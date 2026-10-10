@@ -42,6 +42,7 @@ const STRINGS = {
   featured: { tr: 'Öne çıkanlar', en: 'Featured' },
   website: { tr: 'Web sitesi', en: 'Website' },
   search: { tr: 'Ara', en: 'Search' },
+  install: { tr: 'Ana ekrana ekle', en: 'Add to home screen' },
   guides: { tr: 'Rehberler', en: 'Guides' },
   guide: { tr: 'Rehber', en: 'Guide' },
   stops: { tr: 'durak', en: 'stops' },

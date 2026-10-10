@@ -9,6 +9,7 @@ import { CATEGORY_ICON, KIND_ICON } from '../pins';
 import { distanceM } from '../store';
 import { NearestPierButton, SunsetCard } from './Extras';
 import { openPlace, places } from './context';
+import { canInstall, install, onInstallChange } from '../../app/pwa';
 
 function useStoreVersion(): number {
   const [v, setV] = useState(0);
@@ -26,6 +27,19 @@ function useMapCentre(): [number, number] {
     return () => void map.off('moveend', on);
   }, [map]);
   return c;
+}
+
+/** "Add to home screen" when the browser offers it (Chrome / Android / desktop). */
+function InstallButton() {
+  const t = useT();
+  const [, force] = useState(0);
+  useEffect(() => onInstallChange(() => force((n) => n + 1)), []);
+  if (!canInstall()) return null;
+  return (
+    <button className="pill" onClick={() => void install()}>
+      ⬇ {t('install')}
+    </button>
+  );
 }
 
 export function FeedHeader() {
@@ -69,6 +83,7 @@ export function FeedBody({ extra }: { extra?: ReactNode }) {
     <div className="feed">
       <div className="feed__actions">
         <NearestPierButton />
+        <InstallButton />
         <div className="seg seg--sm" role="group">
           <button className={!saved ? 'on' : ''} onClick={() => setSaved(false)}>
             {t('all')}

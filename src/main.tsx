@@ -21,6 +21,7 @@ import { WeatherController } from './weather/controller';
 import { WeatherLayer } from './weather/weather-layer';
 import { prefersReducedMotion } from './app/motion';
 import { startAdaptiveQuality } from './app/perf';
+import { initPwa } from './app/pwa';
 import { hideLoader, playIntro } from './map/intro';
 import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
@@ -59,6 +60,7 @@ function applyCssTokens() {
 
 async function boot() {
   applyCssTokens();
+  initPwa();
   const container = document.getElementById('map')!;
   const reduced = prefersReducedMotion();
   const params = new URLSearchParams(location.search);
@@ -207,7 +209,18 @@ async function boot() {
   );
 
   hideLoader();
-  if (params.get('adaptive') !== '0') setTimeout(() => startAdaptiveQuality(map), (intro ? CONFIG.camera.intro.durationMs : 0) + 1500);
+  if (params.get('adaptive') !== '0')
+    setTimeout(
+      () =>
+        startAdaptiveQuality(map, (k) => {
+          if (k.particles !== undefined) weatherLayer.quality = k.particles;
+          if (k.gulls !== undefined) ferries.gullsEnabled = k.gulls;
+          if (k.windows !== undefined) city.knobs.windows = k.windows;
+          if (k.buildings !== undefined) city.knobs.buildings = k.buildings;
+          daylight.update();
+        }),
+      (intro ? CONFIG.camera.intro.durationMs : 0) + 1500,
+    );
   if (intro) void playIntro(map);
   if (deep?.kind === 'place') openPlace(deep.id);
   if (deep?.kind === 'pier') openPier(deep.id);

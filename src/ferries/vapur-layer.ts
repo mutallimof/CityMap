@@ -105,6 +105,8 @@ export class VapurLayer implements CustomLayerInterface {
   /** Wind for the funnel smoke (bearing it blows towards, m/s); live weather overrides config. */
   /** 0–1 wind-driven sea state: more rocking. Set by the day/night + weather controller. */
   sea = 0;
+  /** Adaptive quality can switch the seagulls off. */
+  gullsEnabled = true;
   /** 0–1 fog: dims nav lights and reflections (the fog sheet covers the hulls). */
   fog = 0;
   wind = { toward: CONFIG.smoke.windToward as number, ms: CONFIG.smoke.windMs as number };
@@ -335,7 +337,7 @@ export class VapurLayer implements CustomLayerInterface {
     const mc = this.map.getCenter();
     const [ccx, ccy] = this.local([mc.lng, mc.lat]);
     gullTargets.sort((a, b) => Math.hypot(a.x - ccx, a.y - ccy) - Math.hypot(b.x - ccx, b.y - ccy));
-    this.gulls.update(gullTargets, tReal, dt, exag, !this.reduceMotion && this.map.getZoom() >= CONFIG.gulls.minZoom && this.night < 0.8);
+    this.gulls.update(gullTargets, tReal, dt, exag, this.gullsEnabled && !this.reduceMotion && this.map.getZoom() >= CONFIG.gulls.minZoom && this.night < 0.8);
     if (this.accent.instanceColor) this.accent.instanceColor.needsUpdate = true;
 
     const w = CONFIG.wake;

@@ -345,6 +345,8 @@ export function cityPaint(p: CityPalette, ids: CityIds): [string, string, unknow
 
 /** Applies a palette + night level, skipping properties that didn't change. */
 export class CityLook {
+  /** Adaptive quality: drop the lit-window pass / 3D buildings on slow devices. */
+  knobs = { windows: true, buildings: true };
   private last = new Map<string, string>();
   private blossomKey = '';
   constructor(
@@ -365,10 +367,13 @@ export class CityLook {
     this.visible(CITY_LAYER.tulips, tulips);
     // Night: lit-window buildings cross-fade over the pastel ones; bridges light up.
     const lit = Math.max(0, Math.min(1, (night - 0.25) / 0.6));
-    this.visible(CITY_LAYER.buildingsLit, lit > 0.01);
-    this.visible(CITY_LAYER.buildings, lit < 0.99);
-    this.set(CITY_LAYER.buildingsLit, 'fill-extrusion-opacity', buildingOpacity(lit));
-    this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - lit * 0.999));
+    const { windows, buildings } = this.knobs;
+    const litK = windows ? lit : 0;
+    this.visible(CITY_LAYER.buildingsLit, buildings && litK > 0.01);
+    this.visible(CITY_LAYER.buildings, buildings && litK < 0.99);
+    this.visible(CITY_LAYER.landmarkBuildings, buildings);
+    this.set(CITY_LAYER.buildingsLit, 'fill-extrusion-opacity', buildingOpacity(litK));
+    this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - litK * 0.999));
     this.visible(CITY_LAYER.bridgeLamps, night > 0.3);
     this.set(CITY_LAYER.bridgeLamps, 'line-opacity', Math.round(night * 20) / 20);
     this.set(CITY_LAYER.bridgeGlow, 'line-opacity', 0.3 + 0.4 * Math.round(night * 20) / 20);
