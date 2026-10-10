@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -29,13 +29,24 @@ jobs:
       - run: npm run build
         env:
           BASE: /${{ github.event.repository.name }}/
+      - run: touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+      # Also publish the build to the gh-pages branch, so Pages works with either source setting
+      # ("GitHub Actions" or "Deploy from a branch: gh-pages / root").
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist
+          publish_branch: gh-pages
+          force_orphan: true
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Fails harmlessly until Pages' source is set to "GitHub Actions".
+    continue-on-error: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
