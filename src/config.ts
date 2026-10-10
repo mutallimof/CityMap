@@ -122,7 +122,7 @@ export const CONFIG = {
       roadMajorCasing: '#D8AC5B',
       path: '#FFFFFF',
       rail: '#CBBDAB',
-      buildings: ['#FCEAD6', '#F8D3CB', '#FBE1B9', '#D6EAD0', '#E2D6F0', '#FFE6BF', '#D3E4EF'],
+      buildings: ['#FBE3CF', '#F8D3CC', '#FBE7B5', '#F3DDEB', '#DCEBD3', '#FCEEDC', '#F6D9BD'],
       landmark: '#F3C468',
       bridge: '#F2BF52',
       streetLabel: '#7A6550',
@@ -373,7 +373,7 @@ export const CONFIG = {
   },
 
   places: {
-    /** Below this zoom only "hot" pins (fresh posts, live, golden-hour views) show. */
+    /** Below this zoom only well-known featured pins show (Wikidata / high importance). */
     allPinsZoom: 12.4,
     /** Pins closer than this (CSS px) to a higher-priority pin shrink to dots. */
     declutterPx: 40,
@@ -384,6 +384,9 @@ export const CONFIG = {
     /** "Near this pier" radius (m) and walking speed (m/min). */
     nearbyM: 900,
     walkMPerMin: 80,
+    /** Map POIs (OSM cafés, shops, museums, parks…) fade in from this zoom; names from poiNamesFrom. */
+    poiFrom: 14.8,
+    poiNamesFrom: 16,
   },
 
   weather: {
@@ -424,6 +427,13 @@ export const CONFIG = {
     fogHideM: 2600,
     /** Lightning flashes during storms: mean seconds between flashes. */
     lightningEveryS: 9,
+  },
+
+  /** OpenStreetMap services used from the browser (no keys). */
+  osm: {
+    nominatim: 'https://nominatim.openstreetmap.org',
+    /** Nominatim policy: max 1 request/s — we keep a little margin. */
+    minIntervalMs: 1100,
   },
 
   perf: {

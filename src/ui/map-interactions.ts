@@ -26,7 +26,11 @@ export function vesselAt(point: { x: number; y: number }): string | null {
  * route is highlighted, Follow keeps the camera on the vessel until the user drags, and layer
  * chips toggle map layers.
  */
-export function bindMapInteractions(extraTap?: (e: MapMouseEvent) => Selection | undefined): void {
+export function bindMapInteractions(
+  extraTap?: (e: MapMouseEvent) => Selection | undefined,
+  /** Checked after vessels and piers (map POIs). */
+  lateTap?: (e: MapMouseEvent) => Selection | undefined,
+): void {
   const { map, ferries } = services();
 
   map.on('click', (e) => {
@@ -43,6 +47,8 @@ export function bindMapInteractions(extraTap?: (e: MapMouseEvent) => Selection |
       { layers: [LAYER.piers] },
     );
     if (hits.length) return select({ kind: 'pier', id: String(hits[0].properties.id) });
+    const late = lateTap?.(e);
+    if (late !== undefined) return select(late);
     select(null);
   });
   map.on('dragstart', () => ui.get().follow && ui.set({ follow: false }));

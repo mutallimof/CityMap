@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
-import { toIstanbul } from '../../sim/time';
 import { formatHHMM } from '../../sim/time';
 import { useTicker } from '../../ui/hooks';
-import { useT, type StringKey } from '../../ui/i18n';
+import { kindLabel, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
-import { openStatus } from '../opening-hours';
 import { CATEGORY_ICON, KIND_ICON } from '../pins';
 import { PierHint } from './Extras';
 import { placeLink, places, share } from './context';
-import { PostCard } from './PostCard';
 
 function useStoreVersion(): void {
   const [, setV] = useState(0);
@@ -17,17 +14,18 @@ function useStoreVersion(): void {
 }
 
 export function PlaceHeader({ id }: { id: string }) {
-  const t = useT();
+  const lang = useUi((s) => s.lang);
   useStoreVersion();
   const p = places().byId.get(id);
   if (!p) return null;
+  const name = lang === 'en' && p.nameEn ? p.nameEn : p.name;
   return (
     <div className="sheet__title">
       <span className={`swatch swatch--place swatch--${p.category}`}>{KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span>
       <div>
-        <h2>{p.name}</h2>
+        <h2>{name}</h2>
         <small className="muted">
-          {t(`kind_${p.kind}` as StringKey)}
+          {kindLabel(p.kind, lang)}
           {p.district ? ` · ${p.district.replace(/ Mahallesi$/, '')}` : ''}
         </small>
       </div>
@@ -35,22 +33,28 @@ export function PlaceHeader({ id }: { id: string }) {
   );
 }
 
-/** Place: save / share, opening hours (OSM) with open-now, nearest pier + next ferry, its posts. */
+const pretty = (s: string) => s.split(/[;,]/).map((x) => x.trim().replace(/_/g, ' ')).filter(Boolean).join(' · ');
+const domain = (url: string) => url.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+
+/**
+ * Place: everything shown comes from OpenStreetMap — opening hours with open-now, website, phone,
+ * cuisine — and fields OSM doesn't have are simply not shown. Plus the nearest pier + next ferry.
+ */
 export function PlaceBody({ id }: { id: string }) {
   useTicker(15_000);
   useStoreVersion();
   const t = useT();
-  const lang = useUi((s) => s.lang);
   const [toast, setToast] = useState('');
   const store = places();
   const p = store.byId.get(id);
+  useEffect(() => {
+    void store.loadDetails(id);
+  }, [id, store]);
   if (!p) return null;
   const now = services().clock.now();
-  const local = toIstanbul(now);
-  const weekday = (new Date(local.day * 86_400_000).getUTCDay() + 6) % 7; // 0 = Monday
-  const open = openStatus(p.hours ?? undefined, weekday, Math.floor(local.seconds / 60));
+  const open = store.open(id, now);
   const fav = store.favourites.has(id);
-  const posts = store.state.get(id)?.posts ?? [];
+  const loading = store.details.get(id) === 'loading';
 
   const onShare = async () => {
     const r = await share(p.name, placeLink(id));
@@ -69,30 +73,65 @@ export function PlaceBody({ id }: { id: string }) {
         <button className="pill" onClick={onShare}>
           ↗ {t('share')}
         </button>
+        {p.phone && (
+          <a className="pill" href={`tel:${p.phone.split(';')[0].replace(/\s+/g, '')}`}>
+            ☎ {t('call')}
+          </a>
+        )}
         {toast && <span className="toast">{toast}</span>}
       </div>
 
-      <div className="place__hours">
-        {open.state !== 'unknown' && (
-          <span className={`openbadge openbadge--${open.state}`}>
-            {open.state === 'open' ? t('openNow') : t('closedNow')}
-            {open.until !== undefined && ` · ${open.state === 'open' ? t('closes') : t('opens')} ${formatHHMM(open.until * 60)}`}
-          </span>
-        )}
-        <small className="muted">{p.hours ? `${t('hours')}: ${p.hours}` : t('hoursUnknown')}</small>
-      </div>
+      {p.hours && (
+        <div className="place__hours">
+          {open.state !== 'unknown' && (
+            <span className={`openbadge openbadge--${open.state}`}>
+              {open.state === 'open' ? t('openNow') : t('closedNow')}
+              {open.until !== undefined && ` · ${open.state === 'open' ? t('closes') : t('opens')} ${formatHHMM(open.until * 60)}`}
+            </span>
+          )}
+          <small className="muted">
+            {t('hours')}: {p.hours}
+          </small>
+        </div>
+      )}
+
+      {(p.website || p.phone || p.cuisine) && (
+        <dl className="facts">
+          {p.website && (
+            <>
+              <dt>{t('website')}</dt>
+              <dd>
+                <a href={p.website} target="_blank" rel="noopener noreferrer">
+                  {domain(p.website)}
+                </a>
+              </dd>
+            </>
+          )}
+          {p.phone && (
+            <>
+              <dt>☎</dt>
+              <dd>
+                <a href={`tel:${p.phone.split(';')[0].replace(/\s+/g, '')}`}>{p.phone.split(';')[0]}</a>
+              </dd>
+            </>
+          )}
+          {p.cuisine && (
+            <>
+              <dt>{t('cuisine')}</dt>
+              <dd>{pretty(p.cuisine)}</dd>
+            </>
+          )}
+        </dl>
+      )}
+      {loading && <small className="muted">{t('checkingOsm')}</small>}
 
       <PierHint lngLat={p.lngLat} />
 
-      <h3 className="section">
-        {t('posts')} <span className="demo-tag">{t('demo')}</span>
-      </h3>
-      {posts.length === 0 && <p className="muted">{t('noPosts')}</p>}
-      {posts.map((post) => (
-        <PostCard key={post.id} post={post} now={now} />
-      ))}
       <p className="place__credit muted">
-        {t('location')}: © OpenStreetMap · {p.osm} {lang === 'tr' ? '· Paylaşımlar örnektir' : '· Posts are samples'}
+        © OpenStreetMap ·{' '}
+        <a href={`https://www.openstreetmap.org/${p.osm}`} target="_blank" rel="noopener noreferrer">
+          {t('viewOnOsm')}
+        </a>
       </p>
     </div>
   );

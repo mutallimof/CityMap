@@ -179,7 +179,7 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       filter: ['!=', ['get', 'hide_3d'], true],
       layout: { visibility: 'none' },
       paint: {
-        'fill-extrusion-pattern': ['match', pick(3), 0, IMG.windows[0], 1, IMG.windows[1], IMG.windows[2]],
+        'fill-extrusion-pattern': ['match', pickBuilding(3), 0, IMG.windows[0], 1, IMG.windows[1], IMG.windows[2]],
         'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], c.buildingMinHeight],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
         'fill-extrusion-vertical-gradient': true,
@@ -304,9 +304,16 @@ function roadCasingPaint(p: CityPalette) {
   };
 }
 
+/** Buildings merged into tiles often share ids, so mix the height in for pastel variety. */
+const pickBuilding = (n: number): ExpressionSpecification => [
+  '%',
+  ['+', ['floor', ['/', ['to-number', ['id'], 0], 10]], ['round', ['*', ['coalesce', ['get', 'render_height'], 0], 3.7]]],
+  n,
+];
+
 function buildingPaint(p: CityPalette, ids: CityIds) {
   const b = p.buildings;
-  const pastel: ExpressionSpecification = ['match', pick(b.length), ...b.slice(0, -1).flatMap((col, i) => [i, col]), b[b.length - 1]] as unknown as ExpressionSpecification;
+  const pastel: ExpressionSpecification = ['match', pickBuilding(b.length), ...b.slice(0, -1).flatMap((col, i) => [i, col]), b[b.length - 1]] as unknown as ExpressionSpecification;
   return {
     'fill-extrusion-color': (ids.landmarkBuildings.length
       ? ['match', ['to-number', ['id'], 0], ids.landmarkBuildings, p.landmark, pastel]

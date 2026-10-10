@@ -3,6 +3,7 @@ import type { FeatureCollection, Point } from 'geojson';
 import type { ClockController } from '../app/clock';
 import type { DaylightController } from '../app/daylight';
 import type { VapurLayer } from '../ferries/vapur-layer';
+import type { WeatherController } from '../weather/controller';
 import type { PierProps } from '../data/load';
 import type { Network } from '../sim/network';
 import type { DaySchedule, LineSpec } from '../sim/types';
@@ -13,6 +14,7 @@ export interface Services {
   clock: ClockController;
   daylight: DaylightController;
   ferries: VapurLayer;
+  weather: WeatherController;
   network: Network;
   getDay: (day: number) => DaySchedule;
   lines: LineSpec[];

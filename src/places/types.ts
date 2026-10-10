@@ -1,43 +1,35 @@
-export type PlaceCategory = 'food' | 'culture' | 'shopping' | 'view';
+export type PlaceCategory = 'food' | 'culture' | 'shopping' | 'park' | 'view';
 
+/** Featured places as stored in data/places.geojson (all fields from OpenStreetMap). */
 export interface PlaceProps {
   id: string;
   name: string;
   nameEn: string | null;
   category: PlaceCategory;
   kind: string;
+  /** "node/123" | "way/123" | "relation/123" */
   osm: string;
   district: string | null;
   hours: string | null;
   cuisine: string | null;
+  website?: string | null;
+  phone?: string | null;
+  /** Well known (Wikidata / high importance): visible when zoomed out. */
+  major?: boolean;
 }
 
 export interface Place extends PlaceProps {
   lngLat: [number, number];
+  /** 'featured' = curated pin; 'osm' = any map POI the visitor tapped. */
+  source: 'featured' | 'osm';
 }
 
-export type PostType = 'event' | 'offer' | 'news';
-
-/** As stored in data/posts.json (relative timing; DEMO content). */
-export interface RawPost {
-  id: string;
-  placeId: string;
-  type: PostType;
-  title: { tr: string; en: string };
-  body: { tr: string; en: string };
-  /** "HH:MM" or "@sunset±MM". */
-  start?: string;
-  durationMin?: number;
-  dayOffset?: number;
-  validDays?: number;
-  postedHoursAgo: number;
-  demo: true;
-}
-
-/** A post resolved against the current simulated time. */
-export interface Post extends RawPost {
-  postedAt: number; // epoch ms
-  startsAt?: number;
-  endsAt?: number;
-  validUntil?: number;
+/** Extra OSM tags fetched on demand (Nominatim lookup). */
+export interface PlaceDetails {
+  hours: string | null;
+  website: string | null;
+  phone: string | null;
+  cuisine: string | null;
+  district: string | null;
+  nameEn: string | null;
 }

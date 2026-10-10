@@ -1,86 +1,96 @@
 import type { FeatureCollection, Point } from 'geojson';
-import { CONFIG } from '../config';
-import { sunTimes } from '../time/sun';
-import { feedRank, isExpired, isLive, isNew, isSoon, isTonight, resolvePost } from './posts';
-import type { Place, PlaceProps, Post, RawPost } from './types';
+import { toIstanbul } from '../sim/time';
+import { lookupId, nominatim } from '../osm/nominatim';
+import { openStatus, type OpenStatus } from './opening-hours';
+import type { Place, PlaceCategory, PlaceDetails, PlaceProps } from './types';
 import type { Category } from '../ui/store';
-
-export interface PlaceState {
-  posts: Post[];
-  newCount: number;
-  live: boolean;
-  soon: boolean;
-  tonight: boolean;
-  hasEvent: boolean;
-}
 
 const FAV_KEY = 'favourites';
 
+export interface PlaceFilters {
+  categories: Category[];
+  openNow: boolean;
+}
+
+/** Map chip → place categories it shows ("Parks" also shows viewpoints). */
+const CHIP: Record<Category, PlaceCategory[]> = { food: ['food'], culture: ['culture'], shopping: ['shopping'], park: ['park', 'view'] };
+
+export function matchesCategory(cat: PlaceCategory, chips: Category[]): boolean {
+  return !chips.length || chips.some((c) => CHIP[c].includes(cat));
+}
+
+/** Open / closed at a simulated moment from the OSM opening_hours string. */
+export function openAt(hours: string | null | undefined, nowMs: number): OpenStatus {
+  const local = toIstanbul(nowMs);
+  const weekday = (new Date(local.day * 86_400_000).getUTCDay() + 6) % 7; // 0 = Monday
+  return openStatus(hours ?? undefined, weekday, Math.floor(local.seconds / 60));
+}
+
+interface NomLookup {
+  extratags?: Record<string, string> | null;
+  namedetails?: Record<string, string> | null;
+  address?: Record<string, string>;
+}
+
 /**
- * Places + DEMO posts, re-resolved against the simulated clock. Favourites live in localStorage
- * (device only). Listeners fire when posts are re-resolved or favourites change.
+ * Places — all real OpenStreetMap data: the featured set (data/places.geojson) plus any map POI the
+ * visitor taps (added on the fly). Extra tags (hours, website, phone) are looked up from Nominatim
+ * when a place is opened. Favourites live in localStorage (device only).
  */
 export class PlacesStore {
   readonly places: Place[];
   readonly byId: Map<string, Place>;
-  private raw: RawPost[];
-  posts: Post[] = [];
-  state = new Map<string, PlaceState>();
+  readonly details = new Map<string, 'loading' | 'done' | 'failed'>();
   favourites: Set<string>;
   private listeners = new Set<() => void>();
-  private lastMs = 0;
 
-  constructor(fc: FeatureCollection<Point, PlaceProps>, raw: RawPost[]) {
-    this.places = fc.features.map((f) => ({ ...f.properties, lngLat: f.geometry.coordinates as [number, number] }));
+  constructor(fc: FeatureCollection<Point, PlaceProps>) {
+    this.places = fc.features.map((f) => ({ ...f.properties, lngLat: f.geometry.coordinates as [number, number], source: 'featured' as const }));
     this.byId = new Map(this.places.map((p) => [p.id, p]));
-    this.raw = raw.filter((p) => this.byId.has(p.placeId));
     this.favourites = new Set(readFavs());
   }
 
-  /** Re-resolve posts for `nowMs` (cheap; called every few seconds of sim time). */
-  update(nowMs: number, force = false): void {
-    if (!force && Math.abs(nowMs - this.lastMs) < 20_000) return;
-    this.lastMs = nowMs;
-    const [lon, lat] = CONFIG.camera.center;
-    const sun = sunTimes(nowMs, lat, lon);
-    this.posts = this.raw.map((r) => resolvePost(r, nowMs, sun?.sunset ?? null)).filter((p) => !isExpired(p, nowMs));
-    this.state = new Map();
-    for (const p of this.places) this.state.set(p.id, { posts: [], newCount: 0, live: false, soon: false, tonight: false, hasEvent: false });
-    for (const post of this.posts) {
-      const s = this.state.get(post.placeId)!;
-      s.posts.push(post);
-      if (isNew(post, nowMs)) s.newCount++;
-      if (isLive(post, nowMs)) s.live = true;
-      if (isSoon(post, nowMs)) s.soon = true;
-      if (isTonight(post, nowMs)) s.tonight = true;
-      if (post.type === 'event') s.hasEvent = true;
-    }
-    for (const s of this.state.values()) s.posts.sort((a, b) => feedRank(b, nowMs) - feedRank(a, nowMs));
+  /** Add a place found on the map (a tapped POI); returns the stored one. */
+  add(p: Place): Place {
+    const existing = this.byId.get(p.id);
+    if (existing) return existing;
+    this.byId.set(p.id, p);
+    return p;
+  }
+
+  open(id: string, nowMs: number): OpenStatus {
+    return openAt(this.byId.get(id)?.hours, nowMs);
+  }
+
+  visible(id: string, f: PlaceFilters, nowMs: number): boolean {
+    const p = this.byId.get(id);
+    if (!p || !matchesCategory(p.category, f.categories)) return false;
+    return !f.openNow || this.open(id, nowMs).state === 'open';
+  }
+
+  /** Fetch hours / website / phone from OSM (Nominatim lookup) and merge what is missing. */
+  async loadDetails(id: string): Promise<void> {
+    const p = this.byId.get(id);
+    const lid = p && lookupId(p.osm);
+    if (!p || !lid || this.details.has(id)) return;
+    this.details.set(id, 'loading');
     this.emit();
-  }
-
-  /** Feed: posts passing the category / tonight / saved filters, best first. */
-  feed(nowMs: number, f: { categories: Category[]; tonight: boolean; saved: boolean }): Post[] {
-    return this.posts
-      .filter((p) => this.matches(p, f, nowMs))
-      .sort((a, b) => feedRank(b, nowMs) - feedRank(a, nowMs));
-  }
-
-  matches(p: Post, f: { categories: Category[]; tonight: boolean; saved: boolean }, nowMs: number): boolean {
-    const place = this.byId.get(p.placeId)!;
-    if (f.saved && !this.favourites.has(place.id)) return false;
-    if (f.tonight && !isTonight(p, nowMs)) return false;
-    if (!f.categories.length) return true;
-    return f.categories.some((c) => (c === 'events' ? p.type === 'event' : place.category === c));
-  }
-
-  /** Whether a place's pin should show under the current filters. */
-  placeVisible(id: string, f: { categories: Category[]; tonight: boolean }): boolean {
-    const place = this.byId.get(id)!;
-    const s = this.state.get(id);
-    if (f.tonight && !s?.tonight) return false;
-    if (!f.categories.length) return true;
-    return f.categories.some((c) => (c === 'events' ? !!s?.hasEvent : place.category === c));
+    const r = await nominatim<NomLookup[]>('lookup', { osm_ids: lid, extratags: '1', namedetails: '1', addressdetails: '1' });
+    const hit = r?.[0];
+    if (!hit) {
+      this.details.set(id, 'failed');
+      this.emit();
+      return;
+    }
+    const d = detailsFrom(hit);
+    p.hours ??= d.hours;
+    p.website ??= d.website;
+    p.phone ??= d.phone;
+    p.cuisine ??= d.cuisine;
+    p.district ??= d.district;
+    p.nameEn ??= d.nameEn;
+    this.details.set(id, 'done');
+    this.emit();
   }
 
   toggleFavourite(id: string): void {
@@ -99,9 +109,23 @@ export class PlacesStore {
     return () => this.listeners.delete(fn);
   }
 
-  private emit() {
+  emit(): void {
     for (const fn of this.listeners) fn();
   }
+}
+
+export function detailsFrom(r: NomLookup): PlaceDetails {
+  const t = r.extratags ?? {};
+  const a = r.address ?? {};
+  const url = t.website ?? t['contact:website'] ?? t.url ?? null;
+  return {
+    hours: t.opening_hours ?? null,
+    website: url && /^https?:\/\//i.test(url) ? url : url ? `https://${url}` : null,
+    phone: t.phone ?? t['contact:phone'] ?? t['contact:mobile'] ?? null,
+    cuisine: t.cuisine ?? null,
+    district: a.suburb ?? a.city_district ?? a.quarter ?? a.town ?? null,
+    nameEn: r.namedetails?.['name:en'] ?? null,
+  };
 }
 
 function readFavs(): string[] {

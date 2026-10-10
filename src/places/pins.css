@@ -19,6 +19,7 @@
   transform-origin: 50% 100%;
 }
 .pin--food { --pin: #f08a5d; }
+.pin--park { --pin: #4caf6a; }
 .pin--culture { --pin: #9b6ad6; }
 .pin--shopping { --pin: #2e9fb0; }
 .pin--view { --pin: #f2b33d; }
@@ -50,34 +51,19 @@
   background: var(--pin);
   border-radius: 2px;
 }
-.pin__ring {
+.pin__open {
   position: absolute;
-  left: 1px;
-  top: -1px;
-  width: 42px;
-  height: 42px;
+  right: 2px;
+  top: 2px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  opacity: 0;
-  background: conic-gradient(from 0deg, #ffcf3f, #ff6b5a, #d04ec5, #7a5cff, #3fb6ff, #ffcf3f);
-  -webkit-mask: radial-gradient(circle, transparent 18.5px, #000 19.5px);
-  mask: radial-gradient(circle, transparent 18.5px, #000 19.5px);
-  transition: opacity 400ms ease;
-}
-.pin__count {
-  position: absolute;
-  right: -2px;
-  top: -4px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 9px;
-  background: #ff4f5e;
-  color: #fff;
-  font: 800 11px/18px var(--font, 'Nunito', sans-serif);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  background: #34c27a;
+  box-shadow: 0 0 0 2px #fffaf2, 0 0 8px rgba(52, 194, 122, 0.8);
   z-index: 2;
   display: none;
 }
+.pin--open .pin__open { display: block; }
 .pin__fav {
   position: absolute;
   left: -3px;
@@ -105,59 +91,30 @@
   pointer-events: none;
 }
 
-/* fresh posts: story ring spins slowly + soft glow */
-.pin--new .pin__ring {
-  opacity: 1;
-  animation: pin-spin 6s linear infinite;
-}
-.pin--count .pin__count { display: block; }
 /* crowded: shrink to a small dot (still tappable) so important pins stay readable */
 .pin--crowded:not(.pin--selected) .pin__inner { transform: scale(0.42); opacity: 0.9; }
 .pin--crowded:not(.pin--selected) .pin__label,
-.pin--crowded:not(.pin--selected) .pin__count,
+.pin--crowded:not(.pin--selected) .pin__open,
 .pin--crowded:not(.pin--selected) .pin__fav { opacity: 0; }
 .pin--fav .pin__fav { display: block; }
 .pin--hot .pin__bubble { box-shadow: 0 0 0 2.5px var(--pin), 0 0 18px 4px color-mix(in srgb, var(--pin) 55%, transparent), 0 4px 10px rgba(20, 30, 40, 0.28); }
 
-/* on now: expanding pulse */
-.pin--live .pin__bubble::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 2.5px solid #ff4f5e;
-  animation: pin-pulse 1.8s ease-out infinite;
-}
-.pin--soon .pin__bubble::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px dashed color-mix(in srgb, var(--pin) 80%, white);
-  animation: pin-spin 10s linear infinite;
-}
-.pin--tonight .pin__inner { transform: scale(1.12); }
 .pin--golden .pin__bubble { animation: pin-golden 3s ease-in-out infinite; }
 .pin--selected .pin__inner { transform: scale(1.22); }
 .pin--selected .pin__label { opacity: 1; }
 .pin--hidden { pointer-events: none; }
 .pin--hidden .pin__inner { opacity: 0; transform: scale(0.4); }
 
-/* zoomed out: only hot pins; zoomed in: names */
-.pins-far .pin:not(.pin--hot):not(.pin--selected):not(.pin--tonight) { pointer-events: none; }
-.pins-far .pin:not(.pin--hot):not(.pin--selected):not(.pin--tonight) .pin__inner { opacity: 0; transform: scale(0.4); }
+/* zoomed out: only well-known places; zoomed in: names */
+.pins-far .pin:not(.pin--major):not(.pin--hot):not(.pin--selected):not(.pin--fav) { pointer-events: none; }
+.pins-far .pin:not(.pin--major):not(.pin--hot):not(.pin--selected):not(.pin--fav) .pin__inner { opacity: 0; transform: scale(0.4); }
 .pins-labels .pin__label { opacity: 1; }
 .pins-night .pin__bubble { background: #27303d; }
 
-@keyframes pin-spin { to { transform: rotate(360deg); } }
-@keyframes pin-pulse {
-  0% { transform: scale(1); opacity: 0.9; }
-  100% { transform: scale(1.9); opacity: 0; }
-}
 @keyframes pin-golden {
   50% { box-shadow: 0 0 0 2.5px #ffb347, 0 0 26px 8px rgba(255, 168, 64, 0.65), 0 4px 10px rgba(20, 30, 40, 0.28); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pin__ring, .pin--live .pin__bubble::before, .pin--soon .pin__bubble::before, .pin--golden .pin__bubble { animation: none !important; }
+  .pin--golden .pin__bubble { animation: none !important; }
 }
-.motion-reduced .pin__ring, .motion-reduced .pin--live .pin__bubble::before, .motion-reduced .pin--soon .pin__bubble::before, .motion-reduced .pin--golden .pin__bubble { animation: none !important; }
+.motion-reduced .pin--golden .pin__bubble { animation: none !important; }

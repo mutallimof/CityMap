@@ -3,9 +3,10 @@ import '@fontsource/nunito/800.css';
 import './styles.css';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { createMap } from './map/createMap';
+import { setLandmarkLang } from './map/city-setup';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
-import { loadLines, loadPlaces, loadPosts, loadRoutes } from './data/load';
+import { loadLines, loadPlaces, loadRoutes } from './data/load';
 import { buildNetwork } from './sim/network';
 import { buildDaySchedule } from './sim/schedule';
 import { cachedDays } from './sim/state';
@@ -30,7 +31,8 @@ import './ui/ui.css';
 import './places/pins.css';
 import './places/ui/places.css';
 import { PlacesStore } from './places/store';
-import { PlacePins } from './places/pins';
+import { PlacePins, SelectedPlaceMarker } from './places/pins';
+import { PoiLayer } from './places/poi-layer';
 import { openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
@@ -59,12 +61,11 @@ async function boot() {
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
   const deep = parseDeepLink();
   const intro = withIntro && !deep;
-  const [{ map, piers, land, city }, lines, routes, placeData, posts] = await Promise.all([
+  const [{ map, piers, land, city }, lines, routes, placeData] = await Promise.all([
     createMap(container, intro),
     loadLines(),
     loadRoutes(),
     loadPlaces(),
-    loadPosts(),
   ]);
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
@@ -104,31 +105,54 @@ async function boot() {
   water.motion = reduced ? 0.25 : 1;
   ferries.reduceMotion = reduced;
   const pierById = new Map(piers.features.map((f) => [f.properties.id, { ...f.properties, lngLat: f.geometry.coordinates as [number, number] }]));
-  setServices({ map, clock, daylight, ferries, network, getDay, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
-  bindMapInteractions();
+  setServices({ map, clock, daylight, ferries, weather, network, getDay, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
+  // Places — all real OpenStreetMap data: featured pins + every map POI (revealed by zoom).
+  const store = new PlacesStore(placeData);
+  setPlaces(store, reduced);
+  const poi = new PoiLayer(map, store.places.map((p) => p.osm));
+  bindMapInteractions(undefined, (e) => {
+    const p = poi.at(e.point);
+    if (!p) return undefined;
+    store.add(p);
+    openPlace(p.id);
+    return { kind: 'place', id: p.id };
+  });
   document.documentElement.lang = ui.get().lang;
+  setLandmarkLang(ui.get().lang);
+  let lastLang = ui.get().lang;
+  ui.subscribe(() => {
+    if (ui.get().lang !== lastLang) setLandmarkLang((lastLang = ui.get().lang));
+  });
   document.documentElement.classList.toggle('motion-reduced', reduced);
 
-  // Part B: places (OSM) + DEMO posts, pins, feed.
-  const store = new PlacesStore(placeData, posts);
-  setPlaces(store, reduced);
-  store.update(clock.now(), true);
   const pins = new PlacePins(map, store, (p) => openPlace(p.id, false));
+  const picked = new SelectedPlaceMarker(map);
+  let lastPoi = '';
   const refreshPins = () => {
     const s = ui.get();
+    const selectedId = s.selection?.kind === 'place' ? s.selection.id : null;
     pins.update({
       categories: s.categories,
-      tonight: s.tonight,
-      selectedId: s.selection?.kind === 'place' ? s.selection.id : null,
+      openNow: s.openNow,
+      selectedId,
       golden: daylight.theme.night < 0.5 ? daylight.theme.golden : 0,
       night: daylight.theme.night,
+      nowMs: clock.now(),
     });
+    const key = `${s.categories.join()}|${s.openNow}`;
+    if (key !== lastPoi) {
+      lastPoi = key;
+      poi.setFilters({ categories: s.categories, openNow: s.openNow, visible: true });
+    }
+    poi.setNight(daylight.theme.night);
+    const sel = selectedId ? store.byId.get(selectedId) : undefined;
+    picked.show(sel?.source === 'osm' ? sel : null);
   };
   store.onChange(refreshPins);
   ui.subscribe(refreshPins);
   daylight.onChange(refreshPins);
-  clock.onChange(() => store.update(clock.now(), true));
-  setInterval(() => store.update(clock.now()), 2000);
+  clock.onChange(refreshPins);
+  setInterval(refreshPins, 30_000);
   refreshPins();
 
   createRoot(document.getElementById('ui')!).render(
@@ -150,7 +174,7 @@ async function boot() {
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, poi });
 }
 
 boot().catch((err) => {

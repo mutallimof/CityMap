@@ -29,36 +29,36 @@ const STRINGS = {
   food: { tr: 'Yeme-içme', en: 'Food' },
   culture: { tr: 'Kültür', en: 'Culture' },
   shopping: { tr: 'Alışveriş', en: 'Shopping' },
-  events: { tr: 'Etkinlik', en: 'Events' },
-  tonight: { tr: 'Bu akşam', en: 'Tonight' },
   docked: { tr: 'İskelede', en: 'Docked' },
   underway: { tr: 'Seferde', en: 'Underway' },
   progress: { tr: 'Yolculuk', en: 'Trip' },
   inService: { tr: 'seferde', en: 'in service' },
-  feedTitle: { tr: 'Bugün şehirde', en: 'Today in the city' },
+  feedTitle: { tr: 'Şehirde şimdi', en: 'The city now' },
+  feedNote: { tr: 'Gerçek mekânlar · OpenStreetMap', en: 'Real places · OpenStreetMap' },
+  park: { tr: 'Parklar', en: 'Parks' },
+  openNowChip: { tr: 'Şimdi açık', en: 'Open now' },
+  openNowNote: { tr: 'Yalnızca OSM’de çalışma saati olan mekânlar', en: 'Only places with opening hours in OSM' },
+  openPlaces: { tr: 'Şimdi açık', en: 'Open now' },
+  featured: { tr: 'Öne çıkanlar', en: 'Featured' },
+  website: { tr: 'Web sitesi', en: 'Website' },
+  call: { tr: 'Ara', en: 'Call' },
+  cuisine: { tr: 'Mutfak', en: 'Cuisine' },
+  checkingOsm: { tr: 'OpenStreetMap’e bakılıyor…', en: 'Checking OpenStreetMap…' },
+  viewOnOsm: { tr: 'OSM’de gör', en: 'View on OSM' },
+  zoomForMore: { tr: 'Daha fazla mekân için yakınlaş', en: 'Zoom in for more places' },
   demo: { tr: 'DEMO', en: 'DEMO' },
-  demoNote: { tr: 'Örnek içerik — gerçek duyuru değildir. Mekân konumları OpenStreetMap’ten.', en: 'Sample content — not real announcements. Place locations from OpenStreetMap.' },
   all: { tr: 'Tümü', en: 'All' },
   saved: { tr: 'Kaydedilenler', en: 'Saved' },
   save: { tr: 'Kaydet', en: 'Save' },
   savedOne: { tr: 'Kaydedildi', en: 'Saved' },
   share: { tr: 'Paylaş', en: 'Share' },
   copied: { tr: 'Bağlantı kopyalandı', en: 'Link copied' },
-  event: { tr: 'Etkinlik', en: 'Event' },
-  offer: { tr: 'Fırsat', en: 'Offer' },
-  news: { tr: 'Duyuru', en: 'News' },
-  liveNow: { tr: 'Şu an', en: 'On now' },
-  startsIn: { tr: 'başlıyor', en: 'starts in' },
-  until: { tr: 'son gün', en: 'until' },
-  ago: { tr: 'önce', en: 'ago' },
   openNow: { tr: 'Açık', en: 'Open now' },
   closedNow: { tr: 'Kapalı', en: 'Closed' },
   closes: { tr: 'kapanış', en: 'closes' },
   opens: { tr: 'açılış', en: 'opens' },
   hours: { tr: 'Çalışma saatleri', en: 'Opening hours' },
   hoursUnknown: { tr: 'Çalışma saatleri OSM’de yok', en: 'No opening hours in OSM' },
-  posts: { tr: 'Paylaşımlar', en: 'Posts' },
-  noPosts: { tr: 'Şu an paylaşım yok', en: 'Nothing posted right now' },
   noMatches: { tr: 'Bu filtrede bir şey yok', en: 'Nothing matches these filters' },
   nearestPier: { tr: 'En yakın iskele', en: 'Nearest pier' },
   locating: { tr: 'Konum alınıyor…', en: 'Finding you…' },
@@ -73,6 +73,10 @@ const STRINGS = {
   fromPier: { tr: 'iskeleden', en: 'from' },
   location: { tr: 'Konum', en: 'Location' },
   weather: { tr: 'Hava', en: 'Weather' },
+  season_spring: { tr: 'İlkbahar', en: 'Spring' },
+  season_summer: { tr: 'Yaz', en: 'Summer' },
+  season_autumn: { tr: 'Sonbahar', en: 'Autumn' },
+  season_winter: { tr: 'Kış', en: 'Winter' },
   kind_cafe: { tr: 'Kafe', en: 'Café' },
   kind_restaurant: { tr: 'Restoran', en: 'Restaurant' },
   kind_theatre: { tr: 'Tiyatro / sahne', en: 'Theatre / stage' },
@@ -84,12 +88,41 @@ const STRINGS = {
   kind_mall: { tr: 'Alışveriş merkezi', en: 'Shopping mall' },
   kind_bazaar: { tr: 'Çarşı', en: 'Bazaar' },
   kind_viewpoint: { tr: 'Gün batımı noktası', en: 'Sunset spot' },
+  kind_fast_food: { tr: 'Hızlı yemek', en: 'Fast food' },
+  kind_bar: { tr: 'Bar', en: 'Bar' },
+  kind_pub: { tr: 'Pub', en: 'Pub' },
+  kind_ice_cream: { tr: 'Dondurmacı', en: 'Ice cream' },
+  kind_bakery: { tr: 'Fırın', en: 'Bakery' },
+  kind_art_gallery: { tr: 'Sanat galerisi', en: 'Art gallery' },
+  kind_cinema: { tr: 'Sinema', en: 'Cinema' },
+  kind_attraction: { tr: 'Gezilecek yer', en: 'Attraction' },
+  kind_castle: { tr: 'Kale / saray', en: 'Castle / palace' },
+  kind_monument: { tr: 'Anıt', en: 'Monument' },
+  kind_library: { tr: 'Kütüphane', en: 'Library' },
+  kind_park: { tr: 'Park', en: 'Park' },
+  kind_garden: { tr: 'Bahçe', en: 'Garden' },
+  kind_clothes: { tr: 'Giyim', en: 'Clothes' },
+  kind_books: { tr: 'Kitapçı', en: 'Bookshop' },
+  kind_gift: { tr: 'Hediyelik', en: 'Gift shop' },
+  kind_jewelry: { tr: 'Kuyumcu', en: 'Jeweller' },
+  kind_supermarket: { tr: 'Market', en: 'Supermarket' },
+  kind_convenience: { tr: 'Bakkal', en: 'Corner shop' },
+  kind_florist: { tr: 'Çiçekçi', en: 'Florist' },
+  kind_marketplace: { tr: 'Pazar', en: 'Market' },
 } as const;
 
 export type StringKey = keyof typeof STRINGS;
 
 export function t(lang: Lang, key: StringKey): string {
   return STRINGS[key][lang];
+}
+
+/** Human label for an OSM kind (subclass): translated when we know it, else prettified. */
+export function kindLabel(kind: string, lang: Lang): string {
+  const k = `kind_${kind}` as StringKey;
+  if (k in STRINGS) return STRINGS[k][lang];
+  const s = kind.replace(/_/g, ' ');
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 export function useT(): (key: StringKey) => string {

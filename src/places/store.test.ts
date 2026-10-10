@@ -1,42 +1,47 @@
 import { describe, expect, it } from 'vitest';
 import { fromIstanbul } from '../sim/time';
-import { distanceM, PlacesStore } from './store';
-import type { RawPost } from './types';
+import { detailsFrom, distanceM, matchesCategory, PlacesStore } from './store';
 
+const base = { nameEn: null, district: null, cuisine: null };
 const fc = {
   type: 'FeatureCollection' as const,
   features: [
-    { type: 'Feature' as const, properties: { id: 'th', name: 'Theatre', nameEn: null, category: 'culture' as const, kind: 'theatre', osm: 'node/1', district: null, hours: null, cuisine: null }, geometry: { type: 'Point' as const, coordinates: [29, 41] } },
-    { type: 'Feature' as const, properties: { id: 'cafe', name: 'Cafe', nameEn: null, category: 'food' as const, kind: 'cafe', osm: 'node/2', district: null, hours: null, cuisine: null }, geometry: { type: 'Point' as const, coordinates: [29.01, 41] } },
+    { type: 'Feature' as const, properties: { ...base, id: 'th', name: 'Theatre', category: 'culture' as const, kind: 'theatre', osm: 'node/1', hours: null }, geometry: { type: 'Point' as const, coordinates: [29, 41] } },
+    { type: 'Feature' as const, properties: { ...base, id: 'cafe', name: 'Cafe', category: 'food' as const, kind: 'cafe', osm: 'node/2', hours: 'Mo-Su 08:00-20:00' }, geometry: { type: 'Point' as const, coordinates: [29.01, 41] } },
+    { type: 'Feature' as const, properties: { ...base, id: 'view', name: 'View', category: 'view' as const, kind: 'viewpoint', osm: 'node/3', hours: null }, geometry: { type: 'Point' as const, coordinates: [29.02, 41] } },
   ],
 };
-const t = { tr: '', en: '' };
-const raw: RawPost[] = [
-  { id: 'a', placeId: 'th', type: 'event', start: '20:30', durationMin: 120, postedHoursAgo: 2, title: t, body: t, demo: true },
-  { id: 'b', placeId: 'cafe', type: 'offer', validDays: 2, postedHoursAgo: 30, title: t, body: t, demo: true },
-  { id: 'c', placeId: 'ghost', type: 'news', postedHoursAgo: 1, title: t, body: t, demo: true },
-];
-const now = fromIstanbul({ day: 20_000, seconds: 19 * 3600 });
 
-describe('PlacesStore', () => {
-  it('drops posts for unknown places and tracks per-place state', () => {
-    const s = new PlacesStore(fc, raw);
-    s.update(now, true);
-    expect(s.posts.map((p) => p.id).sort()).toEqual(['a', 'b']);
-    expect(s.state.get('th')).toMatchObject({ newCount: 1, tonight: true, hasEvent: true, soon: true });
-    expect(s.state.get('cafe')).toMatchObject({ newCount: 0, tonight: false });
+describe('places store', () => {
+  const s = new PlacesStore(fc);
+  const noon = fromIstanbul({ day: 20_000, seconds: 12 * 3600 });
+  const night = fromIstanbul({ day: 20_000, seconds: 22 * 3600 });
+
+  it('filters by category chips (parks include viewpoints)', () => {
+    expect(s.visible('th', { categories: ['food'], openNow: false }, noon)).toBe(false);
+    expect(s.visible('cafe', { categories: ['food'], openNow: false }, noon)).toBe(true);
+    expect(matchesCategory('view', ['park'])).toBe(true);
+    expect(matchesCategory('food', [])).toBe(true);
   });
 
-  it('filters the feed by category, events and tonight', () => {
-    const s = new PlacesStore(fc, raw);
-    s.update(now, true);
-    expect(s.feed(now, { categories: ['food'], tonight: false, saved: false }).map((p) => p.id)).toEqual(['b']);
-    expect(s.feed(now, { categories: ['events'], tonight: false, saved: false }).map((p) => p.id)).toEqual(['a']);
-    expect(s.feed(now, { categories: [], tonight: true, saved: false }).map((p) => p.id)).toEqual(['a']);
-    expect(s.placeVisible('cafe', { categories: ['culture'], tonight: false })).toBe(false);
+  it('open now needs real opening hours', () => {
+    expect(s.visible('cafe', { categories: [], openNow: true }, noon)).toBe(true);
+    expect(s.visible('cafe', { categories: [], openNow: true }, night)).toBe(false);
+    expect(s.visible('th', { categories: [], openNow: true }, noon)).toBe(false); // hours unknown
   });
 
-  it('measures distances', () => {
-    expect(distanceM([29, 41], [29, 41.01])).toBeCloseTo(1112, -1);
+  it('adds tapped map places once', () => {
+    const p = { ...base, id: 'osm:node/9', name: 'X', category: 'food' as const, kind: 'cafe', osm: 'node/9', hours: null, lngLat: [29, 41] as [number, number], source: 'osm' as const };
+    expect(s.add(p)).toBe(p);
+    expect(s.add({ ...p, name: 'Y' }).name).toBe('X');
+  });
+
+  it('reads details from OSM tags, hiding nothing that is missing', () => {
+    const d = detailsFrom({ extratags: { opening_hours: '24/7', 'contact:website': 'example.org' }, address: { suburb: 'Moda' } });
+    expect(d).toMatchObject({ hours: '24/7', website: 'https://example.org', phone: null, district: 'Moda' });
+  });
+
+  it('distance', () => {
+    expect(distanceM([29, 41], [29.01, 41])).toBeCloseTo(839, -1);
   });
 });

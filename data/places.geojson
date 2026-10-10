@@ -12,7 +12,10 @@
     "osm": "way/491935728",
     "district": "Caferağa Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.sureyyaoperasi.kadikoy.bel.tr/",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -33,7 +36,10 @@
     "osm": "node/6525497699",
     "district": "Caferağa Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "http://www.oyunatolyesi.com/",
+    "phone": "+90 216 345 39 39",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -54,7 +60,10 @@
     "osm": "way/102190100",
     "district": "Caferağa Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -75,7 +84,10 @@
     "osm": "node/4833359922",
     "district": "Caferağa Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -96,7 +108,10 @@
     "osm": "way/1033333873",
     "district": "Gümüşsuyu",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://akmistanbul.gov.tr/tr/iletisim",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -117,7 +132,10 @@
     "osm": "node/6432240559",
     "district": "Asmalı Mescit",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.ortaoyuncular.com/",
+    "phone": "+90 212 251 18 65",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -138,7 +156,10 @@
     "osm": "way/224685421",
     "district": "Tomtom",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -159,7 +180,10 @@
     "osm": "node/654189927",
     "district": "Tomtom",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": "+90 212 244 44 99",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -180,7 +204,10 @@
     "osm": "node/7656296101",
     "district": "Beşiktaş",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://bkmonline.net/",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -201,7 +228,10 @@
     "osm": "node/9255335169",
     "district": "Beşiktaş",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -222,7 +252,10 @@
     "osm": "way/1106158059",
     "district": "Ortaköy Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -243,7 +276,10 @@
     "osm": "way/59595670",
     "district": "Harbiye Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "http://www.crrkonsersalonu.org/",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -264,7 +300,10 @@
     "osm": "way/1039501845",
     "district": "Harbiye Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -285,7 +324,10 @@
     "osm": "way/59595672",
     "district": "Harbiye Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -306,7 +348,10 @@
     "osm": "way/164328435",
     "district": "Sultantepe Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -327,7 +372,10 @@
     "osm": "way/310110171",
     "district": "Aziz Mahmut Hüdayi Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://sehirtiyatrolari.ibb.istanbul/sahne/uskudar-musahipzade-cell-sahnesi",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -348,7 +396,10 @@
     "osm": "node/796862400",
     "district": "Kuloğlu",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "http://www.borusan.com.tr/en-us/SocialResponsibility/CultureAndArts/Pages/ArtCenterIstanbul.aspx",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -369,7 +420,10 @@
     "osm": "node/5640069827",
     "district": "Kılıçali Paşa",
     "hours": "Tu-Th, Sa-Su 10:00-18:00; Fr 10:00-20:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.istanbulmodern.org/",
+    "phone": "+902123347300",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -390,7 +444,10 @@
     "osm": "way/112676117",
     "district": "Asmalı Mescit",
     "hours": "Tu-Su 10:00-19:00, Su 12:00-18:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.peramuzesi.org.tr",
+    "phone": "+90 212 334 99 00",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -411,7 +468,10 @@
     "osm": "way/866642931",
     "district": "Atatürk Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -432,7 +492,10 @@
     "osm": "way/152827180",
     "district": "Kültür Mahallesi",
     "hours": "Mo-Su 10:00-22:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.akmerkez.com.tr/",
+    "phone": "+90 212 282 0170",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -453,7 +516,10 @@
     "osm": "way/46962419",
     "district": "Şişli",
     "hours": "10:00-22:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://istanbulcevahir.com/",
+    "phone": "+90 212 368 6900",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -474,7 +540,10 @@
     "osm": "way/866022515",
     "district": "Altunizade Mahallesi",
     "hours": "10:00-22:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.capitol.com.tr/",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -495,7 +564,10 @@
     "osm": "relation/10098365",
     "district": "Acıbadem Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.ak-asya.com.tr/",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -516,7 +588,10 @@
     "osm": "relation/4840435",
     "district": "Levazım Mahallesi",
     "hours": "10:00-22:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.zorlucenter.com.tr/",
+    "phone": "+90 212 924 0100",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -537,7 +612,10 @@
     "osm": "way/163625174",
     "district": "Reşitpaşa Mahallesi",
     "hours": "Mo-Su 10:00-22:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://istinyepark.com.tr/",
+    "phone": "+90 212 345 5555",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -558,7 +636,10 @@
     "osm": "way/343046405",
     "district": "Kılıçali Paşa",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://galataport.com/",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -579,7 +660,10 @@
     "osm": "way/303807317",
     "district": "Beyazıt Mahallesi",
     "hours": "Mo-Sa 9:00-19:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -600,7 +684,10 @@
     "osm": "way/24234971",
     "district": "Rüstempaşa Mahallesi",
     "hours": "Mo-Sa 08:00-19:00; Su 09:30-19:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "http://www.misircarsisi.net/",
+    "phone": "+902125136597",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -621,7 +708,10 @@
     "osm": "node/6327464485",
     "district": "Kemankeş Karamustafa Paşa",
     "hours": "Mo-Th 09:00-24:00; Fr-Sa 09:00-24:30; Su 10:00-22:00",
-    "cuisine": "pasta;burger;chicken"
+    "cuisine": "pasta;burger;chicken",
+    "website": null,
+    "phone": "+90 212 244 22 52",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -642,7 +732,10 @@
     "osm": "node/11833689471",
     "district": "Kemankeş Karamustafa Paşa",
     "hours": "Mo-Su 11:30-23:00",
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": null,
+    "phone": "+90 212 293 62 63",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -663,7 +756,10 @@
     "osm": "node/11834403969",
     "district": "Kemankeş Karamustafa Paşa",
     "hours": null,
-    "cuisine": "coffee_shop;turkish"
+    "cuisine": "coffee_shop;turkish",
+    "website": "https://namligurme.com.tr/",
+    "phone": "+90 212 293 68 80",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -684,7 +780,10 @@
     "osm": "node/8324180075",
     "district": "Kemankeş Karamustafa Paşa",
     "hours": "Mo-Su 07:00-23:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -705,7 +804,10 @@
     "osm": "node/5753798522",
     "district": "Hacımimi",
     "hours": "Mo-Fr 08:00-22:00; Sa-Su 10:00-22:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": "https://kavacoffeeroasting.com/",
+    "phone": "+90 535 733 15 72",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -726,7 +828,10 @@
     "osm": "node/11335161041",
     "district": "Osmanağa Mahallesi",
     "hours": "Mo-Su 09:00-21:00",
-    "cuisine": "turkish;regional"
+    "cuisine": "turkish;regional",
+    "website": "http://www.fehmilokantasi.com/",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -747,7 +852,10 @@
     "osm": "node/11240964037",
     "district": "Caferağa Mahallesi",
     "hours": "Mo-Su 11:30-22:00",
-    "cuisine": "kebab;turkish"
+    "cuisine": "kebab;turkish",
+    "website": "http://tatarsalim.com.tr",
+    "phone": "+902165505656",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -768,7 +876,10 @@
     "osm": "way/694298359",
     "district": "Osmanağa Mahallesi",
     "hours": "Mo-We 12:00-22:30; Th 12:00-22:30; Fr 12:00-24:00; Sa 12:00-26:00; Su 12:00-23:30",
-    "cuisine": "turkish;kokorec;kokoreç"
+    "cuisine": "turkish;kokorec;kokoreç",
+    "website": null,
+    "phone": "+90 535 401 04 02",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -789,7 +900,10 @@
     "osm": "node/14135026501",
     "district": "Caferağa Mahallesi",
     "hours": "Mo-Su 09:00-22:30",
-    "cuisine": null
+    "cuisine": null,
+    "website": "http://kont.cafe",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -810,7 +924,10 @@
     "osm": "node/10074452417",
     "district": "Caferağa Mahallesi",
     "hours": "Tu-Su 08:00-18:00",
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -831,7 +948,10 @@
     "osm": "node/3079823142",
     "district": "Rüstempaşa Mahallesi",
     "hours": null,
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": "https://www.pandeli.com.tr/",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -852,7 +972,10 @@
     "osm": "node/3079823143",
     "district": "Rüstempaşa Mahallesi",
     "hours": null,
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": "https://www.babihayat.com/",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -873,7 +996,10 @@
     "osm": "node/8493543924",
     "district": "Beşiktaş",
     "hours": "Mo-Su 07:00-23:00",
-    "cuisine": "turkish;sushi"
+    "cuisine": "turkish;sushi",
+    "website": "https://www.shangri-la.com/tr/istanbul/shangrila/dining/restaurants/ist-too/",
+    "phone": "+90 212 275 88 88",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -894,7 +1020,10 @@
     "osm": "node/8493543925",
     "district": "Beşiktaş",
     "hours": "Mo-Su 12:00-15:00, 18:00-23:00",
-    "cuisine": "chinese"
+    "cuisine": "chinese",
+    "website": "https://www.shangri-la.com/istanbul/shangrila/dining/restaurants/shang-palace/",
+    "phone": "+90 212 275 88 88",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -915,7 +1044,10 @@
     "osm": "node/11912290229",
     "district": "Cihannüma Mahallesi",
     "hours": "Mo-Su 09:00-23:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": "https://www.blakcoffee.co",
+    "phone": "+905363540000",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -936,7 +1068,10 @@
     "osm": "node/10646969525",
     "district": "Beşiktaş",
     "hours": "07:00-01:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": "+90 212 703 1080",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -957,7 +1092,10 @@
     "osm": "node/12569326446",
     "district": "Mimar Sinan Mahallesi",
     "hours": "Mo-Su,PH 13:00-02:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -978,7 +1116,10 @@
     "osm": "node/14017781801",
     "district": "Aziz Mahmut Hüdayi Mahallesi",
     "hours": "Mo-Su 11:00-00:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": "+90 542 289 29 25",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -999,7 +1140,10 @@
     "osm": "way/928019617",
     "district": "Mimar Sinan Mahallesi",
     "hours": "Mo-Su,PH 07:00-01:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1020,7 +1164,10 @@
     "osm": "node/13011953213",
     "district": "Mimar Sinan Mahallesi",
     "hours": "Mo-Su 09:00-21:00",
-    "cuisine": "coffee_shop"
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": "+90 532 051 74 23",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1041,7 +1188,10 @@
     "osm": "node/4162021184",
     "district": "Ortaköy Mahallesi",
     "hours": null,
-    "cuisine": "regional"
+    "cuisine": "regional",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1062,7 +1212,10 @@
     "osm": "node/4162021185",
     "district": "Ortaköy Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1083,7 +1236,10 @@
     "osm": "node/7552360429",
     "district": "Bebek Mahallesi",
     "hours": "Mo-Su 09:00-02:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "midpoint.com.tr",
+    "phone": "+90 212 265 40 37",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1104,7 +1260,10 @@
     "osm": "node/7542070017",
     "district": "Bebek Mahallesi",
     "hours": "Mo-Su 09:00-00:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://tr-tr.facebook.com/",
+    "phone": "+90 212 287 56 07",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1125,7 +1284,10 @@
     "osm": "way/338831488",
     "district": "Kanlıca Mahallesi",
     "hours": "Mo-Su 09:00-23:30",
-    "cuisine": "burger;pizza;coffee_shop"
+    "cuisine": "burger;pizza;coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -1146,7 +1308,10 @@
     "osm": "node/12065302769",
     "district": "Merkez Mahallesi",
     "hours": "Mo-Su 08:00-22:30",
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1167,7 +1332,10 @@
     "osm": "node/13626628857",
     "district": "Çayırbaşı Mahallesi",
     "hours": null,
-    "cuisine": "turkish"
+    "cuisine": "turkish",
+    "website": "https://www.pideban.com.tr/",
+    "phone": "+90 212 242 1946",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1188,7 +1356,10 @@
     "osm": "node/4935862767",
     "district": "Nizam Mahallesi",
     "hours": "Mo-Su 10:00-00:00",
-    "cuisine": null
+    "cuisine": null,
+    "website": "yucetepe.com.tr",
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1209,7 +1380,10 @@
     "osm": "way/231458585",
     "district": "Maden Mahallesi",
     "hours": null,
-    "cuisine": "regional"
+    "cuisine": "regional",
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1230,7 +1404,10 @@
     "osm": "node/5047985026",
     "district": "Gümüşsuyu",
     "hours": "Mo-Su 07:30-23:00",
-    "cuisine": "turkish;breakfast;regional;coffee_shop"
+    "cuisine": "turkish;breakfast;regional;coffee_shop",
+    "website": "http://www.geziistanbul.com",
+    "phone": "+902122925358",
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1251,7 +1428,10 @@
     "osm": "relation/9463224",
     "district": "Salacak Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -1272,7 +1452,10 @@
     "osm": "relation/4429796",
     "district": "Salacak Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -1293,7 +1476,10 @@
     "osm": "node/13240477174",
     "district": "Üsküdar",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1314,7 +1500,10 @@
     "osm": "way/1311677944",
     "district": "Merkez Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1335,7 +1524,10 @@
     "osm": "way/23236783",
     "district": "Bereketzade Mahallesi",
     "hours": "09:00-20:30",
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://muze.gen.tr/muze-detay/galatakulesi",
+    "phone": "+90 212 293 81 80",
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -1356,7 +1548,10 @@
     "osm": "way/236464869",
     "district": "Caferağa Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
    },
    "geometry": {
     "type": "Point",
@@ -1377,7 +1572,10 @@
     "osm": "way/48962874",
     "district": "Kuruçeşme Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",
@@ -1398,7 +1596,10 @@
     "osm": "way/569310851",
     "district": "Emirgan Mahallesi",
     "hours": null,
-    "cuisine": null
+    "cuisine": null,
+    "website": "https://www.geziyerler.com/emirgan-korusu",
+    "phone": null,
+    "major": true
    },
    "geometry": {
     "type": "Point",

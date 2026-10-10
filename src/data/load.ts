@@ -7,9 +7,8 @@ import districtsUrl from '../../data/districts.geojson?url';
 import routesUrl from '../../data/routes.geojson?url';
 import linesUrl from '../../data/lines.json?url';
 import placesUrl from '../../data/places.geojson?url';
-import postsUrl from '../../data/posts.json?url';
 import landmarksUrl from '../../data/landmarks.geojson?url';
-import type { PlaceProps, RawPost } from '../places/types';
+import type { PlaceProps } from '../places/types';
 
 export interface BerthProps {
   id: string;
@@ -47,7 +46,6 @@ export const loadDistricts = () => getJson<FeatureCollection<Point, DistrictProp
 export const loadRoutes = () => getJson<FeatureCollection<LineString, RouteProps>>(routesUrl);
 export const loadLines = async () => (await getJson<{ lines: LineSpec[] }>(linesUrl)).lines;
 export const loadPlaces = () => getJson<FeatureCollection<Point, PlaceProps>>(placesUrl);
-export const loadPosts = async () => (await getJson<{ posts: RawPost[] }>(postsUrl)).posts;
 
 export interface LandmarkProps {
   id: string;

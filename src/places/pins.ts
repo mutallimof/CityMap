@@ -1,12 +1,14 @@
 import { Marker, type Map as MlMap } from 'maplibre-gl';
 import { CONFIG } from '../config';
-import type { PlacesStore } from './store';
+import { POI_ICON } from './poi-layer';
+import type { PlaceFilters, PlacesStore } from './store';
 import type { Place } from './types';
 
 export const CATEGORY_ICON: Record<string, string> = {
   food: '🍽',
   culture: '🎭',
   shopping: '🛍',
+  park: '🌳',
   view: '🌅',
 };
 
@@ -22,20 +24,20 @@ export const KIND_ICON: Record<string, string> = {
   mall: '🛍',
   bazaar: '🧺',
   viewpoint: '🌅',
+  ...POI_ICON,
 };
 
-export interface PinFilters {
-  categories: string[];
-  tonight: boolean;
+export interface PinFilters extends PlaceFilters {
   selectedId: string | null;
   golden: number;
   night: number;
+  nowMs: number;
 }
 
 /**
- * Snapchat-style place pins (DOM markers): a round bubble with the category icon, a gradient
- * "story ring" + glow when the place has fresh posts, a pulse when something is on now, a heart
- * for favourites, sunset spots that glow during golden hour. Visibility follows zoom + filters.
+ * Featured place pins (DOM markers): a round bubble with the kind icon, a green dot when open
+ * now (OSM opening hours), a heart for favourites, sunset spots that glow during golden hour.
+ * Zoomed out only well-known places show; visibility follows zoom + filters.
  */
 export class PlacePins {
   private els = new Map<string, HTMLElement>();
@@ -49,10 +51,10 @@ export class PlacePins {
     for (const p of store.places) {
       // MapLibre owns the root element's transform (positioning); visuals live on .pin__inner.
       const el = document.createElement('button');
-      el.className = `pin pin--${p.category}`;
+      el.className = `pin pin--${p.category}${p.major ? ' pin--major' : ''}`;
       el.type = 'button';
       el.setAttribute('aria-label', p.name);
-      el.innerHTML = `<span class="pin__inner"><span class="pin__ring"></span><span class="pin__bubble">${KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span><span class="pin__count"></span><span class="pin__fav">♥</span><span class="pin__tail"></span><span class="pin__label"></span></span>`;
+      el.innerHTML = `<span class="pin__inner"><span class="pin__ring"></span><span class="pin__bubble">${KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span><span class="pin__open"></span><span class="pin__fav">♥</span><span class="pin__tail"></span><span class="pin__label"></span></span>`;
       (el.querySelector('.pin__label') as HTMLElement).textContent = p.name;
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -101,33 +103,50 @@ export class PlacePins {
     root.classList.toggle('pins-labels', z >= CONFIG.places.labelZoom);
   }
 
-  /** Refresh classes from post state + filters (cheap; a few dozen elements). */
+  /** Refresh classes from filters + opening hours (cheap; a few dozen elements). */
   update(f: PinFilters): void {
     for (const p of this.store.places) {
       const el = this.els.get(p.id)!;
-      const s = this.store.state.get(p.id);
-      const visible = this.store.placeVisible(p.id, { categories: f.categories as never, tonight: f.tonight });
-      const fresh = (s?.newCount ?? 0) > 0;
-      el.classList.toggle('pin--hidden', !visible);
-      el.classList.toggle('pin--new', fresh);
-      el.classList.toggle('pin--live', !!s?.live);
-      el.classList.toggle('pin--soon', !!s?.soon && !s?.live);
-      el.classList.toggle('pin--tonight', f.tonight && !!s?.tonight);
-      el.classList.toggle('pin--fav', this.store.favourites.has(p.id));
-      el.classList.toggle('pin--selected', f.selectedId === p.id);
-      el.classList.toggle('pin--hot', fresh || !!s?.live || (p.category === 'view' && f.golden > 0.35));
-      el.classList.toggle('pin--golden', p.category === 'view' && f.golden > 0.35);
-      const count = el.querySelector('.pin__count') as HTMLElement;
-      count.textContent = (s?.newCount ?? 0) >= 2 ? String(s!.newCount) : '';
-      el.classList.toggle('pin--count', (s?.newCount ?? 0) >= 2);
-      el.style.zIndex = f.selectedId === p.id ? '5' : s?.live ? '3' : fresh ? '2' : '1';
+      const visible = this.store.visible(p.id, f, f.nowMs);
+      const open = this.store.open(p.id, f.nowMs).state === 'open';
       const fav = this.store.favourites.has(p.id);
-      this.priority.set(
-        p.id,
-        !visible ? -1 : (f.selectedId === p.id ? 100 : 0) + (s?.live ? 20 : 0) + (fav ? 12 : 0) + (s?.soon ? 8 : 0) + (fresh ? 6 : 0) + (p.category === 'view' ? 3 : 0) + (s?.posts.length ?? 0),
-      );
+      const golden = p.category === 'view' && f.golden > 0.35;
+      el.classList.toggle('pin--hidden', !visible);
+      el.classList.toggle('pin--open', open);
+      el.classList.toggle('pin--fav', fav);
+      el.classList.toggle('pin--selected', f.selectedId === p.id);
+      el.classList.toggle('pin--hot', golden);
+      el.classList.toggle('pin--golden', golden);
+      el.style.zIndex = f.selectedId === p.id ? '5' : p.major ? '2' : '1';
+      this.priority.set(p.id, !visible ? -1 : (f.selectedId === p.id ? 100 : 0) + (fav ? 12 : 0) + (p.major ? 8 : 0) + (golden ? 6 : 0) + (open ? 3 : 0));
     }
     this.map.getContainer().classList.toggle('pins-night', f.night > 0.5);
     this.declutter();
+  }
+}
+
+/** Pin for a selected map POI (they have no DOM pin of their own). */
+export class SelectedPlaceMarker {
+  private el = document.createElement('div');
+  private marker: Marker;
+  private id = '';
+  constructor(map: MlMap) {
+    this.el.className = 'pin pin--selected';
+    this.el.innerHTML = `<span class="pin__inner"><span class="pin__bubble"></span><span class="pin__tail"></span></span>`;
+    this.marker = new Marker({ element: this.el, anchor: 'bottom' }).setLngLat([0, 0]);
+    this.map = map;
+  }
+  private map: MlMap;
+  show(p: Place | null): void {
+    if (!p) {
+      if (this.id) this.marker.remove();
+      this.id = '';
+      return;
+    }
+    if (p.id === this.id) return;
+    this.id = p.id;
+    this.el.className = `pin pin--selected pin--${p.category}`;
+    (this.el.querySelector('.pin__bubble') as HTMLElement).textContent = KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category];
+    this.marker.setLngLat(p.lngLat).addTo(this.map);
   }
 }

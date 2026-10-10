@@ -144,7 +144,8 @@
   margin: 6px 2px;
   background: var(--panel-border);
 }
-.chip--tonight.chip--on { background: linear-gradient(135deg, #3b2a6e, #c25b84); color: #fff; }
+.chip__dot { width: 9px; height: 9px; border-radius: 50%; background: #34c27a; box-shadow: 0 0 6px rgba(52, 194, 122, 0.8); }
+.chip--open.chip--on { background: #1d7f4f; color: #fff; }
 
 /* ---- Time panel ---- */
 .timepanel {

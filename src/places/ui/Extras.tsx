@@ -8,33 +8,30 @@ import { formatWait, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { distanceM } from '../store';
-import { fetchWeather, weatherIcon, type Weather } from '../weather';
+import { weatherIcon } from '../weather';
+import { CATEGORY_ICON, KIND_ICON } from '../pins';
 import { flyTo, nearestPier, openPier, openPlace, places } from './context';
 
-/** Weather chip (Open-Meteo). Also steers the funnel smoke with the real wind. Hidden if offline. */
+const SEASON_ICON = { spring: '🌷', summer: '☀️', autumn: '🍂', winter: '❄️' } as const;
+
+/** Weather chip: live Open-Meteo conditions (or the ?weather= demo) + the season. Hidden if offline. */
 export function WeatherChip() {
   const t = useT();
-  const [w, setW] = useState<Weather | null>(null);
-  useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      const r = await fetchWeather();
-      if (!alive || !r) return;
-      setW(r);
-      const f = services().ferries;
-      f.wind = { toward: (r.windFrom + 180) % 360, ms: Math.max(0.5, Math.min(9, r.windKmh / 3.6)) };
-    };
-    void load();
-    const id = setInterval(load, CONFIG.weather.refreshMin * 60_000);
-    return () => ((alive = false), clearInterval(id));
-  }, []);
   useTicker(5000);
-  if (!w) return null;
-  const night = services().daylight.theme.night > 0.5;
+  const { weather, daylight } = services();
+  const [, force] = useState(0);
+  useEffect(() => weather.onChange(() => force((n) => n + 1)), [weather]);
+  const season = weather.season();
+  if (weather.source === 'offline' && !weather.demo.season) return null;
+  const c = weather.target;
+  const night = daylight.theme.night > 0.5;
+  const title = `${t('weather')} · ${t(('season_' + season) as 'season_spring')}${weather.source === 'live' ? ` · ${Math.round(c.windMs * 3.6)} km/h` : ''}`;
   return (
-    <span className="chip chip--weather" title={`${t('weather')} · ${Math.round(w.windKmh)} km/h`}>
-      <span aria-hidden>{weatherIcon(w.code, night)}</span>
-      <b>{Math.round(w.temperature)}°</b>
+    <span className="chip chip--weather" title={title}>
+      {weather.source !== 'offline' && <span aria-hidden>{weatherIcon(c.code, night)}</span>}
+      {weather.source === 'live' && c.tempC != null && <b>{Math.round(c.tempC)}°</b>}
+      <span aria-hidden>{SEASON_ICON[season]}</span>
+      {weather.source === 'demo' || weather.demo.season ? <small className="chip__demo">{t('demo')}</small> : null}
     </span>
   );
 }
@@ -133,7 +130,7 @@ export function NearbyPlaces({ pierId }: { pierId: string }) {
         {list.map(({ p, d }) => (
           <li key={p.id}>
             <button onClick={() => openPlace(p.id)}>
-              <span className={`post__icon post__icon--${p.category}`}>{p.category === 'view' ? '🌅' : p.category === 'food' ? '🍽' : p.category === 'culture' ? '🎭' : '🛍'}</span>
+              <span className={`picon picon--${p.category}`}>{KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span>
               <span className="nearby__name">{p.name}</span>
               <span className="muted">
                 🚶 {Math.max(1, Math.round(d / CONFIG.places.walkMPerMin))} {t('min')}

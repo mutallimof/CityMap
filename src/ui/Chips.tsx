@@ -5,10 +5,10 @@ const CATS: { id: Category; icon: string }[] = [
   { id: 'food', icon: '🍽' },
   { id: 'culture', icon: '🎭' },
   { id: 'shopping', icon: '🛍' },
-  { id: 'events', icon: '🎶' },
+  { id: 'park', icon: '🌳' },
 ];
 
-/** One scrollable chip row: map layers (Ferries, Routes) then place categories and Tonight. */
+/** One scrollable chip row: map layers (Ferries, Routes) then Open now and place categories. */
 export function Chips({ withCategories }: { withCategories: boolean }) {
   const t = useT();
   const s = useUi((x) => x);
@@ -25,6 +25,9 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
       {withCategories && (
         <>
           <span className="chips__sep" />
+          <button className={`chip chip--open ${s.openNow ? 'chip--on' : ''}`} aria-pressed={s.openNow} onClick={() => ui.set({ openNow: !s.openNow })}>
+            <span className="chip__dot" aria-hidden /> {t('openNowChip')}
+          </button>
           {CATS.map((c) => {
             const on = s.categories.includes(c.id);
             return (
@@ -33,9 +36,6 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
               </button>
             );
           })}
-          <button className={`chip chip--tonight ${s.tonight ? 'chip--on' : ''}`} aria-pressed={s.tonight} onClick={() => ui.set({ tonight: !s.tonight })}>
-            <span aria-hidden>✦</span> {t('tonight')}
-          </button>
         </>
       )}
     </nav>

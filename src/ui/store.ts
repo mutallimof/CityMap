@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 
 export type Lang = 'tr' | 'en';
 export type Selection = { kind: 'vessel'; id: string } | { kind: 'pier'; id: string } | { kind: 'place'; id: string } | null;
-export type Category = 'food' | 'culture' | 'shopping' | 'events';
+export type Category = 'food' | 'culture' | 'shopping' | 'park';
 export type SheetSnap = 'peek' | 'half' | 'full';
 
 export interface UiState {
@@ -14,7 +14,8 @@ export interface UiState {
   routes: boolean;
   /** Place categories shown on the map and in the feed (empty = all). */
   categories: Category[];
-  tonight: boolean;
+  /** Only places open right now (by their OSM opening hours). */
+  openNow: boolean;
   timePanel: boolean;
   hint: boolean;
   sheetSnap: SheetSnap;
@@ -57,7 +58,7 @@ export const ui = createStore<UiState>({
   ferries: true,
   routes: true,
   categories: [],
-  tonight: false,
+  openNow: false,
   timePanel: false,
   hint: true,
   sheetSnap: 'peek',
