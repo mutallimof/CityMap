@@ -14,6 +14,7 @@ import { toIstanbul } from './sim/time';
 import { fleetAt } from './sim/fleet';
 import { ClockController } from './app/clock';
 import { ArrowsLayer } from './ferries/arrows-layer';
+import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
   const r = document.documentElement.style;
@@ -31,9 +32,17 @@ async function boot() {
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
   const [, s, , n] = CONFIG.bounds;
   const network = buildNetwork(lines, routes, (s + n) / 2);
-  const getDay = cachedDays((day) => buildDaySchedule(network.inputs, day));
-  const colors = new Map(lines.map((l) => [l.id, l.color]));
   const clock = new ClockController();
+  // ?stress=40 → denser all-day timetable with at least 40 vessels on the water (perf testing).
+  const stress = Number(new URLSearchParams(location.search).get('stress'));
+  let inputs = network.inputs;
+  if (stress > 0) {
+    const r = stressInputs(network.inputs, stress, toIstanbul(clock.now()));
+    inputs = r.inputs;
+    console.info(`stress mode: ${stress} vessels → every line every ${r.headway} min`);
+  }
+  const getDay = cachedDays((day) => buildDaySchedule(inputs, day));
+  const colors = new Map(lines.map((l) => [l.id, l.color]));
 
   const ferries = new ArrowsLayer({
     poses: () => fleetAt(getDay, network.paths, toIstanbul(clock.now())),

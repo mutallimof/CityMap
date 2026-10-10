@@ -121,14 +121,8 @@
       "stops": [
         "eminonu",
         "besiktas",
-        "ortakoy",
-        "beylerbeyi",
-        "cengelkoy",
-        "arnavutkoy",
-        "bebek",
-        "anadolu-hisari",
+        "uskudar",
         "kanlica",
-        "emirgan",
         "sariyer",
         "rumeli-kavagi",
         "anadolu-kavagi"
@@ -136,14 +130,8 @@
       "berths": [
         "eminonu-bogaz",
         "besiktas-uskudar-bogaz",
-        "ortakoy-main",
-        "beylerbeyi-main",
-        "cengelkoy-main",
-        "arnavutkoy-main",
-        "bebek-main",
-        "anadolu-hisari-main",
+        "uskudar-main",
         "kanlica-main",
-        "emirgan-main",
         "sariyer-main",
         "rumeli-kavagi-main",
         "anadolu-kavagi-main"
@@ -154,13 +142,13 @@
         "last": "19:00",
         "headwayPeak": 30,
         "headwayOff": 45,
-        "dwellMin": 3,
-        "speedKmh": 26
+        "dwellMin": 5,
+        "speedKmh": 19
       },
       "simulated": true,
       "toCheck": [
-        "PROVISIONAL stop list/order (plan only says 'Eminönü → Anadolu Kavağı with stops'): zig-zags so every Bosphorus pier in the catalog is served.",
-        "Headways 30/45 min instead of 15–20/30 to keep the vessel count sane on a ~2 h one-way trip."
+        "Real Şehir Hatları long Bosphorus tour stop order (user, 2026-10-10); simulated headways 30/45 min. 19 km/h + 5 min dwells ≈ 1h53 one way, close to the real ~1h50.",
+        "Üsküdar: uses the main berth (node/6356616321)."
       ]
     },
     {

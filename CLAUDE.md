@@ -25,7 +25,7 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 ## Commands
 ```bash
 npm install
-npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · keys: ` panel, s speed, n now
+npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · ?stress=40 · keys: ` panel, s speed, n now
 npm test               # vitest
 npm run typecheck
 npm run build          # typecheck + production build → dist/
@@ -96,7 +96,11 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
   with a coast-hugging penalty (prefers mid-channel) → string pulling → clearance-safe Chaikin smoothing.
   Each leg leaves/enters its berth via an approach point ~160 m straight out to sea. Hand steering via `via`
   waypoints per leg. Validator = exact geometry (5 m sampling vs shoreline segments + point-in-land).
-- **Bosphorus line stop list is PROVISIONAL** (zig-zag through every Bosphorus pier, headway 30/45) — awaiting user.
+- **Bosphorus line = real long tour (user):** Eminönü → Beşiktaş → Üsküdar → Kanlıca → Sarıyer → Rumeli Kavağı →
+  Anadolu Kavağı; 19 km/h + 5 min dwells ≈ 1h53 one way; simulated headways 30/45. Other Bosphorus piers
+  stay on the map unserved for now. The two unsure berths stay as they are (user).
+- **`?stress=N`** (perf test): every line runs all day on the longest uniform headway giving ≥ N vessels now.
+- **Deploy:** `.github/workflows/deploy.yml` builds `phase-0` with `BASE=/<repo>/` and deploys to GitHub Pages.
 - **Rendering (step 2):** Three.js in a MapLibre custom layer, one InstancedMesh; geometry in local metres
   around `camera.center`, float64 matrix on the CPU (no GPU jitter). Heading = path tangent averaged ±15 m,
   then per-vessel exponential smoothing (`ferries.headingTau`). Vessels grow in/out while docked.
