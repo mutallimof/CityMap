@@ -81,6 +81,99 @@ export const CONFIG = {
     labelHaloNight: '#141A24',
   },
 
+  /**
+   * The city from OpenStreetMap (OpenFreeMap vector tiles, OpenMapTiles schema), in our own palette.
+   * Palettes blend day → golden → night like the base palette; seasons tint vegetation; weather
+   * (wet / snow / overcast) is applied on top in src/map/city-look.ts.
+   */
+  city: {
+    tiles: 'https://tiles.openfreemap.org/planet',
+    glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
+    font: ['Noto Sans Regular'],
+    fontBold: ['Noto Sans Bold'],
+    /** Pastel neighbourhoods: residential areas pick one of these by feature id. */
+    residentialOpacity: 0.75,
+    /** 3D buildings fade in between these zooms. */
+    buildingsFrom: [14.6, 15.4] as [number, number],
+    buildingOpacity: 0.92,
+    /** Minimum extrusion (m) for buildings without a height. */
+    buildingMinHeight: 6,
+    /** Street names from this zoom. */
+    streetLabelsFrom: 15.4,
+    /** Landmark names (towers, bridges) from this zoom. */
+    landmarkLabelsFrom: 12.2,
+    day: {
+      residential: ['#F7DDD3', '#F9E5CA', '#ECE0F1', '#DCEEDD', '#F8EAC4'],
+      commercial: '#F8D8C6',
+      industrial: '#E9E1D5',
+      institutional: '#ECDDF2',
+      hospital: '#F8D6DC',
+      cemetery: '#CDE2C0',
+      pitch: '#B6E2AB',
+      grass: '#BEE3A2',
+      park: '#B2DD96',
+      wood: '#92CB85',
+      sand: '#F7E3AA',
+      farmland: '#E5ECB7',
+      wetland: '#BDE1CF',
+      road: '#FFFDF7',
+      roadCasing: '#E2D1B8',
+      roadMajor: '#F6D489',
+      roadMajorCasing: '#D8AC5B',
+      path: '#FFFFFF',
+      rail: '#CBBDAB',
+      buildings: ['#FCEAD6', '#F8D3CB', '#FBE1B9', '#D6EAD0', '#E2D6F0', '#FFE6BF', '#D3E4EF'],
+      landmark: '#F3C468',
+      bridge: '#F2BF52',
+      streetLabel: '#7A6550',
+      streetHalo: '#FFF8EC',
+    },
+    night: {
+      residential: ['#262C3B', '#2A2C3A', '#252B3D', '#232E39', '#2A2D38'],
+      commercial: '#2C2C3A',
+      industrial: '#22262F',
+      institutional: '#28293B',
+      hospital: '#2D2A38',
+      cemetery: '#1D2A29',
+      pitch: '#1F2F2C',
+      grass: '#1F2E2B',
+      park: '#1E302A',
+      wood: '#1A2A26',
+      sand: '#302E2B',
+      farmland: '#252B26',
+      wetland: '#1C2B2E',
+      road: '#3B4357',
+      roadCasing: '#191E2A',
+      roadMajor: '#9A7640',
+      roadMajorCasing: '#3E3322',
+      path: '#323A4C',
+      rail: '#30364A',
+      buildings: ['#30374A', '#33364A', '#2E364A', '#2F3946', '#343449', '#323848', '#2D3747'],
+      landmark: '#F0BE68',
+      bridge: '#FFC870',
+      streetLabel: '#C9BFAE',
+      streetHalo: '#141A24',
+    },
+    /** Warm cast over everything at golden hour. */
+    goldenTint: '#F4C9A0',
+    goldenTintAmount: 0.22,
+    /** Vegetation by season (day colours; night palette stays dark). */
+    seasons: {
+      spring: { grass: '#C4E9A2', park: '#B9E39A', wood: '#9AD38B', blossom: ['#C77DD8', '#F2A6C9', '#E58FB8'] },
+      summer: { grass: '#B0DD8B', park: '#A7D886', wood: '#80C274', blossom: [] as string[] },
+      autumn: { grass: '#D3DA98', park: '#CBD58C', wood: '#E3B271', blossom: ['#E8692F', '#F2A23A', '#C9472E'] },
+      winter: { grass: '#9DC59A', park: '#97C294', wood: '#5C9A78', blossom: [] as string[] },
+    },
+    /** Spring tulips in Emirgan Korusu (red / yellow / pink / white dots). */
+    tulips: ['#E8344A', '#F7C531', '#F57FB0', '#FFFFFF', '#E8344A', '#FF8A3D'],
+    /** Lit windows on buildings at night. */
+    windowLit: ['#FFC66B', '#FFD58A', '#FFB65C', '#FFE2A8'],
+    windowDark: '#2A3142',
+    windowFacade: '#30374A',
+    /** Share of windows lit at night (0–1). */
+    windowLitShare: 0.42,
+  },
+
   shore: {
     highlightWidth: [1, 2] as [number, number],
     innerShadowWidth: [4, 22] as [number, number],
@@ -134,7 +227,7 @@ export const CONFIG = {
     /** Real distance of berth points off the coastline (must match scripts/build-piers.ts). */
     berthOffsetM: 30,
     /** Gentle roll/pitch/heave (degrees, seconds, metres at real scale); calmer when docked. */
-    bob: { rollDeg: 1.6, rollPeriodS: 5.5, pitchDeg: 0.9, pitchPeriodS: 7.3, heaveM: 0.25, dockedFactor: 0.45 },
+    bob: { rollDeg: 1.6, rollPeriodS: 5.5, pitchDeg: 0.9, pitchPeriodS: 7.3, heaveM: 0.25, dockedFactor: 0.45, windFactor: 2.2 },
     /** Settle bump on arrival: damped surge + pitch (real seconds). */
     bump: { surgeM: 1.6, pitchDeg: 1.4, periodS: 1.7, decayS: 1.1 },
     /** Soft contact shadow under the hull: size as multiples of (beam, length). */
@@ -295,8 +388,42 @@ export const CONFIG = {
 
   weather: {
     /** Open-Meteo (free, no key). Refresh interval in minutes. */
-    url: 'https://api.open-meteo.com/v1/forecast?latitude=41.02&longitude=29.0&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Europe%2FIstanbul',
+    url: 'https://api.open-meteo.com/v1/forecast?latitude=41.02&longitude=29.0&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,cloud_cover,precipitation,visibility&wind_speed_unit=ms&timezone=Europe%2FIstanbul',
     refreshMin: 15,
+    /** Seconds (real time) for the scene to ease into new conditions. */
+    easeS: 4,
+    /** Colours the scene drifts towards under each condition (day / night). */
+    snowDay: '#F4F7FB',
+    snowNight: '#55607A',
+    wetRoadDay: '#A9B0B8',
+    wetRoadNight: '#4E5A70',
+    overcastSky: '#B9C3C9',
+    rainSky: '#8E9CA6',
+    fogColor: '#E4EAEC',
+    fogNight: '#2B3644',
+    /** How much each condition changes the look (0–1). */
+    snowCover: 0.78,
+    wetDarken: 0.14,
+    overcastDesat: 0.32,
+    /** Rain / snow particles (screen-space quads) at full intensity; scaled by quality tier. */
+    rainDrops: 1400,
+    snowFlakes: 900,
+    /** Rain streak length / width (CSS px) and fall speed (screen heights per second). */
+    rainLengthPx: 22,
+    rainWidthPx: 1.3,
+    rainSpeed: 1.6,
+    rainColor: '#DDE8F0',
+    rainAlpha: 0.5,
+    snowSizePx: 4.5,
+    snowSpeed: 0.12,
+    /** Fog banks: drifting noise over the map, metres per noise cell and drift speed (m/s). */
+    fogCellM: 900,
+    fogDriftMs: 9,
+    fogAlpha: 0.9,
+    /** Ferry fading in fog: distance (m) from the view centre where vessels are fully hidden. */
+    fogHideM: 2600,
+    /** Lightning flashes during storms: mean seconds between flashes. */
+    lightningEveryS: 9,
   },
 
   perf: {

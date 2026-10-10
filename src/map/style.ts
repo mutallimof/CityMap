@@ -31,6 +31,7 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
   const s = CONFIG.shore;
   return {
     version: 8,
+    glyphs: CONFIG.city.glyphs,
     sources: {
       [SOURCE.land]: { type: 'geojson', data: EMPTY(), attribution: '© OpenStreetMap contributors' },
       [SOURCE.shore]: { type: 'geojson', data: EMPTY() },

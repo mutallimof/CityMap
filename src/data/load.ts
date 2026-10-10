@@ -1,4 +1,4 @@
-import type { FeatureCollection, LineString, MultiPolygon, Point, Polygon } from 'geojson';
+import type { FeatureCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon } from 'geojson';
 import type { RouteProps } from '../sim/network';
 import type { LineSpec } from '../sim/types';
 import landUrl from '../../data/land.geojson?url';
@@ -8,6 +8,7 @@ import routesUrl from '../../data/routes.geojson?url';
 import linesUrl from '../../data/lines.json?url';
 import placesUrl from '../../data/places.geojson?url';
 import postsUrl from '../../data/posts.json?url';
+import landmarksUrl from '../../data/landmarks.geojson?url';
 import type { PlaceProps, RawPost } from '../places/types';
 
 export interface BerthProps {
@@ -47,3 +48,14 @@ export const loadRoutes = () => getJson<FeatureCollection<LineString, RouteProps
 export const loadLines = async () => (await getJson<{ lines: LineSpec[] }>(linesUrl)).lines;
 export const loadPlaces = () => getJson<FeatureCollection<Point, PlaceProps>>(placesUrl);
 export const loadPosts = async () => (await getJson<{ posts: RawPost[] }>(postsUrl)).posts;
+
+export interface LandmarkProps {
+  id: string;
+  name?: string;
+  nameEn?: string;
+  kind: 'tower' | 'bridge' | 'tulips' | 'bridge-line';
+  osm?: string;
+  building?: number | null;
+  landcover?: number | null;
+}
+export const loadLandmarks = () => getJson<FeatureCollection<Point | MultiLineString, LandmarkProps>>(landmarksUrl);

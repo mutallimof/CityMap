@@ -6,14 +6,16 @@ import { buildStyle, SOURCE } from './style';
 import { initialCamera } from './intro';
 import { shorelineFromLand } from './shoreline';
 import { addLabels, bindLabelZoomClasses } from './labels';
-import { loadDistricts, loadLand, loadPiers, type PierProps } from '../data/load';
+import { loadDistricts, loadLand, loadLandmarks, loadPiers, type PierProps } from '../data/load';
+import { addCity } from './city-setup';
+import type { CityLook } from './city';
 import type { FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson';
 
 // MapLibre resolves its worker relative to its own module, which breaks under
 // Vite's dep pre-bundling; point it at the emitted asset explicitly.
 setWorkerUrl(workerUrl);
 
-export async function createMap(container: HTMLElement, withIntro = false): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps>; land: FeatureCollection<Polygon | MultiPolygon> }> {
+export async function createMap(container: HTMLElement, withIntro = false): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps>; land: FeatureCollection<Polygon | MultiPolygon>; city: CityLook }> {
   const [w, s, e, n] = CONFIG.bounds;
   const pad = CONFIG.camera.boundsPadding;
   const map = new MlMap({
@@ -30,10 +32,11 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
     fadeDuration: 0,
   });
 
-  const [land, piers, districts] = await Promise.all([
+  const [land, piers, districts, landmarks] = await Promise.all([
     loadLand(),
     loadPiers(),
     loadDistricts(),
+    loadLandmarks(),
     new Promise<void>((resolve) => map.once('load', () => resolve())),
   ]);
 
@@ -41,9 +44,10 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
   (map.getSource(SOURCE.shore) as GeoJSONSource).setData(shorelineFromLand(land, CONFIG.bounds));
   (map.getSource(SOURCE.piers) as GeoJSONSource).setData(piers);
 
+  const city = addCity(map, landmarks);
   addLabels(map, 'district', districts);
   addLabels(map, 'pier', piers);
   bindLabelZoomClasses(map);
 
-  return { map, piers, land };
+  return { map, piers, land, city };
 }

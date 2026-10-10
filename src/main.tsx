@@ -16,6 +16,8 @@ import { VapurLayer } from './ferries/vapur-layer';
 import { WaterLayer } from './water/water-layer';
 import { LAYER, SOURCE } from './map/style';
 import { DaylightController } from './app/daylight';
+import { WeatherController } from './weather/controller';
+import { WeatherLayer } from './weather/weather-layer';
 import { prefersReducedMotion } from './app/motion';
 import { startAdaptiveQuality } from './app/perf';
 import { hideLoader, playIntro } from './map/intro';
@@ -57,7 +59,7 @@ async function boot() {
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
   const deep = parseDeepLink();
   const intro = withIntro && !deep;
-  const [{ map, piers, land }, lines, routes, placeData, posts] = await Promise.all([
+  const [{ map, piers, land, city }, lines, routes, placeData, posts] = await Promise.all([
     createMap(container, intro),
     loadLines(),
     loadRoutes(),
@@ -91,7 +93,12 @@ async function boot() {
   const water = new WaterLayer(land);
   map.addLayer(water, LAYER.land);
   map.addLayer(ferries);
-  const daylight = new DaylightController({ map, water, ferries, clock });
+  const weather = new WeatherController(() => clock.now());
+  const weatherLayer = new WeatherLayer();
+  weatherLayer.reduceMotion = reduced;
+  map.addLayer(weatherLayer);
+  weather.start();
+  const daylight = new DaylightController({ map, water, ferries, clock, city, weather, weatherLayer });
   daylight.start();
 
   water.motion = reduced ? 0.25 : 1;
@@ -143,7 +150,7 @@ async function boot() {
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city });
 }
 
 boot().catch((err) => {

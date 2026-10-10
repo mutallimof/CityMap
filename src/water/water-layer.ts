@@ -28,6 +28,8 @@ const FS = /* glsl */ `
   uniform vec2 uSunDir;   // ground direction towards the sun (local xy, unit)
   uniform vec2 uCentre;   // view centre in local metres
   uniform float uViewR;   // rough view radius (m)
+  uniform float uRain;    // 0–1 rain-drop rings
+  uniform float uChop;    // 0–1 wind-driven roughness
   varying vec2 vUv;
   varying vec2 vPos;
 
@@ -45,10 +47,16 @@ const FS = /* glsl */ `
     vec3 col = mix(uShallow, uDeep, smoothstep(0.0, 0.85, d));
     // Slow ripples: two drifting noise octaves modulate brightness.
     vec2 p = vPos * 0.0035;
-    float r1 = noise(p * 2.0 + vec2(t * 0.020, t * 0.012));
-    float r2 = noise(p * 5.3 - vec2(t * 0.031, -t * 0.018));
+    float tc = t * (1.0 + uChop * 2.5);
+    float r1 = noise(p * 2.0 + vec2(tc * 0.020, tc * 0.012));
+    float r2 = noise(p * 5.3 - vec2(tc * 0.031, -tc * 0.018));
+    float r3 = noise(p * 13.0 + vec2(tc * 0.07, tc * 0.05));
     float ripple = r1 * 0.6 + r2 * 0.4;
-    col *= 0.93 + ripple * 0.14;
+    float amp = 0.14 + uChop * 0.22;
+    col *= 1.0 - amp * 0.5 + (ripple * (1.0 - uChop * 0.4) + r3 * uChop * 0.4) * amp;
+    // Wind: whitecaps on the open water.
+    float caps = smoothstep(0.80, 0.9, r3 * 0.55 + r2 * 0.45) * uChop * smoothstep(0.1, 0.4, d);
+    col = mix(col, vec3(0.93, 0.97, 0.98) * (1.0 - uNight * 0.7), caps * 0.55);
     // Sparkle: small glints at a constant on-screen size. The noise scale follows metres-per-pixel
     // in octaves, blending neighbours so glints neither grow into blobs nor pop when zooming.
     float mpp = max(length(fwidth(vPos)), 0.05);
@@ -63,6 +71,25 @@ const FS = /* glsl */ `
     float g = mix(g0, g1, fr);
     float sunSide = 0.35 + 0.65 * smoothstep(-0.6, 1.0, dot(normalize(vPos - uCentre + 1e-3), uSunDir) * clamp(length(vPos - uCentre) / uViewR, 0.0, 1.0) * 2.0);
     col += uSunColor * smoothstep(0.6, 0.72, g) * uSparkle * sunSide * smoothstep(0.02, 0.15, d);
+    // Rain: drop rings at a constant on-screen size (same octave trick as the glints).
+    if (uRain > 0.001) {
+      float rings = 0.0;
+      for (int k = 0; k < 2; k++) {
+        float cell = exp2(l0 + float(k)) * 20.0;
+        vec2 q = vPos / cell;
+        vec2 id = floor(q);
+        vec2 f = fract(q) - 0.5;
+        float h = hash(id);
+        vec2 off = vec2(hash(id + 7.3), hash(id + 1.9)) - 0.5;
+        float ph = fract(t * (0.9 + h * 0.6) + h * 7.0);
+        float rad = ph * 0.42;
+        float dd = length(f - off * 0.3);
+        float ring = smoothstep(0.05, 0.0, abs(dd - rad)) * (1.0 - ph) * step(h, uRain * 0.9);
+        rings += ring * (k == 0 ? 1.0 - fr : fr);
+      }
+      col += vec3(0.75, 0.85, 0.9) * rings * 0.26 * (1.0 - uNight * 0.5);
+      col *= 1.0 - uRain * 0.12;
+    }
     // Night: warm city lights reflected along the shore, gently flickering.
     // Thin and patchy: lit quays and windows, not a continuous band.
     float shore = 1.0 - smoothstep(0.0, 0.045, d);
@@ -81,6 +108,8 @@ export interface WaterUniforms {
   sparkle: number;
   sunColor: string;
   sunAzimuth: number;
+  rain?: number;
+  chop?: number;
 }
 
 /**
@@ -130,6 +159,8 @@ export class WaterLayer implements CustomLayerInterface {
         uSunDir: { value: new THREE.Vector2(0, -1) },
         uCentre: { value: new THREE.Vector2() },
         uViewR: { value: 5000 },
+        uRain: { value: 0 },
+        uChop: { value: 0 },
       },
       depthTest: false,
       depthWrite: false,
@@ -163,6 +194,8 @@ export class WaterLayer implements CustomLayerInterface {
     m.uSunColor.value.set(u.sunColor);
     const a = (u.sunAzimuth * Math.PI) / 180;
     m.uSunDir.value.set(Math.sin(a), Math.cos(a));
+    m.uRain.value = u.rain ?? 0;
+    m.uChop.value = u.chop ?? 0;
   }
 
   render(_gl: WebGLRenderingContext | WebGL2RenderingContext, args: CustomRenderMethodInput): void {

@@ -103,6 +103,10 @@ export class VapurLayer implements CustomLayerInterface {
   /** Reduce-motion: no bob/bump/gulls, calmer smoke. */
   reduceMotion = false;
   /** Wind for the funnel smoke (bearing it blows towards, m/s); live weather overrides config. */
+  /** 0–1 wind-driven sea state: more rocking. Set by the day/night + weather controller. */
+  sea = 0;
+  /** 0–1 fog: dims nav lights and reflections (the fog sheet covers the hulls). */
+  fog = 0;
   wind = { toward: CONFIG.smoke.windToward as number, ms: CONFIG.smoke.windMs as number };
   /** User location (from "nearest pier"), unused by rendering for now. */
   userLocation: [number, number] | null = null;
@@ -264,7 +268,7 @@ export class VapurLayer implements CustomLayerInterface {
 
       // Bob: gentle roll/pitch, per-ship phase, calmer when docked.
       const ph = hash01(id) * Math.PI * 2;
-      const calm = this.reduceMotion ? 0 : v.state.phase === 'docked' ? f.bob.dockedFactor : 1;
+      const calm = (this.reduceMotion ? 0 : v.state.phase === 'docked' ? f.bob.dockedFactor : 1) * (1 + this.sea * f.bob.windFactor);
       const roll = f.bob.rollDeg * calm * Math.sin((2 * Math.PI * tReal) / f.bob.rollPeriodS + ph);
       const pitch = f.bob.pitchDeg * calm * Math.sin((2 * Math.PI * tReal) / f.bob.pitchPeriodS + ph * 1.7) + f.bump.pitchDeg * bump;
       const [fx, fy] = unitFromBearing(heading);
@@ -353,7 +357,7 @@ export class VapurLayer implements CustomLayerInterface {
   /** Port (red), starboard (green) and masthead (white) lights, from the hull's model matrix. */
   private pushLights(m: THREE.Matrix4, grow: number): void {
     const a = this.anchors;
-    const alpha = this.night * grow;
+    const alpha = this.night * grow * (1 - this.fog * 0.5);
     const size = CONFIG.nightLights.sizeM;
     for (const [anchor, col] of [
       [a.port, this.cRed],

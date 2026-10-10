@@ -17,7 +17,8 @@
     "validate:routes": "tsx scripts/validate-routes.ts",
     "data:fetch-places": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-places.ts",
     "data:places": "tsx scripts/build-places.ts",
-    "data:piers": "tsx scripts/build-piers.ts"
+    "data:piers": "tsx scripts/build-piers.ts",
+    "data:landmarks": "NODE_USE_ENV_PROXY=1 tsx scripts/build-landmarks.ts"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@geo-maps/earth-lands-10m": "^0.6.0",
+    "@mapbox/vector-tile": "^3.0.0",
     "@turf/turf": "^7.4.0",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.5",
@@ -36,6 +38,7 @@
     "@types/shapefile": "^0.6.4",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "pbf": "^5.1.2",
     "shapefile": "^0.6.6",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",

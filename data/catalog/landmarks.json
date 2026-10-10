@@ -1,0 +1,13 @@
+{
+  "_comment": "Landmarks highlighted on the map. Names only — geometry comes from OpenFreeMap (OSM) vector tiles via scripts/build-landmarks.ts. `near` = pier id whose surroundings are scanned.",
+  "landmarks": [
+    { "id": "galata-tower", "name": "Galata Kulesi", "nameEn": "Galata Tower", "kind": "tower", "layer": "poi", "match": "Galata Kulesi", "near": "karakoy" },
+    { "id": "maidens-tower", "name": "Kız Kulesi", "nameEn": "Maiden's Tower", "kind": "tower", "layer": "poi", "match": "Kız Kulesi", "class": "attraction", "near": "uskudar" },
+    { "id": "galata-bridge", "name": "Galata Köprüsü", "nameEn": "Galata Bridge", "kind": "bridge", "layer": "transportation_name", "match": "Galata Köprüsü", "near": "eminonu" },
+    { "id": "ataturk-bridge", "name": "Atatürk Köprüsü", "nameEn": "Atatürk Bridge", "kind": "bridge", "layer": "transportation_name", "match": "Atatürk Köprüsü", "near": "karakoy" },
+    { "id": "bosphorus-bridge", "name": "15 Temmuz Şehitler Köprüsü", "nameEn": "Bosphorus Bridge", "kind": "bridge", "layer": "transportation_name", "match": "15 Temmuz Şehitler Köprüsü", "near": "ortakoy" },
+    { "id": "fsm-bridge", "name": "Fatih Sultan Mehmet Köprüsü", "nameEn": "Fatih Sultan Mehmet Bridge", "kind": "bridge", "layer": "transportation_name", "match": "Fatih Sultan Mehmet Köprüsü", "near": "anadolu-hisari" },
+    { "id": "yss-bridge", "name": "Yavuz Sultan Selim Köprüsü", "nameEn": "Yavuz Sultan Selim Bridge", "kind": "bridge", "layer": "transportation_name", "match": "Yavuz Sultan Selim Köprüsü", "near": "rumeli-kavagi", "radius": 3 },
+    { "id": "emirgan-park", "name": "Emirgan Korusu", "nameEn": "Emirgan Grove", "kind": "tulips", "layer": "poi", "match": "Emirgan Korusu", "near": "emirgan" }
+  ]
+}

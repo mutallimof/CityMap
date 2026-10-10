@@ -48,3 +48,16 @@ export function themeAt(elevation: number): Theme {
   const lit = mixPalette(day, sunset, golden * 0.85);
   return { night, golden, palette: mixPalette(lit, nightP, night) };
 }
+
+/** Pull a colour towards its own grey (Rec. 601 luma) by t. */
+export function desaturate(hex: string, t: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  const y = 0.299 * r + 0.587 * g + 0.114 * b;
+  return rgbToHex([r + (y - r) * t, g + (y - g) * t, b + (y - b) * t]);
+}
+
+/** Multiply brightness by (1 − t). */
+export function darken(hex: string, t: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex([r * (1 - t), g * (1 - t), b * (1 - t)]);
+}
