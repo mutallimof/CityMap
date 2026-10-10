@@ -16,7 +16,7 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 
 ## Build steps (plan §4.9)
 1. ✅ Skeleton: Vite, MapLibre custom land/water style, coastline pipeline, piers, debug fps panel.
-2. Simulation: `sim/` + unit tests, routes + validator, ferries as arrows.
+2. Simulation: ✅ `sim/` + unit tests · ⏳ routes + validator, ferries as arrows (blocked on pier data).
 3. Vapur looks: 3D model, heading smoothing, wake, bob, docking.
 4. Water + time: water shader, day/night, night lights, intro fly-in, seagulls.
 5. Interactions: sheets, follow, layer chips, time controls, TR/EN.
@@ -68,4 +68,14 @@ npm run data:piers       # → data/piers.geojson, data/districts.geojson (from 
 - **MapLibre 6 worker:** set explicitly via `setWorkerUrl(…maplibre-gl-worker.mjs?url)`; Vite's dep
   pre-bundling otherwise breaks MapLibre's relative worker URL.
 - **React not mounted yet** — installed, but arrives with the UI sheets (step 5); step 1 has no UI to own.
+- **Sim model (`src/sim`, pure).** Day schedule = f(lines, leg lengths, service day); state = f(schedule, t).
+  Each line's origin departures follow peak/off-peak headways; a vessel sails out, dwells at every stop,
+  turns at the terminus after one dwell, sails back, and is reused for the next origin departure
+  (most-recently-freed first). Idle > `maxLayoverMin` → vessel leaves service; vessels appear/retire
+  **docked** (render layer fades them) so nothing teleports. Leg motion: raised-cosine ease-in/out over
+  `rampSeconds` (velocity and acceleration continuous); short legs lower peak speed instead of skipping ramps.
+  Times are seconds since Istanbul local midnight; late trips (> 24:00) belong to the previous service day.
+  Sim knows only leg lengths — mapping distance → coordinates/heading comes with routes.
+- **Pier data still blocked (2026-10-10).** download.geofabrik.de resets TLS like overpass-api.de; the
+  private.coffee mirror answers HTTP 500 to every request. osmdata.openstreetmap.de works (coastline).
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.

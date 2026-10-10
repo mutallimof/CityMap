@@ -77,6 +77,27 @@ export const CONFIG = {
     fontFamily: "'Nunito', system-ui, sans-serif",
   },
 
+  /** Simulation tunables (pure-function inputs; see src/sim). */
+  sim: {
+    /** Europe/Istanbul is UTC+3 all year (no DST since 2016). */
+    utcOffsetHours: 3,
+    /** Ease-in / ease-out duration when leaving / approaching a pier (s). */
+    rampSeconds: 60,
+    /** Peak windows (Istanbul local time) where headwayPeak applies. */
+    peakWindows: [
+      ['07:00', '10:00'],
+      ['17:00', '20:00'],
+    ] as [string, string][],
+    /** A vessel entering service appears docked this long before its first departure (min). */
+    spawnLeadMin: 6,
+    /** After its last arrival a vessel stays docked this long, then leaves service (min). */
+    retireAfterMin: 10,
+    /** A vessel idle at the origin longer than this leaves service instead of waiting (min). */
+    maxLayoverMin: 45,
+    /** Speed multipliers offered by the time controls. */
+    speeds: [1, 10, 60],
+  },
+
   debug: {
     /** Show the debug panel by default in dev builds (toggle with ?debug=0/1 or the ` key). */
     enabledInDev: true,
