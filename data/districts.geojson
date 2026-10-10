@@ -1,1 +1,197 @@
-{"type":"FeatureCollection","features":[]}
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "eminonu",
+    "name": "Eminönü",
+    "nameEn": "Eminönü",
+    "osm": "node/6310508017"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.971015,
+     41.017536
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "beyoglu",
+    "name": "Beyoğlu",
+    "nameEn": "Beyoğlu",
+    "osm": "relation/1765892"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.973681,
+     41.028423
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "besiktas",
+    "name": "Beşiktaş",
+    "nameEn": "Beşiktaş",
+    "osm": "relation/1765893"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.007528,
+     41.042847
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ortakoy",
+    "name": "Ortaköy",
+    "nameEn": "Ortaköy",
+    "osm": "relation/9335689"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.02819,
+     41.054627
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bebek",
+    "name": "Bebek",
+    "nameEn": "Bebek",
+    "osm": "relation/9343684"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.043959,
+     41.079016
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sariyer",
+    "name": "Sarıyer",
+    "nameEn": "Sarıyer",
+    "osm": "relation/1765895"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.057262,
+     41.16858
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uskudar",
+    "name": "Üsküdar",
+    "nameEn": "Üsküdar",
+    "osm": "relation/1276889"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.015132,
+     41.02655
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kadikoy",
+    "name": "Kadıköy",
+    "nameEn": "Kadıköy",
+    "osm": "relation/1276548"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.024563,
+     40.991295
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "beykoz",
+    "name": "Beykoz",
+    "nameEn": "Beykoz",
+    "osm": "relation/1276910"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.092038,
+     41.1343
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bostanci",
+    "name": "Bostancı",
+    "nameEn": "Bostancı",
+    "osm": "relation/9286607"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.096805,
+     40.958168
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "buyukada",
+    "name": "Büyükada",
+    "nameEn": "Büyükada",
+    "osm": "relation/7590784"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.119037,
+     40.856355
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "heybeliada",
+    "name": "Heybeliada",
+    "nameEn": "Heybeliada",
+    "osm": "relation/9460395"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.099268,
+     40.877412
+    ]
+   }
+  }
+ ]
+}

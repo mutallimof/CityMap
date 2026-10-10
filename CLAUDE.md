@@ -36,8 +36,9 @@ npm run preview        # serve dist/
 curl -o data/raw/lp.zip https://osmdata.openstreetmap.de/download/land-polygons-split-4326.zip \
   && unzip -q data/raw/lp.zip -d data/raw && rm data/raw/lp.zip
 npm run data:coastline   # → data/land.geojson (land-polygons > overpass > coarse npm fallback)
+npm run data:fetch-nominatim  # Nominatim (≤1 req/s) → data/raw/nominatim-istanbul.json — current pier/district source
 npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
-npm run data:piers       # → data/piers.geojson, data/districts.geojson (from catalog + OSM)
+npm run data:piers       # → data/piers.geojson, data/districts.geojson (from catalog + OSM); --verbose lists candidates
 ```
 
 ## Conventions
@@ -76,6 +77,10 @@ npm run data:piers       # → data/piers.geojson, data/districts.geojson (from 
   `rampSeconds` (velocity and acceleration continuous); short legs lower peak speed instead of skipping ramps.
   Times are seconds since Istanbul local midnight; late trips (> 24:00) belong to the previous service day.
   Sim knows only leg lengths — mapping distance → coordinates/heading comes with routes.
-- **Pier data still blocked (2026-10-10).** download.geofabrik.de resets TLS like overpass-api.de; the
-  private.coffee mirror answers HTTP 500 to every request. osmdata.openstreetmap.de works (coastline).
+- **Pier/district source = Nominatim (2026-10-10).** Geofabrik and overpass-api.de reset TLS, private.coffee
+  and maps.mail.ru answer 500/504, overpass.osm.jp has an expired cert. Nominatim works: per pier
+  "<name> iskelesi" + "ferry terminal near <name>", per district "<name>"; 1.1 s between requests.
+  Candidates are pooled per catalog entry (terminals name berths after their *destination*, e.g. Kadıköy's
+  "Kabataş İskelesi"), berths mentioning another catalog pier are penalised, and picks with plausible
+  candidates > 1 km away are flagged. Districts accept admin boundaries (Nominatim gives the admin centre).
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.

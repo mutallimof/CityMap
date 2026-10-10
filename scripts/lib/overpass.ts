@@ -16,6 +16,7 @@ export interface OverpassResponse {
 }
 
 export const RAW_OVERPASS = 'data/raw/overpass-istanbul.json';
+export const RAW_NOMINATIM = 'data/raw/nominatim-istanbul.json';
 
 /** Representative point: node position, else average of way/relation geometry. */
 export function elementPoint(el: OverpassElement): [number, number] | null {

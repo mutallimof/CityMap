@@ -34,6 +34,24 @@ describe('matchPier', () => {
   });
 });
 
+describe('ambiguity', () => {
+  it('flags a plausible candidate far from the winner', () => {
+    const far: OverpassElement[] = [
+      { type: 'node', id: 10, lat: 1, lon: 1, tags: { amenity: 'ferry_terminal', name: 'Kabataş İskelesi' } },
+      { type: 'node', id: 11, lat: 1.05, lon: 1, tags: { amenity: 'ferry_terminal', name: 'Kabataş' } },
+    ];
+    expect(matchPier({ id: 'kabatas', tr: 'Kabataş', en: '' }, far).ambiguous).toBe(true);
+  });
+
+  it('penalises berths named after another pier', () => {
+    const els2: OverpassElement[] = [
+      { type: 'node', id: 20, lat: 1, lon: 1, tags: { amenity: 'ferry_terminal', name: 'Karaköy Eminönü İskelesi' } },
+      { type: 'node', id: 21, lat: 2, lon: 2, tags: { amenity: 'ferry_terminal', name: 'Eminönü' } },
+    ];
+    expect(matchPier({ id: 'eminonu', tr: 'Eminönü', en: '' }, els2, ['Karaköy']).chosen?.el.id).toBe(21);
+  });
+});
+
 describe('matchDistrict', () => {
   it('ranks suburb above town', () => {
     expect(matchDistrict({ id: 'kadikoy', tr: 'Kadıköy', en: 'Kadıköy' }, els).chosen?.el.id).toBe(5);
