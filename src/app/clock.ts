@@ -43,6 +43,12 @@ export class ClockController {
     this.emit();
   }
 
+  /** Jump to an absolute simulated time (keeps the current speed). */
+  setSimTime(simMs: number): void {
+    this.clock = jumpTo(this.clock, simMs, Date.now());
+    this.emit();
+  }
+
   /** Cycle through the configured speeds (1× → 10× → 60× → 1×). */
   cycleSpeed(): void {
     const speeds = CONFIG.sim.speeds;

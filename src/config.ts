@@ -173,6 +173,17 @@ export const CONFIG = {
     cruiseMs: 6.5,
   },
 
+  selection: {
+    /** Unselected ferries are tinted with this while one is selected. */
+    dimColor: '#9AA3A8',
+    ringScale: 0.62,
+    pulseHz: 0.8,
+    /** Tap radius around a ferry (CSS px; plan: hit areas ≥ 44 px). */
+    hitRadiusPx: 26,
+    /** Routes: opacity of unrelated lines while one is selected. */
+    routeDimOpacity: 0.12,
+  },
+
   nightLights: {
     windowGlow: '#FFC46B',
     port: '#FF3B30',
@@ -266,6 +277,15 @@ export const CONFIG = {
     maxLayoverMin: 45,
     /** Speed multipliers offered by the time controls. */
     speeds: [1, 10, 60],
+  },
+
+  perf: {
+    /** Start resolution cap (device pixels per CSS pixel). */
+    maxPixelRatio: 2,
+    /** Steps down when fps < minFps for lowForMs. */
+    pixelRatioSteps: [1.5, 1.25, 1],
+    minFps: 50,
+    lowForMs: 3000,
   },
 
   debug: {

@@ -111,8 +111,14 @@ export class VapurLayer implements CustomLayerInterface {
   private bumpAt = new Map<string, number>();
   private lastFrame = performance.now();
   private o = { m: new THREE.Matrix4(), q: new THREE.Quaternion(), e: new THREE.Euler(0, 0, 0, 'ZXY'), p: new THREE.Vector3(), s: new THREE.Vector3(), c: new THREE.Color() };
-  /** Last rendered poses with their on-screen-ready local positions (hit-testing in step 5). */
+  /** Last rendered poses. */
   visible: VesselPose[] = [];
+  /** Where each vessel was actually drawn (local metres, incl. berth offsets) — for taps / follow. */
+  drawn = new Map<string, { x: number; y: number; pose: VesselPose }>();
+  private ring!: THREE.Mesh;
+  private ringMat!: THREE.MeshBasicMaterial;
+  private dim = new THREE.Color(CONFIG.selection.dimColor);
+  private white = new THREE.Color('#ffffff');
 
   constructor(private opts: VapurLayerOptions) {}
 
@@ -145,6 +151,12 @@ export class VapurLayer implements CustomLayerInterface {
       blending: THREE.AdditiveBlending,
     });
     this.reflect = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), this.reflectMat, MAX_VESSELS);
+    this.ringMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.8, depthWrite: false });
+    this.ring = new THREE.Mesh(new THREE.RingGeometry(0.82, 1, 48), this.ringMat);
+    this.ring.renderOrder = 1;
+    this.ring.visible = false;
+    this.ring.frustumCulled = false;
+    this.body.setColorAt(0, this.white); // allocates instanceColor (used to dim unselected ships)
     for (const m of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       m.frustumCulled = false;
@@ -157,7 +169,7 @@ export class VapurLayer implements CustomLayerInterface {
     this.reflect.renderOrder = 1;
     this.smoke.points.renderOrder = 3;
     this.lights.points.renderOrder = 4;
-    this.root.add(this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.lights.points);
+    this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.lights.points);
     this.scene.add(this.root);
 
     const l = CONFIG.light;
@@ -263,6 +275,17 @@ export class VapurLayer implements CustomLayerInterface {
       s.setScalar(exag * grow);
       m.compose(p, q, s);
       this.body.setMatrixAt(n, m);
+      this.body.setColorAt(n, this.selectedId && this.selectedId !== id ? this.dim : this.white);
+      this.drawn.set(id, { x: px, y: py, pose: v });
+      if (id === this.selectedId) {
+        const sel = CONFIG.selection;
+        const pulse = this.reduceMotion ? 0.5 : (Math.sin(tReal * sel.pulseHz * Math.PI * 2) + 1) / 2;
+        const r = L * sel.ringScale * (1 + pulse * 0.12);
+        this.ring.position.set(px, py, 0.4);
+        this.ring.scale.set(r, r, 1);
+        this.ringMat.color.set(this.opts.lineColor(v.state.lineId));
+        this.ringMat.opacity = 0.55 + 0.35 * (1 - pulse);
+      }
       this.accent.setMatrixAt(n, m);
       this.windows.setMatrixAt(n, m);
       if (this.night > 0.02) this.pushLights(m, grow);
@@ -287,6 +310,9 @@ export class VapurLayer implements CustomLayerInterface {
       if (v.state.phase === 'underway' && v.state.speed > 2) gullTargets.push({ id, x: px, y: py, fx, fy });
       n++;
     }
+    for (const id of this.drawn.keys()) if (!ids.has(id)) this.drawn.delete(id);
+    this.ring.visible = !!this.selectedId && ids.has(this.selectedId);
+    if (this.body.instanceColor) this.body.instanceColor.needsUpdate = true;
     for (const id of this.lastPhase.keys()) if (!ids.has(id)) (this.lastPhase.delete(id), this.bumpAt.delete(id));
     this.headings.retain(ids);
     this.trails.retain(ids);

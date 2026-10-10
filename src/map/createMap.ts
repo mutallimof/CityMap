@@ -26,7 +26,7 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
     maxBounds: [w - pad, s - pad, e + pad, n + pad],
     attributionControl: { compact: false },
     // Smooth and crisp on high-DPI phones without blowing the fill-rate budget.
-    pixelRatio: Math.min(window.devicePixelRatio, 2),
+    pixelRatio: Math.min(window.devicePixelRatio, CONFIG.perf.maxPixelRatio),
     fadeDuration: 0,
   });
 
