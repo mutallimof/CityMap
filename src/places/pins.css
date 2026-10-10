@@ -1,125 +1,19 @@
-/* ===== Place pins (Snapchat-style bubbles) ===== */
-.pin {
-  --pin: #e0a100;
-  width: 44px;
-  height: 50px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-/* Never transition/transform .pin itself — MapLibre positions it with an inline transform. */
-.pin__inner {
-  position: relative;
-  display: block;
-  width: 44px;
-  height: 50px;
-  transition: opacity 300ms ease, transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: 50% 100%;
-}
-.pin--food { --pin: #f08a5d; }
-.pin--park { --pin: #4caf6a; }
-.pin--culture { --pin: #9b6ad6; }
-.pin--shopping { --pin: #2e9fb0; }
-.pin--view { --pin: #f2b33d; }
-
-.pin__bubble {
-  position: absolute;
-  left: 5px;
-  top: 3px;
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fffaf2;
-  font-size: 17px;
-  line-height: 1;
-  box-shadow: 0 0 0 2.5px var(--pin), 0 4px 10px rgba(20, 30, 40, 0.28);
-  z-index: 1;
-}
-/* tail */
-.pin__tail {
-  content: '';
+/* ===== Place pins are MapLibre symbols (src/places/place-layers.ts); only the selection is DOM. ===== */
+/* ===== Selected place (DOM marker over the symbol layers) ===== */
+.sel-pin { pointer-events: none; }
+.sel-pin__inner { position: relative; display: block; transform-origin: 50% 100%; animation: sel-pop 320ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.sel-pin__inner canvas { display: block; }
+.sel-pin__ring {
   position: absolute;
   left: 50%;
-  bottom: 4px;
-  width: 9px;
-  height: 9px;
-  transform: translateX(-50%) rotate(45deg);
-  background: var(--pin);
-  border-radius: 2px;
-}
-.pin__open {
-  position: absolute;
-  right: 2px;
-  top: 2px;
-  width: 11px;
-  height: 11px;
+  bottom: -6px;
+  width: 26px;
+  height: 10px;
+  margin-left: -13px;
   border-radius: 50%;
-  background: #34c27a;
-  box-shadow: 0 0 0 2px #fffaf2, 0 0 8px rgba(52, 194, 122, 0.8);
-  z-index: 2;
-  display: none;
+  border: 2px solid #e0a100;
+  animation: sel-ring 1.8s ease-out infinite;
 }
-.pin--open .pin__open { display: block; }
-.pin__fav {
-  position: absolute;
-  left: -3px;
-  top: -4px;
-  font-size: 13px;
-  color: #ff4f72;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-  z-index: 2;
-  display: none;
-}
-.pin__label {
-  position: absolute;
-  top: 52px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font: 800 11.5px/1.2 var(--font, 'Nunito', sans-serif);
-  color: var(--label-text, #5a4b3a);
-  text-shadow: 0 0 2px var(--label-halo), 0 0 6px var(--label-halo);
-  opacity: 0;
-  transition: opacity 300ms ease;
-  pointer-events: none;
-}
-
-/* crowded: shrink to a small dot (still tappable) so important pins stay readable */
-.pin--crowded:not(.pin--selected) .pin__inner { transform: scale(0.42); opacity: 0.9; }
-.pin--crowded:not(.pin--selected) .pin__label,
-.pin--crowded:not(.pin--selected) .pin__open,
-.pin--crowded:not(.pin--selected) .pin__fav { opacity: 0; }
-.pin--fav .pin__fav { display: block; }
-.pin--hot .pin__bubble { box-shadow: 0 0 0 2.5px var(--pin), 0 0 18px 4px color-mix(in srgb, var(--pin) 55%, transparent), 0 4px 10px rgba(20, 30, 40, 0.28); }
-
-.pin--golden .pin__bubble { animation: pin-golden 3s ease-in-out infinite; }
-.pin--selected .pin__inner { transform: scale(1.22); }
-.pin--selected .pin__label { opacity: 1; }
-.pin--hidden { pointer-events: none; }
-.pin--hidden .pin__inner { opacity: 0; transform: scale(0.4); }
-
-/* zoomed out: only well-known places; zoomed in: names */
-.pins-far .pin:not(.pin--major):not(.pin--hot):not(.pin--selected):not(.pin--fav) { pointer-events: none; }
-.pins-far .pin:not(.pin--major):not(.pin--hot):not(.pin--selected):not(.pin--fav) .pin__inner { opacity: 0; transform: scale(0.4); }
-.pins-labels .pin__label { opacity: 1; }
-.pins-night .pin__bubble { background: #27303d; }
-
-@keyframes pin-golden {
-  50% { box-shadow: 0 0 0 2.5px #ffb347, 0 0 26px 8px rgba(255, 168, 64, 0.65), 0 4px 10px rgba(20, 30, 40, 0.28); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pin--golden .pin__bubble { animation: none !important; }
-}
-.motion-reduced .pin--golden .pin__bubble { animation: none !important; }
-
-/* a guide is open: pins step back so the numbered route reads */
-.guide-open .pin:not(.pin--selected) { pointer-events: none; }
-.guide-open .pin:not(.pin--selected) .pin__inner { opacity: 0; transform: scale(0.4); }
-.guide-open .map-label--landmark { opacity: 0 !important; }
+@keyframes sel-pop { from { transform: scale(0.6); opacity: 0; } }
+@keyframes sel-ring { 0% { transform: scale(0.6); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
+.motion-reduced .sel-pin__ring, .motion-reduced .sel-pin__inner { animation: none; }

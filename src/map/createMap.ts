@@ -5,9 +5,10 @@ import { CONFIG } from '../config';
 import { buildStyle, SOURCE } from './style';
 import { initialCamera } from './intro';
 import { shorelineFromLand } from './shoreline';
-import { addLabels, bindLabelZoomClasses } from './labels';
+import { addMapLabels } from './labels';
 import { loadDistricts, loadLand, loadLandmarks, loadPiers, type DistrictProps, type LandmarkProps, type PierProps } from '../data/load';
 import { addCity } from './city-setup';
+import { registerBuildingsProtocol } from './buildings/protocol';
 import type { CityLook } from './city';
 import type { FeatureCollection, MultiLineString, MultiPolygon, Point, Polygon } from 'geojson';
 
@@ -29,15 +30,18 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
     attributionControl: { compact: false },
     // Smooth and crisp on high-DPI phones without blowing the fill-rate budget.
     pixelRatio: Math.min(window.devicePixelRatio, CONFIG.perf.maxPixelRatio),
-    fadeDuration: 0,
+    // Symbols (places, labels) fade in and out gently as collisions resolve.
+    fadeDuration: 260,
   });
 
   const [land, piers, districts, landmarks] = await Promise.all([
+    // Tile template for the building re-packer must be known before the source is added.
     loadLand(),
     loadPiers(),
     loadDistricts(),
     loadLandmarks(),
     new Promise<void>((resolve) => map.once('load', () => resolve())),
+    registerBuildingsProtocol(),
   ]);
 
   (map.getSource(SOURCE.land) as GeoJSONSource).setData(land);
@@ -45,9 +49,7 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
   (map.getSource(SOURCE.piers) as GeoJSONSource).setData(piers);
 
   const city = addCity(map, landmarks);
-  addLabels(map, 'district', districts);
-  addLabels(map, 'pier', piers);
-  bindLabelZoomClasses(map);
+  addMapLabels(map, districts, piers);
 
   return { map, piers, land, city, districts, landmarks };
 }

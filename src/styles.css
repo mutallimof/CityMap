@@ -15,44 +15,6 @@ body {
   touch-action: none;
 }
 
-/* ---- Labels (DOM markers) ---- */
-.map-label {
-  pointer-events: none;
-  white-space: nowrap;
-  color: var(--label-text);
-  text-shadow:
-    0 0 2px var(--label-halo),
-    0 0 6px var(--label-halo);
-  opacity: 0;
-  transition: opacity 400ms ease;
-}
-.map-label--district {
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.map-label--pier {
-  font-weight: 600;
-  font-size: 11px;
-}
-.map-label--landmark {
-  font-weight: 800;
-  font-size: 11.5px;
-  padding: 2px 8px 2px 6px;
-  border-radius: 99px;
-  background: color-mix(in srgb, var(--label-halo) 70%, transparent);
-  box-shadow: 0 0 0 1px rgba(224, 161, 0, 0.45);
-  text-shadow: none;
-}
-.map-label--tulips { display: none; }
-.season-spring .map-label--tulips { display: block; }
-.show-landmark-labels .map-label--landmark,
-.show-district-labels .map-label--district,
-.show-pier-labels .map-label--pier {
-  opacity: 1;
-}
-
 /* ---- Attribution: keep OSM credit readable but quiet ---- */
 .maplibregl-ctrl-attrib {
   font-family: inherit;

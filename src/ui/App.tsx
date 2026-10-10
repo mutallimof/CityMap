@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Chips } from './Chips';
 import { Fabs } from './Fabs';
+import { Legend } from './Legend';
 import { SearchPanel } from '../search/SearchPanel';
 import { Hint } from './Hint';
 import { PierHeader, PierSheet } from './PierSheet';
@@ -40,7 +41,7 @@ export function App(slots: AppSlots) {
         <Chips withCategories={!!slots.categories} />
         <TimePanel />
       </div>
-      <Fabs />
+      <Legend />
       <SearchPanel />
       <Hint delayMs={slots.introMs} />
       <Sheet
@@ -51,6 +52,7 @@ export function App(slots: AppSlots) {
         header={
           <div className="sheet__headrow">
             {c?.header}
+            <Fabs />
             {sel && (
               <button className="sheet__close" onClick={() => ui.set({ selection: null, follow: false, sheetSnap: 'peek' })} aria-label="Close">
                 ×

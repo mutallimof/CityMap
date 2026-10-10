@@ -19,6 +19,8 @@ export interface UiState {
   timePanel: boolean;
   /** Search overlay open. */
   search: boolean;
+  /** Map legend popover open. */
+  legend: boolean;
   hint: boolean;
   sheetSnap: SheetSnap;
 }
@@ -62,6 +64,7 @@ export const ui = createStore<UiState>({
   categories: [],
   openNow: false,
   search: false,
+  legend: false,
   timePanel: false,
   hint: true,
   sheetSnap: 'peek',

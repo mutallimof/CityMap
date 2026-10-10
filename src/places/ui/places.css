@@ -146,7 +146,7 @@
 }
 .nearby__name { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.chip--weather { gap: 5px; }
+.chip--weather { gap: 4px; padding: 0 10px; min-height: 42px; }
 .chip--weather b { font-size: 15px; }
 .chip__demo { font-size: 9px; font-weight: 900; letter-spacing: 0.06em; opacity: 0.7; }
 
@@ -175,7 +175,7 @@ a.pill { text-decoration: none; color: inherit; display: inline-flex; align-item
 .plist__name b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plist__name small { font-size: 12px; }
 .dot-open { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34c27a; margin-right: 4px; vertical-align: 1px; }
-.chip__dot--h { display: inline-block; margin-right: 8px; vertical-align: 3px; }
+.chip__open--h { display: inline-block; margin-right: 8px; vertical-align: 3px; }
 
 /* guides */
 .guides { display: grid; gap: 8px; }

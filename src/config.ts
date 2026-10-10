@@ -12,7 +12,7 @@ export const CONFIG = {
     center: [29.0, 41.018] as [number, number],
     /** Close enough that ferries read at a glance (~40 px long). */
     zoom: 13.1,
-    pitch: 52,
+    pitch: 46,
     bearing: -18,
     /** Intro: start high above the Sea of Marmara, fly in to the view above. */
     intro: { center: [28.99, 40.93] as [number, number], zoom: 10.4, pitch: 0, bearing: 0, durationMs: 3400 },
@@ -49,10 +49,10 @@ export const CONFIG = {
       fog: '#EBC3A2',
     },
     night: {
-      water: '#0E2B36',
-      waterShallow: '#174452',
-      land: '#1E2430',
-      shoreHighlight: '#3A4458',
+      water: '#0A2431',
+      waterShallow: '#12404E',
+      land: '#1B1E26',
+      shoreHighlight: '#5E9CAC',
       landInnerShadow: '#0F131B',
       sky: '#0B1424',
       horizon: '#1A2A3C',
@@ -92,12 +92,24 @@ export const CONFIG = {
     font: ['Noto Sans Regular'],
     fontBold: ['Noto Sans Bold'],
     /** Pastel neighbourhoods: residential areas pick one of these by feature id. */
-    residentialOpacity: 0.75,
+    residentialOpacity: 0.42,
     /** 3D buildings fade in between these zooms. */
     buildingsFrom: [14.6, 15.4] as [number, number],
     buildingOpacity: 0.92,
-    /** Minimum extrusion (m) for buildings without a height. */
-    buildingMinHeight: 6,
+    /** Buildings without an OSM height get a modest 2–5 floors (varied per building). */
+    buildings: { floorM: 3.2, minFloors: 2, maxFloors: 5 },
+    /** Night: share (0–100) of buildings that stay dark; lit-window shares of the other three facade types;
+     *  warm window tones; facade colour; street-light glow along main roads. */
+    lights: {
+      darkShare: 38,
+      litShares: [0.08, 0.15, 0.24],
+      windows: ['#FFC979', '#FFB35C', '#FFE0A3', '#F7A54A', '#FFD7A0'],
+      facade: '#3B4253',
+      glow: '#FFAE45',
+      glowOpacity: 0.34,
+      /** Light colour on 3D buildings at night. */
+      moonLight: '#E4E8F0',
+    },
     /** Street names from this zoom. */
     streetLabelsFrom: 15.4,
     /** Landmark names (towers, bridges) from this zoom. */
@@ -122,36 +134,36 @@ export const CONFIG = {
       roadMajorCasing: '#D8AC5B',
       path: '#FFFFFF',
       rail: '#CBBDAB',
-      buildings: ['#FBE3CF', '#F8D3CC', '#FBE7B5', '#F3DDEB', '#DCEBD3', '#FCEEDC', '#F6D9BD'],
+      buildings: ['#F6EADD', '#F4E2D9', '#F6EBD6', '#F2E6D8', '#F3E0D8', '#E6EADD', '#EAE4EE'],
       landmark: '#F3C468',
       bridge: '#F2BF52',
       streetLabel: '#7A6550',
       streetHalo: '#FFF8EC',
     },
     night: {
-      residential: ['#262C3B', '#2A2C3A', '#252B3D', '#232E39', '#2A2D38'],
-      commercial: '#2C2C3A',
-      industrial: '#22262F',
-      institutional: '#28293B',
-      hospital: '#2D2A38',
-      cemetery: '#1D2A29',
-      pitch: '#1F2F2C',
-      grass: '#1F2E2B',
-      park: '#1E302A',
-      wood: '#1A2A26',
-      sand: '#302E2B',
-      farmland: '#252B26',
-      wetland: '#1C2B2E',
-      road: '#3B4357',
-      roadCasing: '#191E2A',
-      roadMajor: '#9A7640',
-      roadMajorCasing: '#3E3322',
-      path: '#323A4C',
-      rail: '#30364A',
-      buildings: ['#30374A', '#33364A', '#2E364A', '#2F3946', '#343449', '#323848', '#2D3747'],
+      residential: ['#1F222B', '#21232C', '#1E222C', '#1D232A', '#22232B'],
+      commercial: '#24242D',
+      industrial: '#1C1F26',
+      institutional: '#22222D',
+      hospital: '#25222C',
+      cemetery: '#192322',
+      pitch: '#1A2724',
+      grass: '#1A2623',
+      park: '#192822',
+      wood: '#16231F',
+      sand: '#2A2824',
+      farmland: '#1F241F',
+      wetland: '#182427',
+      road: '#4D5569',
+      roadCasing: '#14171E',
+      roadMajor: '#D99A4A',
+      roadMajorCasing: '#4A3A22',
+      path: '#3A4256',
+      rail: '#353B4E',
+      buildings: ['#3C4354', '#3E4255', '#3A4253', '#3B4451', '#3F4154', '#3D4353', '#394252'],
       landmark: '#F0BE68',
       bridge: '#FFC870',
-      streetLabel: '#C9BFAE',
+      streetLabel: '#D8CFBF',
       streetHalo: '#141A24',
     },
     /** Warm cast over everything at golden hour. */
@@ -166,12 +178,6 @@ export const CONFIG = {
     },
     /** Spring tulips in Emirgan Korusu (red / yellow / pink / white dots). */
     tulips: ['#E8344A', '#F7C531', '#F57FB0', '#FFFFFF', '#E8344A', '#FF8A3D'],
-    /** Lit windows on buildings at night. */
-    windowLit: ['#FFC66B', '#FFD58A', '#FFB65C', '#FFE2A8'],
-    windowDark: '#2A3142',
-    windowFacade: '#30374A',
-    /** Share of windows lit at night (0–1). */
-    windowLitShare: 0.42,
   },
 
   shore: {
@@ -208,8 +214,9 @@ export const CONFIG = {
     beamM: 14,
     /** Size exaggeration by zoom: ~3–4× at city zoom, real size when zoomed right in. */
     exaggeration: [
-      [11, 4],
-      [13, 3],
+      [10, 5.6],
+      [11, 4.9],
+      [13, 3.4],
       [16, 1],
     ] as [number, number][],
     /** Simulated seconds a vessel takes to grow in / shrink out (docked) when entering / leaving service. */
@@ -387,6 +394,12 @@ export const CONFIG = {
     /** Map POIs (OSM cafés, shops, museums, parks…) fade in from this zoom; names from poiNamesFrom. */
     poiFrom: 14.8,
     poiNamesFrom: 16,
+    /** Max OpenMapTiles rank (a per-tile importance order) shown below z16 / z17 / z18, then all. */
+    poiRanks: [24, 60, 140] as [number, number, number],
+    /** Below z17.4 only POIs up to this rank get a name. */
+    poiNameRank: 20,
+    /** Featured place names from this zoom. */
+    featuredNamesFrom: 13.8,
   },
 
   weather: {
@@ -427,6 +440,30 @@ export const CONFIG = {
     fogHideM: 2600,
     /** Lightning flashes during storms: mean seconds between flashes. */
     lightningEveryS: 9,
+  },
+
+  /** Place icons: one colour per category (shape carries the category too — see src/places/icons.ts). */
+  icons: {
+    colors: {
+      cafe: '#8A5A3B',
+      restaurant: '#E8644A',
+      bar: '#8E5BE0',
+      bakery: '#D7951A',
+      museum: '#2F5DA8',
+      gallery: '#2F5DA8',
+      theatre: '#D23A3F',
+      cinema: '#D23A3F',
+      shop: '#13938C',
+      park: '#3B9A57',
+      viewpoint: '#3B9A57',
+      landmark: '#C9971C',
+    },
+    /** Map POIs (CSS px) and featured places (bigger, pin + glow). */
+    poiSize: 22,
+    /** Extra collision space around map POIs (px): fewer icons at once. */
+    poiPadding: 7,
+    featuredSize: 32,
+    landmarkSize: 30,
   },
 
   /** Guide routes on the map. */

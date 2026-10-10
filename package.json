@@ -22,14 +22,17 @@
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",
+    "@mapbox/point-geometry": "^1.1.0",
+    "@mapbox/vector-tile": "^3.0.0",
+    "@maplibre/vt-pbf": "^4.3.2",
     "maplibre-gl": "^6.13.0",
+    "pbf": "^5.1.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "three": "^0.186.1"
   },
   "devDependencies": {
     "@geo-maps/earth-lands-10m": "^0.6.0",
-    "@mapbox/vector-tile": "^3.0.0",
     "@turf/turf": "^7.4.0",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.5",
@@ -38,7 +41,6 @@
     "@types/shapefile": "^0.6.4",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
-    "pbf": "^5.1.2",
     "shapefile": "^0.6.6",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",

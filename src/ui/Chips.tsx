@@ -26,7 +26,7 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
         <>
           <span className="chips__sep" />
           <button className={`chip chip--open ${s.openNow ? 'chip--on' : ''}`} aria-pressed={s.openNow} onClick={() => ui.set({ openNow: !s.openNow })}>
-            <span className="chip__dot" aria-hidden /> {t('openNowChip')}
+            <span className="chip__open" aria-hidden /> {t('openNowChip')}
           </button>
           {CATS.map((c) => {
             const on = s.categories.includes(c.id);
@@ -36,6 +36,9 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
               </button>
             );
           })}
+          <button className={`chip chip--legend ${s.legend ? 'chip--on' : ''}`} aria-pressed={s.legend} onClick={() => ui.set({ legend: !s.legend })}>
+            <span aria-hidden>◉</span> {t('legend')}
+          </button>
         </>
       )}
     </nav>

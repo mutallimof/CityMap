@@ -115,7 +115,8 @@ export class DaylightController {
     f.fog = c.fog;
     this.t.weatherLayer.set({ rain: c.rain, snow: c.snow, fog: c.fog, thunder: c.thunder, windToward: (c.windFrom + 180) % 360, windMs: c.windMs, night: theme.night });
     // 3D buildings: light from the sun (or moon), softer under cloud.
-    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), d.moon, theme.night), (0.42 - theme.night * 0.2) * (0.75 + 0.25 * lf));
+    // Night: a pale, nearly neutral light so facades keep their value (a blue moon tint muddies them).
+    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), CONFIG.city.lights.moonLight, theme.night), (0.4 - theme.night * 0.18) * (0.75 + 0.25 * lf));
     const root0 = document.documentElement;
     root0.dataset.season = season;
     root0.dataset.weather = c.rain > 0.3 ? 'rain' : c.snow > 0.3 ? 'snow' : c.fog > 0.3 ? 'fog' : 'clear';

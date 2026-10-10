@@ -4,7 +4,7 @@ import { useTicker } from '../../ui/hooks';
 import { kindLabel, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
-import { CATEGORY_ICON, KIND_ICON } from '../pins';
+import { PlaceIcon } from './PlaceIcon';
 import { PierHint } from './Extras';
 import { placeLink, places, share } from './context';
 
@@ -21,7 +21,7 @@ export function PlaceHeader({ id }: { id: string }) {
   const name = lang === 'en' && p.nameEn ? p.nameEn : p.name;
   return (
     <div className="sheet__title">
-      <span className={`swatch swatch--place swatch--${p.category}`}>{KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span>
+      <PlaceIcon kind={p.kind} category={p.category} size={44} />
       <div>
         <h2>{name}</h2>
         <small className="muted">

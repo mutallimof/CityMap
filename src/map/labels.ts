@@ -1,38 +1,65 @@
-import { Marker, type Map as MlMap } from 'maplibre-gl';
+import type { ExpressionSpecification, Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, Point } from 'geojson';
 import { CONFIG } from '../config';
 
-export interface LabelProps {
-  name: string;
-}
-
-export type LabelKind = 'district' | 'pier';
-
 /**
- * Labels are DOM markers rather than MapLibre symbol layers: the style needs no
- * glyph server, and the self-hosted Nunito webfont renders Turkish characters
- * (İ ı ş ğ ç ö ü) natively. We only ever show a few dozen, so DOM cost is negligible.
- * Visibility by zoom is a CSS class on the map container.
+ * District and pier names as MapLibre symbol layers (OpenFreeMap glyphs), so they share one
+ * collision space with place icons, landmarks and streets — labels never overlap.
  */
-export function addLabels(map: MlMap, kind: LabelKind, data: FeatureCollection<Point, LabelProps>): void {
-  for (const f of data.features) {
-    const el = document.createElement('div');
-    el.className = `map-label map-label--${kind}`;
-    el.textContent = f.properties.name;
-    new Marker({ element: el, anchor: kind === 'pier' ? 'top' : 'center', offset: kind === 'pier' ? [0, 8] : [0, 0] })
-      .setLngLat(f.geometry.coordinates as [number, number])
-      .addTo(map);
-  }
+export const LABEL_LAYERS = { district: 'label-district', pier: 'label-pier' } as const;
+
+interface Named {
+  name: string;
+  nameEn?: string;
 }
 
-/** Toggle label classes on the container as zoom crosses the configured thresholds. */
-export function bindLabelZoomClasses(map: MlMap): void {
-  const root = map.getContainer();
-  const update = () => {
-    const z = map.getZoom();
-    root.classList.toggle('show-district-labels', z >= CONFIG.labels.districtMinZoom && z <= CONFIG.labels.districtMaxZoom);
-    root.classList.toggle('show-pier-labels', z >= CONFIG.piers.labelMinZoom);
-  };
-  map.on('zoom', update);
-  update();
+const field = (lang: 'tr' | 'en'): ExpressionSpecification => (lang === 'en' ? ['coalesce', ['get', 'nameEn'], ['get', 'name']] : ['get', 'name']);
+
+export function addMapLabels(map: MlMap, districts: FeatureCollection<Point, Named>, piers: FeatureCollection<Point, Named>): void {
+  const l = CONFIG.labels;
+  map.addSource('labels-district', { type: 'geojson', data: districts });
+  map.addSource('labels-pier', { type: 'geojson', data: piers });
+  map.addLayer({
+    id: LABEL_LAYERS.district,
+    type: 'symbol',
+    source: 'labels-district',
+    minzoom: l.districtMinZoom,
+    maxzoom: l.districtMaxZoom,
+    layout: {
+      'text-field': ['upcase', field('tr')],
+      'text-font': [...CONFIG.city.fontBold],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 11, 11, 14, 13.5],
+      'text-letter-spacing': 0.14,
+      'text-max-width': 12,
+      'symbol-sort-key': 0,
+    },
+    paint: { 'text-color': CONFIG.colors.labelText, 'text-halo-color': CONFIG.colors.labelHaloHex, 'text-halo-width': 1.6, 'text-opacity': 0.85 },
+  });
+  map.addLayer({
+    id: LABEL_LAYERS.pier,
+    type: 'symbol',
+    source: 'labels-pier',
+    minzoom: CONFIG.piers.labelMinZoom,
+    layout: {
+      'text-field': field('tr'),
+      'text-font': [...CONFIG.city.font],
+      'text-size': 11.5,
+      'text-anchor': 'top',
+      'text-offset': [0, 0.8],
+      'text-optional': true,
+    },
+    paint: { 'text-color': '#1F5E6E', 'text-halo-color': CONFIG.colors.labelHaloHex, 'text-halo-width': 1.5 },
+  });
+}
+
+export function setLabelLang(map: MlMap, lang: 'tr' | 'en'): void {
+  map.setLayoutProperty(LABEL_LAYERS.district, 'text-field', ['upcase', field(lang)]);
+  map.setLayoutProperty(LABEL_LAYERS.pier, 'text-field', field(lang));
+}
+
+export function setLabelNight(map: MlMap, night: boolean): void {
+  map.setPaintProperty(LABEL_LAYERS.district, 'text-color', night ? CONFIG.colors.labelTextNight : CONFIG.colors.labelText);
+  map.setPaintProperty(LABEL_LAYERS.district, 'text-halo-color', night ? CONFIG.colors.labelHaloNight : CONFIG.colors.labelHaloHex);
+  map.setPaintProperty(LABEL_LAYERS.pier, 'text-color', night ? '#9FD3DE' : '#1F5E6E');
+  map.setPaintProperty(LABEL_LAYERS.pier, 'text-halo-color', night ? CONFIG.colors.labelHaloNight : CONFIG.colors.labelHaloHex);
 }

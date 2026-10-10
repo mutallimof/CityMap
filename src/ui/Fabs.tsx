@@ -7,7 +7,7 @@ import { shareImage, snapshot } from '../share/snapshot';
 import { formatHHMM, toIstanbul } from '../sim/time';
 import { useT } from './i18n';
 import { services } from './services';
-import { ui, useUi } from './store';
+import { useUi } from './store';
 
 /** "Kadıköy · 18:42 · 🌧 14°" for the current view. */
 function caption(lang: 'tr' | 'en'): string {
@@ -27,7 +27,7 @@ function caption(lang: 'tr' | 'en'): string {
   return parts.join(' · ');
 }
 
-/** Round buttons on the right: search, snapshot. */
+/** Camera button (bottom-left, above the sheet). Search lives in the top bar. */
 export function Fabs() {
   const t = useT();
   const lang = useUi((s) => s.lang);
@@ -51,11 +51,11 @@ export function Fabs() {
   };
   return (
     <div className="fabs">
-      <button className="fab" onClick={() => ui.set({ search: true })} aria-label={t('search')}>
-        🔍
-      </button>
       <button className="fab" onClick={shoot} aria-label={t('snapshot')} disabled={busy}>
-        📷
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.7l1.3-2h5l1.3 2h1.7A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="12" cy="12.5" r="3.6" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
       </button>
       {toast && <span className="fab__toast">{toast}</span>}
     </div>

@@ -19,15 +19,25 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
         <span className="chip__icon" aria-hidden>
           {icon}
         </span>
-        <b>{formatHHMM(toIstanbul(now).seconds)}</b>
+        <span className="clock__txt">
+          <b>
+            {formatHHMM(toIstanbul(now).seconds)}
+            {!live && <span className="chip__dot" title="not live" />}
+          </b>
+          <span className="badge">{t('simulated')}</span>
+        </span>
         {clock.speed !== 1 && <span className="chip__speed">{clock.speed}×</span>}
-        {!live && <span className="chip__dot" title="not live" />}
-        <span className="badge">{t('simulated')}</span>
       </button>
       {extra}
-      <button className="chip chip--lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label="Language">
-        <span className={lang === 'tr' ? 'on' : ''}>TR</span>
-        <span className={lang === 'en' ? 'on' : ''}>EN</span>
+      <span className="topbar__spacer" />
+      <button className="iconbtn" onClick={() => ui.set({ search: true })} aria-label={t('search')}>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
+          <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
+          <path d="M15.5 15.5 21 21" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+      </button>
+      <button className="iconbtn iconbtn--lang" onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} aria-label={lang === 'tr' ? 'English' : 'Türkçe'}>
+        {lang === 'tr' ? 'EN' : 'TR'}
       </button>
     </div>
   );

@@ -24,6 +24,7 @@ export function openGuide(id: string): void {
 }
 
 /** Clears the route when the guide sheet closes. */
+const saved = new Map<string, unknown>();
 export function bindGuideSelection(): void {
   let shown = '';
   ui.subscribe(() => {
@@ -32,8 +33,14 @@ export function bindGuideSelection(): void {
     if (id === shown) return;
     shown = id;
     showGuide(services().map, id ? byId(id) ?? null : null);
-    // Let the route breathe: place pins and landmark tags step back while a guide is open.
-    document.documentElement.classList.toggle('guide-open', !!id);
+    // Let the route breathe: place icons step back while a guide is open.
+    const map = services().map;
+    for (const l of ['featured', 'poi', 'landmark-icons']) {
+      if (!map.getLayer(l)) continue;
+      if (!saved.has(l)) saved.set(l, map.getPaintProperty(l, 'icon-opacity') ?? 1);
+      map.setPaintProperty(l, 'icon-opacity', (id ? 0.25 : saved.get(l)) as number);
+      map.setPaintProperty(l, 'text-opacity', id ? 0 : 1);
+    }
   });
 }
 

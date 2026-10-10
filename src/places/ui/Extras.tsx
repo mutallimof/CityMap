@@ -9,7 +9,7 @@ import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { distanceM } from '../store';
 import { weatherIcon } from '../weather';
-import { CATEGORY_ICON, KIND_ICON } from '../pins';
+import { PlaceIcon } from './PlaceIcon';
 import { flyTo, nearestPier, openPier, openPlace, places } from './context';
 
 const SEASON_ICON = { spring: '🌷', summer: '☀️', autumn: '🍂', winter: '❄️' } as const;
@@ -130,7 +130,7 @@ export function NearbyPlaces({ pierId }: { pierId: string }) {
         {list.map(({ p, d }) => (
           <li key={p.id}>
             <button onClick={() => openPlace(p.id)}>
-              <span className={`picon picon--${p.category}`}>{KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span>
+              <PlaceIcon kind={p.kind} category={p.category} />
               <span className="nearby__name">{p.name}</span>
               <span className="muted">
                 🚶 {Math.max(1, Math.round(d / CONFIG.places.walkMPerMin))} {t('min')}

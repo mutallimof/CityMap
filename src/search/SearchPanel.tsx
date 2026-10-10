@@ -5,8 +5,9 @@ import { CONFIG } from '../config';
 import type { DistrictProps, LandmarkProps } from '../data/load';
 import { CITY_SOURCE } from '../map/city';
 import { nominatim } from '../osm/nominatim';
-import { CATEGORY_ICON, KIND_ICON } from '../places/pins';
-import { categoryOfClass, placeFromFeature } from '../places/poi-layer';
+import { kindOfPlace, type IconKind } from '../places/icons';
+import { PlaceIcon } from '../places/ui/PlaceIcon';
+import { categoryOfClass, iconKindOfPoi, placeFromFeature } from '../places/place-layers';
 import { flyTo, openPier, openPlace, places } from '../places/ui/context';
 import { kindLabel, useT } from '../ui/i18n';
 import { services } from '../ui/services';
@@ -24,7 +25,6 @@ export function setSearchData(d: SearchData): void {
 }
 export const searchData = () => data;
 
-const LANDMARK_ICON: Record<string, string> = { tower: '🗼', bridge: '🌉', tulips: '🌷' };
 
 /** POIs + street names from tiles already loaded (free, instant, offline-friendly). */
 type Feat = Parameters<typeof placeFromFeature>[0];
@@ -34,11 +34,11 @@ function tileItems(map: MlMap, q: string): { items: SearchResult[]; feats: Map<s
   if (!map.getSource(CITY_SOURCE)) return { items, feats };
   for (const f of map.querySourceFeatures(CITY_SOURCE, { sourceLayer: 'poi' })) {
     const name = f.properties?.name as string | undefined;
-    if (!name || !categoryOfClass(String(f.properties.class)) || !score(name, q)) continue;
+    if (!name || !iconKindOfPoi(String(f.properties.class), String(f.properties.subclass)) || !score(name, q)) continue;
     const p = placeFromFeature(f);
     if (!p || feats.has(p.id)) continue;
     feats.set(p.id, f);
-    items.push({ kind: 'poi', id: p.id, name, sub: '', icon: KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category], lngLat: p.lngLat });
+    items.push({ kind: 'poi', id: p.id, name, sub: '', icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
   }
   for (const f of map.querySourceFeatures(CITY_SOURCE, { sourceLayer: 'transportation_name' })) {
     const name = f.properties?.name as string | undefined;
@@ -90,13 +90,13 @@ export function SearchPanel() {
     const { map, pierById } = services();
     const items: SearchResult[] = [];
     for (const p of places().byId.values())
-      items.push({ kind: 'place', id: p.id, name: lang === 'en' && p.nameEn ? p.nameEn : p.name, sub: kindLabel(p.kind, lang), icon: KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category], lngLat: p.lngLat });
+      items.push({ kind: 'place', id: p.id, name: lang === 'en' && p.nameEn ? p.nameEn : p.name, sub: kindLabel(p.kind, lang), icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
     for (const [id, p] of pierById) items.push({ kind: 'pier', id, name: lang === 'en' ? p.nameEn : p.name, sub: t('pier'), icon: '⚓', lngLat: p.lngLat });
     for (const f of data?.districts.features ?? [])
       items.push({ kind: 'district', id: f.properties.id, name: lang === 'en' ? f.properties.nameEn : f.properties.name, sub: t('district'), icon: '🏘', lngLat: f.geometry.coordinates as [number, number] });
     for (const f of data?.landmarks.features ?? [])
       if (f.geometry.type === 'Point' && f.properties.name)
-        items.push({ kind: 'landmark', id: f.properties.id, name: (lang === 'en' ? f.properties.nameEn : f.properties.name) ?? '', sub: t('landmark'), icon: LANDMARK_ICON[f.properties.kind] ?? '★', lngLat: f.geometry.coordinates as [number, number] });
+        items.push({ kind: 'landmark', id: f.properties.id, name: (lang === 'en' ? f.properties.nameEn : f.properties.name) ?? '', sub: t('landmark'), icon: f.properties.kind === 'bridge' ? '🌉' : 'k:landmark', lngLat: f.geometry.coordinates as [number, number] });
     const tiles = tileItems(map, q);
     feats.current = tiles.feats;
     for (const r of tiles.items) r.sub = r.kind === 'street' ? t('street') : kindLabel(placeFromFeature(tiles.feats.get(r.id)!)?.kind ?? '', lang);
@@ -127,7 +127,7 @@ export function SearchPanel() {
         id: `osm:${r.osm_type}/${r.osm_id}`,
         name: r.name || r.display_name.split(',')[0],
         sub: r.display_name.split(',').slice(1, 3).join(',').trim(),
-        icon: PLACE_CATEGORIES.has(r.category) ? KIND_ICON[r.type] ?? '📍' : r.category === 'highway' ? '🛣' : r.category === 'place' || r.category === 'boundary' ? '🏘' : '📍',
+        icon: PLACE_CATEGORIES.has(r.category) ? `k:${kindOfPlace(r.type, categoryOfClass(r.type) ?? '')}` : r.category === 'highway' ? '🛣' : r.category === 'place' || r.category === 'boundary' ? '🏘' : '📍',
         lngLat: [Number(r.lon), Number(r.lat)] as [number, number],
         bbox: [Number(r.boundingbox[2]), Number(r.boundingbox[0]), Number(r.boundingbox[3]), Number(r.boundingbox[1])] as [number, number, number, number],
         _cat: r.category,
@@ -204,7 +204,7 @@ export function SearchPanel() {
           {list.map((r) => (
             <li key={`${r.kind}:${r.id}`}>
               <button onClick={() => pick(r)}>
-                <span className="picon">{r.icon}</span>
+                {r.icon.startsWith('k:') ? <PlaceIcon icon={r.icon.slice(2) as IconKind} /> : <span className="picon">{r.icon}</span>}
                 <span className="plist__name">
                   <b>{r.name}</b>
                   {r.sub && <small className="muted">{r.sub}</small>}

@@ -22,6 +22,8 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 5. ✅ Interactions: sheets, follow, layer chips, time controls, TR/EN.
 6. ✅ Polish + perf (adaptive pixel ratio), reduce-motion, deploy (GitHub Pages).
 7. ✅ Part B (user, 2026-10-10): living city map + feed — see `docs/ideas.md`.
+9. ✅ Design pass (user, 2026-10-10): buildings, night contrast, places allow-list + icon family, iPhone layout —
+   before/after in `docs/design-pass/`.
 8. ✅ Chunk 3 (user, 2026-10-10): colourful OSM city (OpenFreeMap), live weather + seasons, places by zoom
    (real data only), search, Open now, guides, snapshot share, PWA, adaptive effects.
 
@@ -70,8 +72,8 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - **Piers/districts from OSM only.** `data/catalog/*.json` holds ids + names + match tokens; `build-piers.ts`
   takes coordinates from OSM ferry terminals / place features, prefers Şehir Hatları terminals, flags
   ambiguous matches; pin with `"osm": "node/123"`. Until OSM data is fetched, piers/districts are empty.
-- **Labels are DOM markers, not MapLibre symbol layers.** No glyph server needed (no API keys), Nunito
-  webfont renders Turkish characters natively; we only show a few dozen labels so DOM cost is negligible.
+- **Labels (superseded, design pass):** all map text and place icons are MapLibre symbols in one collision
+  space (OpenFreeMap glyphs, Noto Sans) so nothing overlaps; only the selected-place highlight is a DOM marker.
 - **Shoreline lines derived at runtime** from land polygons (dropping segments along the clip box), so
   `land.geojson` stays polygon-only within the 400 KB budget and the data edge isn't drawn as a coast.
 - **Land rings are RFC 7946 wound** (land on the left) — the inner-shadow layer uses a negative `line-offset`.
@@ -177,3 +179,25 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - **Adaptive quality ladder** (`src/app/perf.ts`): pixel ratio → particles/gulls → window pass → flat buildings;
   low-end devices start at 1.5×. Headless screenshots run at ~2 fps — use `?adaptive=0` or the ladder kicks in.
 - **Pages is live** (gh-pages branch source): https://mutallimof.github.io/CityMap/
+- **Design pass (user, 2026-10-10).**
+  - *Buildings:* OpenFreeMap's z14 tiles group all same-height buildings of a tile into one multipolygon, so a
+    style can't vary them. A `buildings://` MapLibre protocol + 2 Web Workers (`src/map/buildings`) re-pack the
+    layer into single buildings with `v` (0–99 variation), `h` (real OSM height, else 2–5 floors × 3.2 m) and `b`.
+    Day: soft pastels, light from the sun, no texture. Night: 38 % of buildings dark, the rest get one of three
+    sparse, irregular warm-window facades (64 px tiles, runs of lit flats); pale neutral night light so facades
+    keep their value. Default pitch 46°.
+  - *Night contrast:* darker blue water, neutral dark land, lighter facades, sodium-gold main roads with a
+    blurred street-light glow (fades in z12.6→14.2), bright teal shoreline. Roads step back when zoomed out.
+  - *Places:* allow-list of OSM class/subclass (`POI_KINDS` in `src/places/icons.ts`): cafés, restaurants, bars,
+    bakeries/sweets, museums, galleries, theatres, cinemas, malls/bazaars/department stores, parks, viewpoints,
+    landmarks. Match on `subclass` + class guard (concat expressions didn't evaluate). OpenMapTiles `rank` is a
+    per-tile order (cafés ~40), so thresholds are 24/60/140 by zoom; `icon-padding` limits density; names only for
+    rank ≤ 20 until z17.4. Tile POIs carry no hours/website, so "more OSM detail" is honoured by featured places
+    (curated, detailed) always winning collisions — not per POI.
+  - *Icons:* one canvas-drawn family (`src/places/icons.ts`): colour + shape per category (circle food & drink,
+    rounded square culture, hexagon shopping, leaf nature, star landmark), white glyphs; featured = bigger pin
+    with glow and a baked open-now dot; bars glow at night, viewpoints at golden hour (images swapped). Legend
+    chip. Lists/sheets/search use the same icons (`PlaceIcon`).
+  - *Layout (390 px):* clock chip stacks time over "Simulated schedule"; search + TR/EN are icon buttons; camera
+    sits in the sheet header; a soft scrim under the HUD hides map icons beneath the controls.
+  - *Ferries:* exaggeration 5.6× at z10, 4.9× at z11 (was 4×) so they read as boats when zoomed out.

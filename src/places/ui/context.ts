@@ -4,7 +4,7 @@ import { ui } from '../../ui/store';
 import type { PlacesStore } from '../store';
 import type { Place } from '../types';
 import { lookupId, nominatim } from '../../osm/nominatim';
-import { categoryOfClass } from '../poi-layer';
+import { categoryOfClass } from '../place-layers';
 import { distanceM } from '../store';
 
 let store: PlacesStore | null = null;

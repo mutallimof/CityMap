@@ -5,7 +5,7 @@ import { useTicker } from '../../ui/hooks';
 import { kindLabel, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
-import { CATEGORY_ICON, KIND_ICON } from '../pins';
+import { PlaceIcon } from './PlaceIcon';
 import { distanceM } from '../store';
 import { NearestPierButton, SunsetCard } from './Extras';
 import { openPlace, places } from './context';
@@ -49,7 +49,7 @@ export function FeedHeader() {
     <div className="feedhead">
       <div>
         <h2>
-          {openNow && <span className="chip__dot chip__dot--h" aria-hidden />}
+          {openNow && <span className="chip__open chip__open--h" aria-hidden />}
           {openNow ? t('openNowChip') : t('feedTitle')}
         </h2>
         <small className="muted">{openNow ? t('openNowNote') : t('feedNote')}</small>
@@ -101,7 +101,7 @@ export function FeedBody({ extra }: { extra?: ReactNode }) {
         {list.map(({ p, d, o }) => (
           <li key={p.id}>
             <button onClick={() => openPlace(p.id)}>
-              <span className={`picon picon--${p.category}`}>{KIND_ICON[p.kind] ?? CATEGORY_ICON[p.category]}</span>
+              <PlaceIcon kind={p.kind} category={p.category} />
               <span className="plist__name">
                 <b>{lang === 'en' && p.nameEn ? p.nameEn : p.name}</b>
                 <small className="muted">

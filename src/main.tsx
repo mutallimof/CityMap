@@ -3,7 +3,7 @@ import '@fontsource/nunito/800.css';
 import './styles.css';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { createMap } from './map/createMap';
-import { setLandmarkLang } from './map/city-setup';
+import { setLabelLang, setLabelNight } from './map/labels';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
 import { loadLines, loadPlaces, loadRoutes } from './data/load';
@@ -32,14 +32,14 @@ import './ui/ui.css';
 import './places/pins.css';
 import './places/ui/places.css';
 import { PlacesStore } from './places/store';
-import { PlacePins, SelectedPlaceMarker } from './places/pins';
-import { PoiLayer } from './places/poi-layer';
+import { SelectedPlaceMarker } from './places/pins';
+import { PlaceLayers } from './places/place-layers';
 import { setSearchData } from './search/SearchPanel';
 import guidesCatalog from '../data/catalog/guides.json';
 import { resolveGuide, type GuideDeps, type GuideSpec } from './guides/guides';
 import { addGuideLayers } from './guides/layer';
 import { bindGuideSelection, GuideBody, GuideHeader, GuidesRow, openGuide, setGuides } from './guides/ui';
-import { openPier, openPlace, setPlaces } from './places/ui/context';
+import { flyTo, openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
 import { NearbyPlaces, WeatherChip } from './places/ui/Extras';
@@ -117,20 +117,29 @@ async function boot() {
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });
   setPlaces(store, reduced);
-  const poi = new PoiLayer(map, store.places.map((p) => p.osm));
+  const placeLayers = new PlaceLayers(map, store, landmarks);
   bindMapInteractions(undefined, (e) => {
-    const p = poi.at(e.point);
-    if (!p) return undefined;
-    store.add(p);
+    const hit = placeLayers.at(e.point);
+    if (!hit) return undefined;
+    if ('featured' in hit) {
+      openPlace(hit.featured);
+      return { kind: 'place', id: hit.featured };
+    }
+    if ('landmark' in hit) {
+      const l = hit.landmark;
+      if (!l.osm) {
+        flyTo(l.lngLat, 15.2);
+        return null;
+      }
+      const p = store.add({ id: `osm:${l.osm}`, name: l.name ?? '', nameEn: l.nameEn ?? null, category: 'culture', kind: 'attraction', osm: l.osm, district: null, hours: null, cuisine: null, lngLat: l.lngLat, source: 'osm' });
+      openPlace(p.id);
+      return { kind: 'place', id: p.id };
+    }
+    const p = store.add(hit.poi);
     openPlace(p.id);
     return { kind: 'place', id: p.id };
   });
   document.documentElement.lang = ui.get().lang;
-  setLandmarkLang(ui.get().lang);
-  let lastLang = ui.get().lang;
-  ui.subscribe(() => {
-    if (ui.get().lang !== lastLang) setLandmarkLang((lastLang = ui.get().lang));
-  });
   document.documentElement.classList.toggle('motion-reduced', reduced);
 
   // Guides (seed): stops reference our OSM-derived places, piers and landmarks.
@@ -166,28 +175,20 @@ async function boot() {
   );
   bindGuideSelection();
 
-  const pins = new PlacePins(map, store, (p) => openPlace(p.id, false));
   const picked = new SelectedPlaceMarker(map);
-  let lastPoi = '';
+  let labelState = '';
   const refreshPins = () => {
     const s = ui.get();
     const selectedId = s.selection?.kind === 'place' ? s.selection.id : null;
-    pins.update({
-      categories: s.categories,
-      openNow: s.openNow,
-      selectedId,
-      golden: daylight.theme.night < 0.5 ? daylight.theme.golden : 0,
-      night: daylight.theme.night,
-      nowMs: clock.now(),
-    });
-    const key = `${s.categories.join()}|${s.openNow}`;
-    if (key !== lastPoi) {
-      lastPoi = key;
-      poi.setFilters({ categories: s.categories, openNow: s.openNow, visible: true });
+    const night = daylight.theme.night;
+    placeLayers.update({ categories: s.categories, openNow: s.openNow, nowMs: clock.now(), night, golden: night < 0.5 ? daylight.theme.golden : 0, lang: s.lang });
+    const ls = `${s.lang}|${night > 0.5}`;
+    if (ls !== labelState) {
+      labelState = ls;
+      setLabelLang(map, s.lang);
+      setLabelNight(map, night > 0.5);
     }
-    poi.setNight(daylight.theme.night);
-    const sel = selectedId ? store.byId.get(selectedId) : undefined;
-    picked.show(sel?.source === 'osm' ? sel : null);
+    picked.show(selectedId ? store.byId.get(selectedId) ?? null : null);
   };
   store.onChange(refreshPins);
   ui.subscribe(refreshPins);
@@ -228,7 +229,7 @@ async function boot() {
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, poi });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, placeLayers });
 }
 
 boot().catch((err) => {

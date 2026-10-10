@@ -14,6 +14,8 @@ export interface SheetProps {
   /** Dragging below peek (or tapping the close button) calls this. */
   onClose?: () => void;
   header: ReactNode;
+  /** Rides on the sheet's top edge (e.g. the camera button). */
+  accessory?: ReactNode;
   children: ReactNode;
 }
 
@@ -21,7 +23,7 @@ export interface SheetProps {
  * Bottom sheet with peek / half / full snap points. Drag the header to resize; release snaps to the
  * nearest point (velocity-aware). Transform-only animation, so it stays on the compositor.
  */
-export function Sheet({ open, snap, onSnap, onClose, header, children }: SheetProps) {
+export function Sheet({ open, snap, onSnap, onClose, header, accessory, children }: SheetProps) {
   const [drag, setDrag] = useState<number | null>(null);
   const start = useRef({ y: 0, h: 0, t: 0 });
   const height = HEIGHTS[snap]();
@@ -66,6 +68,7 @@ export function Sheet({ open, snap, onSnap, onClose, header, children }: SheetPr
       style={{ height: full, transform: `translateY(${full - shown}px)` }}
       aria-hidden={!open}
     >
+      {accessory && <div className="sheet__accessory">{accessory}</div>}
       <header className="sheet__header" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
         <div className="sheet__grip" />
         {header}

@@ -8,6 +8,9 @@ import type { CityPalette } from './city-look';
  * roads, bridges, 3D buildings and street names follow. Colours are re-applied by applyCityLook().
  */
 export const CITY_SOURCE = 'city';
+/** Same tiles, building layer re-packed into single buildings (src/map/buildings). */
+export const BUILDING_SOURCE = 'city-buildings';
+const BUILDING_LAYER = 'b';
 export const LANDMARK_SOURCE = 'landmarks';
 
 export const CITY_LAYER = {
@@ -15,6 +18,7 @@ export const CITY_LAYER = {
   landcover: 'city-landcover',
   blossom: 'city-blossom',
   tulips: 'city-tulips',
+  roadGlow: 'city-road-glow',
   roadCasing: 'city-road-casing',
   road: 'city-road',
   rail: 'city-rail',
@@ -30,7 +34,8 @@ export const CITY_LAYER = {
 export const IMG = {
   blossom: 'city-blossom',
   tulips: 'city-tulips',
-  windows: ['city-win-0', 'city-win-1', 'city-win-2'],
+  /** Night facades: dark, sparse, medium, livelier — chosen per building. */
+  windows: ['city-win-0', 'city-win-1', 'city-win-2', 'city-win-3'],
 } as const;
 
 const Z = (stops: [number, number][], base = 1.5): ExpressionSpecification => ['interpolate', ['exponential', base], ['zoom'], ...stops.flat()];
@@ -96,7 +101,7 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       minzoom: 12,
       filter: ['any', ['==', ['get', 'class'], 'wood'], ['in', ['get', 'subclass'], ['literal', ['park', 'garden']]]],
       layout: { visibility: p.blossom.length ? 'visible' : 'none' },
-      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z([[12, 0.35], [15, 0.9]]) },
+      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z([[12, 0.2], [15, 0.5]]) },
     },
     {
       id: CITY_LAYER.tulips,
@@ -116,6 +121,22 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       minzoom: 13,
       filter: ['all', classIn(['rail', 'transit']), notTunnel],
       paint: { 'line-color': p.rail, 'line-width': Z([[13, 0.6], [17, 2]]), 'line-dasharray': ['literal', [3, 2]] },
+    },
+    {
+      // Night: warm street-light glow along the main roads (opacity follows the night level).
+      id: CITY_LAYER.roadGlow,
+      type: 'line',
+      source: CITY_SOURCE,
+      'source-layer': 'transportation',
+      minzoom: 11,
+      filter: ['all', classIn([...MAJOR, ...MID]), notTunnel],
+      layout: { 'line-join': 'round', 'line-cap': 'round', visibility: 'none' },
+      paint: {
+        'line-color': c.lights.glow,
+        'line-width': ['interpolate', ['exponential', 1.5], ['zoom'], 11, ['match', ['get', 'class'], MAJOR, 4, 2], 14, ['match', ['get', 'class'], MAJOR, 14, 8], 16, ['match', ['get', 'class'], MAJOR, 40, 24], 18, ['match', ['get', 'class'], MAJOR, 110, 60]] as unknown as ExpressionSpecification,
+        'line-blur': ['interpolate', ['exponential', 1.5], ['zoom'], 11, 3, 14, 10, 16, 26, 18, 70] as unknown as ExpressionSpecification,
+        'line-opacity': 0,
+      },
     },
     {
       id: CITY_LAYER.roadCasing,
@@ -157,14 +178,13 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
     {
       id: CITY_LAYER.buildings,
       type: 'fill-extrusion',
-      source: CITY_SOURCE,
-      'source-layer': 'building',
+      source: BUILDING_SOURCE,
+      'source-layer': BUILDING_LAYER,
       minzoom: c.buildingsFrom[0],
-      filter: ['!=', ['get', 'hide_3d'], true],
       paint: {
         ...buildingPaint(p, ids),
-        'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], c.buildingMinHeight],
-        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+        'fill-extrusion-height': ['get', 'h'],
+        'fill-extrusion-base': ['get', 'b'],
         'fill-extrusion-vertical-gradient': true,
         'fill-extrusion-opacity': buildingOpacity(1),
       },
@@ -173,15 +193,15 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       // Same buildings with lit-window patterns; cross-faded in at night.
       id: CITY_LAYER.buildingsLit,
       type: 'fill-extrusion',
-      source: CITY_SOURCE,
-      'source-layer': 'building',
+      source: BUILDING_SOURCE,
+      'source-layer': BUILDING_LAYER,
       minzoom: c.buildingsFrom[0],
-      filter: ['!=', ['get', 'hide_3d'], true],
       layout: { visibility: 'none' },
       paint: {
-        'fill-extrusion-pattern': ['match', pickBuilding(3), 0, IMG.windows[0], 1, IMG.windows[1], IMG.windows[2]],
-        'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], c.buildingMinHeight],
-        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+        // Many buildings stay dark; the rest get a few warm windows, unevenly scattered.
+        'fill-extrusion-pattern': ['step', ['get', 'v'], IMG.windows[0], c.lights.darkShare, IMG.windows[1], c.lights.darkShare + 25, IMG.windows[2], c.lights.darkShare + 42, IMG.windows[3]],
+        'fill-extrusion-height': ['get', 'h'],
+        'fill-extrusion-base': ['get', 'b'],
         'fill-extrusion-vertical-gradient': true,
         'fill-extrusion-opacity': buildingOpacity(0),
       },
@@ -190,14 +210,14 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       // Landmark buildings (Galata Tower): warm gold by day, floodlit at night — above the window layer.
       id: CITY_LAYER.landmarkBuildings,
       type: 'fill-extrusion',
-      source: CITY_SOURCE,
-      'source-layer': 'building',
+      source: BUILDING_SOURCE,
+      'source-layer': BUILDING_LAYER,
       minzoom: 13,
       filter: ['in', ['to-number', ['id'], 0], ['literal', ids.landmarkBuildings.length ? ids.landmarkBuildings : [-1]]],
       paint: {
         'fill-extrusion-color': p.landmark,
-        'fill-extrusion-height': ['max', ['coalesce', ['get', 'render_height'], 0], c.buildingMinHeight],
-        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+        'fill-extrusion-height': ['get', 'h'],
+        'fill-extrusion-base': ['get', 'b'],
         'fill-extrusion-vertical-gradient': true,
         'fill-extrusion-opacity': 1,
       },
@@ -293,7 +313,12 @@ function roadWidth(): ExpressionSpecification {
 }
 
 function roadPaint(p: CityPalette) {
-  return { 'line-color': roadColor(p), 'line-width': roadWidth(), 'line-opacity': ['match', ['get', 'class'], 'path', 0.7, 1] as ExpressionSpecification };
+  // Zoomed out, roads step back so the water and coast lead; full strength from z14.
+  return {
+    'line-color': roadColor(p),
+    'line-width': roadWidth(),
+    'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, ['match', ['get', 'class'], 'path', 0.4, 0.5], 14, ['match', ['get', 'class'], 'path', 0.7, 1]] as unknown as ExpressionSpecification,
+  };
 }
 
 function roadCasingPaint(p: CityPalette) {
@@ -304,12 +329,8 @@ function roadCasingPaint(p: CityPalette) {
   };
 }
 
-/** Buildings merged into tiles often share ids, so mix the height in for pastel variety. */
-const pickBuilding = (n: number): ExpressionSpecification => [
-  '%',
-  ['+', ['floor', ['/', ['to-number', ['id'], 0], 10]], ['round', ['*', ['coalesce', ['get', 'render_height'], 0], 3.7]]],
-  n,
-];
+/** Per-building variation `v` (0–99) from the re-packed building layer. */
+const pickBuilding = (n: number): ExpressionSpecification => ['%', ['get', 'v'], n];
 
 function buildingPaint(p: CityPalette, ids: CityIds) {
   const b = p.buildings;
@@ -361,7 +382,7 @@ export class CityLook {
     const key = p.blossom.join(',');
     if (key !== this.blossomKey) {
       this.blossomKey = key;
-      if (p.blossom.length) putImage(map, IMG.blossom, dotPattern(p.blossom, 64, 26, 2.2, 7));
+      if (p.blossom.length) putImage(map, IMG.blossom, dotPattern(p.blossom, 64, 14, 1.8, 7));
       this.visible(CITY_LAYER.blossom, p.blossom.length > 0);
     }
     this.visible(CITY_LAYER.tulips, tulips);
@@ -374,6 +395,10 @@ export class CityLook {
     this.visible(CITY_LAYER.landmarkBuildings, buildings);
     this.set(CITY_LAYER.buildingsLit, 'fill-extrusion-opacity', buildingOpacity(litK));
     this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - litK * 0.999));
+    this.visible(CITY_LAYER.roadGlow, night > 0.05);
+    // Street-light glow only once you're close enough to read streets; zoomed out it would be orange noise.
+    const glow = Math.round(night * CONFIG.city.lights.glowOpacity * 20) / 20;
+    this.set(CITY_LAYER.roadGlow, 'line-opacity', ['interpolate', ['linear'], ['zoom'], 12.6, 0, 14.2, glow]);
     this.visible(CITY_LAYER.bridgeLamps, night > 0.3);
     this.set(CITY_LAYER.bridgeLamps, 'line-opacity', Math.round(night * 20) / 20);
     this.set(CITY_LAYER.bridgeGlow, 'line-opacity', 0.3 + 0.4 * Math.round(night * 20) / 20);
@@ -441,25 +466,42 @@ export function dotPattern(colors: readonly string[], size: number, count: numbe
   return g.getImageData(0, 0, size, size);
 }
 
-/** Facade tile with a grid of windows, a share of them lit warm. */
-export function windowPattern(seed: number): ImageData {
-  const c = CONFIG.city;
-  const size = 32;
+/**
+ * Night facade tile: rows of floors with mostly dark windows; a share are lit in runs (a lit flat
+ * spans 1–3 windows), warm tones of varying strength. `share` 0 = a dark building. Tiles are large
+ * (64 px) and irregular so no grid reads at a glance.
+ */
+export function windowPattern(seed: number, share: number): ImageData {
+  const n = CONFIG.city.lights;
+  const size = 64;
   const [, g] = canvas(size, size);
-  g.fillStyle = c.windowFacade;
+  g.fillStyle = n.facade;
   g.fillRect(0, 0, size, size);
+  if (share <= 0) return g.getImageData(0, 0, size, size);
   const rand = rng(seed);
-  for (let y = 0; y < 4; y++)
-    for (let x = 0; x < 4; x++) {
-      const lit = rand() < c.windowLitShare;
-      g.fillStyle = lit ? c.windowLit[Math.floor(rand() * c.windowLit.length)] : c.windowDark;
-      g.fillRect(x * 8 + 2, y * 8 + 2, 4, 5);
+  const rows = 8; // floors per tile
+  const cols = 10;
+  for (let r = 0; r < rows; r++) {
+    let run = 0;
+    for (let k = 0; k < cols; k++) {
+      // Lit flats come in short runs; whole floors are sometimes dark.
+      const floorDark = rand() < 0.35;
+      const lit = !floorDark && (run > 0 ? rand() < 0.55 : rand() < share);
+      run = lit ? run + 1 : 0;
+      if (!lit) continue;
+      const col = n.windows[Math.floor(rand() * n.windows.length)];
+      g.globalAlpha = 0.55 + rand() * 0.45;
+      g.fillStyle = col;
+      g.fillRect(k * 6.4 + 1.6, r * 8 + 2, 2.6, 3.6);
     }
+  }
+  g.globalAlpha = 1;
   return g.getImageData(0, 0, size, size);
 }
 
 export function addCityImages(map: MlMap): void {
-  IMG.windows.forEach((id, i) => putImage(map, id, windowPattern(11 + i * 7)));
+  const shares = [0, ...CONFIG.city.lights.litShares];
+  IMG.windows.forEach((id, i) => putImage(map, id, windowPattern(11 + i * 7, shares[i])));
   putImage(map, IMG.tulips, dotPattern([...CONFIG.city.tulips], 48, 60, 2, 3));
   putImage(map, IMG.blossom, dotPattern(['#00000000'], 8, 1, 1, 1));
 }
