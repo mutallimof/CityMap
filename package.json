@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "data:coastline": "NODE_OPTIONS=--max-old-space-size=6000 tsx scripts/build-coastline.ts",
-    "data:fetch-osm": "tsx scripts/fetch-osm.ts",
+    "data:fetch-osm": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-osm.ts",
     "data:piers": "tsx scripts/build-piers.ts"
   },
   "dependencies": {
