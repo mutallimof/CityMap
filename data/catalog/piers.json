@@ -1,0 +1,28 @@
+{
+  "_comment": "Pier catalog: ids + display names + OSM name tokens to match. Coordinates are NEVER typed here — build-piers.ts takes them from OSM (data/raw). Add \"osm\": \"node/123\" to pin a specific feature when matching is ambiguous.",
+  "piers": [
+    { "id": "eminonu", "tr": "Eminönü", "en": "Eminönü", "match": ["Eminönü"] },
+    { "id": "karakoy", "tr": "Karaköy", "en": "Karaköy", "match": ["Karaköy"] },
+    { "id": "kabatas", "tr": "Kabataş", "en": "Kabataş", "match": ["Kabataş"] },
+    { "id": "besiktas", "tr": "Beşiktaş", "en": "Beşiktaş", "match": ["Beşiktaş"] },
+    { "id": "ortakoy", "tr": "Ortaköy", "en": "Ortaköy", "match": ["Ortaköy"] },
+    { "id": "bebek", "tr": "Bebek", "en": "Bebek", "match": ["Bebek"] },
+    { "id": "arnavutkoy", "tr": "Arnavutköy", "en": "Arnavutköy", "match": ["Arnavutköy"] },
+    { "id": "emirgan", "tr": "Emirgan", "en": "Emirgan", "match": ["Emirgan"] },
+    { "id": "sariyer", "tr": "Sarıyer", "en": "Sarıyer", "match": ["Sarıyer"] },
+    { "id": "rumeli-kavagi", "tr": "Rumeli Kavağı", "en": "Rumeli Kavağı", "match": ["Rumeli Kavağı", "Rumelikavağı"] },
+    { "id": "anadolu-kavagi", "tr": "Anadolu Kavağı", "en": "Anadolu Kavağı", "match": ["Anadolu Kavağı", "Anadolukavağı"] },
+    { "id": "kanlica", "tr": "Kanlıca", "en": "Kanlıca", "match": ["Kanlıca"] },
+    { "id": "anadolu-hisari", "tr": "Anadolu Hisarı", "en": "Anadolu Hisarı", "match": ["Anadolu Hisarı", "Anadoluhisarı"] },
+    { "id": "cengelkoy", "tr": "Çengelköy", "en": "Çengelköy", "match": ["Çengelköy"] },
+    { "id": "beylerbeyi", "tr": "Beylerbeyi", "en": "Beylerbeyi", "match": ["Beylerbeyi"] },
+    { "id": "uskudar", "tr": "Üsküdar", "en": "Üsküdar", "match": ["Üsküdar"] },
+    { "id": "haydarpasa", "tr": "Haydarpaşa", "en": "Haydarpaşa", "match": ["Haydarpaşa"] },
+    { "id": "kadikoy", "tr": "Kadıköy", "en": "Kadıköy", "match": ["Kadıköy"] },
+    { "id": "bostanci", "tr": "Bostancı", "en": "Bostancı", "match": ["Bostancı"] },
+    { "id": "kinaliada", "tr": "Kınalıada", "en": "Kınalıada", "match": ["Kınalıada"] },
+    { "id": "burgazada", "tr": "Burgazada", "en": "Burgazada", "match": ["Burgazada", "Burgaz"] },
+    { "id": "heybeliada", "tr": "Heybeliada", "en": "Heybeliada", "match": ["Heybeliada"] },
+    { "id": "buyukada", "tr": "Büyükada", "en": "Büyükada", "match": ["Büyükada"] }
+  ]
+}

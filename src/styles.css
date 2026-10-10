@@ -1,0 +1,75 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--water, #1f5e6e);
+  font-family: var(--font, 'Nunito', system-ui, sans-serif);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#map {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+
+/* ---- Labels (DOM markers) ---- */
+.map-label {
+  pointer-events: none;
+  white-space: nowrap;
+  color: var(--label-text);
+  text-shadow:
+    0 0 2px var(--label-halo),
+    0 0 6px var(--label-halo);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.map-label--district {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.map-label--pier {
+  font-weight: 600;
+  font-size: 11px;
+}
+.show-district-labels .map-label--district,
+.show-pier-labels .map-label--pier {
+  opacity: 1;
+}
+
+/* ---- Attribution: keep OSM credit readable but quiet ---- */
+.maplibregl-ctrl-attrib {
+  font-family: inherit;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ---- Debug ---- */
+.debug-panel {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: 8px;
+  z-index: 10;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(10, 20, 28, 0.72);
+  color: #dfe9ec;
+  font: 11px/1.4 ui-monospace, Menlo, monospace;
+  pointer-events: none;
+}
+.debug-panel .ok { color: #7ee08a; }
+.debug-panel .warn { color: #f2c94c; }
+.debug-panel .bad { color: #f07a6a; }
+
+.boot-error {
+  position: fixed;
+  inset: auto 8px 8px 8px;
+  color: #fff;
+  background: #a33;
+  padding: 8px;
+  white-space: pre-wrap;
+}

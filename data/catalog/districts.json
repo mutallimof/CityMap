@@ -1,0 +1,17 @@
+{
+  "_comment": "District / area labels. Positions come from OSM place=* features (build-piers.ts); never typed here. Add \"osm\" to pin.",
+  "districts": [
+    { "id": "eminonu", "tr": "Eminönü", "en": "Eminönü" },
+    { "id": "beyoglu", "tr": "Beyoğlu", "en": "Beyoğlu" },
+    { "id": "besiktas", "tr": "Beşiktaş", "en": "Beşiktaş" },
+    { "id": "ortakoy", "tr": "Ortaköy", "en": "Ortaköy" },
+    { "id": "bebek", "tr": "Bebek", "en": "Bebek" },
+    { "id": "sariyer", "tr": "Sarıyer", "en": "Sarıyer" },
+    { "id": "uskudar", "tr": "Üsküdar", "en": "Üsküdar" },
+    { "id": "kadikoy", "tr": "Kadıköy", "en": "Kadıköy" },
+    { "id": "beykoz", "tr": "Beykoz", "en": "Beykoz" },
+    { "id": "bostanci", "tr": "Bostancı", "en": "Bostancı" },
+    { "id": "buyukada", "tr": "Büyükada", "en": "Büyükada" },
+    { "id": "heybeliada", "tr": "Heybeliada", "en": "Heybeliada" }
+  ]
+}
