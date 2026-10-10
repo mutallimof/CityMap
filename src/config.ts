@@ -101,7 +101,7 @@ export const CONFIG = {
     /** Street names from this zoom. */
     streetLabelsFrom: 15.4,
     /** Landmark names (towers, bridges) from this zoom. */
-    landmarkLabelsFrom: 12.2,
+    landmarkLabelsFrom: 13.2,
     day: {
       residential: ['#F7DDD3', '#F9E5CA', '#ECE0F1', '#DCEEDD', '#F8EAC4'],
       commercial: '#F8D8C6',
@@ -428,6 +428,9 @@ export const CONFIG = {
     /** Lightning flashes during storms: mean seconds between flashes. */
     lightningEveryS: 9,
   },
+
+  /** Guide routes on the map. */
+  guides: { walkColor: '#C0392B', stopColor: '#E0A100' },
 
   /** Snapshot share image: aspect (w/h, 4:5 = Instagram feed) and max height in px. */
   snapshot: { aspect: 0.8, maxHeight: 1350, appName: 'Istanbul Living City' },

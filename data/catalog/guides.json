@@ -1,0 +1,50 @@
+{
+  "_comment": "Seed guides. Stops reference our OSM-derived data by id (place:<id> from data/places.geojson, pier:<id>, landmark:<id>); no coordinates here. `next` is how you reach the following stop: \"walk\" or \"ferry:<lineId>\" (drawn along that line's real route).",
+  "guides": [
+    {
+      "id": "first-day",
+      "icon": "✨",
+      "title": { "tr": "İstanbul'da ilk gün", "en": "First day in Istanbul" },
+      "summary": { "tr": "Baharat çarşısından Galata'ya, vapurla Asya'ya ve Moda'da gün batımı.", "en": "From the spice market to Galata, a ferry to Asia and sunset in Moda." },
+      "hours": 5,
+      "stops": [
+        { "ref": "place:misir-carsisi", "next": "walk", "note": { "tr": "Güne baharat ve lokum kokuları arasında başla.", "en": "Start among the spices and Turkish delight." } },
+        { "ref": "landmark:galata-bridge", "next": "walk", "note": { "tr": "Oltacıların arasından Haliç'i yürüyerek geç.", "en": "Walk across the Golden Horn past the fishermen." } },
+        { "ref": "place:galata-kulesi", "next": "walk", "note": { "tr": "Kuleye çık, şehri tepeden gör.", "en": "Climb the tower for the view over the city." } },
+        { "ref": "pier:karakoy", "next": "ferry:kadikoy-karakoy", "note": { "tr": "Vapura bin, martılara simit at.", "en": "Hop on the vapur — the gulls will follow." } },
+        { "ref": "pier:kadikoy", "next": "walk", "note": { "tr": "Asya yakasına hoş geldin.", "en": "Welcome to the Asian side." } },
+        { "ref": "place:moda-burnu", "note": { "tr": "Moda sahilinde gün batımını izle.", "en": "Watch the sunset from the Moda shore." } }
+      ]
+    },
+    {
+      "id": "bosphorus",
+      "icon": "⛴",
+      "title": { "tr": "Vapurla Boğaz", "en": "Bosphorus by ferry" },
+      "summary": { "tr": "Uzun Boğaz turu: iki kıta, üç köprü, Karadeniz'in kapısına kadar.", "en": "The long Bosphorus tour: two continents, three bridges, up to the Black Sea gate." },
+      "hours": 6,
+      "stops": [
+        { "ref": "pier:eminonu", "next": "ferry:bogaz", "note": { "tr": "Boğaz Hattı vapuruna Eminönü'nden bin.", "en": "Board the Bosphorus Line at Eminönü." } },
+        { "ref": "pier:besiktas", "next": "ferry:bogaz", "note": { "tr": "Avrupa yakasında ilk durak.", "en": "First stop on the European shore." } },
+        { "ref": "pier:uskudar", "next": "ferry:bogaz", "note": { "tr": "Asya'ya geçiş — Kız Kulesi'ne bak.", "en": "Across to Asia — look for the Maiden's Tower." } },
+        { "ref": "pier:kanlica", "next": "ferry:bogaz", "note": { "tr": "Köprülerin altından geçtikten sonra Kanlıca yoğurdu.", "en": "After passing under the bridges: Kanlıca, famous for its yoghurt." } },
+        { "ref": "pier:sariyer", "next": "ferry:bogaz", "note": { "tr": "Balıkçı köyü havası.", "en": "A fishing-village feel." } },
+        { "ref": "pier:rumeli-kavagi", "next": "ferry:bogaz", "note": { "tr": "Boğaz daralıyor, Karadeniz yakın.", "en": "The strait narrows; the Black Sea is close." } },
+        { "ref": "pier:anadolu-kavagi", "note": { "tr": "Son durak: tepeye yürü, balık ye, dönüş vapurunu bekle.", "en": "Last stop: walk up the hill, eat fish, catch the ferry back." } }
+      ]
+    },
+    {
+      "id": "asian-sunset",
+      "icon": "🌅",
+      "title": { "tr": "Üsküdar'da gün batımı", "en": "Sunset in Üsküdar" },
+      "summary": { "tr": "Sahil boyunca Salacak'a yürü, Kız Kulesi'ne karşı gün batımı, vapurla dönüş.", "en": "Stroll the shore to Salacak, sunset facing the Maiden's Tower, ferry back." },
+      "hours": 2,
+      "stops": [
+        { "ref": "pier:uskudar", "next": "walk", "note": { "tr": "Vapurdan in, sahil boyunca güneye yürü.", "en": "Step off the ferry and walk south along the shore." } },
+        { "ref": "place:kiz-kulesi", "next": "walk", "note": { "tr": "Kız Kulesi tam karşında.", "en": "The Maiden's Tower right in front of you." } },
+        { "ref": "place:salacak", "next": "walk", "note": { "tr": "Çay al, güneşin tarihi yarımadanın arkasına batışını izle.", "en": "Get a tea and watch the sun set behind the old city." } },
+        { "ref": "pier:uskudar", "next": "ferry:uskudar-eminonu", "note": { "tr": "Işıklar yanarken vapurla karşıya geç.", "en": "Cross back by ferry as the lights come on." } },
+        { "ref": "pier:eminonu", "note": { "tr": "Eminönü'nde balık ekmek.", "en": "Finish with a fish sandwich in Eminönü." } }
+      ]
+    }
+  ]
+}

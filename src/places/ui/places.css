@@ -176,3 +176,34 @@ a.pill { text-decoration: none; color: inherit; display: inline-flex; align-item
 .plist__name small { font-size: 12px; }
 .dot-open { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34c27a; margin-right: 4px; vertical-align: 1px; }
 .chip__dot--h { display: inline-block; margin-right: 8px; vertical-align: 3px; }
+
+/* guides */
+.guides { display: grid; gap: 8px; }
+.guides .section { margin: 0; }
+.guides__row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px 4px; }
+.guides__row::-webkit-scrollbar { display: none; }
+.guidecard {
+  flex: 0 0 auto;
+  width: 168px;
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--panel-border);
+  background: linear-gradient(135deg, rgba(224, 161, 0, 0.14), rgba(31, 94, 110, 0.1));
+  text-align: left;
+  font-size: 14px;
+}
+.guidecard b { line-height: 1.25; }
+.guidecard small { font-size: 12px; }
+.guidecard__icon { font-size: 22px; }
+.guide { display: grid; gap: 12px; }
+.guide__summary { margin: 0; font-size: 14.5px; line-height: 1.45; }
+.guide__stops { list-style: none; margin: 0; padding: 0; display: grid; }
+.guide__stops li { display: grid; }
+.guide__stops button { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border: 0; background: none; text-align: left; font-size: 14px; }
+.guide__n { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #e0a100; color: #fff; font-weight: 900; font-size: 13px; box-shadow: 0 0 0 2px #fff; }
+.guide__txt { display: grid; gap: 2px; }
+.guide__txt small { font-size: 12.5px; line-height: 1.35; }
+.guide__leg { margin: 0 0 0 12px; padding: 2px 0 4px 26px; border-left: 2px dashed rgba(127, 127, 127, 0.4); font-size: 12.5px; font-weight: 700; }

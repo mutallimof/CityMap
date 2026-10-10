@@ -118,3 +118,8 @@
   .pin--golden .pin__bubble { animation: none !important; }
 }
 .motion-reduced .pin--golden .pin__bubble { animation: none !important; }
+
+/* a guide is open: pins step back so the numbered route reads */
+.guide-open .pin:not(.pin--selected) { pointer-events: none; }
+.guide-open .pin:not(.pin--selected) .pin__inner { opacity: 0; transform: scale(0.4); }
+.guide-open .map-label--landmark { opacity: 0 !important; }

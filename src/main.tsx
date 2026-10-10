@@ -34,14 +34,18 @@ import { PlacesStore } from './places/store';
 import { PlacePins, SelectedPlaceMarker } from './places/pins';
 import { PoiLayer } from './places/poi-layer';
 import { setSearchData } from './search/SearchPanel';
+import guidesCatalog from '../data/catalog/guides.json';
+import { resolveGuide, type GuideDeps, type GuideSpec } from './guides/guides';
+import { addGuideLayers } from './guides/layer';
+import { bindGuideSelection, GuideBody, GuideHeader, GuidesRow, openGuide, setGuides } from './guides/ui';
 import { openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
 import { NearbyPlaces, WeatherChip } from './places/ui/Extras';
 
-function parseDeepLink(): { kind: 'place' | 'pier'; id: string } | null {
-  const m = /^#(place|pier)=(.+)$/.exec(location.hash);
-  return m ? { kind: m[1] as 'place' | 'pier', id: decodeURIComponent(m[2]) } : null;
+function parseDeepLink(): { kind: 'place' | 'pier' | 'guide'; id: string } | null {
+  const m = /^#(place|pier|guide)=(.+)$/.exec(location.hash);
+  return m ? { kind: m[1] as 'place' | 'pier' | 'guide', id: decodeURIComponent(m[2]) } : null;
 }
 import { stressInputs } from './sim/stress';
 
@@ -127,6 +131,39 @@ async function boot() {
   });
   document.documentElement.classList.toggle('motion-reduced', reduced);
 
+  // Guides (seed): stops reference our OSM-derived places, piers and landmarks.
+  addGuideLayers(map);
+  const lineColor = new Map(lines.map((l) => [l.id, l.color]));
+  const guideDeps: GuideDeps = {
+    place: (id) => {
+      const p = store.byId.get(id);
+      return p && { name: { tr: p.name, en: p.nameEn ?? p.name }, lngLat: p.lngLat, icon: '' };
+    },
+    pier: (id) => {
+      const p = pierById.get(id);
+      return p && { name: { tr: p.name, en: p.nameEn }, lngLat: p.lngLat, icon: '⚓' };
+    },
+    landmark: (id) => {
+      const f = landmarks.features.find((x) => x.properties.id === id && x.geometry.type === 'Point');
+      return f && { name: { tr: f.properties.name ?? id, en: f.properties.nameEn ?? id }, lngLat: (f.geometry as GeoJSON.Point).coordinates as [number, number], icon: '' };
+    },
+    line: (id) => {
+      const r = routes.features.find((x) => x.properties.lineId === id);
+      return r && { coords: r.geometry.coordinates as [number, number][], stops: r.properties.stops, stopVertex: r.properties.stopVertex, color: lineColor.get(id) ?? '#E0A100' };
+    },
+  };
+  setGuides(
+    (guidesCatalog.guides as GuideSpec[]).flatMap((g) => {
+      try {
+        return [resolveGuide(g, guideDeps)];
+      } catch (err) {
+        console.warn(err);
+        return [];
+      }
+    }),
+  );
+  bindGuideSelection();
+
   const pins = new PlacePins(map, store, (p) => openPlace(p.id, false));
   const picked = new SelectedPlaceMarker(map);
   let lastPoi = '';
@@ -162,7 +199,8 @@ async function boot() {
       introMs={intro ? CONFIG.camera.intro.durationMs : 0}
       categories
       topExtra={<WeatherChip />}
-      feed={{ header: <FeedHeader />, body: <FeedBody /> }}
+      feed={{ header: <FeedHeader />, body: <FeedBody extra={<GuidesRow />} /> }}
+      guideSheet={(id) => ({ header: <GuideHeader id={id} />, body: <GuideBody id={id} /> })}
       placeSheet={(id) => ({ header: <PlaceHeader id={id} />, body: <PlaceBody id={id} /> })}
       nearbyPier={(id) => <NearbyPlaces pierId={id} />}
     />,
@@ -173,6 +211,7 @@ async function boot() {
   if (intro) void playIntro(map);
   if (deep?.kind === 'place') openPlace(deep.id);
   if (deep?.kind === 'pier') openPier(deep.id);
+  if (deep?.kind === 'guide') openGuide(deep.id);
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.

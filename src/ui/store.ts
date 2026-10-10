@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
 export type Lang = 'tr' | 'en';
-export type Selection = { kind: 'vessel'; id: string } | { kind: 'pier'; id: string } | { kind: 'place'; id: string } | null;
+export type Selection = { kind: 'vessel'; id: string } | { kind: 'pier'; id: string } | { kind: 'place'; id: string } | { kind: 'guide'; id: string } | null;
 export type Category = 'food' | 'culture' | 'shopping' | 'park';
 export type SheetSnap = 'peek' | 'half' | 'full';
 
