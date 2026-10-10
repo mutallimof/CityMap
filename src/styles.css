@@ -127,3 +127,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .loader__boat { animation: none; transform: translateX(78px); }
 }
+
+/* Keep the OSM credit visible above the feed sheet's peek (plan §4.10). */
+.maplibregl-ctrl-bottom-right {
+  bottom: calc(140px + env(safe-area-inset-bottom));
+}
