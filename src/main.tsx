@@ -33,6 +33,7 @@ import './places/ui/places.css';
 import { PlacesStore } from './places/store';
 import { PlacePins, SelectedPlaceMarker } from './places/pins';
 import { PoiLayer } from './places/poi-layer';
+import { setSearchData } from './search/SearchPanel';
 import { openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
@@ -61,7 +62,7 @@ async function boot() {
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
   const deep = parseDeepLink();
   const intro = withIntro && !deep;
-  const [{ map, piers, land, city }, lines, routes, placeData] = await Promise.all([
+  const [{ map, piers, land, city, districts, landmarks }, lines, routes, placeData] = await Promise.all([
     createMap(container, intro),
     loadLines(),
     loadRoutes(),
@@ -108,6 +109,7 @@ async function boot() {
   setServices({ map, clock, daylight, ferries, weather, network, getDay, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
   // Places — all real OpenStreetMap data: featured pins + every map POI (revealed by zoom).
   const store = new PlacesStore(placeData);
+  setSearchData({ districts, landmarks });
   setPlaces(store, reduced);
   const poi = new PoiLayer(map, store.places.map((p) => p.osm));
   bindMapInteractions(undefined, (e) => {

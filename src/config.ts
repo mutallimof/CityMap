@@ -429,6 +429,9 @@ export const CONFIG = {
     lightningEveryS: 9,
   },
 
+  /** Snapshot share image: aspect (w/h, 4:5 = Instagram feed) and max height in px. */
+  snapshot: { aspect: 0.8, maxHeight: 1350, appName: 'Istanbul Living City' },
+
   /** OpenStreetMap services used from the browser (no keys). */
   osm: {
     nominatim: 'https://nominatim.openstreetmap.org',

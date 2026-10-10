@@ -6,16 +6,16 @@ import { buildStyle, SOURCE } from './style';
 import { initialCamera } from './intro';
 import { shorelineFromLand } from './shoreline';
 import { addLabels, bindLabelZoomClasses } from './labels';
-import { loadDistricts, loadLand, loadLandmarks, loadPiers, type PierProps } from '../data/load';
+import { loadDistricts, loadLand, loadLandmarks, loadPiers, type DistrictProps, type LandmarkProps, type PierProps } from '../data/load';
 import { addCity } from './city-setup';
 import type { CityLook } from './city';
-import type { FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson';
+import type { FeatureCollection, MultiLineString, MultiPolygon, Point, Polygon } from 'geojson';
 
 // MapLibre resolves its worker relative to its own module, which breaks under
 // Vite's dep pre-bundling; point it at the emitted asset explicitly.
 setWorkerUrl(workerUrl);
 
-export async function createMap(container: HTMLElement, withIntro = false): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps>; land: FeatureCollection<Polygon | MultiPolygon>; city: CityLook }> {
+export async function createMap(container: HTMLElement, withIntro = false): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps>; land: FeatureCollection<Polygon | MultiPolygon>; city: CityLook; districts: FeatureCollection<Point, DistrictProps>; landmarks: FeatureCollection<Point | MultiLineString, LandmarkProps> }> {
   const [w, s, e, n] = CONFIG.bounds;
   const pad = CONFIG.camera.boundsPadding;
   const map = new MlMap({
@@ -49,5 +49,5 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
   addLabels(map, 'pier', piers);
   bindLabelZoomClasses(map);
 
-  return { map, piers, land, city };
+  return { map, piers, land, city, districts, landmarks };
 }

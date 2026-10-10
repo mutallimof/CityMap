@@ -126,7 +126,7 @@ function dist(f: MapGeoJSONFeature, p: { x: number; y: number }, map: MlMap): nu
   return Math.hypot(q.x - p.x, q.y - p.y);
 }
 
-export function placeFromFeature(f: MapGeoJSONFeature): Place | null {
+export function placeFromFeature(f: Pick<MapGeoJSONFeature, 'id' | 'properties' | 'geometry'>): Place | null {
   const props = f.properties as Record<string, string | number | undefined>;
   const osm = typeof f.id === 'number' ? osmFromTileId(f.id) : null;
   const cls = String(props.class ?? '');

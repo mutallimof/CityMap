@@ -17,6 +17,8 @@ export interface UiState {
   /** Only places open right now (by their OSM opening hours). */
   openNow: boolean;
   timePanel: boolean;
+  /** Search overlay open. */
+  search: boolean;
   hint: boolean;
   sheetSnap: SheetSnap;
 }
@@ -59,6 +61,7 @@ export const ui = createStore<UiState>({
   routes: true,
   categories: [],
   openNow: false,
+  search: false,
   timePanel: false,
   hint: true,
   sheetSnap: 'peek',

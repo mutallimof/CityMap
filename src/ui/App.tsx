@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { Chips } from './Chips';
+import { Fabs } from './Fabs';
+import { SearchPanel } from '../search/SearchPanel';
 import { Hint } from './Hint';
 import { PierHeader, PierSheet } from './PierSheet';
 import { Sheet } from './Sheet';
@@ -36,6 +38,8 @@ export function App(slots: AppSlots) {
         <Chips withCategories={!!slots.categories} />
         <TimePanel />
       </div>
+      <Fabs />
+      <SearchPanel />
       <Hint delayMs={slots.introMs} />
       <Sheet
         open={!!c}
