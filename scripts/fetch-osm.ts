@@ -1,6 +1,8 @@
 /**
- * Download everything Phase 0 needs from OpenStreetMap in one Overpass query:
- * coastline ways, ferry terminals / piers, and place nodes for district labels.
+ * Download piers + district places from OpenStreetMap in one Overpass query (ferry terminals /
+ * piers, place=* features). Coastline ways are included for the alternative coastline source,
+ * but the primary coastline now comes from osmdata land polygons (see build-coastline.ts).
+ * Override the endpoint with OVERPASS_URL=…
  * Output (raw, never hand-edited): data/raw/overpass-istanbul.json
  *
  * Run: npm run data:fetch-osm   (needs network access to an Overpass endpoint)
@@ -9,11 +11,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { DATA_BBOX } from './bbox';
 import { RAW_OVERPASS, type OverpassResponse } from './lib/overpass';
 
-const ENDPOINTS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.private.coffee/api/interpreter',
-];
+const ENDPOINTS = process.env.OVERPASS_URL
+  ? [process.env.OVERPASS_URL]
+  : ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
 
 const [w, s, e, n] = DATA_BBOX;
 const bb = `${s},${w},${n},${e}`;

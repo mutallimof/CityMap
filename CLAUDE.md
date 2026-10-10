@@ -32,8 +32,11 @@ npm run build          # typecheck + production build → dist/
 npm run preview        # serve dist/
 
 # Data pipeline (outputs are committed; re-run only when changing data)
-npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (needs network to overpass-api.de)
-npm run data:coastline   # → data/land.geojson (overpass source if raw file exists, else coarse npm fallback)
+# Coastline source (~930 MB download, unzips to 1.3 GB; data/raw/ is gitignored):
+curl -o data/raw/lp.zip https://osmdata.openstreetmap.de/download/land-polygons-split-4326.zip \
+  && unzip -q data/raw/lp.zip -d data/raw && rm data/raw/lp.zip
+npm run data:coastline   # → data/land.geojson (land-polygons > overpass > coarse npm fallback)
+npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
 npm run data:piers       # → data/piers.geojson, data/districts.geojson (from catalog + OSM)
 ```
 
@@ -48,11 +51,12 @@ npm run data:piers       # → data/piers.geojson, data/districts.geojson (from 
 - Commit after each build step.
 
 ## Decisions log
-- **2026-10-10 — Coastline source.** The plan's candidate `@geo-maps/earth-lands-100m` (and the `-10m`
-  variant) has only ~380 vertices across the whole bbox: the Golden Horn is a triangle, the Bosphorus jagged.
-  Not good enough. Built a second pipeline: OSM `natural=coastline` ways via Overpass, assembled into land
-  polygons (`scripts/lib/assemble-coastline.ts`, unit tested). The sandbox network blocks Overpass, so
-  `data/land.geojson` is currently the coarse geo-maps **placeholder** until `npm run data:fetch-osm` runs.
+- **2026-10-10 — Coastline source.** The plan's candidate `@geo-maps/earth-lands-100m` (and `-10m`) has only
+  ~380 vertices across the whole bbox (Golden Horn a triangle) — rejected. Now using osmdata.openstreetmap.de
+  **land-polygons-split-4326** (per user): stream shapefile → clip to bbox → union grid tiles (they overlap)
+  → opening of 12 m (drops jetties < ~24 m wide that rendered as spiky artefacts) → simplify ~5 m.
+  Result: 76 KB. Overpass `natural=coastline` assembly kept as an alternative source (unit tested).
+- **Data downloads stay out of git** (`data/raw/` ignored); only processed files are committed.
 - **Piers/districts from OSM only.** `data/catalog/*.json` holds ids + names + match tokens; `build-piers.ts`
   takes coordinates from OSM ferry terminals / place features, prefers Şehir Hatları terminals, flags
   ambiguous matches; pin with `"osm": "node/123"`. Until OSM data is fetched, piers/districts are empty.
