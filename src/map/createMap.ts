@@ -3,25 +3,23 @@ import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { CONFIG } from '../config';
 import { buildStyle, SOURCE } from './style';
+import { initialCamera } from './intro';
 import { shorelineFromLand } from './shoreline';
 import { addLabels, bindLabelZoomClasses } from './labels';
 import { loadDistricts, loadLand, loadPiers, type PierProps } from '../data/load';
-import type { FeatureCollection, Point } from 'geojson';
+import type { FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson';
 
 // MapLibre resolves its worker relative to its own module, which breaks under
 // Vite's dep pre-bundling; point it at the emitted asset explicitly.
 setWorkerUrl(workerUrl);
 
-export async function createMap(container: HTMLElement): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps> }> {
+export async function createMap(container: HTMLElement, withIntro = false): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps>; land: FeatureCollection<Polygon | MultiPolygon> }> {
   const [w, s, e, n] = CONFIG.bounds;
   const pad = CONFIG.camera.boundsPadding;
   const map = new MlMap({
     container,
     style: buildStyle(),
-    center: CONFIG.camera.center,
-    zoom: CONFIG.camera.zoom,
-    pitch: CONFIG.camera.pitch,
-    bearing: CONFIG.camera.bearing,
+    ...initialCamera(withIntro),
     minZoom: CONFIG.camera.minZoom,
     maxZoom: CONFIG.camera.maxZoom,
     maxPitch: CONFIG.camera.maxPitch,
@@ -47,5 +45,5 @@ export async function createMap(container: HTMLElement): Promise<{ map: MlMap; p
   addLabels(map, 'pier', piers);
   bindLabelZoomClasses(map);
 
-  return { map, piers };
+  return { map, piers, land };
 }

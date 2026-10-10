@@ -9,7 +9,6 @@ export const SOURCE = {
 } as const;
 
 export const LAYER = {
-  shallow: 'water-shallow',
   land: 'land',
   innerShadow: 'land-inner-shadow',
   shoreHighlight: 'shore-highlight',
@@ -50,22 +49,12 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
     layers: [
       { id: 'water', type: 'background', paint: { 'background-color': p.water } },
       {
-        id: LAYER.shallow,
-        type: 'line',
-        source: SOURCE.shore,
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: {
-          'line-color': p.waterShallow,
-          'line-width': byZoom(s.shallowWidth),
-          'line-blur': byZoom(s.shallowBlur),
-          'line-opacity': s.shallowOpacity,
-        },
-      },
-      {
         id: LAYER.land,
         type: 'fill',
         source: SOURCE.land,
-        paint: { 'fill-color': p.land, 'fill-antialias': true },
+        // 0.999: keeps land in MapLibre's ordered (translucent) pass so it draws *after* the custom
+        // water layer; fully opaque fills are drawn early with depth and the water would cover them.
+        paint: { 'fill-color': p.land, 'fill-antialias': true, 'fill-opacity': 0.999 },
       },
       {
         // Rings are RFC 7946-wound (land on the left), so a negative offset pushes inland.

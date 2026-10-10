@@ -75,6 +75,7 @@ const FS = /* glsl */ `
     float fade = pow(1.0 - age, 1.7);
     float a = (arms + wash + bow) * speed * fade * mix(0.45, 1.0, n) * uOpacity;
     gl_FragColor = vec4(uColor, clamp(a, 0.0, 1.0));
+    #include <colorspace_fragment>
   }
 `;
 

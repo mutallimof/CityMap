@@ -10,9 +10,12 @@ export const CONFIG = {
   camera: {
     /** Karaköy – Kadıköy – Üsküdar triangle, Bosphorus mouth. */
     center: [29.0, 41.018] as [number, number],
-    zoom: 12.6,
-    pitch: 50,
+    /** Close enough that ferries read at a glance (~40 px long). */
+    zoom: 13.1,
+    pitch: 52,
     bearing: -18,
+    /** Intro: start high above the Sea of Marmara, fly in to the view above. */
+    intro: { center: [28.99, 40.93] as [number, number], zoom: 10.4, pitch: 0, bearing: 0, durationMs: 3400 },
     minZoom: 10,
     maxZoom: 17.5,
     maxPitch: 65,
@@ -33,6 +36,17 @@ export const CONFIG = {
       sky: '#BFE3E8',
       horizon: '#E8F1EC',
       fog: '#D9ECEB',
+    },
+    /** Golden hour / sunset (sun 0–8° up) and twilight blend through this. */
+    sunset: {
+      water: '#2A5C6E',
+      waterShallow: '#4E8C94',
+      land: '#F2D9BE',
+      shoreHighlight: '#FFE9CF',
+      landInnerShadow: '#C79C7A',
+      sky: '#F7B98B',
+      horizon: '#F6CFA0',
+      fog: '#EBC3A2',
     },
     night: {
       water: '#0E2B36',
@@ -62,13 +76,12 @@ export const CONFIG = {
     pierStroke: '#1F5E6E',
     labelText: '#5A4B3A',
     labelHalo: 'rgba(243, 233, 215, 0.85)',
+    labelHaloHex: '#F3E9D7',
+    labelTextNight: '#E9E1D2',
+    labelHaloNight: '#141A24',
   },
 
   shore: {
-    /** Shallow band width in px at z10 and z16 (interpolated). */
-    shallowWidth: [6, 60] as [number, number],
-    shallowBlur: [6, 50] as [number, number],
-    shallowOpacity: 0.55,
     highlightWidth: [1, 2] as [number, number],
     innerShadowWidth: [4, 22] as [number, number],
     innerShadowBlur: [4, 20] as [number, number],
@@ -130,6 +143,17 @@ export const CONFIG = {
     shadowOpacity: 0.38,
   },
 
+  water: {
+    /** Distance-to-coast texture width (cells) and the distance mapped to "deep" (m). */
+    fieldWidth: 768,
+    fieldMaxM: 1400,
+    /** Warm city-light reflections along the shore at night. */
+    cityLight: '#FFB45E',
+    /** Sparkle strength by day / golden hour. */
+    sparkleDay: 0.5,
+    sparkleGolden: 0.5,
+  },
+
   wake: {
     /** Simulated seconds of track the wake covers at real scale (plan: ~20–30 s). */
     seconds: 28,
@@ -149,7 +173,69 @@ export const CONFIG = {
     cruiseMs: 6.5,
   },
 
-  /** Lighting for 3D objects (day; step 4 drives this from the sun). */
+  nightLights: {
+    windowGlow: '#FFC46B',
+    port: '#FF3B30',
+    starboard: '#34E07A',
+    masthead: '#FFF6E0',
+    /** Light sprite size (world metres before exaggeration… sprites are clamped in px). */
+    sizeM: 14,
+    reflection: '#FFB35C',
+    reflectionOpacity: 0.32,
+    /** Reflection streak size in hull lengths / beams. */
+    reflectionLength: 1.8,
+    reflectionWidth: 0.7,
+  },
+
+  smoke: {
+    puffs: 9,
+    lifeS: 7,
+    /** Bearing the wind blows towards (poyraz from the NE → towards SW). */
+    windToward: 215,
+    windMs: 2.2,
+    riseMs: 1.6,
+    /** How much of the ship's speed the puffs keep astern (0 = left behind at once). */
+    sternDrift: 0.55,
+    sizeM: 8,
+    growM: 4.5,
+    alpha: 0.38,
+    dockedAlpha: 0.16,
+    color: '#EEF0F1',
+    nightColor: '#5F6670',
+  },
+
+  gulls: {
+    count: 6,
+    vessels: 3,
+    minZoom: 13.2,
+    spanM: 9,
+    orbitM: 28,
+    altitudeM: 22,
+    orbitSpeed: 0.55,
+    flapHz: 2.6,
+    followTau: 2.5,
+    color: '#F7F7F2',
+  },
+
+  /** Day/night: sun elevation (degrees) breakpoints and per-phase light. */
+  daylight: {
+    /** Fully "day" above this elevation; golden hour between goldenBelow and 0. */
+    dayAbove: 10,
+    /** Fully "night" below this elevation (civil twilight ends at −6°). */
+    nightBelow: -7,
+    /** Light colours/intensities for 3D objects. */
+    sunDay: '#FFF1DE',
+    sunGolden: '#FFD2A1',
+    moon: '#9FB7D9',
+    hemiSkyNight: '#5A6E96',
+    hemiGroundNight: '#0A1820',
+    hemiNight: 0.95,
+    sunNight: 0.25,
+    /** Re-apply the map palette when it changes by more than this (0–1 blend steps). */
+    paletteStep: 0.02,
+  },
+
+  /** Lighting for 3D objects (day values; day/night blends from here). */
   light: {
     sky: '#FFFFFF',
     ground: '#2E6A78',

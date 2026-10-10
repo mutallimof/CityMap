@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { MercatorCoordinate, type CustomLayerInterface, type CustomRenderMethodInput, type Map as MlMap } from 'maplibre-gl';
+import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from 'maplibre-gl';
+import { sharedFrame, sharedRenderer } from '../three/context';
 import { CONFIG } from '../config';
 import { vesselPose, type DockingParams, type VesselPose } from '../sim/fleet';
 import type { LinePath } from '../sim/path';
@@ -7,6 +8,8 @@ import { HeadingSmoother, interpolateStops } from './headings';
 import { buildVapur } from './model';
 import { WakeMesh, type Trail } from './wake';
 import { TrailCache } from './trail-cache';
+import { PointSprites } from './points';
+import { Gulls, type GullTarget } from './gulls';
 
 const MAX_VESSELS = 128;
 const DEG = Math.PI / 180;
@@ -42,6 +45,30 @@ function shadowTexture(): THREE.Texture {
 
 const unitFromBearing = (deg: number): [number, number] => [Math.sin(deg * DEG), Math.cos(deg * DEG)];
 
+/** Long soft streak for night light reflections: an elongated radial glow, brightest near the ship. */
+function streakTexture(): THREE.Texture {
+  const c = document.createElement('canvas');
+  c.width = 32;
+  c.height = 128;
+  const g = c.getContext('2d')!;
+  const img = g.createImageData(32, 128);
+  for (let y = 0; y < 128; y++) {
+    for (let x = 0; x < 32; x++) {
+      const u = (x + 0.5) / 16 - 1; // −1..1 across
+      const v = (y + 0.5) / 128; // 0 at the far end … 1 at the ship
+      const across = Math.max(0, 1 - u * u) ** 2;
+      const along = Math.sin(Math.PI * v) ** 0.7 * (0.35 + 0.65 * v);
+      const shimmer = 0.75 + 0.25 * Math.sin(y * 0.9) * Math.sin(y * 0.37);
+      const a = Math.round(255 * across * along * shimmer);
+      const i = (y * 32 + x) * 4;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = a;
+      img.data[i + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  return new THREE.CanvasTexture(c);
+}
+
 /**
  * The vapur fleet in a MapLibre custom layer: instanced procedural hulls (body + line-colour
  * stripe), soft hull shadows and one wake mesh. Everything lives in local metres around
@@ -61,10 +88,24 @@ export class VapurLayer implements CustomLayerInterface {
   private body!: THREE.InstancedMesh;
   private accent!: THREE.InstancedMesh;
   private shadow!: THREE.InstancedMesh;
+  private windows!: THREE.InstancedMesh;
+  private windowMat!: THREE.MeshBasicMaterial;
+  private reflect!: THREE.InstancedMesh;
+  private reflectMat!: THREE.MeshBasicMaterial;
+  private lights = new PointSprites(MAX_VESSELS * 3, { additive: true, core: 1, minPx: 3, maxPx: 22 });
+  private smoke = new PointSprites(MAX_VESSELS * CONFIG.smoke.puffs, { additive: false, core: 0, minPx: 1, maxPx: 120 });
+  private gulls = new Gulls();
+  private hemi!: THREE.HemisphereLight;
+  private sun!: THREE.DirectionalLight;
+  private anchors!: ReturnType<typeof buildVapur>['anchors'];
+  /** 0 = day, 1 = night (window glow, nav lights, reflections). Set by the day/night controller. */
+  night = 0;
+  /** Reduce-motion: no bob/bump/gulls, calmer smoke. */
+  reduceMotion = false;
+  /** Selected vessel (ring + others dimmed), set by the UI. */
+  selectedId: string | null = null;
   private wake = new WakeMesh(MAX_VESSELS, CONFIG.wake.maxSamples);
   private trails = new TrailCache(CONFIG.wake.seconds / (CONFIG.wake.samples - 1));
-  private origin = MercatorCoordinate.fromLngLat(CONFIG.camera.center, 0);
-  private metre = this.origin.meterInMercatorCoordinateUnits();
   private headings = new HeadingSmoother(CONFIG.ferries.headingTau);
   private lastPhase = new Map<string, string>();
   private bumpAt = new Map<string, number>();
@@ -77,8 +118,7 @@ export class VapurLayer implements CustomLayerInterface {
 
   onAdd(map: MlMap, gl: WebGLRenderingContext | WebGL2RenderingContext): void {
     this.map = map;
-    this.renderer = new THREE.WebGLRenderer({ canvas: map.getCanvas(), context: gl as WebGL2RenderingContext, antialias: true });
-    this.renderer.autoClear = false;
+    this.renderer = sharedRenderer(map, gl);
 
     const geo = buildVapur();
     const bodyMat = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
@@ -93,7 +133,19 @@ export class VapurLayer implements CustomLayerInterface {
       depthWrite: false,
     });
     this.shadow = new THREE.InstancedMesh(shadowGeo, shadowMat, MAX_VESSELS);
-    for (const m of [this.body, this.accent, this.shadow]) {
+    this.anchors = geo.anchors;
+    this.windowMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.vapur.windows });
+    this.windows = new THREE.InstancedMesh(geo.windows, this.windowMat, MAX_VESSELS);
+    this.reflectMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(CONFIG.nightLights.reflection),
+      alphaMap: streakTexture(),
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    this.reflect = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), this.reflectMat, MAX_VESSELS);
+    for (const m of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       m.frustumCulled = false;
       m.count = 0;
@@ -101,23 +153,42 @@ export class VapurLayer implements CustomLayerInterface {
     this.shadow.renderOrder = 0;
     this.body.renderOrder = 2;
     this.accent.renderOrder = 2;
-    this.root.add(this.shadow, this.wake.mesh, this.body, this.accent);
+    this.windows.renderOrder = 2;
+    this.reflect.renderOrder = 1;
+    this.smoke.points.renderOrder = 3;
+    this.lights.points.renderOrder = 4;
+    this.root.add(this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.lights.points);
     this.scene.add(this.root);
 
     const l = CONFIG.light;
-    const hemi = new THREE.HemisphereLight(l.sky, l.ground, l.hemiIntensity);
-    hemi.position.set(0, 0, 1);
-    this.scene.add(hemi);
-    const sun = new THREE.DirectionalLight(l.sun, l.sunIntensity);
+    this.hemi = new THREE.HemisphereLight(l.sky, l.ground, l.hemiIntensity);
+    this.hemi.position.set(0, 0, 1);
+    this.scene.add(this.hemi);
+    this.sun = new THREE.DirectionalLight(l.sun, l.sunIntensity);
+    this.setLighting({ sunAzimuth: l.sunAzimuth, sunElevation: l.sunElevation, sunColor: l.sun, sunIntensity: l.sunIntensity, sky: l.sky, ground: l.ground, hemiIntensity: l.hemiIntensity, night: 0 });
+    this.scene.add(this.sun);
+  }
+
+  /** Light the fleet for the current sun/moon (called by the day/night controller). */
+  setLighting(l: { sunAzimuth: number; sunElevation: number; sunColor: string; sunIntensity: number; sky: string; ground: string; hemiIntensity: number; night: number }): void {
+    if (!this.sun) return;
     const [sx, sy] = unitFromBearing(l.sunAzimuth);
-    sun.position.set(sx * Math.cos(l.sunElevation * DEG), sy * Math.cos(l.sunElevation * DEG), Math.sin(l.sunElevation * DEG));
-    this.scene.add(sun);
+    const el = Math.max(8, l.sunElevation) * DEG; // keep some modelling light even at night (moon)
+    this.sun.position.set(sx * Math.cos(el), sy * Math.cos(el), Math.sin(el));
+    this.sun.color.set(l.sunColor);
+    this.sun.intensity = l.sunIntensity;
+    this.hemi.color.set(l.sky);
+    this.hemi.groundColor.set(l.ground);
+    this.hemi.intensity = l.hemiIntensity;
+    this.night = l.night;
+    const nl = CONFIG.nightLights;
+    this.windowMat.color.set(CONFIG.colors.vapur.windows).lerp(new THREE.Color(nl.windowGlow), Math.min(1, l.night * 1.2));
+    this.reflectMat.opacity = nl.reflectionOpacity * l.night ** 2;
   }
 
   /** Local metres (x east, y north) of a lng/lat. */
   private local(lngLat: [number, number]): [number, number] {
-    const mc = MercatorCoordinate.fromLngLat(lngLat, 0);
-    return [(mc.x - this.origin.x) / this.metre, -(mc.y - this.origin.y) / this.metre];
+    return sharedFrame.local(lngLat);
   }
 
   /**
@@ -146,6 +217,13 @@ export class VapurLayer implements CustomLayerInterface {
     const B = f.beamM * exag;
 
     const poses = this.opts.poses();
+    // Ground direction from the view centre towards the viewer (for night reflections).
+    const viewBack = (this.map.getBearing() + 180) % 360;
+    const [vbx, vby] = unitFromBearing(viewBack);
+    const canvas = this.map.getCanvas();
+    this.lights.begin(canvas.width, canvas.height);
+    this.smoke.begin(canvas.width, canvas.height);
+    const gullTargets: GullTarget[] = [];
     this.visible = poses;
     const { m, q, e, p, s, c } = this.o;
     const ids = new Set<string>();
@@ -166,11 +244,11 @@ export class VapurLayer implements CustomLayerInterface {
       if (prev === 'underway' && v.state.phase === 'docked') this.bumpAt.set(id, tReal);
       this.lastPhase.set(id, v.state.phase);
       const bt = tReal - (this.bumpAt.get(id) ?? -1e9);
-      const bump = bt < 6 ? Math.exp(-bt / f.bump.decayS) * Math.sin((2 * Math.PI * bt) / f.bump.periodS) : 0;
+      const bump = bt < 6 && !this.reduceMotion ? Math.exp(-bt / f.bump.decayS) * Math.sin((2 * Math.PI * bt) / f.bump.periodS) : 0;
 
       // Bob: gentle roll/pitch, per-ship phase, calmer when docked.
       const ph = hash01(id) * Math.PI * 2;
-      const calm = v.state.phase === 'docked' ? f.bob.dockedFactor : 1;
+      const calm = this.reduceMotion ? 0 : v.state.phase === 'docked' ? f.bob.dockedFactor : 1;
       const roll = f.bob.rollDeg * calm * Math.sin((2 * Math.PI * tReal) / f.bob.rollPeriodS + ph);
       const pitch = f.bob.pitchDeg * calm * Math.sin((2 * Math.PI * tReal) / f.bob.pitchPeriodS + ph * 1.7) + f.bump.pitchDeg * bump;
       const [fx, fy] = unitFromBearing(heading);
@@ -186,37 +264,103 @@ export class VapurLayer implements CustomLayerInterface {
       m.compose(p, q, s);
       this.body.setMatrixAt(n, m);
       this.accent.setMatrixAt(n, m);
+      this.windows.setMatrixAt(n, m);
+      if (this.night > 0.02) this.pushLights(m, grow);
+      this.pushSmoke(v, px, py, fx, fy, exag, grow, tReal);
       this.accent.setColorAt(n, c.set(this.opts.lineColor(v.state.lineId)));
 
-      q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), -heading * DEG);
+      q.setFromAxisAngle(this.zAxis, -heading * DEG);
       p.set(px, py, 0.15);
       s.set(B * f.shadowScale[0] * grow, L * f.shadowScale[1] * grow, 1);
       m.compose(p, q, s);
       this.shadow.setMatrixAt(n, m);
 
+      // Night: a warm light streak on the water, stretching towards the viewer.
+      const nl = CONFIG.nightLights;
+      q.setFromAxisAngle(this.zAxis, -viewBack * DEG);
+      p.set(px + vbx * L * nl.reflectionLength * 0.5, py + vby * L * nl.reflectionLength * 0.5, 0.2);
+      s.set(B * nl.reflectionWidth * grow, L * nl.reflectionLength * grow, 1);
+      m.compose(p, q, s);
+      this.reflect.setMatrixAt(n, m);
+
       if (v.state.speed > 0.05 || v.state.phase === 'underway') trails.push(this.trail(v, px, py, fx, fy, exag));
+      if (v.state.phase === 'underway' && v.state.speed > 2) gullTargets.push({ id, x: px, y: py, fx, fy });
       n++;
     }
     for (const id of this.lastPhase.keys()) if (!ids.has(id)) (this.lastPhase.delete(id), this.bumpAt.delete(id));
     this.headings.retain(ids);
     this.trails.retain(ids);
-    for (const mesh of [this.body, this.accent, this.shadow]) {
+    for (const mesh of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
       mesh.count = n;
       mesh.instanceMatrix.needsUpdate = true;
     }
+    this.reflect.visible = this.night > 0.02;
+    this.lights.end();
+    this.smoke.end();
+    // Gulls follow the ferries nearest the view centre, only when zoomed in enough to see them.
+    const mc = this.map.getCenter();
+    const [ccx, ccy] = this.local([mc.lng, mc.lat]);
+    gullTargets.sort((a, b) => Math.hypot(a.x - ccx, a.y - ccy) - Math.hypot(b.x - ccx, b.y - ccy));
+    this.gulls.update(gullTargets, tReal, dt, exag, !this.reduceMotion && this.map.getZoom() >= CONFIG.gulls.minZoom && this.night < 0.8);
     if (this.accent.instanceColor) this.accent.instanceColor.needsUpdate = true;
 
     const w = CONFIG.wake;
     this.wake.update(trails, { hullLength: L, beam: B, spread: w.spread, maxWidthBeams: w.maxWidthBeams, color: c.set(w.color), opacity: w.opacity }, tReal);
 
-    const proj = new THREE.Matrix4().fromArray(args.defaultProjectionData.mainMatrix as unknown as number[]);
-    const local = new THREE.Matrix4()
-      .makeTranslation(this.origin.x, this.origin.y, this.origin.z)
-      .scale(new THREE.Vector3(this.metre, -this.metre, this.metre));
-    this.camera.projectionMatrix = proj.multiply(local);
+    this.camera.projectionMatrix = sharedFrame.projection(args);
     this.renderer.resetState();
     this.renderer.render(this.scene, this.camera);
     this.map.triggerRepaint();
+  }
+
+  private zAxis = new THREE.Vector3(0, 0, 1);
+  private tmpV = new THREE.Vector3();
+  private cRed = new THREE.Color(CONFIG.nightLights.port);
+  private cGreen = new THREE.Color(CONFIG.nightLights.starboard);
+  private cWhite = new THREE.Color(CONFIG.nightLights.masthead);
+  private cSmoke = new THREE.Color();
+
+  /** Port (red), starboard (green) and masthead (white) lights, from the hull's model matrix. */
+  private pushLights(m: THREE.Matrix4, grow: number): void {
+    const a = this.anchors;
+    const alpha = this.night * grow;
+    const size = CONFIG.nightLights.sizeM;
+    for (const [anchor, col] of [
+      [a.port, this.cRed],
+      [a.starboard, this.cGreen],
+      [a.mastTop, this.cWhite],
+    ] as const) {
+      const w = this.tmpV.copy(anchor).applyMatrix4(m);
+      this.lights.push(w.x, w.y, w.z, col, alpha, size);
+    }
+  }
+
+  /**
+   * Funnel smoke: puffs leave the funnel, trail astern as the ship moves and drift downwind,
+   * growing and fading. Each puff's age is a function of real time, so there's no particle state.
+   */
+  private pushSmoke(v: VesselPose, px: number, py: number, fx: number, fy: number, exag: number, grow: number, tReal: number): void {
+    const sm = CONFIG.smoke;
+    const k = CONFIG.ferries.lengthM / 70;
+    const funnelBack = CONFIG.ferries.lengthM * 0.06 * exag;
+    const fz = 14.6 * k * exag;
+    const [wx, wy] = unitFromBearing(sm.windToward);
+    const speed = v.state.speed; // m/s real; the visual trail scales with exaggeration
+    const seed = hash01(v.state.vesselId) * sm.lifeS;
+    const life = this.reduceMotion ? sm.lifeS * 1.6 : sm.lifeS;
+    const base = (v.state.phase === 'docked' ? sm.dockedAlpha : sm.alpha) * grow * (1 - this.night * 0.55);
+    this.cSmoke.set(sm.color).lerp(new THREE.Color(sm.nightColor), this.night);
+    for (let i = 0; i < sm.puffs; i++) {
+      const age = (((tReal + seed) / life + i / sm.puffs) % 1) * life;
+      const u = age / life;
+      const back = speed * age * sm.sternDrift * exag;
+      const drift = sm.windMs * age * exag;
+      const x = px - fx * (funnelBack + back) + wx * drift;
+      const y = py - fy * (funnelBack + back) + wy * drift;
+      const z = fz + sm.riseMs * age * exag;
+      const a = base * Math.min(1, u * 8) * (1 - u) ** 1.6;
+      this.smoke.push(x, y, z, this.cSmoke, a, (sm.sizeM + sm.growM * age) * exag);
+    }
   }
 
   /**

@@ -3,7 +3,6 @@ import '@fontsource/nunito/800.css';
 import './styles.css';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { createMap } from './map/createMap';
-import { SOURCE } from './map/style';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
 import { loadLines, loadRoutes } from './data/load';
@@ -14,6 +13,11 @@ import { toIstanbul } from './sim/time';
 import { fleetAt } from './sim/fleet';
 import { ClockController } from './app/clock';
 import { VapurLayer } from './ferries/vapur-layer';
+import { WaterLayer } from './water/water-layer';
+import { LAYER, SOURCE } from './map/style';
+import { DaylightController } from './app/daylight';
+import { prefersReducedMotion } from './app/motion';
+import { hideLoader, playIntro } from './map/intro';
 import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
@@ -27,7 +31,10 @@ function applyCssTokens() {
 async function boot() {
   applyCssTokens();
   const container = document.getElementById('map')!;
-  const [{ map, piers }, lines, routes] = await Promise.all([createMap(container), loadLines(), loadRoutes()]);
+  const reduced = prefersReducedMotion();
+  const params = new URLSearchParams(location.search);
+  const withIntro = !reduced && params.get('intro') !== '0';
+  const [{ map, piers, land }, lines, routes] = await Promise.all([createMap(container, withIntro), loadLines(), loadRoutes()]);
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
   const [, s, , n] = CONFIG.bounds;
@@ -52,11 +59,20 @@ async function boot() {
     docking,
     lineColor: (id) => colors.get(id) ?? '#ffffff',
   });
+  const water = new WaterLayer(land);
+  map.addLayer(water, LAYER.land);
   map.addLayer(ferries);
+  const daylight = new DaylightController({ map, water, ferries, clock });
+  daylight.start();
+
+  water.motion = reduced ? 0.25 : 1;
+  ferries.reduceMotion = reduced;
+  hideLoader();
+  if (withIntro) void playIntro(map);
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight });
 }
 
 boot().catch((err) => {
