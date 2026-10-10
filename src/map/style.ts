@@ -5,6 +5,7 @@ export const SOURCE = {
   land: 'land',
   shore: 'shore',
   piers: 'piers',
+  routes: 'routes',
 } as const;
 
 export const LAYER = {
@@ -13,6 +14,7 @@ export const LAYER = {
   innerShadow: 'land-inner-shadow',
   shoreHighlight: 'shore-highlight',
   piers: 'piers',
+  routes: 'routes',
 } as const;
 
 const EMPTY = (): GeoJSON.FeatureCollection => ({ type: 'FeatureCollection', features: [] });
@@ -34,6 +36,7 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
       [SOURCE.land]: { type: 'geojson', data: EMPTY(), attribution: '© OpenStreetMap contributors' },
       [SOURCE.shore]: { type: 'geojson', data: EMPTY() },
       [SOURCE.piers]: { type: 'geojson', data: EMPTY() },
+      [SOURCE.routes]: { type: 'geojson', data: EMPTY() },
     },
     sky: {
       'sky-color': p.sky,
@@ -84,6 +87,18 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
         source: SOURCE.shore,
         layout: { 'line-join': 'round' },
         paint: { 'line-color': p.shoreHighlight, 'line-width': byZoom(s.highlightWidth) },
+      },
+      {
+        id: LAYER.routes,
+        type: 'line',
+        source: SOURCE.routes,
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': byZoom(CONFIG.routes.width),
+          'line-opacity': CONFIG.routes.opacity,
+          'line-dasharray': ['literal', CONFIG.routes.dash],
+        },
       },
       {
         id: LAYER.piers,

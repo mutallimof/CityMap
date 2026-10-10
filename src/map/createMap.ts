@@ -5,13 +5,14 @@ import { CONFIG } from '../config';
 import { buildStyle, SOURCE } from './style';
 import { shorelineFromLand } from './shoreline';
 import { addLabels, bindLabelZoomClasses } from './labels';
-import { loadDistricts, loadLand, loadPiers } from '../data/load';
+import { loadDistricts, loadLand, loadPiers, type PierProps } from '../data/load';
+import type { FeatureCollection, Point } from 'geojson';
 
 // MapLibre resolves its worker relative to its own module, which breaks under
 // Vite's dep pre-bundling; point it at the emitted asset explicitly.
 setWorkerUrl(workerUrl);
 
-export async function createMap(container: HTMLElement): Promise<MlMap> {
+export async function createMap(container: HTMLElement): Promise<{ map: MlMap; piers: FeatureCollection<Point, PierProps> }> {
   const [w, s, e, n] = CONFIG.bounds;
   const pad = CONFIG.camera.boundsPadding;
   const map = new MlMap({
@@ -46,5 +47,5 @@ export async function createMap(container: HTMLElement): Promise<MlMap> {
   addLabels(map, 'pier', piers);
   bindLabelZoomClasses(map);
 
-  return map;
+  return { map, piers };
 }

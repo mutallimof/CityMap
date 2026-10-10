@@ -77,6 +77,29 @@ export const CONFIG = {
     fontFamily: "'Nunito', system-ui, sans-serif",
   },
 
+  routes: {
+    /** Route lines under the ferries. */
+    width: [1.2, 3] as [number, number],
+    opacity: 0.45,
+    dash: [2, 2] as [number, number],
+  },
+
+  ferries: {
+    /** Real vapur size (m); the model is drawn this size × exaggeration. */
+    lengthM: 70,
+    beamM: 14,
+    /** Size exaggeration by zoom: ~3–4× at city zoom, real size when zoomed right in. */
+    exaggeration: [
+      [11, 4],
+      [13, 3],
+      [16, 1],
+    ] as [number, number][],
+    /** Simulated seconds a vessel takes to grow in / shrink out (docked) when entering / leaving service. */
+    appearSeconds: 90,
+    /** Heading smoothing: time constant (s, real time) of the critically-damped turn. */
+    headingTau: 0.35,
+  },
+
   /** Simulation tunables (pure-function inputs; see src/sim). */
   sim: {
     /** Europe/Istanbul is UTC+3 all year (no DST since 2016). */

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run validate:routes && tsc --noEmit && vite build",
     "preview": "vite preview --host",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -13,6 +13,8 @@
     "data:coastline": "NODE_OPTIONS=--max-old-space-size=6000 tsx scripts/build-coastline.ts",
     "data:fetch-osm": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-osm.ts",
     "data:fetch-nominatim": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-nominatim.ts",
+    "data:routes": "NODE_OPTIONS=--max-old-space-size=4096 tsx scripts/build-routes.ts",
+    "validate:routes": "tsx scripts/validate-routes.ts",
     "data:piers": "tsx scripts/build-piers.ts"
   },
   "dependencies": {

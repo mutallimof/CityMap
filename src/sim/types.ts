@@ -15,8 +15,12 @@ export interface LineSpec {
   /** Stop ids in outbound order. Inbound runs the same stops reversed. */
   stops: string[];
   routeId: string;
+  /** Berth id per stop (same order as stops). */
+  berths?: string[];
   service: ServiceSpec;
   simulated: true;
+  /** Open questions for a human (data/catalog/lines.json). */
+  toCheck?: string[];
 }
 
 /** Route lengths per leg, outbound order (leg i = stops[i] → stops[i+1]), metres. */

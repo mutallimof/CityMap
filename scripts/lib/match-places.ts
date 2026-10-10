@@ -60,9 +60,12 @@ const PLACE_RANK: Record<string, number> = { suburb: 6, town: 5, quarter: 4, nei
 /** Admin boundaries (Nominatim returns them with their admin-centre point): district (6) > mahalle (8). */
 const ADMIN_RANK: Record<string, number> = { '6': 5, '8': 4 };
 
-function resolve(cands: Match[], entry: CatalogEntry): MatchResult {
+function resolve(cands: Match[], entry: CatalogEntry, elements: OverpassElement[]): MatchResult {
   if (entry.osm) {
-    const pinned = cands.find((c) => osmRef(c.el) === entry.osm) ?? null;
+    // A pin is authoritative: it may not carry the pier's name (e.g. Kabataş' "Şehir Hatları" station).
+    const el = elements.find((e) => osmRef(e) === entry.osm);
+    const point = el && elementPoint(el);
+    const pinned = el && point ? (cands.find((c) => c.el === el) ?? { el, point, score: 0 }) : null;
     return { chosen: pinned, candidates: cands, ambiguous: false };
   }
   cands.sort((a, b) => b.score - a.score);
@@ -92,7 +95,7 @@ export function matchPier(entry: CatalogEntry, elements: OverpassElement[], othe
     const mentionsOther = ns.some((nm) => others.some((o) => containsWord(nm, o)));
     if (point) cands.push({ el, point, score: pierScore(t) - (mentionsOther ? OTHER_PIER_PENALTY : 0) });
   }
-  return resolve(cands, entry);
+  return resolve(cands, entry, elements);
 }
 
 export function matchDistrict(entry: CatalogEntry, elements: OverpassElement[]): MatchResult {
@@ -106,5 +109,5 @@ export function matchDistrict(entry: CatalogEntry, elements: OverpassElement[]):
     const point = elementPoint(el);
     if (point) cands.push({ el, point, score });
   }
-  return resolve(cands, entry);
+  return resolve(cands, entry, elements);
 }

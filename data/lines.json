@@ -1,0 +1,199 @@
+{
+  "lines": [
+    {
+      "id": "kadikoy-karakoy",
+      "name": {
+        "tr": "Kadıköy – Karaköy",
+        "en": "Kadıköy – Karaköy"
+      },
+      "color": "#E0A100",
+      "stops": [
+        "kadikoy",
+        "karakoy"
+      ],
+      "berths": [
+        "kadikoy-sh",
+        "karakoy-kadikoy-uskudar"
+      ],
+      "routeId": "route-kadikoy-karakoy",
+      "service": {
+        "first": "07:00",
+        "last": "23:30",
+        "headwayPeak": 15,
+        "headwayOff": 30,
+        "dwellMin": 4,
+        "speedKmh": 24
+      },
+      "simulated": true
+    },
+    {
+      "id": "kadikoy-eminonu",
+      "name": {
+        "tr": "Kadıköy – Eminönü",
+        "en": "Kadıköy – Eminönü"
+      },
+      "color": "#F08A5D",
+      "stops": [
+        "kadikoy",
+        "eminonu"
+      ],
+      "berths": [
+        "kadikoy-sh",
+        "eminonu-kadikoy"
+      ],
+      "routeId": "route-kadikoy-eminonu",
+      "service": {
+        "first": "07:10",
+        "last": "23:00",
+        "headwayPeak": 20,
+        "headwayOff": 30,
+        "dwellMin": 4,
+        "speedKmh": 24
+      },
+      "simulated": true
+    },
+    {
+      "id": "uskudar-eminonu",
+      "name": {
+        "tr": "Üsküdar – Eminönü",
+        "en": "Üsküdar – Eminönü"
+      },
+      "color": "#F4F1E8",
+      "stops": [
+        "uskudar",
+        "eminonu"
+      ],
+      "berths": [
+        "uskudar-main",
+        "eminonu-kadikoy"
+      ],
+      "routeId": "route-uskudar-eminonu",
+      "service": {
+        "first": "06:50",
+        "last": "23:10",
+        "headwayPeak": 15,
+        "headwayOff": 30,
+        "dwellMin": 3,
+        "speedKmh": 22
+      },
+      "simulated": true,
+      "toCheck": [
+        "Which Eminönü berth serves Üsküdar? Using the main one (Şehir Hatları Kadıköy İskelesi).",
+        "Üsküdar berth: using node/6356616321 'Üsküdar İskelesi' (no operator tag)."
+      ]
+    },
+    {
+      "id": "kadikoy-besiktas",
+      "name": {
+        "tr": "Kadıköy – Beşiktaş",
+        "en": "Kadıköy – Beşiktaş"
+      },
+      "color": "#8FD3F4",
+      "stops": [
+        "kadikoy",
+        "besiktas"
+      ],
+      "berths": [
+        "kadikoy-sh",
+        "besiktas-kadikoy"
+      ],
+      "routeId": "route-kadikoy-besiktas",
+      "service": {
+        "first": "07:15",
+        "last": "22:45",
+        "headwayPeak": 20,
+        "headwayOff": 30,
+        "dwellMin": 4,
+        "speedKmh": 24
+      },
+      "simulated": true,
+      "toCheck": [
+        "Which Kadıköy berth serves Beşiktaş? Using the main one (Kadıköy 2 İskelesi)."
+      ]
+    },
+    {
+      "id": "bogaz",
+      "name": {
+        "tr": "Boğaz Hattı",
+        "en": "Bosphorus Line"
+      },
+      "color": "#E57BA6",
+      "stops": [
+        "eminonu",
+        "besiktas",
+        "ortakoy",
+        "beylerbeyi",
+        "cengelkoy",
+        "arnavutkoy",
+        "bebek",
+        "anadolu-hisari",
+        "kanlica",
+        "emirgan",
+        "sariyer",
+        "rumeli-kavagi",
+        "anadolu-kavagi"
+      ],
+      "berths": [
+        "eminonu-bogaz",
+        "besiktas-uskudar-bogaz",
+        "ortakoy-main",
+        "beylerbeyi-main",
+        "cengelkoy-main",
+        "arnavutkoy-main",
+        "bebek-main",
+        "anadolu-hisari-main",
+        "kanlica-main",
+        "emirgan-main",
+        "sariyer-main",
+        "rumeli-kavagi-main",
+        "anadolu-kavagi-main"
+      ],
+      "routeId": "route-bogaz",
+      "service": {
+        "first": "08:00",
+        "last": "19:00",
+        "headwayPeak": 30,
+        "headwayOff": 45,
+        "dwellMin": 3,
+        "speedKmh": 26
+      },
+      "simulated": true,
+      "toCheck": [
+        "PROVISIONAL stop list/order (plan only says 'Eminönü → Anadolu Kavağı with stops'): zig-zags so every Bosphorus pier in the catalog is served.",
+        "Headways 30/45 min instead of 15–20/30 to keep the vessel count sane on a ~2 h one-way trip."
+      ]
+    },
+    {
+      "id": "adalar",
+      "name": {
+        "tr": "Adalar Hattı",
+        "en": "Islands Line"
+      },
+      "color": "#B5D96B",
+      "stops": [
+        "kabatas",
+        "kinaliada",
+        "burgazada",
+        "heybeliada",
+        "buyukada"
+      ],
+      "berths": [
+        "kabatas-main",
+        "kinaliada-main",
+        "burgazada-main",
+        "heybeliada-main",
+        "buyukada-main"
+      ],
+      "routeId": "route-adalar",
+      "service": {
+        "first": "07:00",
+        "last": "21:00",
+        "headwayPeak": 30,
+        "headwayOff": 60,
+        "dwellMin": 3,
+        "speedKmh": 26
+      },
+      "simulated": true
+    }
+  ]
+}

@@ -16,7 +16,7 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 
 ## Build steps (plan §4.9)
 1. ✅ Skeleton: Vite, MapLibre custom land/water style, coastline pipeline, piers, debug fps panel.
-2. Simulation: ✅ `sim/` + unit tests · ⏳ routes + validator, ferries as arrows (blocked on pier data).
+2. ✅ Simulation: `sim/` + unit tests, routes + validator, ferries as arrows.
 3. Vapur looks: 3D model, heading smoothing, wake, bob, docking.
 4. Water + time: water shader, day/night, night lights, intro fly-in, seagulls.
 5. Interactions: sheets, follow, layer chips, time controls, TR/EN.
@@ -25,7 +25,7 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 ## Commands
 ```bash
 npm install
-npm run dev            # http://localhost:5173 (also on LAN for phones). ?debug=1 / ?debug=0, ` toggles panel
+npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · keys: ` panel, s speed, n now
 npm test               # vitest
 npm run typecheck
 npm run build          # typecheck + production build → dist/
@@ -38,7 +38,9 @@ curl -o data/raw/lp.zip https://osmdata.openstreetmap.de/download/land-polygons-
 npm run data:coastline   # → data/land.geojson (land-polygons > overpass > coarse npm fallback)
 npm run data:fetch-nominatim  # Nominatim (≤1 req/s) → data/raw/nominatim-istanbul.json — current pier/district source
 npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
-npm run data:piers       # → data/piers.geojson, data/districts.geojson (from catalog + OSM); --verbose lists candidates
+npm run data:piers       # → data/piers.geojson (+ in-water berths), data/districts.geojson; --verbose lists candidates
+npm run data:routes      # → data/routes.geojson + data/lines.json from data/catalog/lines.json (A* in water)
+npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m from coast
 ```
 
 ## Conventions
@@ -83,4 +85,19 @@ npm run data:piers       # → data/piers.geojson, data/districts.geojson (from 
   Candidates are pooled per catalog entry (terminals name berths after their *destination*, e.g. Kadıköy's
   "Kabataş İskelesi"), berths mentioning another catalog pier are penalised, and picks with plausible
   candidates > 1 km away are flagged. Districts accept admin boundaries (Nominatim gives the admin centre).
+- **Piers have berths (user, 2026-10-10).** One pier = one marker/name; big terminals list several OSM berths
+  in `data/catalog/piers.json` (first = main Şehir Hatları berth); each line picks its berth per stop in
+  `data/catalog/lines.json` (`berths`), defaulting to the main one. Unclear choices are in each line's `toCheck`.
+  Haydarpaşa dropped (no ferry terminal in OSM, no line uses it). Pins: Kabataş node/12985086871,
+  Eminönü way/112174276, Kadıköy relation/19464376, Beşiktaş way/415337536.
+- **Berth points are computed, not raw OSM.** Terminal nodes sit on land and our coastline drops jetties, so
+  berth = nearest shoreline point + 30 m along the seaward normal; stores coast-parallel and seaward bearings.
+- **Routes are generated, then committed and validated** (plan says hand-authored): A* on a 20 m water grid
+  with a coast-hugging penalty (prefers mid-channel) → string pulling → clearance-safe Chaikin smoothing.
+  Each leg leaves/enters its berth via an approach point ~160 m straight out to sea. Hand steering via `via`
+  waypoints per leg. Validator = exact geometry (5 m sampling vs shoreline segments + point-in-land).
+- **Bosphorus line stop list is PROVISIONAL** (zig-zag through every Bosphorus pier, headway 30/45) — awaiting user.
+- **Rendering (step 2):** Three.js in a MapLibre custom layer, one InstancedMesh; geometry in local metres
+  around `camera.center`, float64 matrix on the CPU (no GPU jitter). Heading = path tangent averaged ±15 m,
+  then per-vessel exponential smoothing (`ferries.headingTau`). Vessels grow in/out while docked.
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.
