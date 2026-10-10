@@ -44,6 +44,18 @@ export const CONFIG = {
       horizon: '#1A2A3C',
       fog: '#122030',
     },
+    /** Classic İstanbul vapur palette. */
+    vapur: {
+      hull: '#F7F4EC',
+      hullBottom: '#2A2E35',
+      deck: '#E4DACA',
+      house: '#FBFAF6',
+      windows: '#34404C',
+      roof: '#D8D3C8',
+      funnel: '#E8B22E',
+      funnelTop: '#1E1F22',
+      mast: '#3A3D42',
+    },
     accentGold: '#E0A100',
     sunsetCoral: '#F08A5D',
     pier: '#FFFFFF',
@@ -98,6 +110,55 @@ export const CONFIG = {
     appearSeconds: 90,
     /** Heading smoothing: time constant (s, real time) of the critically-damped turn. */
     headingTau: 0.35,
+    /** Sim seconds to swing alongside after arriving, and out again before departing. */
+    dockTurnSeconds: 50,
+    /** Route distance (m) over which a vessel eases into its berth slot / quay offset. */
+    berthBlendM: 350,
+    /** Lines sharing a berth moor abreast: spacing between hulls, in (exaggerated) beams. */
+    slotSpacing: 1.25,
+    /** Extra seaward clearance for exaggerated hulls at the quay (fraction of exaggerated beam). */
+    quayClearance: 0.6,
+    /** Real distance of berth points off the coastline (must match scripts/build-piers.ts). */
+    berthOffsetM: 30,
+    /** Gentle roll/pitch/heave (degrees, seconds, metres at real scale); calmer when docked. */
+    bob: { rollDeg: 1.6, rollPeriodS: 5.5, pitchDeg: 0.9, pitchPeriodS: 7.3, heaveM: 0.25, dockedFactor: 0.45 },
+    /** Settle bump on arrival: damped surge + pitch (real seconds). */
+    bump: { surgeM: 1.6, pitchDeg: 1.4, periodS: 1.7, decayS: 1.1 },
+    /** Soft contact shadow under the hull: size as multiples of (beam, length). */
+    shadowScale: [1.9, 1.25] as [number, number],
+    shadowColor: '#0B2730',
+    shadowOpacity: 0.38,
+  },
+
+  wake: {
+    /** Simulated seconds of track the wake covers at real scale (plan: ~20–30 s). */
+    seconds: 28,
+    /** How much longer the wake gets with hull exaggeration (0 = not at all, 1 = proportional). */
+    exagFactor: 0.6,
+    /** Trail samples at real scale (spaced seconds/(samples−1) apart); more when exaggerated. */
+    samples: 22,
+    /** Cap on trail samples per vessel (mesh size = vessels × maxSamples × 3 vertices). */
+    maxSamples: 48,
+    /** V opening: half-width growth per metre behind the bow. */
+    spread: 0.3,
+    /** Max wake half-width, in beams. */
+    maxWidthBeams: 2.6,
+    color: '#F4FBFA',
+    opacity: 0.85,
+    /** Speed (m/s) that counts as "full" wake. */
+    cruiseMs: 6.5,
+  },
+
+  /** Lighting for 3D objects (day; step 4 drives this from the sun). */
+  light: {
+    sky: '#FFFFFF',
+    ground: '#2E6A78',
+    hemiIntensity: 1.6,
+    sun: '#FFF1DE',
+    sunIntensity: 1.9,
+    /** Compass bearing / elevation (degrees) the light comes from. */
+    sunAzimuth: 210,
+    sunElevation: 48,
   },
 
   /** Simulation tunables (pure-function inputs; see src/sim). */

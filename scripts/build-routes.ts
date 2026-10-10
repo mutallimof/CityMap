@@ -13,7 +13,7 @@ import type { Feature, FeatureCollection, MultiPolygon, Point, Polygon } from 'g
 import { shorelineFromLand } from '../src/map/shoreline';
 import { DATA_BBOX } from './bbox';
 import { localProj } from './lib/local-proj';
-import { chaikinSafe, findPath, rasterize, stringPull } from './lib/nav-grid';
+import { chaikinSafe, findPath, rasterize, segmentOk, stringPull } from './lib/nav-grid';
 import { CoastIndex } from './lib/route-check';
 import { ROUTE_RULES } from './lib/route-rules';
 
@@ -23,8 +23,13 @@ const PATH = { minClear: 70, comfortClear: 350, hugPenalty: 4, endpointRadius: 1
 const LOS_CLEAR = 90;
 const LOS_END_CLEAR = 10;
 const SMOOTH_ITER = 5;
-/** Vessels leave/approach a berth via a point this far straight out to sea (shrunk if water is tight). */
-const APPROACH_M = 160;
+/**
+ * Vessels glide in/out alongside the pier: the approach point lies APPROACH_ALONG_M along the shore
+ * (towards the other end of the leg) and APPROACH_OUT_M out to sea. Shrinks if the water is tight;
+ * falls back to straight out to sea.
+ */
+const APPROACH_ALONG_M = 240;
+const APPROACH_OUT_M = 80;
 /** Smoothing may cut corners down to this clearance (validator needs 30 m). */
 const SMOOTH_CLEAR = 55;
 
@@ -42,6 +47,7 @@ interface BerthProps {
   id: string;
   lngLat: [number, number];
   seawardBearing: number;
+  alongBearing: number;
 }
 interface PierProps {
   id: string;
@@ -73,14 +79,27 @@ function berthOf(line: CatalogLine, pierId: string) {
   return b;
 }
 
-/** Point straight out to sea from a berth, at the longest distance ≤ APPROACH_M with open water. */
-function approachOf(b: BerthProps): [number, number] {
+const unit = (bearing: number): [number, number] => [Math.sin((bearing * Math.PI) / 180), Math.cos((bearing * Math.PI) / 180)];
+
+function openWater(p: [number, number], need: number): boolean {
+  const [i, j] = [Math.floor(p[0] / CELL_M), Math.floor(p[1] / CELL_M)];
+  if (i < 0 || j < 0 || i >= grid.nx || j >= grid.ny) return false;
+  return !grid.land[j * grid.nx + i] && grid.clear[j * grid.nx + i] >= need;
+}
+
+/** Approach point for a berth, on the along-shore side facing `toward` (the other end of the leg). */
+function approachOf(b: BerthProps, toward: [number, number]): [number, number] {
   const [bx, by] = proj.toXY(b.lngLat);
-  const rad = (b.seawardBearing * Math.PI) / 180;
-  for (let d = APPROACH_M; d >= 40; d -= 20) {
-    const p: [number, number] = [bx + Math.sin(rad) * d, by + Math.cos(rad) * d];
-    const [i, j] = [Math.floor(p[0] / CELL_M), Math.floor(p[1] / CELL_M)];
-    if (!grid.land[j * grid.nx + i] && grid.clear[j * grid.nx + i] >= Math.min(PATH.minClear, d * 0.5)) return p;
+  const sea = unit(b.seawardBearing);
+  let along = unit(b.alongBearing);
+  if ((toward[0] - bx) * along[0] + (toward[1] - by) * along[1] < 0) along = [-along[0], -along[1]];
+  for (let k = 1; k >= 0.4; k -= 0.15) {
+    const p: [number, number] = [bx + (along[0] * APPROACH_ALONG_M + sea[0] * APPROACH_OUT_M) * k, by + (along[1] * APPROACH_ALONG_M + sea[1] * APPROACH_OUT_M) * k];
+    if (openWater(p, APPROACH_OUT_M * k * 0.6) && segmentOk(grid, [bx, by], p, { clear: 45, endClear: 10, endRadius: ROUTE_RULES.endExemptM - 10, ends: [[bx, by], [bx, by]] })) return p;
+  }
+  for (let d = 160; d >= 40; d -= 20) {
+    const p: [number, number] = [bx + sea[0] * d, by + sea[1] * d];
+    if (openWater(p, Math.min(PATH.minClear, d * 0.5))) return p;
   }
   return [bx, by];
 }
@@ -96,8 +115,8 @@ for (const line of catalog) {
   for (let k = 0; k < berths.length - 1; k++) {
     const from = proj.toXY(berths[k].lngLat);
     const to = proj.toXY(berths[k + 1].lngLat);
-    const a0 = approachOf(berths[k]);
-    const a1 = approachOf(berths[k + 1]);
+    const a0 = approachOf(berths[k], to);
+    const a1 = approachOf(berths[k + 1], from);
     // Relaxed clearance only near the berths (not at hand-placed via points).
     const rule = { clear: LOS_CLEAR, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
     const pts = [a0, ...(line.via?.[String(k)] ?? []).map((c) => proj.toXY(c)), a1];

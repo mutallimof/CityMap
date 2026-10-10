@@ -13,7 +13,7 @@ import { cachedDays } from './sim/state';
 import { toIstanbul } from './sim/time';
 import { fleetAt } from './sim/fleet';
 import { ClockController } from './app/clock';
-import { ArrowsLayer } from './ferries/arrows-layer';
+import { VapurLayer } from './ferries/vapur-layer';
 import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
@@ -27,11 +27,13 @@ function applyCssTokens() {
 async function boot() {
   applyCssTokens();
   const container = document.getElementById('map')!;
-  const [{ map }, lines, routes] = await Promise.all([createMap(container), loadLines(), loadRoutes()]);
+  const [{ map, piers }, lines, routes] = await Promise.all([createMap(container), loadLines(), loadRoutes()]);
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
   const [, s, , n] = CONFIG.bounds;
-  const network = buildNetwork(lines, routes, (s + n) / 2);
+  const berths = piers.features.flatMap((f) => f.properties.berths);
+  const network = buildNetwork(lines, routes, (s + n) / 2, berths);
+  const docking = { turnSeconds: CONFIG.ferries.dockTurnSeconds, berthBlendM: CONFIG.ferries.berthBlendM };
   const clock = new ClockController();
   // ?stress=40 → denser all-day timetable with at least 40 vessels on the water (perf testing).
   const stress = Number(new URLSearchParams(location.search).get('stress'));
@@ -44,15 +46,17 @@ async function boot() {
   const getDay = cachedDays((day) => buildDaySchedule(inputs, day));
   const colors = new Map(lines.map((l) => [l.id, l.color]));
 
-  const ferries = new ArrowsLayer({
-    poses: () => fleetAt(getDay, network.paths, toIstanbul(clock.now())),
+  const ferries = new VapurLayer({
+    poses: () => fleetAt(getDay, network.paths, toIstanbul(clock.now()), docking),
+    paths: network.paths,
+    docking,
     lineColor: (id) => colors.get(id) ?? '#ffffff',
   });
   map.addLayer(ferries);
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries });
 }
 
 boot().catch((err) => {

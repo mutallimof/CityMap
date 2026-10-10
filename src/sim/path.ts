@@ -17,9 +17,22 @@ export interface LegPath {
   kx: number; // metres per degree lon at this latitude
 }
 
+/** Berth geometry a vessel docks at (per stop of a line). */
+export interface StopBerth {
+  berthId: string;
+  /** Coast-parallel compass bearing (either way along is fine). */
+  along: number;
+  /** Compass bearing from the coast to open water. */
+  seaward: number;
+  /** Docking slot when several lines share the berth: 0 at the quay, 1, 2, … moored abreast outside it. */
+  slot: number;
+}
+
 export interface LinePath {
   lineId: string;
   legs: LegPath[];
+  /** One per stop (outbound order); absent when berth data isn't available. */
+  berths?: StopBerth[];
 }
 
 export function legPath(coords: LngLat[], refLat = coords[0][1]): LegPath {

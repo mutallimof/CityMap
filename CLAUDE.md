@@ -17,7 +17,7 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 ## Build steps (plan §4.9)
 1. ✅ Skeleton: Vite, MapLibre custom land/water style, coastline pipeline, piers, debug fps panel.
 2. ✅ Simulation: `sim/` + unit tests, routes + validator, ferries as arrows.
-3. Vapur looks: 3D model, heading smoothing, wake, bob, docking.
+3. ✅ (first pass) Vapur looks: 3D model, heading smoothing, wake, bob, docking. Funnel smoke → step 4.
 4. Water + time: water shader, day/night, night lights, intro fly-in, seagulls.
 5. Interactions: sheets, follow, layer chips, time controls, TR/EN.
 6. Polish + perf, reduce-motion, deploy.
@@ -104,4 +104,21 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - **Rendering (step 2):** Three.js in a MapLibre custom layer, one InstancedMesh; geometry in local metres
   around `camera.center`, float64 matrix on the CPU (no GPU jitter). Heading = path tangent averaged ±15 m,
   then per-vessel exponential smoothing (`ferries.headingTau`). Vessels grow in/out while docked.
+- **Approach points run along the shore** (240 m along, 80 m out) so vessels glide in alongside the pier
+  instead of bow-first; falls back to straight out to sea where water is tight.
+- **Docking is pure:** docked heading = f(arrival heading, berth along-bearing, departure heading, dock time):
+  swing alongside over `dockTurnSeconds` after arriving, swing out over the same before leaving.
+- **Shared berths moor abreast** (slot 0 at the quay, 1, 2 … further out to sea) — sliding along the
+  quay put exaggerated hulls on land at curved quays. Near piers hulls also get a seaward "quay clearance"
+  offset so 3–4× hulls don't overlap the coast; both blend in over `berthBlendM` of route (no jumps).
+- **Vapur model is procedural** (`src/ferries/model.ts`, ~1k triangles): body InstancedMesh with vertex colours
+  + a line-colour stripe InstancedMesh (2 draw calls) + soft shadow quads. Lambert, flat shading.
+- **Mirror trap:** the local→mercator matrix flips y; MapLibre's matrix compensates for closed meshes, so
+  hulls are fine, but open ribbons (wake) must be `DoubleSide`.
+- **Wake = pure past poses.** Trail = the vessel's own pose function sampled at earlier sim times on a fixed
+  grid (cached per vessel; only the newest sample is computed per frame), V arms widening from the bow,
+  prop wash behind the stern, fades with age and speed. One dynamic ribbon mesh for all vessels.
+- **Real-time-only effects** (not part of the sim): bob (roll/pitch/heave, per-ship phase), settle bump on
+  arrival, heading smoothing. Everything that says *where* a vessel is stays a pure function of sim time.
+- Known: lines don't avoid each other (vessels of different lines can overlap where routes cross).
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.
