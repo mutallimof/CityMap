@@ -44,3 +44,28 @@ map, **Return** = useful enough that people come back. **Total** = sum. ✅ = bu
   (wind steers the smoke), **nearest pier**, **favourites**, **share links**, **near this pier**.
 
 See the decisions log in `CLAUDE.md` for how each piece works.
+
+## What got built (second chunk, 2026-10-10)
+
+- **Colourful city** from OpenStreetMap via OpenFreeMap vector tiles (no key), in our palette:
+  pastel neighbourhoods, parks, woods, beaches, warm-white roads with soft-gold avenues, 3D pastel
+  buildings from z15 with lit windows at night, street names. Landmarks from the same OSM tiles
+  (`npm run data:landmarks`): Galata Tower (gold building), Maiden's Tower, five bridges (gold glow,
+  lamps at night). Our coastline and water shader stay on top of everything.
+- **Live weather + seasons**: Open-Meteo every 15 min. Rain gives streaks, drop rings and wet
+  streets. Fog gives drifting banks that swallow the ferries. Wind gives chop, whitecaps, rocking
+  and smoke. Snow gives flakes and white ground. Clouds give softer light, and storms bring
+  lightning. Seasons follow the date: spring blossom and Emirgan tulips, bright summer, orange
+  autumn, deep winter. The demo switch is `?weather=clear|cloudy|rain|storm|fog|snow|wind&season=spring|summer|autumn|winter`.
+- **Real data only**: the demo posts are gone. More places fade in by zoom, using every named OSM
+  café, restaurant, museum, shop and park from the tiles. The place sheet shows only OSM fields:
+  hours with open/closed, website, phone and cuisine. These are looked up on Nominatim when a
+  place is opened. It also shows the nearest pier and next ferry. There is an **Open now** filter.
+- **Search**: instant results from local data and loaded tiles. Pressing Enter searches Nominatim,
+  following its policy (no autocomplete, ≤1 req/s).
+- **Guides** (seed): `data/catalog/guides.json` holds First day in Istanbul, Bosphorus by ferry and
+  Sunset in Üsküdar. Each is drawn as a route.
+- **Snapshot share**: a 4:5 image with a caption and watermark, sent to the share sheet.
+- **PWA**: manifest, icons, iOS splash screens, full-screen, service worker.
+- **Adaptive effects**: resolution drops first, then particles and gulls, then window lights, then
+  3D buildings.

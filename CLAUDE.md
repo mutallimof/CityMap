@@ -22,11 +22,13 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 5. ✅ Interactions: sheets, follow, layer chips, time controls, TR/EN.
 6. ✅ Polish + perf (adaptive pixel ratio), reduce-motion, deploy (GitHub Pages).
 7. ✅ Part B (user, 2026-10-10): living city map + feed — see `docs/ideas.md`.
+8. ✅ Chunk 3 (user, 2026-10-10): colourful OSM city (OpenFreeMap), live weather + seasons, places by zoom
+   (real data only), search, Open now, guides, snapshot share, PWA, adaptive effects.
 
 ## Commands
 ```bash
 npm install
-npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · ?stress=40 · keys: ` panel, s speed, n now
+npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · ?stress=40 · ?weather=rain&season=spring · ?adaptive=0 · #place= #pier= #guide= · keys: ` panel, s speed, n now
 npm test               # vitest
 npm run typecheck
 npm run build          # typecheck + production build → dist/
@@ -41,7 +43,9 @@ npm run data:fetch-nominatim  # Nominatim (≤1 req/s) → data/raw/nominatim-is
 npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
 npm run data:piers       # → data/piers.geojson (+ in-water berths), data/districts.geojson; --verbose lists candidates
 npm run data:fetch-places  # Nominatim (2.5 s apart, 429 backoff, incremental) → data/raw/nominatim-places.json
-npm run data:places      # → data/places.geojson (OSM places) + data/posts.json (DEMO posts from templates)
+npm run data:places      # → data/places.geojson (OSM places: hours, website, phone, major)
+npm run data:landmarks   # OpenFreeMap tiles (cached in data/raw/tiles) → data/landmarks.geojson
+node scripts/build-icons.cjs  # icon.svg → PWA icons + iOS splashes (needs Playwright/Chromium)
 npm run data:routes      # → data/routes.geojson + data/lines.json from data/catalog/lines.json (A* in water)
 npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m from coast
 ```
@@ -53,7 +57,7 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - Small typed modules: `src/map` (MapLibre setup/style/labels), `src/sim` (pure functions + tests),
   `src/ferries`, `src/water`, `src/ui`, `src/debug`, `src/data` (runtime loaders).
 - `data/raw/` = downloaded sources, never hand-edited. `data/catalog/` = hand-written ids/names (no coordinates).
-- No API keys, no tile servers; all data static. Fonts self-hosted (`@fontsource/nunito`).
+- No API keys. Static data + keyless services: OpenFreeMap tiles/glyphs, Open-Meteo, Nominatim (browser, ≤1 req/s, on submit). UI font self-hosted (`@fontsource/nunito`); map glyphs from OpenFreeMap.
 - Commit after each build step.
 
 ## Decisions log
@@ -143,3 +147,33 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - **Deploy:** workflow publishes to Pages via Actions *and* to a `gh-pages` branch, so either Pages
   source setting works. Pages must be enabled once by the repo owner.
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.
+
+- **City basemap (chunk 3):** OpenFreeMap `planet` vector tiles (OpenMapTiles schema) drawn in our own palette
+  (`CONFIG.city`, `src/map/city.ts`); ground layers sit between our land fill and the shore lines, so the coast
+  and water shader stay ours. Colours = `cityLook()` (pure): day→golden→night, season tints, wet/snow/overcast.
+  Tile feature ids = osm_id×10 + 1/2/3 (Planetiler) → used to link POIs/buildings/landcover to OSM.
+  Merged tile buildings share ids, so pastel variety mixes in height. Night windows = a second extrusion layer
+  with generated window patterns, cross-faded. Labels for streets/POIs use MapLibre symbols (OFM glyphs);
+  our district/pier/landmark labels stay DOM.
+- **Landmarks** come from the tiles too (`scripts/build-landmarks.ts`, names in `data/catalog/landmarks.json`,
+  searched around a named pier): tower POIs → their building id (gold extrusion), bridge name lines → glow +
+  night lamps, Emirgan Korusu → landcover id for spring tulips.
+- **Weather** (`src/weather`): `Conditions` from Open-Meteo WMO codes or `?weather=` presets, eased over
+  `easeS`; DaylightController applies it to palette, city, water (`uRain` rings, `uChop`), ferries (wind, sea
+  rocking, fog-dimmed lights) and `WeatherLayer` (fog sheet in world space — ferries fade because it's drawn over
+  them; rain/snow as screen-space instanced quads; lightning). Fog shader must use world position (modelMatrix).
+- **Real data only (user):** demo posts removed. Featured places (`data/places.geojson`, incl. website/phone/major)
+  are DOM pins; every other named OSM POI is the `poi` symbol layer (zoom + rank reveal, collision). Opening a
+  place looks up missing tags via Nominatim `lookup` (queued ≥1.1 s, session-cached); missing fields are hidden.
+  "Open now" can only use known hours, so it hides the tile POIs.
+- **Search:** local + loaded-tile results as you type; Nominatim `search` (bounded to our bbox) only on submit —
+  the Nominatim policy forbids autocomplete. Result attribution shown in the panel.
+- **Guides:** `data/catalog/guides.json` references place/pier/landmark ids + `ferry:<lineId>` legs (sliced from
+  the line's route by `stopVertex`); a unit test resolves every guide against committed data.
+- **Snapshot:** frame copied inside MapLibre's `render` event (no preserveDrawingBuffer), cropped 4:5, caption +
+  watermark; Web Share with files, download fallback. DOM labels/pins are not in the image.
+- **PWA:** `public/manifest.webmanifest` (fullscreen), icons/splashes generated from `public/icons/icon.svg`,
+  `public/sw.js` (prod only): network-first page, cache-first hashed assets, SWR OpenFreeMap tiles (≤600).
+- **Adaptive quality ladder** (`src/app/perf.ts`): pixel ratio → particles/gulls → window pass → flat buildings;
+  low-end devices start at 1.5×. Headless screenshots run at ~2 fps — use `?adaptive=0` or the ladder kicks in.
+- **Pages is live** (gh-pages branch source): https://mutallimof.github.io/CityMap/
