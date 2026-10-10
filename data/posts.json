@@ -1,0 +1,1536 @@
+{
+ "_comment": "DEMO content — generated from data/catalog/post-templates.json; not real announcements.",
+ "posts": [
+  {
+   "id": "akasya-alisveris-merkezi:mall-sale",
+   "placeId": "akasya-alisveris-merkezi",
+   "template": "mall-sale",
+   "demo": true,
+   "type": "offer",
+   "validDays": 5,
+   "postedHoursAgo": 8,
+   "title": {
+    "tr": "Sonbahar indirim haftası",
+    "en": "Autumn sale week"
+   },
+   "body": {
+    "tr": "Katılımcı mağazalarda seçili ürünlerde indirim.",
+    "en": "Discounts on selected items in participating stores."
+   }
+  },
+  {
+   "id": "akasya-alisveris-merkezi:mall-kids",
+   "placeId": "akasya-alisveris-merkezi",
+   "template": "mall-kids",
+   "demo": true,
+   "type": "event",
+   "start": "14:00",
+   "durationMin": 180,
+   "dayOffset": 1,
+   "postedHoursAgo": 18,
+   "title": {
+    "tr": "Yarın çocuk atölyesi",
+    "en": "Kids' workshop tomorrow"
+   },
+   "body": {
+    "tr": "Kâğıttan vapur yapımı — malzemeler bizden.",
+    "en": "Build a paper ferry — materials provided."
+   }
+  },
+  {
+   "id": "akmerkez:mall-late",
+   "placeId": "akmerkez",
+   "template": "mall-late",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 30,
+   "title": {
+    "tr": "Cuma geç saate kadar açık",
+    "en": "Late opening on Friday"
+   },
+   "body": {
+    "tr": "Mağazalar cuma 23:00'e kadar açık.",
+    "en": "Shops stay open until 23:00 on Friday."
+   }
+  },
+  {
+   "id": "atasehir-modern:museum-night",
+   "placeId": "atasehir-modern",
+   "template": "museum-night",
+   "demo": true,
+   "type": "event",
+   "start": "19:00",
+   "durationMin": 180,
+   "dayOffset": 0,
+   "postedHoursAgo": 4,
+   "title": {
+    "tr": "Müzede gece: geç saate kadar açık",
+    "en": "Museum late: open until 22:00"
+   },
+   "body": {
+    "tr": "Rehberli kısa turlar her saat başı. Teras manzarası ücretsiz.",
+    "en": "Short guided tours every hour. The terrace view is free."
+   }
+  },
+  {
+   "id": "ataturk-kultur-merkezi:stage-premiere",
+   "placeId": "ataturk-kultur-merkezi",
+   "template": "stage-premiere",
+   "demo": true,
+   "type": "event",
+   "start": "20:30",
+   "durationMin": 140,
+   "dayOffset": 0,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Yeni sezon prömiyeri bu akşam",
+    "en": "New season premiere tonight"
+   },
+   "body": {
+    "tr": "Klasik bir komedinin yeni yorumu. Kapılar 20:00'de açılıyor; son biletler gişede.",
+    "en": "A fresh take on a classic comedy. Doors open at 20:00; last tickets at the box office."
+   }
+  },
+  {
+   "id": "ataturk-kultur-merkezi:stage-matinee",
+   "placeId": "ataturk-kultur-merkezi",
+   "template": "stage-matinee",
+   "demo": true,
+   "type": "event",
+   "start": "15:00",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 20,
+   "title": {
+    "tr": "Yarın aile matinesi",
+    "en": "Family matinee tomorrow"
+   },
+   "body": {
+    "tr": "Çocuklar için müzikli bir masal. 6 yaş ve üstü için uygun.",
+    "en": "A musical fairy tale for kids. Suitable for ages 6 and up."
+   }
+  },
+  {
+   "id": "bab-i-hayat:rest-lunch",
+   "placeId": "bab-i-hayat",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "baba-sahne:stage-concert",
+   "placeId": "baba-sahne",
+   "template": "stage-concert",
+   "demo": true,
+   "type": "event",
+   "start": "21:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Bu gece: oda müziği konseri",
+    "en": "Tonight: chamber music concert"
+   },
+   "body": {
+    "tr": "Yaylı dörtlüden Boğaz esintili bir program. Konser sonrası söyleşi.",
+    "en": "A string quartet programme with a Bosphorus theme, followed by a short talk."
+   }
+  },
+  {
+   "id": "bebek-koru-kahvesi:cafe-breakfast",
+   "placeId": "bebek-koru-kahvesi",
+   "template": "cafe-breakfast",
+   "demo": true,
+   "type": "offer",
+   "validDays": 4,
+   "postedHoursAgo": 10,
+   "title": {
+    "tr": "Hafta sonu serpme kahvaltı",
+    "en": "Weekend spread breakfast"
+   },
+   "body": {
+    "tr": "Cumartesi ve pazar 09:00–13:00. Çay sınırsız.",
+    "en": "Saturday & Sunday 09:00–13:00. Unlimited tea."
+   }
+  },
+  {
+   "id": "bebek-koru-kahvesi:cafe-new",
+   "placeId": "bebek-koru-kahvesi",
+   "template": "cafe-new",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Yeni sezon kahveleri geldi",
+    "en": "New season coffees are in"
+   },
+   "body": {
+    "tr": "Bu hafta iki yeni demleme yöntemi deneyin.",
+    "en": "Try two new brewing methods this week."
+   }
+  },
+  {
+   "id": "birecikli-kebap-karakoy:rest-fish",
+   "placeId": "birecikli-kebap-karakoy",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "bkm:stage-jazz",
+   "placeId": "bkm",
+   "template": "stage-jazz",
+   "demo": true,
+   "type": "event",
+   "start": "22:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Gece caz seansı",
+    "en": "Late-night jazz session"
+   },
+   "body": {
+    "tr": "Trio + sürpriz konuk. Ayakta alan sınırlı.",
+    "en": "A trio plus a surprise guest. Limited standing room."
+   }
+  },
+  {
+   "id": "bkm-mutfak:stage-tickets",
+   "placeId": "bkm-mutfak",
+   "template": "stage-tickets",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 9,
+   "title": {
+    "tr": "Kasım programı açıklandı",
+    "en": "November programme announced"
+   },
+   "body": {
+    "tr": "Yeni oyunlar ve konserler için biletler cuma satışta.",
+    "en": "Tickets for the new plays and concerts go on sale on Friday."
+   }
+  },
+  {
+   "id": "bkm-mutfak:stage-premiere",
+   "placeId": "bkm-mutfak",
+   "template": "stage-premiere",
+   "demo": true,
+   "type": "event",
+   "start": "20:30",
+   "durationMin": 140,
+   "dayOffset": 0,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Yeni sezon prömiyeri bu akşam",
+    "en": "New season premiere tonight"
+   },
+   "body": {
+    "tr": "Klasik bir komedinin yeni yorumu. Kapılar 20:00'de açılıyor; son biletler gişede.",
+    "en": "A fresh take on a classic comedy. Doors open at 20:00; last tickets at the box office."
+   }
+  },
+  {
+   "id": "blak-coffee-co:cafe-acoustic",
+   "placeId": "blak-coffee-co",
+   "template": "cafe-acoustic",
+   "demo": true,
+   "type": "event",
+   "start": "19:30",
+   "durationMin": 90,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Akustik akşam",
+    "en": "Acoustic evening"
+   },
+   "body": {
+    "tr": "Gitar ve ses — giriş serbest, sıcak çikolata bizden.",
+    "en": "Guitar and vocals — free entry, hot chocolate on us."
+   }
+  },
+  {
+   "id": "borusan-art-center:stage-matinee",
+   "placeId": "borusan-art-center",
+   "template": "stage-matinee",
+   "demo": true,
+   "type": "event",
+   "start": "15:00",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 20,
+   "title": {
+    "tr": "Yarın aile matinesi",
+    "en": "Family matinee tomorrow"
+   },
+   "body": {
+    "tr": "Çocuklar için müzikli bir masal. 6 yaş ve üstü için uygun.",
+    "en": "A musical fairy tale for kids. Suitable for ages 6 and up."
+   }
+  },
+  {
+   "id": "camlica-tepesi:view-sunset",
+   "placeId": "camlica-tepesi",
+   "template": "view-sunset",
+   "demo": true,
+   "type": "event",
+   "start": "@sunset-30",
+   "durationMin": 60,
+   "dayOffset": 0,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Gün batımı buluşması",
+    "en": "Sunset meet-up"
+   },
+   "body": {
+    "tr": "Termosunu getir; batan güneşe karşı çay ve sohbet.",
+    "en": "Bring a thermos — tea and chat facing the sunset."
+   }
+  },
+  {
+   "id": "capitol-alisveris-merkezi:mall-sale",
+   "placeId": "capitol-alisveris-merkezi",
+   "template": "mall-sale",
+   "demo": true,
+   "type": "offer",
+   "validDays": 5,
+   "postedHoursAgo": 8,
+   "title": {
+    "tr": "Sonbahar indirim haftası",
+    "en": "Autumn sale week"
+   },
+   "body": {
+    "tr": "Katılımcı mağazalarda seçili ürünlerde indirim.",
+    "en": "Discounts on selected items in participating stores."
+   }
+  },
+  {
+   "id": "cemal-resit-rey-konser-salonu:stage-concert",
+   "placeId": "cemal-resit-rey-konser-salonu",
+   "template": "stage-concert",
+   "demo": true,
+   "type": "event",
+   "start": "21:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Bu gece: oda müziği konseri",
+    "en": "Tonight: chamber music concert"
+   },
+   "body": {
+    "tr": "Yaylı dörtlüden Boğaz esintili bir program. Konser sonrası söyleşi.",
+    "en": "A string quartet programme with a Bosphorus theme, followed by a short talk."
+   }
+  },
+  {
+   "id": "cengelkoy-borekcisi:rest-music",
+   "placeId": "cengelkoy-borekcisi",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "cengelkoy-borekcisi:rest-sunset",
+   "placeId": "cengelkoy-borekcisi",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "devlet-tiyatrolari-tekel-sahnesi:stage-jazz",
+   "placeId": "devlet-tiyatrolari-tekel-sahnesi",
+   "template": "stage-jazz",
+   "demo": true,
+   "type": "event",
+   "start": "22:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Gece caz seansı",
+    "en": "Late-night jazz session"
+   },
+   "body": {
+    "tr": "Trio + sürpriz konuk. Ayakta alan sınırlı.",
+    "en": "A trio plus a surprise guest. Limited standing room."
+   }
+  },
+  {
+   "id": "emirgan-korusu:view-photo",
+   "placeId": "emirgan-korusu",
+   "template": "view-photo",
+   "demo": true,
+   "type": "event",
+   "start": "07:00",
+   "durationMin": 60,
+   "dayOffset": 1,
+   "postedHoursAgo": 11,
+   "title": {
+    "tr": "Şafak fotoğraf yürüyüşü",
+    "en": "Dawn photo walk"
+   },
+   "body": {
+    "tr": "Sisli sabahlar ve vapur siluetleri için erken buluşma.",
+    "en": "Meet early for misty mornings and ferry silhouettes."
+   }
+  },
+  {
+   "id": "espressolab:cafe-simit",
+   "placeId": "espressolab",
+   "template": "cafe-simit",
+   "demo": true,
+   "type": "offer",
+   "validDays": 1,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Vapur saatine çay + simit",
+    "en": "Tea + simit for the ferry"
+   },
+   "body": {
+    "tr": "Paket çay ve simit, iskeleye yürürken.",
+    "en": "Take-away tea and simit for the walk to the pier."
+   }
+  },
+  {
+   "id": "espressolab:cafe-breakfast",
+   "placeId": "espressolab",
+   "template": "cafe-breakfast",
+   "demo": true,
+   "type": "offer",
+   "validDays": 4,
+   "postedHoursAgo": 10,
+   "title": {
+    "tr": "Hafta sonu serpme kahvaltı",
+    "en": "Weekend spread breakfast"
+   },
+   "body": {
+    "tr": "Cumartesi ve pazar 09:00–13:00. Çay sınırsız.",
+    "en": "Saturday & Sunday 09:00–13:00. Unlimited tea."
+   }
+  },
+  {
+   "id": "galata-kulesi:view-sunset",
+   "placeId": "galata-kulesi",
+   "template": "view-sunset",
+   "demo": true,
+   "type": "event",
+   "start": "@sunset-30",
+   "durationMin": 60,
+   "dayOffset": 0,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Gün batımı buluşması",
+    "en": "Sunset meet-up"
+   },
+   "body": {
+    "tr": "Termosunu getir; batan güneşe karşı çay ve sohbet.",
+    "en": "Bring a thermos — tea and chat facing the sunset."
+   }
+  },
+  {
+   "id": "galataport:mall-kids",
+   "placeId": "galataport",
+   "template": "mall-kids",
+   "demo": true,
+   "type": "event",
+   "start": "14:00",
+   "durationMin": 180,
+   "dayOffset": 1,
+   "postedHoursAgo": 18,
+   "title": {
+    "tr": "Yarın çocuk atölyesi",
+    "en": "Kids' workshop tomorrow"
+   },
+   "body": {
+    "tr": "Kâğıttan vapur yapımı — malzemeler bizden.",
+    "en": "Build a paper ferry — materials provided."
+   }
+  },
+  {
+   "id": "garaj-istanbul:stage-tickets",
+   "placeId": "garaj-istanbul",
+   "template": "stage-tickets",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 9,
+   "title": {
+    "tr": "Kasım programı açıklandı",
+    "en": "November programme announced"
+   },
+   "body": {
+    "tr": "Yeni oyunlar ve konserler için biletler cuma satışta.",
+    "en": "Tickets for the new plays and concerts go on sale on Friday."
+   }
+  },
+  {
+   "id": "garaj-istanbul:stage-premiere",
+   "placeId": "garaj-istanbul",
+   "template": "stage-premiere",
+   "demo": true,
+   "type": "event",
+   "start": "20:30",
+   "durationMin": 140,
+   "dayOffset": 0,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Yeni sezon prömiyeri bu akşam",
+    "en": "New season premiere tonight"
+   },
+   "body": {
+    "tr": "Klasik bir komedinin yeni yorumu. Kapılar 20:00'de açılıyor; son biletler gişede.",
+    "en": "A fresh take on a classic comedy. Doors open at 20:00; last tickets at the box office."
+   }
+  },
+  {
+   "id": "gezi-istanbul-cafe:cafe-new",
+   "placeId": "gezi-istanbul-cafe",
+   "template": "cafe-new",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Yeni sezon kahveleri geldi",
+    "en": "New season coffees are in"
+   },
+   "body": {
+    "tr": "Bu hafta iki yeni demleme yöntemi deneyin.",
+    "en": "Try two new brewing methods this week."
+   }
+  },
+  {
+   "id": "gulfem-hatun-konagi:rest-lunch",
+   "placeId": "gulfem-hatun-konagi",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "haldun-taner-sahnesi:stage-matinee",
+   "placeId": "haldun-taner-sahnesi",
+   "template": "stage-matinee",
+   "demo": true,
+   "type": "event",
+   "start": "15:00",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 20,
+   "title": {
+    "tr": "Yarın aile matinesi",
+    "en": "Family matinee tomorrow"
+   },
+   "body": {
+    "tr": "Çocuklar için müzikli bir masal. 6 yaş ve üstü için uygun.",
+    "en": "A musical fairy tale for kids. Suitable for ages 6 and up."
+   }
+  },
+  {
+   "id": "haldun-taner-sahnesi:stage-concert",
+   "placeId": "haldun-taner-sahnesi",
+   "template": "stage-concert",
+   "demo": true,
+   "type": "event",
+   "start": "21:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Bu gece: oda müziği konseri",
+    "en": "Tonight: chamber music concert"
+   },
+   "body": {
+    "tr": "Yaylı dörtlüden Boğaz esintili bir program. Konser sonrası söyleşi.",
+    "en": "A string quartet programme with a Bosphorus theme, followed by a short talk."
+   }
+  },
+  {
+   "id": "harbiye-cemil-topuzlu-acik-hava-tiyatros:stage-jazz",
+   "placeId": "harbiye-cemil-topuzlu-acik-hava-tiyatros",
+   "template": "stage-jazz",
+   "demo": true,
+   "type": "event",
+   "start": "22:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Gece caz seansı",
+    "en": "Late-night jazz session"
+   },
+   "body": {
+    "tr": "Trio + sürpriz konuk. Ayakta alan sınırlı.",
+    "en": "A trio plus a surprise guest. Limited standing room."
+   }
+  },
+  {
+   "id": "harbiye-muhsin-ertugrul-tiyatrosu:stage-tickets",
+   "placeId": "harbiye-muhsin-ertugrul-tiyatrosu",
+   "template": "stage-tickets",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 9,
+   "title": {
+    "tr": "Kasım programı açıklandı",
+    "en": "November programme announced"
+   },
+   "body": {
+    "tr": "Yeni oyunlar ve konserler için biletler cuma satışta.",
+    "en": "Tickets for the new plays and concerts go on sale on Friday."
+   }
+  },
+  {
+   "id": "ibb-muammer-karaca-tiyatrosu:stage-premiere",
+   "placeId": "ibb-muammer-karaca-tiyatrosu",
+   "template": "stage-premiere",
+   "demo": true,
+   "type": "event",
+   "start": "20:30",
+   "durationMin": 140,
+   "dayOffset": 0,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Yeni sezon prömiyeri bu akşam",
+    "en": "New season premiere tonight"
+   },
+   "body": {
+    "tr": "Klasik bir komedinin yeni yorumu. Kapılar 20:00'de açılıyor; son biletler gişede.",
+    "en": "A fresh take on a classic comedy. Doors open at 20:00; last tickets at the box office."
+   }
+  },
+  {
+   "id": "ibb-muammer-karaca-tiyatrosu:stage-matinee",
+   "placeId": "ibb-muammer-karaca-tiyatrosu",
+   "template": "stage-matinee",
+   "demo": true,
+   "type": "event",
+   "start": "15:00",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 20,
+   "title": {
+    "tr": "Yarın aile matinesi",
+    "en": "Family matinee tomorrow"
+   },
+   "body": {
+    "tr": "Çocuklar için müzikli bir masal. 6 yaş ve üstü için uygun.",
+    "en": "A musical fairy tale for kids. Suitable for ages 6 and up."
+   }
+  },
+  {
+   "id": "ist-too:rest-fish",
+   "placeId": "ist-too",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "istanbul-cevahir-alisveris-ve-eglence-me:mall-late",
+   "placeId": "istanbul-cevahir-alisveris-ve-eglence-me",
+   "template": "mall-late",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 30,
+   "title": {
+    "tr": "Cuma geç saate kadar açık",
+    "en": "Late opening on Friday"
+   },
+   "body": {
+    "tr": "Mağazalar cuma 23:00'e kadar açık.",
+    "en": "Shops stay open until 23:00 on Friday."
+   }
+  },
+  {
+   "id": "istanbul-modern-sanat-muzesi:museum-expo",
+   "placeId": "istanbul-modern-sanat-muzesi",
+   "template": "museum-expo",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 26,
+   "title": {
+    "tr": "Yeni sergi: Kentin Suları",
+    "en": "New exhibition: The City's Waters"
+   },
+   "body": {
+    "tr": "Vapurlar, iskeleler ve Boğaz'ın 150 yılı fotoğraflarla.",
+    "en": "150 years of ferries, piers and the Bosphorus in photographs."
+   }
+  },
+  {
+   "id": "istanbul-modern-sanat-muzesi:museum-night",
+   "placeId": "istanbul-modern-sanat-muzesi",
+   "template": "museum-night",
+   "demo": true,
+   "type": "event",
+   "start": "19:00",
+   "durationMin": 180,
+   "dayOffset": 0,
+   "postedHoursAgo": 4,
+   "title": {
+    "tr": "Müzede gece: geç saate kadar açık",
+    "en": "Museum late: open until 22:00"
+   },
+   "body": {
+    "tr": "Rehberli kısa turlar her saat başı. Teras manzarası ücretsiz.",
+    "en": "Short guided tours every hour. The terrace view is free."
+   }
+  },
+  {
+   "id": "istinyepark:mall-sale",
+   "placeId": "istinyepark",
+   "template": "mall-sale",
+   "demo": true,
+   "type": "offer",
+   "validDays": 5,
+   "postedHoursAgo": 8,
+   "title": {
+    "tr": "Sonbahar indirim haftası",
+    "en": "Autumn sale week"
+   },
+   "body": {
+    "tr": "Katılımcı mağazalarda seçili ürünlerde indirim.",
+    "en": "Discounts on selected items in participating stores."
+   }
+  },
+  {
+   "id": "kahve-dunyasi:cafe-acoustic",
+   "placeId": "kahve-dunyasi",
+   "template": "cafe-acoustic",
+   "demo": true,
+   "type": "event",
+   "start": "19:30",
+   "durationMin": 90,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Akustik akşam",
+    "en": "Acoustic evening"
+   },
+   "body": {
+    "tr": "Gitar ve ses — giriş serbest, sıcak çikolata bizden.",
+    "en": "Guitar and vocals — free entry, hot chocolate on us."
+   }
+  },
+  {
+   "id": "kapali-carsi:bazaar-tour",
+   "placeId": "kapali-carsi",
+   "template": "bazaar-tour",
+   "demo": true,
+   "type": "event",
+   "start": "10:30",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 14,
+   "title": {
+    "tr": "Sabah çarşı yürüyüşü",
+    "en": "Morning bazaar walk"
+   },
+   "body": {
+    "tr": "Baharat, çay ve el sanatları ustalarıyla kısa bir yürüyüş.",
+    "en": "A short walk meeting spice, tea and craft makers."
+   }
+  },
+  {
+   "id": "kapali-carsi:bazaar-spice",
+   "placeId": "kapali-carsi",
+   "template": "bazaar-spice",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 4,
+   "title": {
+    "tr": "Kış çayı karışımları",
+    "en": "Winter tea blends"
+   },
+   "body": {
+    "tr": "Ihlamur ve kuşburnu karışımları yeni geldi.",
+    "en": "Linden and rosehip blends just arrived."
+   }
+  },
+  {
+   "id": "karakoy-gumruk:rest-music",
+   "placeId": "karakoy-gumruk",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "kavacoffee:cafe-simit",
+   "placeId": "kavacoffee",
+   "template": "cafe-simit",
+   "demo": true,
+   "type": "offer",
+   "validDays": 1,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Vapur saatine çay + simit",
+    "en": "Tea + simit for the ferry"
+   },
+   "body": {
+    "tr": "Paket çay ve simit, iskeleye yürürken.",
+    "en": "Take-away tea and simit for the walk to the pier."
+   }
+  },
+  {
+   "id": "kiz-kulesi:view-photo",
+   "placeId": "kiz-kulesi",
+   "template": "view-photo",
+   "demo": true,
+   "type": "event",
+   "start": "07:00",
+   "durationMin": 60,
+   "dayOffset": 1,
+   "postedHoursAgo": 11,
+   "title": {
+    "tr": "Şafak fotoğraf yürüyüşü",
+    "en": "Dawn photo walk"
+   },
+   "body": {
+    "tr": "Sisli sabahlar ve vapur siluetleri için erken buluşma.",
+    "en": "Meet early for misty mornings and ferry silhouettes."
+   }
+  },
+  {
+   "id": "kont-moda:cafe-breakfast",
+   "placeId": "kont-moda",
+   "template": "cafe-breakfast",
+   "demo": true,
+   "type": "offer",
+   "validDays": 4,
+   "postedHoursAgo": 10,
+   "title": {
+    "tr": "Hafta sonu serpme kahvaltı",
+    "en": "Weekend spread breakfast"
+   },
+   "body": {
+    "tr": "Cumartesi ve pazar 09:00–13:00. Çay sınırsız.",
+    "en": "Saturday & Sunday 09:00–13:00. Unlimited tea."
+   }
+  },
+  {
+   "id": "lunapark-restaurant:rest-sunset",
+   "placeId": "lunapark-restaurant",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "mado:cafe-new",
+   "placeId": "mado",
+   "template": "cafe-new",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Yeni sezon kahveleri geldi",
+    "en": "New season coffees are in"
+   },
+   "body": {
+    "tr": "Bu hafta iki yeni demleme yöntemi deneyin.",
+    "en": "Try two new brewing methods this week."
+   }
+  },
+  {
+   "id": "mado:cafe-acoustic",
+   "placeId": "mado",
+   "template": "cafe-acoustic",
+   "demo": true,
+   "type": "event",
+   "start": "19:30",
+   "durationMin": 90,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Akustik akşam",
+    "en": "Acoustic evening"
+   },
+   "body": {
+    "tr": "Gitar ve ses — giriş serbest, sıcak çikolata bizden.",
+    "en": "Guitar and vocals — free entry, hot chocolate on us."
+   }
+  },
+  {
+   "id": "mesut-cafe:rest-lunch",
+   "placeId": "mesut-cafe",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "midpoint:cafe-simit",
+   "placeId": "midpoint",
+   "template": "cafe-simit",
+   "demo": true,
+   "type": "offer",
+   "validDays": 1,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Vapur saatine çay + simit",
+    "en": "Tea + simit for the ferry"
+   },
+   "body": {
+    "tr": "Paket çay ve simit, iskeleye yürürken.",
+    "en": "Take-away tea and simit for the walk to the pier."
+   }
+  },
+  {
+   "id": "mihrabat:rest-fish",
+   "placeId": "mihrabat",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "mihrabat:rest-music",
+   "placeId": "mihrabat",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "misir-carsisi:bazaar-tour",
+   "placeId": "misir-carsisi",
+   "template": "bazaar-tour",
+   "demo": true,
+   "type": "event",
+   "start": "10:30",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 14,
+   "title": {
+    "tr": "Sabah çarşı yürüyüşü",
+    "en": "Morning bazaar walk"
+   },
+   "body": {
+    "tr": "Baharat, çay ve el sanatları ustalarıyla kısa bir yürüyüş.",
+    "en": "A short walk meeting spice, tea and craft makers."
+   }
+  },
+  {
+   "id": "moda-burnu:view-sunset",
+   "placeId": "moda-burnu",
+   "template": "view-sunset",
+   "demo": true,
+   "type": "event",
+   "start": "@sunset-30",
+   "durationMin": 60,
+   "dayOffset": 0,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Gün batımı buluşması",
+    "en": "Sunset meet-up"
+   },
+   "body": {
+    "tr": "Termosunu getir; batan güneşe karşı çay ve sohbet.",
+    "en": "Bring a thermos — tea and chat facing the sunset."
+   }
+  },
+  {
+   "id": "namli-gurme:rest-sunset",
+   "placeId": "namli-gurme",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "namli-gurme:rest-lunch",
+   "placeId": "namli-gurme",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "olimpiyat-kokorec:rest-fish",
+   "placeId": "olimpiyat-kokorec",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "ortaoyuncular-tiyatrosu:stage-concert",
+   "placeId": "ortaoyuncular-tiyatrosu",
+   "template": "stage-concert",
+   "demo": true,
+   "type": "event",
+   "start": "21:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Bu gece: oda müziği konseri",
+    "en": "Tonight: chamber music concert"
+   },
+   "body": {
+    "tr": "Yaylı dörtlüden Boğaz esintili bir program. Konser sonrası söyleşi.",
+    "en": "A string quartet programme with a Bosphorus theme, followed by a short talk."
+   }
+  },
+  {
+   "id": "oyun-atolyesi:stage-jazz",
+   "placeId": "oyun-atolyesi",
+   "template": "stage-jazz",
+   "demo": true,
+   "type": "event",
+   "start": "22:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Gece caz seansı",
+    "en": "Late-night jazz session"
+   },
+   "body": {
+    "tr": "Trio + sürpriz konuk. Ayakta alan sınırlı.",
+    "en": "A trio plus a surprise guest. Limited standing room."
+   }
+  },
+  {
+   "id": "oyun-atolyesi:stage-tickets",
+   "placeId": "oyun-atolyesi",
+   "template": "stage-tickets",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 9,
+   "title": {
+    "tr": "Kasım programı açıklandı",
+    "en": "November programme announced"
+   },
+   "body": {
+    "tr": "Yeni oyunlar ve konserler için biletler cuma satışta.",
+    "en": "Tickets for the new plays and concerts go on sale on Friday."
+   }
+  },
+  {
+   "id": "pandeli:rest-music",
+   "placeId": "pandeli",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "paraf-kurucesme-acikhava:stage-premiere",
+   "placeId": "paraf-kurucesme-acikhava",
+   "template": "stage-premiere",
+   "demo": true,
+   "type": "event",
+   "start": "20:30",
+   "durationMin": 140,
+   "dayOffset": 0,
+   "postedHoursAgo": 3,
+   "title": {
+    "tr": "Yeni sezon prömiyeri bu akşam",
+    "en": "New season premiere tonight"
+   },
+   "body": {
+    "tr": "Klasik bir komedinin yeni yorumu. Kapılar 20:00'de açılıyor; son biletler gişede.",
+    "en": "A fresh take on a classic comedy. Doors open at 20:00; last tickets at the box office."
+   }
+  },
+  {
+   "id": "pera-muzesi:museum-expo",
+   "placeId": "pera-muzesi",
+   "template": "museum-expo",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 26,
+   "title": {
+    "tr": "Yeni sergi: Kentin Suları",
+    "en": "New exhibition: The City's Waters"
+   },
+   "body": {
+    "tr": "Vapurlar, iskeleler ve Boğaz'ın 150 yılı fotoğraflarla.",
+    "en": "150 years of ferries, piers and the Bosphorus in photographs."
+   }
+  },
+  {
+   "id": "pera-muzesi:museum-night",
+   "placeId": "pera-muzesi",
+   "template": "museum-night",
+   "demo": true,
+   "type": "event",
+   "start": "19:00",
+   "durationMin": 180,
+   "dayOffset": 0,
+   "postedHoursAgo": 4,
+   "title": {
+    "tr": "Müzede gece: geç saate kadar açık",
+    "en": "Museum late: open until 22:00"
+   },
+   "body": {
+    "tr": "Rehberli kısa turlar her saat başı. Teras manzarası ücretsiz.",
+    "en": "Short guided tours every hour. The terrace view is free."
+   }
+  },
+  {
+   "id": "pide-ban:rest-sunset",
+   "placeId": "pide-ban",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "pideban-sariyer:rest-lunch",
+   "placeId": "pideban-sariyer",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "pierre-loti:view-photo",
+   "placeId": "pierre-loti",
+   "template": "view-photo",
+   "demo": true,
+   "type": "event",
+   "start": "07:00",
+   "durationMin": 60,
+   "dayOffset": 1,
+   "postedHoursAgo": 11,
+   "title": {
+    "tr": "Şafak fotoğraf yürüyüşü",
+    "en": "Dawn photo walk"
+   },
+   "body": {
+    "tr": "Sisli sabahlar ve vapur siluetleri için erken buluşma.",
+    "en": "Meet early for misty mornings and ferry silhouettes."
+   }
+  },
+  {
+   "id": "pisi-mutfak:cafe-breakfast",
+   "placeId": "pisi-mutfak",
+   "template": "cafe-breakfast",
+   "demo": true,
+   "type": "offer",
+   "validDays": 4,
+   "postedHoursAgo": 10,
+   "title": {
+    "tr": "Hafta sonu serpme kahvaltı",
+    "en": "Weekend spread breakfast"
+   },
+   "body": {
+    "tr": "Cumartesi ve pazar 09:00–13:00. Çay sınırsız.",
+    "en": "Saturday & Sunday 09:00–13:00. Unlimited tea."
+   }
+  },
+  {
+   "id": "salacak:view-sunset",
+   "placeId": "salacak",
+   "template": "view-sunset",
+   "demo": true,
+   "type": "event",
+   "start": "@sunset-30",
+   "durationMin": 60,
+   "dayOffset": 0,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Gün batımı buluşması",
+    "en": "Sunset meet-up"
+   },
+   "body": {
+    "tr": "Termosunu getir; batan güneşe karşı çay ve sohbet.",
+    "en": "Bring a thermos — tea and chat facing the sunset."
+   }
+  },
+  {
+   "id": "shang-palace:rest-fish",
+   "placeId": "shang-palace",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "shang-palace:rest-music",
+   "placeId": "shang-palace",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "sureyya-operasi:stage-matinee",
+   "placeId": "sureyya-operasi",
+   "template": "stage-matinee",
+   "demo": true,
+   "type": "event",
+   "start": "15:00",
+   "durationMin": 90,
+   "dayOffset": 1,
+   "postedHoursAgo": 20,
+   "title": {
+    "tr": "Yarın aile matinesi",
+    "en": "Family matinee tomorrow"
+   },
+   "body": {
+    "tr": "Çocuklar için müzikli bir masal. 6 yaş ve üstü için uygun.",
+    "en": "A musical fairy tale for kids. Suitable for ages 6 and up."
+   }
+  },
+  {
+   "id": "tatar-salim:rest-sunset",
+   "placeId": "tatar-salim",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "ulus-parki:view-photo",
+   "placeId": "ulus-parki",
+   "template": "view-photo",
+   "demo": true,
+   "type": "event",
+   "start": "07:00",
+   "durationMin": 60,
+   "dayOffset": 1,
+   "postedHoursAgo": 11,
+   "title": {
+    "tr": "Şafak fotoğraf yürüyüşü",
+    "en": "Dawn photo walk"
+   },
+   "body": {
+    "tr": "Sisli sabahlar ve vapur siluetleri için erken buluşma.",
+    "en": "Meet early for misty mornings and ferry silhouettes."
+   }
+  },
+  {
+   "id": "uskudar-musahipzade-celal-sahnesi:stage-concert",
+   "placeId": "uskudar-musahipzade-celal-sahnesi",
+   "template": "stage-concert",
+   "demo": true,
+   "type": "event",
+   "start": "21:00",
+   "durationMin": 120,
+   "dayOffset": 0,
+   "postedHoursAgo": 5,
+   "title": {
+    "tr": "Bu gece: oda müziği konseri",
+    "en": "Tonight: chamber music concert"
+   },
+   "body": {
+    "tr": "Yaylı dörtlüden Boğaz esintili bir program. Konser sonrası söyleşi.",
+    "en": "A string quartet programme with a Bosphorus theme, followed by a short talk."
+   }
+  },
+  {
+   "id": "uskudar-sahne:cafe-new",
+   "placeId": "uskudar-sahne",
+   "template": "cafe-new",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 1,
+   "title": {
+    "tr": "Yeni sezon kahveleri geldi",
+    "en": "New season coffees are in"
+   },
+   "body": {
+    "tr": "Bu hafta iki yeni demleme yöntemi deneyin.",
+    "en": "Try two new brewing methods this week."
+   }
+  },
+  {
+   "id": "yanyali-fehmi-lokantasi:rest-lunch",
+   "placeId": "yanyali-fehmi-lokantasi",
+   "template": "rest-lunch",
+   "demo": true,
+   "type": "offer",
+   "validDays": 3,
+   "postedHoursAgo": 2,
+   "title": {
+    "tr": "Hafta içi öğle menüsü",
+    "en": "Weekday lunch menu"
+   },
+   "body": {
+    "tr": "Üç meze, ana yemek ve çay. 12:00–15:00 arası.",
+    "en": "Three meze, a main and tea. 12:00–15:00."
+   }
+  },
+  {
+   "id": "yanyali-fehmi-lokantasi:rest-fish",
+   "placeId": "yanyali-fehmi-lokantasi",
+   "template": "rest-fish",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 6,
+   "title": {
+    "tr": "Mevsimin ilk palamutları",
+    "en": "First bonito of the season"
+   },
+   "body": {
+    "tr": "Izgara palamut ve roka salatası bu hafta menüde.",
+    "en": "Grilled bonito with rocket salad on the menu this week."
+   }
+  },
+  {
+   "id": "yemen-2-ocakbasi:rest-music",
+   "placeId": "yemen-2-ocakbasi",
+   "template": "rest-music",
+   "demo": true,
+   "type": "event",
+   "start": "20:00",
+   "durationMin": 150,
+   "dayOffset": 0,
+   "postedHoursAgo": 7,
+   "title": {
+    "tr": "Bu akşam canlı fasıl",
+    "en": "Live fasıl music tonight"
+   },
+   "body": {
+    "tr": "Masa ayırtmanızı öneririz; pencere kenarı erken doluyor.",
+    "en": "Booking recommended — the window tables go first."
+   }
+  },
+  {
+   "id": "yucetepe-kir-gazinosu:rest-sunset",
+   "placeId": "yucetepe-kir-gazinosu",
+   "template": "rest-sunset",
+   "demo": true,
+   "type": "offer",
+   "validDays": 2,
+   "postedHoursAgo": 12,
+   "title": {
+    "tr": "Gün batımı saati",
+    "en": "Sunset hour"
+   },
+   "body": {
+    "tr": "Gün batımından bir saat önce başlayan mezelerde indirim.",
+    "en": "Meze discount starting an hour before sunset."
+   }
+  },
+  {
+   "id": "zorlu-center:mall-kids",
+   "placeId": "zorlu-center",
+   "template": "mall-kids",
+   "demo": true,
+   "type": "event",
+   "start": "14:00",
+   "durationMin": 180,
+   "dayOffset": 1,
+   "postedHoursAgo": 18,
+   "title": {
+    "tr": "Yarın çocuk atölyesi",
+    "en": "Kids' workshop tomorrow"
+   },
+   "body": {
+    "tr": "Kâğıttan vapur yapımı — malzemeler bizden.",
+    "en": "Build a paper ferry — materials provided."
+   }
+  },
+  {
+   "id": "zorlu-center:mall-late",
+   "placeId": "zorlu-center",
+   "template": "mall-late",
+   "demo": true,
+   "type": "news",
+   "postedHoursAgo": 30,
+   "title": {
+    "tr": "Cuma geç saate kadar açık",
+    "en": "Late opening on Friday"
+   },
+   "body": {
+    "tr": "Mağazalar cuma 23:00'e kadar açık.",
+    "en": "Shops stay open until 23:00 on Friday."
+   }
+  }
+ ]
+}

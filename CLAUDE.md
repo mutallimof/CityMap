@@ -17,10 +17,11 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
 ## Build steps (plan §4.9)
 1. ✅ Skeleton: Vite, MapLibre custom land/water style, coastline pipeline, piers, debug fps panel.
 2. ✅ Simulation: `sim/` + unit tests, routes + validator, ferries as arrows.
-3. ✅ (first pass) Vapur looks: 3D model, heading smoothing, wake, bob, docking. Funnel smoke → step 4.
-4. Water + time: water shader, day/night, night lights, intro fly-in, seagulls.
-5. Interactions: sheets, follow, layer chips, time controls, TR/EN.
-6. Polish + perf, reduce-motion, deploy.
+3. ✅ Vapur looks: 3D model, heading smoothing, wake, bob, docking.
+4. ✅ Water + time: water shader, day/night, night lights, intro fly-in, seagulls, funnel smoke.
+5. ✅ Interactions: sheets, follow, layer chips, time controls, TR/EN.
+6. ✅ Polish + perf (adaptive pixel ratio), reduce-motion, deploy (GitHub Pages).
+7. ✅ Part B (user, 2026-10-10): living city map + feed — see `docs/ideas.md`.
 
 ## Commands
 ```bash
@@ -39,6 +40,8 @@ npm run data:coastline   # → data/land.geojson (land-polygons > overpass > coa
 npm run data:fetch-nominatim  # Nominatim (≤1 req/s) → data/raw/nominatim-istanbul.json — current pier/district source
 npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
 npm run data:piers       # → data/piers.geojson (+ in-water berths), data/districts.geojson; --verbose lists candidates
+npm run data:fetch-places  # Nominatim (2.5 s apart, 429 backoff, incremental) → data/raw/nominatim-places.json
+npm run data:places      # → data/places.geojson (OSM places) + data/posts.json (DEMO posts from templates)
 npm run data:routes      # → data/routes.geojson + data/lines.json from data/catalog/lines.json (A* in water)
 npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m from coast
 ```
@@ -121,4 +124,22 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
 - **Real-time-only effects** (not part of the sim): bob (roll/pitch/heave, per-ship phase), settle bump on
   arrival, heading smoothing. Everything that says *where* a vessel is stays a pure function of sim time.
 - Known: lines don't avoid each other (vessels of different lines can overlap where routes cross).
+- **Water is a custom layer under the land** with a distance-to-coast field rasterised at runtime (canvas +
+  EDT). Land fill uses opacity 0.999 so MapLibre draws it in the ordered pass *after* the water (opaque
+  fills are drawn early with depth and would be painted over). Raw ShaderMaterials end with
+  `#include <colorspace_fragment>`. Glints use metres-per-pixel octaves so they stay pixel-sized.
+- **Day/night = real sun for the simulated time** (NOAA equations); one continuous palette blend
+  day → golden → night drives map paint, sky, water, 3D lights, night lights, labels, pins.
+- **One shared three.js renderer + LocalFrame** for all custom layers.
+- **UI is React over the map** (`src/ui`), tiny observable store; sheet = peek/half/full, transform-only.
+- **Marker pitfall:** MapLibre positions DOM markers via inline `transform` on the root — never
+  transform/transition the marker root (pins animate `.pin__inner`).
+- **Part B places are real OSM features** (Nominatim lookups listed in `data/catalog/place-queries.json`;
+  religious/diplomatic/police/municipal-canteen names excluded so demo posts are never attributed to
+  them). **Posts are DEMO** (templates by venue group; relative times so "Tonight" always has content),
+  labelled DEMO on every card + sheet + feed header.
+- **Weather** from Open-Meteo in the user's browser (no key); real wind steers the funnel smoke.
+  The sandbox can't reach it (chip hides), the deployed site can.
+- **Deploy:** workflow publishes to Pages via Actions *and* to a `gh-pages` branch, so either Pages
+  source setting works. Pages must be enabled once by the repo owner.
 - Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.

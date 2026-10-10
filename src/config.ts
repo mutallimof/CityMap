@@ -279,6 +279,26 @@ export const CONFIG = {
     speeds: [1, 10, 60],
   },
 
+  places: {
+    /** Below this zoom only "hot" pins (fresh posts, live, golden-hour views) show. */
+    allPinsZoom: 12.4,
+    /** Pins closer than this (CSS px) to a higher-priority pin shrink to dots. */
+    declutterPx: 40,
+    /** Names under pins from this zoom. */
+    labelZoom: 15.2,
+    /** Fly-to zoom when opening a place / post. */
+    flyZoom: 15.6,
+    /** "Near this pier" radius (m) and walking speed (m/min). */
+    nearbyM: 900,
+    walkMPerMin: 80,
+  },
+
+  weather: {
+    /** Open-Meteo (free, no key). Refresh interval in minutes. */
+    url: 'https://api.open-meteo.com/v1/forecast?latitude=41.02&longitude=29.0&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Europe%2FIstanbul',
+    refreshMin: 15,
+  },
+
   perf: {
     /** Start resolution cap (device pixels per CSS pixel). */
     maxPixelRatio: 2,

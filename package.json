@@ -15,6 +15,8 @@
     "data:fetch-nominatim": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-nominatim.ts",
     "data:routes": "NODE_OPTIONS=--max-old-space-size=4096 tsx scripts/build-routes.ts",
     "validate:routes": "tsx scripts/validate-routes.ts",
+    "data:fetch-places": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-places.ts",
+    "data:places": "tsx scripts/build-places.ts",
     "data:piers": "tsx scripts/build-piers.ts"
   },
   "dependencies": {

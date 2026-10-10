@@ -5,7 +5,7 @@ import type { GeoJSONSource } from 'maplibre-gl';
 import { createMap } from './map/createMap';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
-import { loadLines, loadRoutes } from './data/load';
+import { loadLines, loadPlaces, loadPosts, loadRoutes } from './data/load';
 import { buildNetwork } from './sim/network';
 import { buildDaySchedule } from './sim/schedule';
 import { cachedDays } from './sim/state';
@@ -25,6 +25,19 @@ import { setServices } from './ui/services';
 import { bindMapInteractions } from './ui/map-interactions';
 import { ui } from './ui/store';
 import './ui/ui.css';
+import './places/pins.css';
+import './places/ui/places.css';
+import { PlacesStore } from './places/store';
+import { PlacePins } from './places/pins';
+import { openPier, openPlace, setPlaces } from './places/ui/context';
+import { FeedBody, FeedHeader } from './places/ui/Feed';
+import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
+import { NearbyPlaces, WeatherChip } from './places/ui/Extras';
+
+function parseDeepLink(): { kind: 'place' | 'pier'; id: string } | null {
+  const m = /^#(place|pier)=(.+)$/.exec(location.hash);
+  return m ? { kind: m[1] as 'place' | 'pier', id: decodeURIComponent(m[2]) } : null;
+}
 import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
@@ -41,7 +54,16 @@ async function boot() {
   const reduced = prefersReducedMotion();
   const params = new URLSearchParams(location.search);
   const withIntro = !reduced && params.get('intro') !== '0';
-  const [{ map, piers, land }, lines, routes] = await Promise.all([createMap(container, withIntro), loadLines(), loadRoutes()]);
+  // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
+  const deep = parseDeepLink();
+  const intro = withIntro && !deep;
+  const [{ map, piers, land }, lines, routes, placeData, posts] = await Promise.all([
+    createMap(container, intro),
+    loadLines(),
+    loadRoutes(),
+    loadPlaces(),
+    loadPosts(),
+  ]);
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
   const [, s, , n] = CONFIG.bounds;
@@ -78,15 +100,50 @@ async function boot() {
   setServices({ map, clock, daylight, ferries, network, getDay, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
   bindMapInteractions();
   document.documentElement.lang = ui.get().lang;
-  createRoot(document.getElementById('ui')!).render(<App introMs={withIntro ? CONFIG.camera.intro.durationMs : 0} />);
+  document.documentElement.classList.toggle('motion-reduced', reduced);
+
+  // Part B: places (OSM) + DEMO posts, pins, feed.
+  const store = new PlacesStore(placeData, posts);
+  setPlaces(store, reduced);
+  store.update(clock.now(), true);
+  const pins = new PlacePins(map, store, (p) => openPlace(p.id, false));
+  const refreshPins = () => {
+    const s = ui.get();
+    pins.update({
+      categories: s.categories,
+      tonight: s.tonight,
+      selectedId: s.selection?.kind === 'place' ? s.selection.id : null,
+      golden: daylight.theme.night < 0.5 ? daylight.theme.golden : 0,
+      night: daylight.theme.night,
+    });
+  };
+  store.onChange(refreshPins);
+  ui.subscribe(refreshPins);
+  daylight.onChange(refreshPins);
+  clock.onChange(() => store.update(clock.now(), true));
+  setInterval(() => store.update(clock.now()), 2000);
+  refreshPins();
+
+  createRoot(document.getElementById('ui')!).render(
+    <App
+      introMs={intro ? CONFIG.camera.intro.durationMs : 0}
+      categories
+      topExtra={<WeatherChip />}
+      feed={{ header: <FeedHeader />, body: <FeedBody /> }}
+      placeSheet={(id) => ({ header: <PlaceHeader id={id} />, body: <PlaceBody id={id} /> })}
+      nearbyPier={(id) => <NearbyPlaces pierId={id} />}
+    />,
+  );
 
   hideLoader();
-  if (params.get('adaptive') !== '0') setTimeout(() => startAdaptiveQuality(map), (withIntro ? CONFIG.camera.intro.durationMs : 0) + 1500);
-  if (withIntro) void playIntro(map);
+  if (params.get('adaptive') !== '0') setTimeout(() => startAdaptiveQuality(map), (intro ? CONFIG.camera.intro.durationMs : 0) + 1500);
+  if (intro) void playIntro(map);
+  if (deep?.kind === 'place') openPlace(deep.id);
+  if (deep?.kind === 'pier') openPier(deep.id);
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store });
 }
 
 boot().catch((err) => {

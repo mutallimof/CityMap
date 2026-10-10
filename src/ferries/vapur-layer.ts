@@ -102,6 +102,10 @@ export class VapurLayer implements CustomLayerInterface {
   night = 0;
   /** Reduce-motion: no bob/bump/gulls, calmer smoke. */
   reduceMotion = false;
+  /** Wind for the funnel smoke (bearing it blows towards, m/s); live weather overrides config. */
+  wind = { toward: CONFIG.smoke.windToward as number, ms: CONFIG.smoke.windMs as number };
+  /** User location (from "nearest pier"), unused by rendering for now. */
+  userLocation: [number, number] | null = null;
   /** Selected vessel (ring + others dimmed), set by the UI. */
   selectedId: string | null = null;
   private wake = new WakeMesh(MAX_VESSELS, CONFIG.wake.maxSamples);
@@ -370,7 +374,7 @@ export class VapurLayer implements CustomLayerInterface {
     const k = CONFIG.ferries.lengthM / 70;
     const funnelBack = CONFIG.ferries.lengthM * 0.06 * exag;
     const fz = 14.6 * k * exag;
-    const [wx, wy] = unitFromBearing(sm.windToward);
+    const [wx, wy] = unitFromBearing(this.wind.toward);
     const speed = v.state.speed; // m/s real; the visual trail scales with exaggeration
     const seed = hash01(v.state.vesselId) * sm.lifeS;
     const life = this.reduceMotion ? sm.lifeS * 1.6 : sm.lifeS;
@@ -380,7 +384,7 @@ export class VapurLayer implements CustomLayerInterface {
       const age = (((tReal + seed) / life + i / sm.puffs) % 1) * life;
       const u = age / life;
       const back = speed * age * sm.sternDrift * exag;
-      const drift = sm.windMs * age * exag;
+      const drift = this.wind.ms * age * exag;
       const x = px - fx * (funnelBack + back) + wx * drift;
       const y = py - fy * (funnelBack + back) + wy * drift;
       const z = fz + sm.riseMs * age * exag;
