@@ -1,272 +1,126 @@
-# Istanbul Living City — Phase 0 prototype
+# Istanbul Living City
 
-Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts, no real-time data.
+Animated, mobile-first map of Istanbul: vapurs on the water, a colourful OSM city, places, events, history.
+Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · original plan `docs/plan.md` (keep as is)
+· ideas/changelog `docs/ideas.md`.
 
-## Short spec
-- Mobile-first web page: tilted (≈50°), stylized map of Istanbul's waters (Bosphorus, Golden Horn,
-  Marmara coast, Princes' Islands) with 20–40 vapurs sailing on a **simulated** timetable.
-- ~23 real piers (coordinates **only from OSM**, never typed from memory), 6 real lines, simulated schedules.
-- Vapur motion: interpolated by clock time, ease in/out of piers (~60 s), smoothed heading (never snaps),
-  docking (slow, rotate parallel, wait 3–5 min, settle bump), V-wake, bob, night lights, seagulls.
-- Tap vapur/pier → bottom sheets. Layer chips, time controls (Now, 1×/10×/60×, scrubber), TR/EN.
-- Day/night follows Europe/Istanbul time. "Simulated schedule" badge + OSM attribution always visible.
-- Priorities: (1) beauty and smooth ferry motion, (2) 60 fps with 40 ferries on a mid-range phone,
-  (3) correctness: ferries never cross land; positions are a pure function of clock time.
-- Definition of done: plan §4.10 acceptance criteria.
+## Ground rules (from the user)
+- Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
+- **No open-source licence** — the user keeps all rights.
+- **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
+  No demo/fake posts. "Simulated schedule" badge + OSM attribution always visible.
+- No API keys, no backend: static data + keyless services (OpenFreeMap, Open-Meteo, Nominatim).
+- Priorities: beauty and smooth ferry motion → 60 fps on a mid-range phone → correctness (ferries never cross land;
+  positions are a pure function of clock time). Respect reduce-motion everywhere.
+- **Every visual constant lives in `src/config.ts`.** Record decisions in this file.
 
-## Build steps (plan §4.9)
-1. ✅ Skeleton: Vite, MapLibre custom land/water style, coastline pipeline, piers, debug fps panel.
-2. ✅ Simulation: `sim/` + unit tests, routes + validator, ferries as arrows.
-3. ✅ Vapur looks: 3D model, heading smoothing, wake, bob, docking.
-4. ✅ Water + time: water shader, day/night, night lights, intro fly-in, seagulls, funnel smoke.
-5. ✅ Interactions: sheets, follow, layer chips, time controls, TR/EN.
-6. ✅ Polish + perf (adaptive pixel ratio), reduce-motion, deploy (GitHub Pages).
-7. ✅ Part B (user, 2026-10-10): living city map + feed — see `docs/ideas.md`.
-9. ✅ Design pass (user, 2026-10-10): buildings, night contrast, places allow-list + icon family, iPhone layout —
-   before/after in `docs/design-pass/`.
-8. ✅ Chunk 3 (user, 2026-10-10): colourful OSM city (OpenFreeMap), live weather + seasons, places by zoom
-   (real data only), search, Open now, guides, snapshot share, PWA, adaptive effects.
-11. ✅ Chunk 5 (user, 2026-10-11, iPhone testing): filters, green forests, far-view edge, more places, gull facts,
-   sounds, `?skyline=1` test.
-10. ✅ Chunk 4 (user, 2026-10-11): cinematic ferries, history stories (Wikidata/Wikipedia/Commons), venue events
-   (daily scrapers on GitHub Actions), refresh workflow with validation.
+## Current state (2026-10-11)
+- **Ferries:** 6 real Şehir Hatları lines, 22 OSM piers with berths, **simulated** timetables (`src/sim`, pure).
+  Procedural 3D vapurs (three.js custom layer): wake, bob, docking, smoke, horn rings, splash, gulls, Follow glide.
+- **City:** OpenFreeMap vector tiles in our palette; day→golden→night from the real sun; live weather + seasons;
+  re-packed 3D buildings with night windows; forests green all year with seasonal tree crowns.
+- **Places:** ~380 featured pins (67 curated + 286 auto-picked + 23 event venues) + tile POIs by zoom;
+  place sheet with hours/website/phone (Nominatim lookup on open), Story section, upcoming events.
+- **Stories:** 509 historic places (Wikidata/Wikipedia/Commons), book markers.
+- **Events:** ~340 events from 24 configured venues (daily scrape), glow/pulse on pins, chips
+  Today · This weekend · Workshops · Free.
+- **UI:** React over the map; filters = All + combinable category toggles + Open now + event chips; search; guides;
+  snapshot share; PWA; TR/EN; sound toggle (off by default); golden gulls tell facts; `?skyline=1` night test mode.
 
 ## Commands
 ```bash
 npm install
-npm run dev            # http://localhost:5173 (also on LAN). ?debug=1/0 · ?t=18:30 · ?speed=60 · ?stress=40 · ?weather=rain&season=spring · ?adaptive=0 · #place= #pier= #guide= · keys: ` panel, s speed, n now
-npm test               # vitest
+npm run dev        # :5173 · ?t=18:30 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
+                   #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= · keys: ` panel, s speed, n now
+npm test           # vitest (140 tests)
 npm run typecheck
-npm run build          # typecheck + production build → dist/
-npm run preview        # serve dist/
-
-# Data pipeline (outputs are committed; re-run only when changing data)
-# Coastline source (~930 MB download, unzips to 1.3 GB; data/raw/ is gitignored):
-curl -o data/raw/lp.zip https://osmdata.openstreetmap.de/download/land-polygons-split-4326.zip \
-  && unzip -q data/raw/lp.zip -d data/raw && rm data/raw/lp.zip
-npm run data:coastline   # → data/land.geojson (land-polygons > overpass > coarse npm fallback)
-npm run data:fetch-nominatim  # Nominatim (≤1 req/s) → data/raw/nominatim-istanbul.json — current pier/district source
-npm run data:fetch-osm   # Overpass → data/raw/overpass-istanbul.json (OVERPASS_URL=… to pick a mirror)
-npm run data:piers       # → data/piers.geojson (+ in-water berths), data/districts.geojson; --verbose lists candidates
-npm run data:fetch-places  # Nominatim (2.5 s apart, 429 backoff, incremental) → data/raw/nominatim-places.json
-npm run data:places      # → data/places.geojson (OSM places: hours, website, phone, major)
-npm run data:landmarks   # OpenFreeMap tiles (cached in data/raw/tiles) → data/landmarks.geojson
-node scripts/build-icons.cjs  # icon.svg → PWA icons + iOS splashes (needs Playwright/Chromium)
-npm run data:routes      # → data/routes.geojson + data/lines.json from data/catalog/lines.json (A* in water)
-npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m from coast
-npm run data:venues      # event venues from OFM tiles → data/venue-places.geojson (catalog: data/catalog/venue-places.json)
-npm run data:stories     # GitHub Actions only (sandbox can't reach Wikimedia) → data/stories.json
-npm run data:events      # GitHub Actions only → data/events.json + data/events-log.json (FORCE=1, VENUES=a,b)
-npm run validate:data    # gate before committing refreshed data
-npm run data:featured    # GitHub Actions only (Overpass) → data/places-auto.geojson (monthly with stories)
+npm run build      # typecheck + validate:routes + vite build → dist/
+npm run validate:data   # gate for refreshed data (also runs in the refresh job)
 ```
 
-## Conventions
-- Stack: Vite + TypeScript (strict), MapLibre GL JS, Three.js in a MapLibre custom layer (from step 2/3),
-  React only for UI sheets/controls, Turf.js only in build scripts, Vitest.
-- **Every visual constant lives in `src/config.ts`** (colours, sizes, speeds, wake, scale, zooms).
-- Small typed modules: `src/map` (MapLibre setup/style/labels), `src/sim` (pure functions + tests),
-  `src/ferries`, `src/water`, `src/ui`, `src/debug`, `src/data` (runtime loaders).
-- `data/raw/` = downloaded sources, never hand-edited. `data/catalog/` = hand-written ids/names (no coordinates).
-- No API keys. Static data + keyless services: OpenFreeMap tiles/glyphs, Open-Meteo, Nominatim (browser, ≤1 req/s, on submit). UI font self-hosted (`@fontsource/nunito`); map glyphs from OpenFreeMap.
-- Commit after each build step.
+## Data pipelines
+Processed outputs are committed in `data/`; `data/raw/` (downloads) is gitignored; `data/catalog/` = hand-written
+ids/names/rules (no coordinates).
 
-## Decisions log
-- **2026-10-10 — Coastline source.** The plan's candidate `@geo-maps/earth-lands-100m` (and `-10m`) has only
-  ~380 vertices across the whole bbox (Golden Horn a triangle) — rejected. Now using osmdata.openstreetmap.de
-  **land-polygons-split-4326** (per user): stream shapefile → clip to bbox → union grid tiles (they overlap)
-  → opening of 12 m (drops jetties < ~24 m wide that rendered as spiky artefacts) → simplify ~5 m.
-  Result: 76 KB. Overpass `natural=coastline` assembly kept as an alternative source (unit tested).
-- **Data downloads stay out of git** (`data/raw/` ignored); only processed files are committed.
-- **Piers/districts from OSM only.** `data/catalog/*.json` holds ids + names + match tokens; `build-piers.ts`
-  takes coordinates from OSM ferry terminals / place features, prefers Şehir Hatları terminals, flags
-  ambiguous matches; pin with `"osm": "node/123"`. Until OSM data is fetched, piers/districts are empty.
-- **Labels (superseded, design pass):** all map text and place icons are MapLibre symbols in one collision
-  space (OpenFreeMap glyphs, Noto Sans) so nothing overlaps; only the selected-place highlight is a DOM marker.
-- **Shoreline lines derived at runtime** from land polygons (dropping segments along the clip box), so
-  `land.geojson` stays polygon-only within the 400 KB budget and the data edge isn't drawn as a coast.
-- **Land rings are RFC 7946 wound** (land on the left) — the inner-shadow layer uses a negative `line-offset`.
-- **MapLibre 6 worker:** set explicitly via `setWorkerUrl(…maplibre-gl-worker.mjs?url)`; Vite's dep
-  pre-bundling otherwise breaks MapLibre's relative worker URL.
-- **React not mounted yet** — installed, but arrives with the UI sheets (step 5); step 1 has no UI to own.
-- **Sim model (`src/sim`, pure).** Day schedule = f(lines, leg lengths, service day); state = f(schedule, t).
-  Each line's origin departures follow peak/off-peak headways; a vessel sails out, dwells at every stop,
-  turns at the terminus after one dwell, sails back, and is reused for the next origin departure
-  (most-recently-freed first). Idle > `maxLayoverMin` → vessel leaves service; vessels appear/retire
-  **docked** (render layer fades them) so nothing teleports. Leg motion: raised-cosine ease-in/out over
-  `rampSeconds` (velocity and acceleration continuous); short legs lower peak speed instead of skipping ramps.
-  Times are seconds since Istanbul local midnight; late trips (> 24:00) belong to the previous service day.
-  Sim knows only leg lengths — mapping distance → coordinates/heading comes with routes.
-- **Pier/district source = Nominatim (2026-10-10).** Geofabrik and overpass-api.de reset TLS, private.coffee
-  and maps.mail.ru answer 500/504, overpass.osm.jp has an expired cert. Nominatim works: per pier
-  "<name> iskelesi" + "ferry terminal near <name>", per district "<name>"; 1.1 s between requests.
-  Candidates are pooled per catalog entry (terminals name berths after their *destination*, e.g. Kadıköy's
-  "Kabataş İskelesi"), berths mentioning another catalog pier are penalised, and picks with plausible
-  candidates > 1 km away are flagged. Districts accept admin boundaries (Nominatim gives the admin centre).
-- **Piers have berths (user, 2026-10-10).** One pier = one marker/name; big terminals list several OSM berths
-  in `data/catalog/piers.json` (first = main Şehir Hatları berth); each line picks its berth per stop in
-  `data/catalog/lines.json` (`berths`), defaulting to the main one. Unclear choices are in each line's `toCheck`.
-  Haydarpaşa dropped (no ferry terminal in OSM, no line uses it). Pins: Kabataş node/12985086871,
-  Eminönü way/112174276, Kadıköy relation/19464376, Beşiktaş way/415337536.
-- **Berth points are computed, not raw OSM.** Terminal nodes sit on land and our coastline drops jetties, so
-  berth = nearest shoreline point + 30 m along the seaward normal; stores coast-parallel and seaward bearings.
-- **Routes are generated, then committed and validated** (plan says hand-authored): A* on a 20 m water grid
-  with a coast-hugging penalty (prefers mid-channel) → string pulling → clearance-safe Chaikin smoothing.
-  Each leg leaves/enters its berth via an approach point ~160 m straight out to sea. Hand steering via `via`
-  waypoints per leg. Validator = exact geometry (5 m sampling vs shoreline segments + point-in-land).
-- **Bosphorus line = real long tour (user):** Eminönü → Beşiktaş → Üsküdar → Kanlıca → Sarıyer → Rumeli Kavağı →
-  Anadolu Kavağı; 19 km/h + 5 min dwells ≈ 1h53 one way; simulated headways 30/45. Other Bosphorus piers
-  stay on the map unserved for now. The two unsure berths stay as they are (user).
-- **`?stress=N`** (perf test): every line runs all day on the longest uniform headway giving ≥ N vessels now.
-- **Deploy:** `.github/workflows/deploy.yml` builds `phase-0` with `BASE=/<repo>/` and deploys to GitHub Pages.
-- **Rendering (step 2):** Three.js in a MapLibre custom layer, one InstancedMesh; geometry in local metres
-  around `camera.center`, float64 matrix on the CPU (no GPU jitter). Heading = path tangent averaged ±15 m,
-  then per-vessel exponential smoothing (`ferries.headingTau`). Vessels grow in/out while docked.
-- **Approach points run along the shore** (240 m along, 80 m out) so vessels glide in alongside the pier
-  instead of bow-first; falls back to straight out to sea where water is tight.
-- **Docking is pure:** docked heading = f(arrival heading, berth along-bearing, departure heading, dock time):
-  swing alongside over `dockTurnSeconds` after arriving, swing out over the same before leaving.
-- **Shared berths moor abreast** (slot 0 at the quay, 1, 2 … further out to sea) — sliding along the
-  quay put exaggerated hulls on land at curved quays. Near piers hulls also get a seaward "quay clearance"
-  offset so 3–4× hulls don't overlap the coast; both blend in over `berthBlendM` of route (no jumps).
-- **Vapur model is procedural** (`src/ferries/model.ts`, ~1k triangles): body InstancedMesh with vertex colours
-  + a line-colour stripe InstancedMesh (2 draw calls) + soft shadow quads. Lambert, flat shading.
-- **Mirror trap:** the local→mercator matrix flips y; MapLibre's matrix compensates for closed meshes, so
-  hulls are fine, but open ribbons (wake) must be `DoubleSide`.
-- **Wake = pure past poses.** Trail = the vessel's own pose function sampled at earlier sim times on a fixed
-  grid (cached per vessel; only the newest sample is computed per frame), V arms widening from the bow,
-  prop wash behind the stern, fades with age and speed. One dynamic ribbon mesh for all vessels.
-- **Real-time-only effects** (not part of the sim): bob (roll/pitch/heave, per-ship phase), settle bump on
-  arrival, heading smoothing. Everything that says *where* a vessel is stays a pure function of sim time.
-- Known: lines don't avoid each other (vessels of different lines can overlap where routes cross).
-- **Water is a custom layer under the land** with a distance-to-coast field rasterised at runtime (canvas +
-  EDT). Land fill uses opacity 0.999 so MapLibre draws it in the ordered pass *after* the water (opaque
-  fills are drawn early with depth and would be painted over). Raw ShaderMaterials end with
-  `#include <colorspace_fragment>`. Glints use metres-per-pixel octaves so they stay pixel-sized.
-- **Day/night = real sun for the simulated time** (NOAA equations); one continuous palette blend
-  day → golden → night drives map paint, sky, water, 3D lights, night lights, labels, pins.
-- **One shared three.js renderer + LocalFrame** for all custom layers.
-- **UI is React over the map** (`src/ui`), tiny observable store; sheet = peek/half/full, transform-only.
-- **Marker pitfall:** MapLibre positions DOM markers via inline `transform` on the root — never
-  transform/transition the marker root (pins animate `.pin__inner`).
-- **Part B places are real OSM features** (Nominatim lookups listed in `data/catalog/place-queries.json`;
-  religious/diplomatic/police/municipal-canteen names excluded so demo posts are never attributed to
-  them). **Posts are DEMO** (templates by venue group; relative times so "Tonight" always has content),
-  labelled DEMO on every card + sheet + feed header.
-- **Weather** from Open-Meteo in the user's browser (no key); real wind steers the funnel smoke.
-  The sandbox can't reach it (chip hides), the deployed site can.
-- **Deploy:** workflow publishes to Pages via Actions *and* to a `gh-pages` branch, so either Pages
-  source setting works. Pages must be enabled once by the repo owner.
-- Versions: Vite 8, TypeScript 7, MapLibre 6.13, Three 0.186, React 19, Vitest 5.
+| Output | Script | Source | When / where |
+|---|---|---|---|
+| `land.geojson` | `data:coastline` | osmdata land-polygons (download in `data/raw`, see script header) | manual |
+| `piers.geojson`, `districts.geojson` | `data:fetch-nominatim` → `data:piers` | Nominatim | manual |
+| `routes.geojson`, `lines.json` | `data:routes` (+ `validate:routes` in build) | A* on water grid | manual |
+| `places.geojson` (67 curated) | `data:fetch-places` → `data:places` | Nominatim | manual |
+| `landmarks.geojson` | `data:landmarks` | OFM tiles | manual |
+| `venue-places.geojson` | `data:venues` | OFM tiles + Nominatim fallback | manual |
+| `events.json`, `events-log.json`, `event-venues.geojson`, `venue-geocode.json` | `data:events` | venue sites + Nominatim | **daily 06:17 Istanbul**, Actions |
+| `stories.json` | `data:stories` | Overpass + Wikidata + Wikipedia + Commons | **monthly (3rd)**, Actions |
+| `places-auto.geojson` | `data:featured` | Overpass | **monthly (3rd)**, Actions |
 
-- **City basemap (chunk 3):** OpenFreeMap `planet` vector tiles (OpenMapTiles schema) drawn in our own palette
-  (`CONFIG.city`, `src/map/city.ts`); ground layers sit between our land fill and the shore lines, so the coast
-  and water shader stay ours. Colours = `cityLook()` (pure): day→golden→night, season tints, wet/snow/overcast.
-  Tile feature ids = osm_id×10 + 1/2/3 (Planetiler) → used to link POIs/buildings/landcover to OSM.
-  Merged tile buildings share ids, so pastel variety mixes in height. Night windows = a second extrusion layer
-  with generated window patterns, cross-faded. Labels for streets/POIs use MapLibre symbols (OFM glyphs);
-  our district/pier/landmark labels stay DOM.
-- **Landmarks** come from the tiles too (`scripts/build-landmarks.ts`, names in `data/catalog/landmarks.json`,
-  searched around a named pier): tower POIs → their building id (gold extrusion), bridge name lines → glow +
-  night lamps, Emirgan Korusu → landcover id for spring tulips.
-- **Weather** (`src/weather`): `Conditions` from Open-Meteo WMO codes or `?weather=` presets, eased over
-  `easeS`; DaylightController applies it to palette, city, water (`uRain` rings, `uChop`), ferries (wind, sea
-  rocking, fog-dimmed lights) and `WeatherLayer` (fog sheet in world space — ferries fade because it's drawn over
-  them; rain/snow as screen-space instanced quads; lightning). Fog shader must use world position (modelMatrix).
-- **Real data only (user):** demo posts removed. Featured places (`data/places.geojson`, incl. website/phone/major)
-  are DOM pins; every other named OSM POI is the `poi` symbol layer (zoom + rank reveal, collision). Opening a
-  place looks up missing tags via Nominatim `lookup` (queued ≥1.1 s, session-cached); missing fields are hidden.
-  "Open now" can only use known hours, so it hides the tile POIs.
-- **Search:** local + loaded-tile results as you type; Nominatim `search` (bounded to our bbox) only on submit —
-  the Nominatim policy forbids autocomplete. Result attribution shown in the panel.
-- **Guides:** `data/catalog/guides.json` references place/pier/landmark ids + `ferry:<lineId>` legs (sliced from
-  the line's route by `stopVertex`); a unit test resolves every guide against committed data.
-- **Snapshot:** frame copied inside MapLibre's `render` event (no preserveDrawingBuffer), cropped 4:5, caption +
-  watermark; Web Share with files, download fallback. DOM labels/pins are not in the image.
-- **PWA:** `public/manifest.webmanifest` (fullscreen), icons/splashes generated from `public/icons/icon.svg`,
-  `public/sw.js` (prod only): network-first page, cache-first hashed assets, SWR OpenFreeMap tiles (≤600).
-- **Adaptive quality ladder** (`src/app/perf.ts`): pixel ratio → particles/gulls → window pass → flat buildings;
-  low-end devices start at 1.5×. Headless screenshots run at ~2 fps — use `?adaptive=0` or the ladder kicks in.
-- **Pages is live** (gh-pages branch source): https://mutallimof.github.io/CityMap/
-- **Design pass (user, 2026-10-10).**
-  - *Buildings:* OpenFreeMap's z14 tiles group all same-height buildings of a tile into one multipolygon, so a
-    style can't vary them. A `buildings://` MapLibre protocol + 2 Web Workers (`src/map/buildings`) re-pack the
-    layer into single buildings with `v` (0–99 variation), `h` (real OSM height, else 2–5 floors × 3.2 m) and `b`.
-    Day: soft pastels, light from the sun, no texture. Night: 38 % of buildings dark, the rest get one of three
-    sparse, irregular warm-window facades (64 px tiles, runs of lit flats); pale neutral night light so facades
-    keep their value. Default pitch 46°.
-  - *Night contrast:* darker blue water, neutral dark land, lighter facades, sodium-gold main roads with a
-    blurred street-light glow (fades in z12.6→14.2), bright teal shoreline. Roads step back when zoomed out.
-  - *Places:* allow-list of OSM class/subclass (`POI_KINDS` in `src/places/icons.ts`): cafés, restaurants, bars,
-    bakeries/sweets, museums, galleries, theatres, cinemas, malls/bazaars/department stores, parks, viewpoints,
-    landmarks. Match on `subclass` + class guard (concat expressions didn't evaluate). OpenMapTiles `rank` is a
-    per-tile order (cafés ~40), so thresholds are 24/60/140 by zoom; `icon-padding` limits density; names only for
-    rank ≤ 20 until z17.4. Tile POIs carry no hours/website, so "more OSM detail" is honoured by featured places
-    (curated, detailed) always winning collisions — not per POI.
-  - *Icons:* one canvas-drawn family (`src/places/icons.ts`): colour + shape per category (circle food & drink,
-    rounded square culture, hexagon shopping, leaf nature, star landmark), white glyphs; featured = bigger pin
-    with glow and a baked open-now dot; bars glow at night, viewpoints at golden hour (images swapped). Legend
-    chip. Lists/sheets/search use the same icons (`PlaceIcon`).
-  - *Layout (390 px):* clock chip stacks time over "Simulated schedule"; search + TR/EN are icon buttons; camera
-    sits in the sheet header; a soft scrim under the HUD hides map icons beneath the controls.
-  - *Ferries:* exaggeration 5.6× at z10, 4.9× at z11 (was 4×) so they read as boats when zoomed out.
+- `.github/workflows/data-refresh.yml`: cron + `workflow_dispatch` (`what` = events|stories|places|both,
+  `venues` = ids to force-refetch). Steps: scrapers (`continue-on-error`) → `validate:data` (fails ⇒ nothing
+  committed) → commit (rebase + retry push) → calls `deploy.yml`. **Never deploy empty or broken data**: the
+  validator refuses big drops vs the committed file and empty-after-non-empty.
+- `deploy.yml`: tests + build with `BASE=/<repo>/` → publishes `dist/` to the `gh-pages` branch (Pages source).
+- The dev sandbox **cannot reach** venue sites, Wikimedia, Overpass or Open-Meteo. Develop those through Actions runs
+  (dispatch the refresh job; for page structure push a temporary probe workflow on a side branch).
 
-- **Chunk 4 (user, 2026-10-11).**
-  - *Ferries:* bigger at every zoom (6.4× z10 → 1.3× z16); soft gaussian smoke puffs drifting with real wind;
-    departure = two gold horn rings from the funnel + dark smoke burst; arrival = foam ring + droplets + bump;
-    gulls prefer ferries that just left; Follow = rAF glide (centre + bearing ease). Moments are detected from sim
-    phase changes and skipped on time jumps (> 300 s/frame) and under reduce-motion.
-  - *Stories:* `scripts/stories/build-stories.ts` (monthly, Actions): Overpass features with `wikidata` + a
-    story kind → Wikidata (P571/P84/P149/P18, sitelinks) → Wikipedia REST summaries TR/EN (trimmed at sentence
-    ends) → Commons thumbnail with artist + licence (free licences only). Static `data/stories.json`; phones never
-    call Wikimedia. Map: book marker layer `stories` (collision below landmark/featured), italic names from
-    z15.4; story ids are removed from the POI layer. Sheet: Story section with credit "Text: Wikipedia, CC BY-SA".
-  - *Events:* venues + scraper settings in `data/catalog/venues.json` (internal, never shown). Scrapers:
-    Arter (its own JSON endpoint), Akbank Sanat (calendar page), Şehir Tiyatroları (play pages → sessions per
-    stage), generic list → detail (facts read only from the text under `<h1>`). Facts only (title, time, place,
-    category, free/price, page + official ticket link). `http.ts`: robots.txt (403 on robots = blocked), ≥ 4 s per
-    host, clear UA, 25 s timeout; ≤ 1 run/day per venue (20 h guard). Resellers never fetched/linked. Place =
-    venue default or aliases / map-place names found in the venue text; events at venues not on our map are
-    dropped (counted as `unplaced`). Failure / block / sudden zero → keep that venue's last good events; per-venue
-    status in `data/events-log.json`. Venues missing from our places come from OFM tiles via `build-venues.ts`
-    (Akbank Sanat and Salon İKSV are not in OSM by name → their own-stage events can't be placed).
-  - *Event UI:* featured pin images `feat-<icon>-ev` glow (gold) with an event today; DOM pulse ring while one
-    is on (static under reduce-motion). Multi-day runs (> 30 h, exhibitions) never glow/pulse but count for
-    Today/Weekend filters. Chips Today · This weekend (time window, OR) · Workshops · Free (AND); with any event
-    chip on, only matching featured venues show (POI + story layers hidden).
-  - *Refresh:* `.github/workflows/data-refresh.yml` — events daily 06:17 Istanbul, stories on the 3rd monthly;
-    scrapers `continue-on-error`, then `validate:data` (schema, https, no resellers, known places, refuses big
-    drops vs committed / empty after non-empty) → commit to phase-0 → calls `deploy.yml` (workflow_call; bot pushes
-    don't trigger workflows). Sandbox can't reach venue sites: develop through Actions runs.
-  - *Venues not in OSM (user, 2026-10-11):* `data/catalog/extra-venues.json` = name + official address + contact page.
-    The scraper (`scripts/events/venues-geo.ts`) first checks street + number appear on the venue's own contact page
-    (mismatch → logged with what the page says, venue left off), then geocodes with Nominatim (bounded, ≥ 1.1 s):
-    house-number POI/building, else a street < 350 m long. Multi-venue programmes (Akbank, Kumbaracı50, BKM, Şehir)
-    resolve unknown venue lines by name in OSM (every significant word must match a real POI; online/Zoom skipped;
-    ≤ 40 lookups/run; cache `data/venue-geocode.json`, misses retried after 30 days). Output
-    `data/event-venues.geojson` (loaded with the places; `osm` = '' when the hit isn't the venue itself → sheet shows
-    the address, no OSM link). Moda Sahnesi is placed but has no events: its site publishes no dates (reseller only).
-  - *Deploy:* only the `gh-pages` branch publish remains (the Actions-Pages job always failed; Pages uses the branch).
-- **Chunk 5 (user, 2026-10-11).**
-  - *Filters:* `src/places/filters.ts` is the one rule for pins, feed and the "N places here · Show all" hint.
-    Category chips are on/off toggles that combine (empty = All; selecting all four = All); "All" resets
-    categories + Open now + event chips. With any filter on, matching pins show at every zoom (not only `major`).
-    Map POIs hide only for Open now / event chips (they have no hours/events); story markers follow Culture.
-  - *Edge of the data box:* the background is land-coloured and OFM `water` polygons (`city-outer-water`) carry the
-    sea beyond our coastline box, under the water shader, which fades out over the last 5 % of the box. Box-edge
-    shoreline segments use a 1e-4° tolerance (simplification moves them slightly).
-  - *Forests:* wood stays green in every season; seasons show as `crownPattern` tree crowns (192 px tile, clumps)
-    over wood/parks from z9: autumn leaves, spring blossom, green in summer/winter, white crowns under snow.
-  - *More places:* `scripts/build-featured.ts` picks ~330 OSM places by detail score (hours, website, cuisine,
-    phone, Wikidata), no chains/fast food/excluded names, spread round-robin over a ~2 km grid; Overpass in a 4×4
-    grid of boxes (split again on timeouts; failed parts keep earlier picks; >25 % missing → keep the file).
-    Map POIs from z13.6 but only rank ≤ 6 per tile until z15.
-  - *Gull facts:* the first 2 gulls are golden (instance colour, 1.35× size); tap (34 px, height-corrected) → a
-    bubble that follows the gull 9 s; `src/fun/facts.ts` = 21 checked facts TR/EN, shown from a shuffled deck.
-  - *Sound:* `src/audio/sound.ts`, all synthesised (no files): waves (brown noise + swell), gull calls, a horn on
-    real-time departures within ~6 km·2^(13−z) of the centre. Off by default; `navigator.audioSession = ambient`
-    (iOS silent switch); reduce-motion = waves only; suspended while hidden.
-  - *Skyline test (`?skyline=1`):* `src/map/skyline.ts` — line-gradient light shows on the three Bosphorus bridges
-    (rainbow / red-white chase / pulse, ~15 fps), halo + core on Maiden's / Galata Tower, warm halos on story
-    mosques/palaces/towers/fortresses; fades in with night.
+## Venue scraping rules (`scripts/events/`, config `data/catalog/venues.json` — internal, never shown in the UI)
+- **Facts only:** title, date/time, venue/place, category, price if listed, event page + official ticket link.
+  Never copy descriptions or images.
+- **Polite:** respect robots.txt (403 on robots.txt = blocked), **≥ 4 s between requests per host**, clear User-Agent
+  (`IstanbulLivingCityBot/0.1 (+site; contact)`), 25 s timeout, **at most once a day per venue** (20 h guard).
+- **No ticket resellers** (Biletix, Passo, Bubilet, Biletinial, Mobilet) — never fetched, never linked.
+- Every event attaches to a real map place: venue default, `aliases`, map-place names, or OSM name lookup;
+  venues not in OSM come from `data/catalog/extra-venues.json` (official address, verified on the venue's own
+  contact page before geocoding). Unplaceable events are dropped and counted.
+- Blocked / failed / layout change (sudden zero) ⇒ skip, **keep that venue's last good events**, log status in
+  `events-log.json`. No visible sources list or prototype label in the UI.
+- Scraper kinds: `arter` (JSON endpoint), `akbank` (calendar), `sehir` (play sessions per stage), `salon` (API),
+  `fisekhane`, `dasdas`, `kumbaraci`, `uniq`, `bkm`, `listtext` (list-page items), `generic` (list → detail, facts
+  from text under `<h1>`). `disabled: "<reason>"` keeps a venue in the config without fetching.
 
+## Code map
+`src/sim` pure schedule/state + tests · `src/ferries` vapur layer, model, wake, gulls, smoke · `src/water` shader +
+coast distance field · `src/map` style, city (OFM) layers + look, buildings protocol/workers, skyline ·
+`src/places` stores, filters, layers, icons, sheets · `src/events`, `src/stories`, `src/fun` (gull facts),
+`src/audio` (synthesised sound), `src/weather`, `src/time` (sun/palette), `src/ui` (React HUD, store, i18n),
+`src/app` (daylight, perf ladder, PWA), `scripts/` (data builders + scrapers, Turf only here).
+Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest 5.
+
+## Key decisions & traps (keep in mind)
+- **Sim:** schedule = f(lines, leg lengths, day); state = f(schedule, t). Raised-cosine leg ease; vessels appear/retire
+  docked; times = seconds since Istanbul midnight, late trips belong to the previous service day. Visual-only effects
+  (bob, bump, heading smoothing, moments) are real-time and never change *where* a vessel is.
+- **Routes** are generated (A* on 20 m water grid, string pulling, clearance-safe smoothing) then committed and
+  validated (5 m sampling vs shoreline). Berths = shore point + 30 m seaward; approach points run along the shore;
+  shared berths moor abreast. Lines don't avoid each other.
+- **Rendering:** one shared three.js renderer + `LocalFrame` (local metres around the camera centre, float64 matrix on
+  CPU). The local→mercator matrix flips y: open ribbons must be `DoubleSide`. Raw shaders end with
+  `#include <colorspace_fragment>`.
+- **Water** = custom layer under the land; land fill opacity 0.999 (keeps it in the translucent pass after the water).
+  Outside our coastline box: land-coloured background + OFM `water` polygons; the shader fades at the box edge.
+- **MapLibre:** worker URL set via `setWorkerUrl(...?url)`; never transform a DOM marker root; OMT `concat`
+  filters didn't evaluate (match `subclass` + class guard); OMT `rank` is per tile; tile feature id = osm_id×10+1/2/3.
+- **Buildings:** OFM z14 merges same-height buildings → `buildings://` protocol + workers re-pack them.
+- **Filters:** `src/places/filters.ts` is the single rule for pins, feed and hint; with any filter on, matches show
+  at every zoom; tile POIs hide only for Open now / event chips; story markers follow Culture.
+- **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
+- **Sound:** synthesised Web Audio, off by default, `audioSession = ambient` (iOS silent switch), reduce-motion = waves only.
+- **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run
+  ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
+
+## Known issues
+- Ferry timetables are **simulated** (headways), not real; some Bosphorus piers are unserved.
+- No events from CRR, Zorlu PSM, İBB Kültür (connect timeouts from GitHub runners, likely geo-blocking).
+  Moda Sahnesi is on the map but its site publishes no dates (reseller only). Borusan Sanat / İKSV return 0
+  between seasons/festivals. Event categories are guessed from titles.
+- Overpass is often overloaded (504/500): the monthly places/stories jobs may keep last month's data for some areas.
+- `stories.json` is ~630 KB (lazy-loaded); the main JS chunk is > 500 KB (build warning).
+- Snapshots don't include DOM labels/pins. Sound and `?skyline=1` not yet judged on a real iPhone.
+- Leftover branches `probe-run` / `probe-out` (the git proxy refused deletion) — delete in GitHub.
+- Actions warn about Node 20 deprecation for `actions/checkout@v4` / `setup-node@v4`.
+
+## Roadmap (next sessions, in order)
+1. **Real ferry timetables** — replace simulated headways with Şehir Hatları schedules (keep positions a pure
+   function of time; keep the "simulated" badge until data is real and validated).
+2. **"Plan my evening / trip"** — combine events, places and ferries into a plan, with ferry departure alerts.
+3. **Cleanup pass** — dead code, config consolidation, bundle splitting, test gaps, docs.
+4. **Cartoon-style redesign** — a playful illustrated look across map, ferries, icons and UI.
