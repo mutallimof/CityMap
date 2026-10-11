@@ -21,6 +21,12 @@ export function vesselAt(point: { x: number; y: number }): string | null {
   return best;
 }
 
+let interceptor: ((point: { x: number; y: number }) => boolean) | null = null;
+/** A tap handler that runs before everything else and swallows the tap when it returns true (gull facts). */
+export function setTapInterceptor(fn: (point: { x: number; y: number }) => boolean): void {
+  interceptor = fn;
+}
+
 /**
  * Map ⇄ UI wiring: taps select vessels / piers (empty map closes the sheet), the selected line's
  * route is highlighted, Follow keeps the camera on the vessel until the user drags, and layer
@@ -34,6 +40,7 @@ export function bindMapInteractions(
   const { map, ferries } = services();
 
   map.on('click', (e) => {
+    if (interceptor?.(e.point)) return;
     const extra = extraTap?.(e);
     if (extra !== undefined) return select(extra);
     const v = ui.get().ferries ? vesselAt(e.point) : null;

@@ -46,6 +46,8 @@ export class Gulls {
   private p = new THREE.Vector3();
   private s = new THREE.Vector3();
   private z = new THREE.Vector3(0, 0, 1);
+  /** Where the golden fact gulls are now (local metres, z = altitude), empty when hidden. */
+  readonly factPositions: { i: number; x: number; y: number; z: number }[] = [];
 
   constructor() {
     const g = CONFIG.gulls;
@@ -53,12 +55,17 @@ export class Gulls {
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.mesh.frustumCulled = false;
     this.mesh.count = 0;
+    // golden "fact" gulls (tappable) — instance colours multiply the white material
+    const white = new THREE.Color('#FFFFFF');
+    const gold = new THREE.Color(g.factColor);
+    for (let i = 0; i < g.count; i++) this.mesh.setColorAt(i, i < g.factCount ? gold : white);
     this.gulls = Array.from({ length: g.count }, (_, i) => ({ vesselId: null, cx: 0, cy: 0, init: false, phase: (i * 2.399) % (Math.PI * 2) }));
   }
 
   /** `targets`: candidate vessels (underway, near the view centre first). */
   update(targets: GullTarget[], tReal: number, dt: number, exag: number, visible: boolean): void {
     const cfg = CONFIG.gulls;
+    this.factPositions.length = 0;
     if (!visible || targets.length === 0) {
       this.mesh.count = 0;
       return;
@@ -92,12 +99,13 @@ export class Gulls {
       const heading = Math.atan2(Math.cos(a) * r * 0.75 * w, -Math.sin(a) * r * w) - Math.PI / 2;
       const glide = 0.5 + 0.5 * Math.sin(tReal * 0.31 + g.phase * 3);
       const flap = Math.sin(tReal * cfg.flapHz * Math.PI * 2 + g.phase) * (glide > 0.6 ? 0.15 : 1);
-      const span = cfg.spanM * exag;
+      const span = cfg.spanM * exag * (i < cfg.factCount ? 1.35 : 1);
       this.p.set(x, y, z);
       this.q.setFromAxisAngle(this.z, heading);
       this.s.set(span / 2, span * 0.45, span * 0.28 * flap);
       this.m.compose(this.p, this.q, this.s);
       this.mesh.setMatrixAt(n++, this.m);
+      if (i < cfg.factCount) this.factPositions.push({ i, x, y, z });
     });
     this.mesh.count = n;
     this.mesh.instanceMatrix.needsUpdate = true;

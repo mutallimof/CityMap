@@ -352,6 +352,12 @@ export const CONFIG = {
     flapHz: 2.6,
     followTau: 2.5,
     color: '#F7F7F2',
+    /** The first N gulls are golden and tell an Istanbul fact when tapped. */
+    factCount: 2,
+    factColor: '#FFD27A',
+    /** Tap radius (CSS px) and how long a fact bubble stays (ms). */
+    factHitPx: 34,
+    factBubbleMs: 9000,
   },
 
   /** Day/night: sun elevation (degrees) breakpoints and per-phase light. */

@@ -112,6 +112,11 @@ export class VapurLayer implements CustomLayerInterface {
   /** Wind for the funnel smoke (bearing it blows towards, m/s); live weather overrides config. */
   /** 0–1 wind-driven sea state: more rocking. Set by the day/night + weather controller. */
   sea = 0;
+  /** Golden fact gulls on screen right now: map position + height above the water (m). */
+  factGulls(): { i: number; lngLat: [number, number]; altM: number }[] {
+    return this.gulls.factPositions.map((g) => ({ i: g.i, lngLat: sharedFrame.lngLat([g.x, g.y]), altM: g.z }));
+  }
+
   /** Adaptive quality can switch the seagulls off. */
   gullsEnabled = true;
   /** 0–1 fog: dims nav lights and reflections (the fog sheet covers the hulls). */

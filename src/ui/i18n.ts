@@ -2,7 +2,7 @@ import { useUi, type Lang } from './store';
 
 const STRINGS = {
   simulated: { tr: 'Simüle sefer', en: 'Simulated schedule' },
-  tapHint: { tr: 'Bir vapura dokun', en: 'Tap a vapur' },
+  tapHint: { tr: 'Bir vapura — ya da altın bir martıya — dokun', en: 'Tap a vapur — or a golden gull' },
   now: { tr: 'Şimdi', en: 'Now' },
   next: { tr: 'Sonraki', en: 'Next' },
   at: { tr: 'İskelede', en: 'At' },

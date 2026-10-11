@@ -1,3 +1,4 @@
+import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
 import '@fontsource/nunito/800.css';
@@ -27,7 +28,7 @@ import { hideLoader, playIntro } from './map/intro';
 import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import { setServices } from './ui/services';
-import { bindMapInteractions } from './ui/map-interactions';
+import { bindMapInteractions, setTapInterceptor } from './ui/map-interactions';
 import { ui } from './ui/store';
 import './ui/ui.css';
 import './places/pins.css';
@@ -123,6 +124,9 @@ async function boot() {
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });
   setPlaces(store, reduced);
+  // Golden seagulls tell Istanbul facts when tapped.
+  const gullFacts = new GullFacts(map, ferries);
+  setTapInterceptor((pt) => gullFacts.tap(pt));
   const placeLayers = new PlaceLayers(map, store, landmarks);
   bindMapInteractions(undefined, (e) => {
     const hit = placeLayers.at(e.point);
@@ -261,7 +265,7 @@ async function boot() {
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, placeLayers });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, placeLayers, gullFacts });
 }
 
 boot().catch((err) => {

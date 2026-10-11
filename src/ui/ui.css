@@ -545,3 +545,40 @@
   color: var(--accent-ink);
   cursor: pointer;
 }
+
+/* Golden seagull fact bubble — follows the gull; the point sits just above it. */
+.gullfact {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+  width: max-content;
+  max-width: min(260px, 70vw);
+  margin: 0;
+  padding: 8px 12px 9px;
+  border-radius: 14px;
+  background: var(--panel-solid);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font-size: 13.5px;
+  line-height: 1.35;
+  translate: -50% calc(-100% - 18px);
+  animation: gullfact-in 0.25s ease-out;
+}
+.gullfact::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: var(--panel-solid);
+  transform: translateX(-50%) rotate(45deg);
+}
+.gullfact small { display: block; color: #b07a10; font-weight: 800; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+.gullfact p { margin: 2px 0 0; }
+@keyframes gullfact-in { from { opacity: 0; scale: 0.9; } }
+@media (prefers-reduced-motion: reduce) { .gullfact { animation: none; } }
+.gullfact--below { translate: -50% 22px; }
+.gullfact--below::after { bottom: auto; top: -6px; }
