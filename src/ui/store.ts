@@ -26,6 +26,8 @@ export interface UiState {
   ev: EventFilters;
   hint: boolean;
   sheetSnap: SheetSnap;
+  /** Harbour sounds (off by default; turned on by a tap). */
+  sound: boolean;
 }
 
 function initialLang(): Lang {
@@ -72,6 +74,7 @@ export const ui = createStore<UiState>({
   timePanel: false,
   hint: true,
   sheetSnap: 'peek',
+  sound: false,
 });
 
 export function useUi<S>(select: (s: UiState) => S): S {

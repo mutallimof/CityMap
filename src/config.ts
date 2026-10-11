@@ -360,6 +360,20 @@ export const CONFIG = {
     factBubbleMs: 9000,
   },
 
+  /** Harbour sounds (Web Audio, synthesised): levels 0..1, zoom range, horn reach. */
+  sound: {
+    master: 0.8,
+    waves: 0.22,
+    gull: 0.09,
+    horn: 0.32,
+    hornS: 2.1,
+    /** Things at the view centre are quiet below fromZoom and full from fullZoom. */
+    fromZoom: 11,
+    fullZoom: 15.5,
+    /** A departure is heard within this many metres of the view centre at z13 (halves per zoom level). */
+    hearM: 6000,
+  },
+
   /** Day/night: sun elevation (degrees) breakpoints and per-phase light. */
   daylight: {
     /** Fully "day" above this elevation; golden hour between goldenBelow and 0. */

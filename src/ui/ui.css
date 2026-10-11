@@ -582,3 +582,12 @@
 @media (prefers-reduced-motion: reduce) { .gullfact { animation: none; } }
 .gullfact--below { translate: -50% 22px; }
 .gullfact--below::after { bottom: auto; top: -6px; }
+.iconbtn--on { background: var(--chip-on); color: var(--chip-on-ink); }
+/* Phones: five things in the top bar (clock, weather, search, sound, TR/EN) must fit 360–400 px. */
+@media (max-width: 420px) {
+  .topbar { gap: 6px; padding: 0 10px; }
+  .topbar .iconbtn { width: 36px; height: 36px; }
+  .chip--clock { padding: 0 10px 0 9px; }
+  .chip--weather { min-width: 0; flex-shrink: 1; overflow: hidden; }
+  .chip--weather .chip__demo { display: none; }
+}

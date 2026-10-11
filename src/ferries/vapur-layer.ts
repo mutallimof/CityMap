@@ -112,6 +112,14 @@ export class VapurLayer implements CustomLayerInterface {
   /** Wind for the funnel smoke (bearing it blows towards, m/s); live weather overrides config. */
   /** 0–1 wind-driven sea state: more rocking. Set by the day/night + weather controller. */
   sea = 0;
+  /** Called when a vessel leaves a pier in real time (not on time jumps) — the sound layer's horn. */
+  onDeparture?: (lngLat: [number, number]) => void;
+
+  /** Seagulls flying in view right now (for the sound layer). */
+  gullCount(): number {
+    return this.gulls.mesh.count;
+  }
+
   /** Golden fact gulls on screen right now: map position + height above the water (m). */
   factGulls(): { i: number; lngLat: [number, number]; altM: number }[] {
     return this.gulls.factPositions.map((g) => ({ i: g.i, lngLat: sharedFrame.lngLat([g.x, g.y]), altM: g.z }));
@@ -283,7 +291,10 @@ export class VapurLayer implements CustomLayerInterface {
       // Settle bump: a damped surge/pitch when a vessel comes to rest at a pier (real time).
       const prev = this.lastPhase.get(id);
       if (prev === 'underway' && v.state.phase === 'docked' && fxOn) this.bumpAt.set(id, tReal);
-      if (prev === 'docked' && v.state.phase === 'underway' && fxOn) this.departAt.set(id, tReal);
+      if (prev === 'docked' && v.state.phase === 'underway' && fxOn) {
+        this.departAt.set(id, tReal);
+        this.onDeparture?.(v.lngLat);
+      }
       this.lastPhase.set(id, v.state.phase);
       const bt = tReal - (this.bumpAt.get(id) ?? -1e9);
       const bump = bt < 6 && !this.reduceMotion ? Math.exp(-bt / f.bump.decayS) * Math.sin((2 * Math.PI * bt) / f.bump.periodS) : 0;

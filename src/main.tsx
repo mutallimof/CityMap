@@ -1,3 +1,4 @@
+import { HarbourSound } from './audio/sound';
 import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
@@ -124,6 +125,13 @@ async function boot() {
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });
   setPlaces(store, reduced);
+  // Harbour sounds: off until the visitor taps the speaker (browsers need a gesture anyway).
+  const sound = new HarbourSound(map, reduced, () => ferries.gullCount());
+  ferries.onDeparture = (ll) => sound.departure(ll);
+  ui.subscribe(() => {
+    const on = ui.get().sound;
+    if (on !== sound.enabled) sound.setEnabled(on);
+  });
   // Golden seagulls tell Istanbul facts when tapped.
   const gullFacts = new GullFacts(map, ferries);
   setTapInterceptor((pt) => gullFacts.tap(pt));

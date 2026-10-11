@@ -116,6 +116,8 @@ const STRINGS = {
   zoomForMore: { tr: 'Daha fazla mekân için yakınlaş', en: 'Zoom in for more places' },
   demo: { tr: 'DEMO', en: 'DEMO' },
   all: { tr: 'Tümü', en: 'All' },
+  soundOn: { tr: 'Sesi aç', en: 'Sound on' },
+  soundOff: { tr: 'Sesi kapat', en: 'Sound off' },
   allChip: { tr: 'Hepsi', en: 'All' },
   filterInView: { tr: 'Burada {n} yer', en: '{n} places here' },
   filterNoneHere: { tr: 'Burada yok · toplam {n}', en: 'None here · {n} in all' },
