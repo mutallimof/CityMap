@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-11T14:09:36.552Z",
+ "generated": "2026-10-11T14:26:27.437Z",
  "venues": {
   "arter": {
    "status": "ok",
@@ -47,10 +47,12 @@
    "message": "fetch failed (Connect Timeout Error (attempted address: kultursanat.istanbul:443, timeout: 10000ms))"
   },
   "borusan": {
-   "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
+   "status": "empty",
+   "lastRun": "2026-10-11T14:26:27.437Z",
    "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 0
+   "count": 0,
+   "unplaced": 12,
+   "message": "2 list page(s), 14 detail link(s), 0 without a date"
   },
   "iksv": {
    "status": "ok",
@@ -59,10 +61,10 @@
    "count": 0
   },
   "salon-iksv": {
-   "status": "ok",
+   "status": "skipped",
    "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 0
+   "count": 0,
+   "message": "venue not in OpenStreetMap; programme is client-rendered from /plugins/iksv/plugins.ashx (programSalon=4582, lang=tr)"
   },
   "crr": {
    "status": "failed",
@@ -83,10 +85,10 @@
    "count": 7
   },
   "moda-sahnesi": {
-   "status": "ok",
+   "status": "skipped",
    "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 0
+   "count": 0,
+   "message": "venue not in OpenStreetMap (robots.txt allows us; /events/<slug>/ pages)"
   }
  }
 }
