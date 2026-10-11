@@ -179,7 +179,6 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - Overpass is often overloaded (504/500): the monthly places/stories jobs may keep last month's data for some areas.
 - `stories.json` is ~630 KB (lazy-loaded); the main JS chunk is > 500 KB (build warning).
 - Snapshots don't include DOM labels/pins. Sound and `?skyline=1` not yet judged on a real iPhone.
-- Leftover branches `probe-run`, `probe-out`, `probe/holidays`, `probe/holidays-out` (the git proxy refuses deletion) — delete in GitHub.
 - Actions warn about Node 20 deprecation for `actions/checkout@v4` / `setup-node@v4`.
 
 ## Roadmap (next sessions, in order)
