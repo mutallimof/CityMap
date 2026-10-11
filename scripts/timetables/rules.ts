@@ -2,7 +2,8 @@
  * How each parsed table of the Şehir Hatları timetable becomes trips on our lines. Pure (tested).
  *
  * Reading conventions (all from the PDF's own layout):
- *  - "Row" tables (Kabataş–Adalar, Uzun Boğaz Turu): one row = one trip, columns in sailing order,
+ *  - "Row" tables (Kabataş–Adalar, Uzun Boğaz Turu, Rumeli Kavağı – Eminönü, Anadolu Kavağı – Üsküdar):
+ *    one row = one trip, columns in sailing order,
  *    KALKIŞ = departure, VARIŞ = arrival, "-" = doesn't call.
  *  - "Cycle" tables (Kadıköy/Üsküdar – Karaköy – Eminönü, the night Kadıköy – Karaköy – Beşiktaş):
  *    each column lists one pier's departures; a row is one vessel's round — it leaves the first pier,
@@ -102,6 +103,10 @@ export const RULES: Record<string, Rule> = {
   'kabatas-adalar-sunday-back': { line: 'adalar', method: 'rows' },
   'uzun-bogaz-out': { line: 'bogaz', method: 'rows' },
   'uzun-bogaz-back': { line: 'bogaz', method: 'rows' },
+  'rumeli-kavagi-eminonu': { line: 'rumeli-kavagi-eminonu', method: 'rows' },
+  'eminonu-rumeli-kavagi': { line: 'rumeli-kavagi-eminonu', method: 'rows' },
+  'anadolu-kavagi-uskudar': { line: 'anadolu-kavagi-uskudar', method: 'rows' },
+  'uskudar-anadolu-kavagi': { line: 'anadolu-kavagi-uskudar', method: 'rows' },
 };
 
 const minutes = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5));

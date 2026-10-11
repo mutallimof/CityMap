@@ -34,11 +34,18 @@ refresh job warns in its run summary from 30 days before.
    Diyanet's calendar). The validator refuses a timetable the holiday list doesn't cover.
 9. If a trip calls at a pier pair with no route yet: `npm run data:routes` (adds the leg), then
    `npm run validate:timetables`, `npm test`, `npm run build`.
+10. A new pier: add it to `data/catalog/piers.json` (pin `"osm"` when the name match is ambiguous), then
+   `npm run data:fetch-nominatim` → `npm run data:piers` (coordinates only from OSM) and check the existing
+   piers didn't move.
+
+Rotated column headers (pp. 12–13, 22, 28) are read bottom → top per text line and matched without spaces.
 
 ## How tables become trips (see `rules.ts`)
 
-- Row tables (Kabataş – Adalar, Uzun Boğaz Turu): one row = one trip; KALKIŞ = departure, VARIŞ =
-  arrival. A time under KALKIŞ at a trip's last pier = the vessel is there by then.
+- Row tables (Kabataş – Adalar p. 12–13, Rumeli Kavağı – Eminönü p. 22, Anadolu Kavağı – Üsküdar p. 28,
+  Uzun Boğaz Turu p. 35): one row = one trip; KALKIŞ = departure, VARIŞ = arrival, "-" = the trip skips that
+  pier (the trip is the actual stop sequence; a pier pair it sails gets its own route leg). A time under
+  KALKIŞ at a trip's last pier = the vessel is there by then (e.g. Eminönü → Sarıyer trips).
 - Cycle tables (Kadıköy / Üsküdar – Karaköy – Eminönü, night Kadıköy – Karaköy – Beşiktaş): each column
   is one pier's departures; a row is one vessel's round (out via the printed piers, back from the last
   printed one), when every gap fits one vessel — otherwise each departure is its own trip.

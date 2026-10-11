@@ -2,7 +2,7 @@
 
 Animated, mobile-first map of Istanbul: vapurs on the water, a colourful OSM city, places, events, history.
 Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · original plan `docs/plan.md` (keep as is)
-· ideas/changelog `docs/ideas.md`.
+· ideas `docs/ideas.md`. **No changelog file** (don't create one): project history = this file + git.
 
 ## Ground rules (from the user)
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
@@ -14,9 +14,14 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   positions are a pure function of clock time). Respect reduce-motion everywhere.
 - **Every visual constant lives in `src/config.ts`.** Record decisions in this file.
 
-## Current state (2026-10-11, real timetables)
-- **Ferries:** 5 Şehir Hatları lines (as the operator runs them), 22 OSM piers with berths, **real timetables**
+## Current state (2026-10-11, real timetables + Bosphorus commuter lines)
+- **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
   (winter 2026-27 PDF, valid to 27 Jun 2027; simulated fallback per line, labelled) — `src/sim`, pure.
+  Lines (PDF page): Kadıköy – Karaköy – Eminönü (4), Üsküdar – Karaköy – Eminönü (5), Kadıköy – Beşiktaş (+ Fri/Sat
+  night via Karaköy, 6), Kabataş – Adalar (12–13), Rumeli Kavağı – Eminönü (22), Anadolu Kavağı – Üsküdar (28),
+  Uzun Boğaz Turu (35). Weekday peak ≈ 20 vessels at once (19:14).
+  Piers added for the commuter lines (all OSM): Büyükdere (way/592032187, pier building), İstinye (node/6502486594),
+  Beykoz (way/739105702), Paşabahçe (way/525436007), Çubuklu (way/525436006 passenger pier, not the car ferry).
   Procedural 3D vapurs (three.js custom layer): wake, bob, docking, smoke, horn rings, splash, gulls, Follow glide.
 - **City:** OpenFreeMap vector tiles in our palette; day→golden→night from the real sun; live weather + seasons;
   re-packed 3D buildings with night windows; forests green all year with seasonal tree crowns.
@@ -32,9 +37,9 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 ## Commands
 ```bash
 npm install
-npm run dev        # :5173 · ?t=18:30 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
+npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
                    #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= · keys: ` panel, s speed, n now
-npm test           # vitest (177 tests)
+npm test           # vitest (183 tests)
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
@@ -107,7 +112,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   vessel). This is a reading of the layout, not printed explicitly — see Known issues. Footnotes mapped by text.
 - **Routes** are generated (A* on 20 m water grid, string pulling, clearance-safe smoothing) then committed and
   validated (5 m sampling vs shoreline). Berths = shore point + 30 m seaward; approach points run along the shore;
-  shared berths moor abreast. Lines don't avoid each other.
+  shared berths moor abreast. Lines don't avoid each other. Each berth is approached from the side the raw A*
+  water path arrives from (not the other pier's straight-line side — that made hairpins in İstinye bay).
 - **Rendering:** one shared three.js renderer + `LocalFrame` (local metres around the camera centre, float64 matrix on
   CPU). The local→mercator matrix flips y: open ribbons must be `DoubleSide`. Raw shaders end with
   `#include <colorspace_fragment>`.
@@ -128,7 +134,12 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   Kadıköy/Üsküdar – Karaköy – Eminönü lines; we read rows as rounds (out K→Kr→E, back E→K direct), which fits the
   row layout, the footnotes and the sailing times. One Kadıköy berth for both the old (Eski) and new (Yeni) pier
   (night trips keep the PDF's note). Arife half-days run the normal timetable (PDF says nothing). Some Bosphorus piers
-  are unserved (Boğaz Hattı commuter line, Kısa Boğaz Turu not included).
+  are unserved (Boğaz Hattı commuter line, Kısa Boğaz Turu not included; Kandilli, Küçüksu, Tarabya, Yeniköy).
+- Ferries of different lines pass through each other near shared piers (not fixed). Worst at Üsküdar since the
+  commuter lines (≈15 min/day of two vessels < 40 m apart, was ≈1; Anadolu Kavağı – Üsküdar lays over 09:10–11:35
+  in the outer slot), Beşiktaş ≈5, Kadıköy ≈85 (unchanged).
+- Bebek → Arnavutköy is printed as 5 min; over our 1.64 km route that fits to ≈33 km/h (limit 34).
+- Eminönü / Beşiktaş berths of Rumeli Kavağı – Eminönü: the Boğaz berths (PDF doesn't say).
 - No events from CRR, Zorlu PSM, İBB Kültür (connect timeouts from GitHub runners, likely geo-blocking).
   Moda Sahnesi is on the map but its site publishes no dates (reseller only). Borusan Sanat / İKSV return 0
   between seasons/festivals. Event categories are guessed from titles.

@@ -43,7 +43,7 @@ describe('real timetable on the map', () => {
   const getDay = schedules();
 
   it('runs every line on its real timetable inside the validity period', () => {
-    expect(Object.values(getDay(MON).modes)).toEqual(['real', 'real', 'real', 'real', 'real']);
+    expect(Object.values(getDay(MON).modes)).toEqual(['real', 'real', 'real', 'real', 'real', 'real', 'real']);
   });
 
   it('pier boards show printed times exactly (Kadıköy, Monday morning)', () => {
@@ -97,6 +97,22 @@ describe('real timetable on the map', () => {
       }
       for (const d of s.departures) expect(leaving.has(`${d.stopId}@${d.t}`), `${d.tripId} ${d.stopId} ${d.t}`).toBe(true);
     }
+  });
+
+  it('new Bosphorus piers have boards with printed times (Beykoz, Büyükdere, İstinye, Paşabahçe, Çubuklu)', () => {
+    const at = { day: MON, seconds: parseHHMM('06:00') };
+    const first = (pier: string) => {
+      const d = nextDepartures(getDay, pier, at, 1)[0];
+      return [d.lineId, (d.t / 60) | 0, d.real];
+    };
+    expect(first('beykoz')).toEqual(['anadolu-kavagi-uskudar', 7 * 60, true]);
+    expect(first('pasabahce')).toEqual(['anadolu-kavagi-uskudar', 7 * 60 + 10, true]);
+    expect(first('cubuklu')).toEqual(['anadolu-kavagi-uskudar', 7 * 60 + 20, true]);
+    expect(first('buyukdere')).toEqual(['rumeli-kavagi-eminonu', 7 * 60 + 35, true]);
+    expect(first('istinye')).toEqual(['rumeli-kavagi-eminonu', 8 * 60, true]);
+    // A trip ending at Sarıyer lists no departure there; Bebek is skipped where the PDF prints "-".
+    const bebek = getDay(MON).departures.filter((d) => d.stopId === 'bebek' && d.lineId === 'rumeli-kavagi-eminonu').map((d) => (d.t / 60) | 0);
+    expect(bebek).not.toContain(18 * 60 + 15);
   });
 
   it('printed arrivals are met exactly (Uzun Boğaz Turu at Anadolu Kavağı 12:25; it waits there until 15:00)', () => {

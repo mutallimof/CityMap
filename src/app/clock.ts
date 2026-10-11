@@ -3,7 +3,7 @@ import { fromIstanbul, jumpTo, parseHHMM, simNow, toIstanbul, withSpeed, type Si
 
 /**
  * The app's one mutable simulation clock. Starts at real Istanbul time, 1×.
- * URL overrides for testing: ?speed=60 and ?t=18:30 (Istanbul local, today).
+ * URL overrides for testing: ?speed=60, ?t=18:30 (Istanbul local) and ?date=2026-10-12 (default today).
  */
 export class ClockController {
   private clock: SimClock;
@@ -14,9 +14,11 @@ export class ClockController {
     this.clock = { anchorRealMs: now, anchorSimMs: now, speed: 1 };
     const q = new URLSearchParams(location.search);
     const t = q.get('t');
-    if (t) {
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(q.get('date') ?? '') ? q.get('date')! : null;
+    if (t || date) {
       const today = toIstanbul(now);
-      this.clock = jumpTo(this.clock, fromIstanbul({ day: today.day, seconds: parseHHMM(t) }), now);
+      const day = date ? Date.parse(`${date}T00:00:00Z`) / 86_400_000 : today.day;
+      this.clock = jumpTo(this.clock, fromIstanbul({ day, seconds: t ? parseHHMM(t) : today.seconds }), now);
     }
     const speed = Number(q.get('speed'));
     if (speed > 0) this.clock = withSpeed(this.clock, speed, now);

@@ -7254,6 +7254,1603 @@
      ]
     }
    ]
+  },
+  "rumeli-kavagi-eminonu": {
+   "pdf": [
+    "RUMELİ KAVAĞI - EMİNÖNÜ HATTI (p. 22)",
+    "EMİNÖNÜ - RUMELİ KAVAĞI HATTI (p. 22)"
+   ],
+   "notes": [],
+   "trips": [
+    {
+     "id": "rumeli-kavagi-eminonu:1",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "07:20"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "07:30"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "07:35"
+      },
+      {
+       "stop": "istinye",
+       "dep": "08:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "08:05"
+      },
+      {
+       "stop": "bebek",
+       "dep": "08:20"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "08:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "08:35"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "08:45"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "09:00"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:2",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "08:20"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "08:30"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "08:35"
+      },
+      {
+       "stop": "istinye",
+       "dep": "09:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "09:05"
+      },
+      {
+       "stop": "bebek",
+       "dep": "09:20"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "09:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "09:35"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "09:45"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "10:00"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:3",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "sariyer",
+       "dep": "09:30"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "09:35"
+      },
+      {
+       "stop": "istinye",
+       "dep": "10:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "10:05"
+      },
+      {
+       "stop": "bebek",
+       "dep": "10:20"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "10:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "10:35"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "10:45"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "11:00"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:4",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "sariyer",
+       "dep": "10:30"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "10:35"
+      },
+      {
+       "stop": "istinye",
+       "dep": "11:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "11:05"
+      },
+      {
+       "stop": "bebek",
+       "dep": "11:20"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "11:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "11:40"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "11:50"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "12:05"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:5",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "11:35"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "11:45"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "11:50"
+      },
+      {
+       "stop": "istinye",
+       "dep": "12:15"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "12:20"
+      },
+      {
+       "stop": "bebek",
+       "dep": "12:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "12:40"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "12:50"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "13:05"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "13:20"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:6",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "sariyer",
+       "dep": "12:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "12:30"
+      },
+      {
+       "stop": "istinye",
+       "dep": "12:55"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "13:00"
+      },
+      {
+       "stop": "bebek",
+       "dep": "13:15"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "13:20"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "13:30"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "13:40"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "13:55"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:7",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "13:15"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "13:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "13:30"
+      },
+      {
+       "stop": "istinye",
+       "dep": "13:55"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "14:00"
+      },
+      {
+       "stop": "bebek",
+       "dep": "14:15"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "14:20"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "14:40"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "14:55"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:8",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "sariyer",
+       "dep": "14:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "14:30"
+      },
+      {
+       "stop": "istinye",
+       "dep": "14:55"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "15:00"
+      },
+      {
+       "stop": "bebek",
+       "dep": "15:15"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "15:20"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "15:30"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "15:40"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "15:55"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:9",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "sariyer",
+       "dep": "15:45"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "15:50"
+      },
+      {
+       "stop": "istinye",
+       "dep": "16:15"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "16:20"
+      },
+      {
+       "stop": "bebek",
+       "dep": "16:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "16:40"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "16:50"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "17:00"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "17:15"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:10",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "16:10"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "16:20"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "16:25"
+      },
+      {
+       "stop": "istinye",
+       "dep": "16:50"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "16:55"
+      },
+      {
+       "stop": "bebek",
+       "dep": "17:10"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "17:15"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "17:30"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "17:40"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "17:55"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:11",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "17:10"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "17:20"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "17:25"
+      },
+      {
+       "stop": "istinye",
+       "dep": "17:50"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "17:55"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "18:15"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "18:25"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "18:35"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "18:50"
+      }
+     ]
+    },
+    {
+     "id": "rumeli-kavagi-eminonu:12",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "rumeli-kavagi",
+       "dep": "18:30"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "18:40"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "18:45"
+      },
+      {
+       "stop": "istinye",
+       "dep": "19:10"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "19:15"
+      },
+      {
+       "stop": "bebek",
+       "dep": "19:30"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "19:35"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "19:45"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "19:55"
+      },
+      {
+       "stop": "eminonu",
+       "arr": "20:10"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:1",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "09:35"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "09:50"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "10:00"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "10:15"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "10:40"
+      },
+      {
+       "stop": "istinye",
+       "dep": "10:45"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "11:10"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "11:15"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "11:25"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:2",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "10:15"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "10:30"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "10:50"
+      },
+      {
+       "stop": "bebek",
+       "dep": "11:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "11:20"
+      },
+      {
+       "stop": "istinye",
+       "dep": "11:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "11:55"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "12:00"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:3",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "11:10"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "11:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "11:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "11:50"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "12:15"
+      },
+      {
+       "stop": "istinye",
+       "dep": "12:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "12:50"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "12:55"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "13:05"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:4",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "12:15"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "12:30"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "12:40"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "12:55"
+      },
+      {
+       "stop": "bebek",
+       "dep": "13:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "13:20"
+      },
+      {
+       "stop": "istinye",
+       "dep": "13:25"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "13:50"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "13:55"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:5",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "13:35"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "13:50"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "14:00"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "14:15"
+      },
+      {
+       "stop": "bebek",
+       "dep": "14:20"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "14:40"
+      },
+      {
+       "stop": "istinye",
+       "dep": "14:45"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "15:10"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "15:15"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:6",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "14:10"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "14:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "14:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "14:50"
+      },
+      {
+       "stop": "bebek",
+       "dep": "15:00"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "15:15"
+      },
+      {
+       "stop": "istinye",
+       "dep": "15:20"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "15:45"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "15:50"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "16:00"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:7",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "15:10"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "15:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "15:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "15:50"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "16:10"
+      },
+      {
+       "stop": "istinye",
+       "dep": "16:20"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "16:45"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "16:50"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "17:00"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:8",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "16:10"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "16:25"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "16:35"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "16:50"
+      },
+      {
+       "stop": "bebek",
+       "dep": "16:55"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "17:15"
+      },
+      {
+       "stop": "istinye",
+       "dep": "17:20"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "17:45"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "17:50"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "18:00"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:9",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "17:25"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "17:40"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "17:50"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "18:05"
+      },
+      {
+       "stop": "bebek",
+       "dep": "18:10"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "18:30"
+      },
+      {
+       "stop": "istinye",
+       "dep": "18:35"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "19:00"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "19:05"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "19:15"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:10",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "18:05"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "18:20"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "18:30"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "18:45"
+      },
+      {
+       "stop": "bebek",
+       "dep": "18:50"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "19:10"
+      },
+      {
+       "stop": "istinye",
+       "dep": "19:15"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "19:40"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "19:45"
+      },
+      {
+       "stop": "rumeli-kavagi",
+       "arr": "19:55"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:11",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "18:55"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "19:10"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "19:20"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "19:40"
+      },
+      {
+       "stop": "bebek",
+       "dep": "19:45"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "20:05"
+      },
+      {
+       "stop": "istinye",
+       "dep": "20:10"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "20:35"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "20:40"
+      }
+     ]
+    },
+    {
+     "id": "eminonu-rumeli-kavagi:12",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu",
+       "dep": "20:20"
+      },
+      {
+       "stop": "besiktas",
+       "dep": "20:35"
+      },
+      {
+       "stop": "ortakoy",
+       "dep": "20:45"
+      },
+      {
+       "stop": "arnavutkoy",
+       "dep": "21:00"
+      },
+      {
+       "stop": "bebek",
+       "dep": "21:05"
+      },
+      {
+       "stop": "emirgan",
+       "dep": "21:25"
+      },
+      {
+       "stop": "istinye",
+       "dep": "21:30"
+      },
+      {
+       "stop": "buyukdere",
+       "dep": "21:55"
+      },
+      {
+       "stop": "sariyer",
+       "dep": "22:00"
+      }
+     ]
+    }
+   ]
+  },
+  "anadolu-kavagi-uskudar": {
+   "pdf": [
+    "ANADOLU KAVAĞI - ÜSKÜDAR HATTI (p. 28)"
+   ],
+   "notes": [],
+   "trips": [
+    {
+     "id": "anadolu-kavagi-uskudar:1",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "beykoz",
+       "dep": "07:00"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "07:10"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "07:20"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "07:30"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "07:40"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "07:55"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "08:05"
+      },
+      {
+       "stop": "uskudar",
+       "arr": "08:20"
+      }
+     ]
+    },
+    {
+     "id": "anadolu-kavagi-uskudar:2",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "anadolu-kavagi",
+       "dep": "07:30"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "07:50"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "08:00"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "08:10"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "08:20"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "08:30"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "08:45"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "08:55"
+      },
+      {
+       "stop": "uskudar",
+       "arr": "09:10"
+      }
+     ]
+    },
+    {
+     "id": "anadolu-kavagi-uskudar:3",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "anadolu-kavagi",
+       "dep": "14:30"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "14:50"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "15:00"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "15:10"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "15:20"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "15:30"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "15:45"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "15:55"
+      },
+      {
+       "stop": "uskudar",
+       "arr": "16:10"
+      }
+     ]
+    },
+    {
+     "id": "anadolu-kavagi-uskudar:4",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "anadolu-kavagi",
+       "dep": "16:00"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "16:20"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "16:30"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "16:40"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "16:50"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "17:00"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "17:15"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "17:25"
+      },
+      {
+       "stop": "uskudar",
+       "arr": "17:40"
+      }
+     ]
+    },
+    {
+     "id": "anadolu-kavagi-uskudar:5",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "beykoz",
+       "dep": "17:45"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "17:55"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "18:05"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "18:15"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "18:25"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "18:40"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "18:50"
+      },
+      {
+       "stop": "uskudar",
+       "arr": "19:05"
+      }
+     ]
+    },
+    {
+     "id": "uskudar-anadolu-kavagi:1",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar",
+       "dep": "11:35"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "11:50"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "12:00"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "12:15"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "12:25"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "12:35"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "12:45"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "12:55"
+      },
+      {
+       "stop": "anadolu-kavagi",
+       "arr": "13:15"
+      }
+     ]
+    },
+    {
+     "id": "uskudar-anadolu-kavagi:2",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar",
+       "dep": "13:45"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "14:00"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "14:10"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "14:25"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "14:35"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "14:45"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "14:55"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "15:05"
+      },
+      {
+       "stop": "anadolu-kavagi",
+       "arr": "15:25"
+      }
+     ]
+    },
+    {
+     "id": "uskudar-anadolu-kavagi:3",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar",
+       "dep": "16:15"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "16:30"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "16:40"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "16:55"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "17:05"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "17:15"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "17:25"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "17:35"
+      }
+     ]
+    },
+    {
+     "id": "uskudar-anadolu-kavagi:4",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar",
+       "dep": "17:50"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "18:05"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "18:15"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "18:35"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "18:45"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "18:55"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "19:05"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "19:15"
+      },
+      {
+       "stop": "anadolu-kavagi",
+       "arr": "19:35"
+      }
+     ]
+    },
+    {
+     "id": "uskudar-anadolu-kavagi:5",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar",
+       "dep": "19:10"
+      },
+      {
+       "stop": "beylerbeyi",
+       "dep": "19:25"
+      },
+      {
+       "stop": "cengelkoy",
+       "dep": "19:35"
+      },
+      {
+       "stop": "anadolu-hisari",
+       "dep": "19:50"
+      },
+      {
+       "stop": "kanlica",
+       "dep": "20:00"
+      },
+      {
+       "stop": "cubuklu",
+       "dep": "20:10"
+      },
+      {
+       "stop": "pasabahce",
+       "dep": "20:20"
+      },
+      {
+       "stop": "beykoz",
+       "dep": "20:30"
+      }
+     ]
+    }
+   ]
   }
  }
 }

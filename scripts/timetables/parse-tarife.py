@@ -97,7 +97,7 @@ def check_headers(page, table, col_centres):
                 lines.setdefault(round(c['x0'] / 1.5), []).append(c)
             texts = [norm_text(''.join(c['text'] for c in sorted(cs, key=lambda c: -c['top']))) for cs in lines.values()]
             text = '|'.join(texts)
-            if not any(name.replace('.', '') == t.replace('.', '') for t in texts):
+            if not any(norm_text(name).replace('.', '') == t.replace('.', '') for t in texts):
                 raise ParseError(f"{table['id']}: column {i} header {name!r} not found (read {text[:40]!r})")
         return
     words = [w for w in page.extract_words() if w['upright'] and y0 <= w['top'] <= y1 and x0 - 5 <= w['x0'] <= x1 + 5]

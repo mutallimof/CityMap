@@ -16,13 +16,15 @@ describe('timetable rules', () => {
     expect(built.file).toEqual(committed);
   });
 
-  it('maps the PDF tables onto our five lines', () => {
+  it('maps the PDF tables onto our seven lines', () => {
     expect(Object.fromEntries(Object.entries(built.file.lines).map(([id, l]) => [id, l.pdf]))).toEqual({
       'kadikoy-karakoy-eminonu': ['KADIKÖY - KARAKÖY - EMİNÖNÜ HATTI (p. 4)'],
       'uskudar-karakoy-eminonu': ['ÜSKÜDAR - KARAKÖY - EMİNÖNÜ HATTI (p. 5)'],
       'kadikoy-besiktas': ['KADIKÖY - BEŞİKTAŞ HATTI (p. 6)', 'KADIKÖY - KARAKÖY - BEŞİKTAŞ HATTI (p. 6)'],
       adalar: ['KABATAŞ - ADALAR HATTI (p. 12)', 'KABATAŞ - ADALAR HATTI (p. 13)'],
       bogaz: ['UZUN BOĞAZ TURU - NOSTALJİK TUR (p. 35)'],
+      'rumeli-kavagi-eminonu': ['RUMELİ KAVAĞI - EMİNÖNÜ HATTI (p. 22)', 'EMİNÖNÜ - RUMELİ KAVAĞI HATTI (p. 22)'],
+      'anadolu-kavagi-uskudar': ['ANADOLU KAVAĞI - ÜSKÜDAR HATTI (p. 28)'],
     });
   });
 
@@ -77,5 +79,14 @@ describe('timetable rules', () => {
   it('fails on a table without a rule and on an unknown day heading', () => {
     expect(buildTimetables(one({ id: 'nope' }), 'x').problems[0]).toMatch(/no rule/);
     expect(buildTimetables(one({ days: 'BAYRAMLARDA' }), 'x').problems[0]).toMatch(/unknown day heading/);
+  });
+
+  it('commuter lines: "-" skips the pier, the trip is the actual stop sequence', () => {
+    expect(calls('rumeli-kavagi-eminonu:7')).toEqual(['rumeli-kavagi@13:15', 'sariyer@13:25', 'buyukdere@13:30', 'istinye@13:55', 'emirgan@14:00', 'bebek@14:15', 'arnavutkoy@14:20', 'besiktas@14:40', 'eminonu>14:55']);
+    expect(calls('rumeli-kavagi-eminonu:3')[0]).toBe('sariyer@09:30');
+    expect(calls('eminonu-rumeli-kavagi:2')).toEqual(['eminonu@10:15', 'besiktas@10:30', 'arnavutkoy@10:50', 'bebek@11:00', 'emirgan@11:20', 'istinye@11:25', 'buyukdere@11:55', 'sariyer@12:00']);
+    expect(calls('anadolu-kavagi-uskudar:1')[0]).toBe('beykoz@07:00');
+    expect(calls('uskudar-anadolu-kavagi:3').at(-1)).toBe('beykoz@17:35');
+    expect(trip('anadolu-kavagi-uskudar:1').days).toEqual(['weekday', 'saturday', 'sunday']);
   });
 });

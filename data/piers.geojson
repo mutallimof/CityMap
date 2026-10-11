@@ -684,6 +684,156 @@
      40.876101
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "buyukdere",
+    "name": "Büyükdere",
+    "nameEn": "Büyükdere",
+    "osm": "way/592032187",
+    "berths": [
+     {
+      "id": "buyukdere-main",
+      "name": "Büyük Dere İskelesi",
+      "osm": "way/592032187",
+      "lngLat": [
+       29.046395,
+       41.160531
+      ],
+      "alongBearing": 61.6,
+      "seawardBearing": 151.6,
+      "osmToCoastM": 1
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.046219,
+     41.160778
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "istinye",
+    "name": "İstinye",
+    "nameEn": "İstinye",
+    "osm": "node/6502486594",
+    "berths": [
+     {
+      "id": "istinye-main",
+      "name": "İstinye",
+      "osm": "node/6502486594",
+      "lngLat": [
+       29.061109,
+       41.11295
+      ],
+      "alongBearing": 98.4,
+      "seawardBearing": 188.4,
+      "osmToCoastM": 4
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.061168,
+     41.113251
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "beykoz",
+    "name": "Beykoz",
+    "nameEn": "Beykoz",
+    "osm": "way/739105702",
+    "berths": [
+     {
+      "id": "beykoz-main",
+      "name": "Beykoz",
+      "osm": "way/739105702",
+      "lngLat": [
+       29.090849,
+       41.134489
+      ],
+      "alongBearing": 23.5,
+      "seawardBearing": 113.5,
+      "osmToCoastM": 13
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.090375,
+     41.134645
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pasabahce",
+    "name": "Paşabahçe",
+    "nameEn": "Paşabahçe",
+    "osm": "way/525436007",
+    "berths": [
+     {
+      "id": "pasabahce-main",
+      "name": "Paşabahçe İskelesi",
+      "osm": "way/525436007",
+      "lngLat": [
+       29.09321,
+       41.116812
+      ],
+      "alongBearing": 258.8,
+      "seawardBearing": 348.8,
+      "osmToCoastM": 15
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.093246,
+     41.116675
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "cubuklu",
+    "name": "Çubuklu",
+    "nameEn": "Çubuklu",
+    "osm": "way/525436006",
+    "berths": [
+     {
+      "id": "cubuklu-main",
+      "name": "Çubuklu İskelesi",
+      "osm": "way/525436006",
+      "lngLat": [
+       29.08054,
+       41.107615
+      ],
+      "alongBearing": 292.4,
+      "seawardBearing": 22.4,
+      "osmToCoastM": 11
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.080455,
+     41.107459
+    ]
+   }
   }
  ]
 }

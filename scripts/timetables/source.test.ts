@@ -27,6 +27,10 @@ describe('timetable PDF, parsed tables vs the rendered pages', () => {
       ['kabatas-adalar-sunday-back', 15],
       ['uzun-bogaz-out', 1],
       ['uzun-bogaz-back', 1],
+      ['rumeli-kavagi-eminonu', 12],
+      ['eminonu-rumeli-kavagi', 12],
+      ['anadolu-kavagi-uskudar', 5],
+      ['uskudar-anadolu-kavagi', 5],
     ]);
   });
 
@@ -113,5 +117,56 @@ describe('timetable PDF, parsed tables vs the rendered pages', () => {
       '**': 'Pazar ve resmi tatil günleri yapılmaz.',
       '***': 'Karaköy İskelesi’nde yolcu almaz.',
     });
+  });
+
+  it('p. 22 Rumeli Kavağı – Eminönü: rows = trips, "-" = pier skipped, arrival at Eminönü', () => {
+    const id = 'rumeli-kavagi-eminonu';
+    expect(row(id, 0)).toEqual(['07:20', '07:30', '07:35', '08:00', '08:05', '08:20', '08:25', '08:35', '08:45', '09:00']);
+    expect(row(id, 2)).toEqual(['-', '09:30', '09:35', '10:00', '10:05', '10:20', '10:25', '10:35', '10:45', '11:00']);
+    expect(row(id, 3)).toEqual(['-', '10:30', '10:35', '11:00', '11:05', '11:20', '11:25', '11:40', '11:50', '12:05']);
+    expect(row(id, 6)).toEqual(['13:15', '13:25', '13:30', '13:55', '14:00', '14:15', '14:20', '-', '14:40', '14:55']);
+    expect(row(id, 10)).toEqual(['17:10', '17:20', '17:25', '17:50', '17:55', '-', '18:15', '18:25', '18:35', '18:50']);
+    expect(row(id, 11)).toEqual(['18:30', '18:40', '18:45', '19:10', '19:15', '19:30', '19:35', '19:45', '19:55', '20:10']);
+    expect(column(id, 0)).toEqual(['07:20', '08:20', '-', '-', '11:35', '-', '13:15', '-', '-', '16:10', '17:10', '18:30']);
+  });
+
+  it('p. 22 Eminönü – Rumeli Kavağı: trips ending at Sarıyer ("-" under Rumeli Kavağı)', () => {
+    const id = 'eminonu-rumeli-kavagi';
+    expect(table(id).columns.map((c) => c.stop)).toEqual(['eminonu', 'besiktas', 'ortakoy', 'arnavutkoy', 'bebek', 'emirgan', 'istinye', 'buyukdere', 'sariyer', 'rumeli-kavagi']);
+    expect(row(id, 0)).toEqual(['09:35', '09:50', '10:00', '10:15', '-', '10:40', '10:45', '11:10', '11:15', '11:25']);
+    expect(row(id, 1)).toEqual(['10:15', '10:30', '-', '10:50', '11:00', '11:20', '11:25', '11:55', '12:00', '-']);
+    expect(row(id, 6)).toEqual(['15:10', '15:25', '15:35', '15:50', '-', '16:10', '16:20', '16:45', '16:50', '17:00']);
+    expect(row(id, 11)).toEqual(['20:20', '20:35', '20:45', '21:00', '21:05', '21:25', '21:30', '21:55', '22:00', '-']);
+    expect(column(id, 9)).toEqual(['11:25', '-', '13:05', '-', '-', '16:00', '17:00', '18:00', '19:15', '19:55', '-', '-']);
+  });
+
+  it('mismatch: rotated two-word headers ("ANADOLU HİSARI", "RUMELİ KAVAĞI") are matched without spaces', () => {
+    expect(table('uskudar-anadolu-kavagi').columns.map((c) => `${c.stop}/${c.kind}`)).toEqual([
+      'uskudar/dep',
+      'beylerbeyi/dep',
+      'cengelkoy/dep',
+      'anadolu-hisari/dep',
+      'kanlica/dep',
+      'cubuklu/dep',
+      'pasabahce/dep',
+      'beykoz/dep',
+      'anadolu-kavagi/arr',
+    ]);
+    expect(table('rumeli-kavagi-eminonu').columns[0]).toEqual({ stop: 'rumeli-kavagi', kind: 'dep' });
+  });
+
+  it('p. 28 Anadolu Kavağı – Üsküdar, both directions', () => {
+    const a = 'anadolu-kavagi-uskudar';
+    expect(row(a, 0)).toEqual(['-', '07:00', '07:10', '07:20', '07:30', '07:40', '07:55', '08:05', '08:20']);
+    expect(row(a, 1)).toEqual(['07:30', '07:50', '08:00', '08:10', '08:20', '08:30', '08:45', '08:55', '09:10']);
+    expect(row(a, 2)).toEqual(['14:30', '14:50', '15:00', '15:10', '15:20', '15:30', '15:45', '15:55', '16:10']);
+    expect(row(a, 3)).toEqual(['16:00', '16:20', '16:30', '16:40', '16:50', '17:00', '17:15', '17:25', '17:40']);
+    expect(row(a, 4)).toEqual(['-', '17:45', '17:55', '18:05', '18:15', '18:25', '18:40', '18:50', '19:05']);
+    const b = 'uskudar-anadolu-kavagi';
+    expect(row(b, 0)).toEqual(['11:35', '11:50', '12:00', '12:15', '12:25', '12:35', '12:45', '12:55', '13:15']);
+    expect(row(b, 1)).toEqual(['13:45', '14:00', '14:10', '14:25', '14:35', '14:45', '14:55', '15:05', '15:25']);
+    expect(row(b, 2)).toEqual(['16:15', '16:30', '16:40', '16:55', '17:05', '17:15', '17:25', '17:35', '-']);
+    expect(row(b, 3)).toEqual(['17:50', '18:05', '18:15', '18:35', '18:45', '18:55', '19:05', '19:15', '19:35']);
+    expect(row(b, 4)).toEqual(['19:10', '19:25', '19:35', '19:50', '20:00', '20:10', '20:20', '20:30', '-']);
   });
 });

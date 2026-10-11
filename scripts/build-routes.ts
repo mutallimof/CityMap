@@ -91,7 +91,21 @@ function openWater(p: [number, number], need: number): boolean {
   return !grid.land[j * grid.nx + i] && grid.clear[j * grid.nx + i] >= need;
 }
 
-/** Approach point for a berth, on the along-shore side facing `toward` (the other end of the leg). */
+/** How far along the raw water path to look for the side a berth is approached from (m). */
+const APPROACH_PROBE_M = 600;
+
+/** The point `d` metres along a path (or `fallback` if it's shorter). */
+function pointAlong(path: [number, number][], d: number, fallback: [number, number]): [number, number] {
+  let left = d;
+  for (let i = 1; i < path.length; i++) {
+    const seg = Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]);
+    if (seg >= left) return path[i];
+    left -= seg;
+  }
+  return fallback;
+}
+
+/** Approach point for a berth, on the along-shore side facing `toward` (where the leg's water path heads). */
 function approachOf(b: BerthProps, toward: [number, number]): [number, number] {
   const [bx, by] = proj.toXY(b.lngLat);
   const sea = unit(b.seawardBearing);
@@ -132,8 +146,11 @@ for (const line of catalog) {
     const [b0, b1] = [berthOf(line, fromId), berthOf(line, toId)];
     const from = proj.toXY(b0.lngLat);
     const to = proj.toXY(b1.lngLat);
-    const a0 = approachOf(b0, to);
-    const a1 = approachOf(b1, from);
+    // Approach each berth from the side the water path actually comes from (in a bay the other pier's
+    // straight-line direction can point the wrong way along the shore and force a hairpin).
+    const probe = findPath(grid, from, to, PATH);
+    const a0 = approachOf(b0, probe ? pointAlong(probe, APPROACH_PROBE_M, to) : to);
+    const a1 = approachOf(b1, probe ? pointAlong([...probe].reverse(), APPROACH_PROBE_M, from) : from);
     // Relaxed clearance only near the berths (not at hand-placed via points).
     const rule = { clear: LOS_CLEAR, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
     const pts = [a0, ...(line.via?.[`${fromId}>${toId}`] ?? []).map((c) => proj.toXY(c)), a1];

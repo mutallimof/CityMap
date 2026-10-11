@@ -223,6 +223,51 @@
         "Büyükada"
       ],
       "osm": "node/493262183"
+    },
+    {
+      "id": "buyukdere",
+      "tr": "Büyükdere",
+      "en": "Büyükdere",
+      "match": [
+        "Büyükdere",
+        "Büyük Dere"
+      ],
+      "osm": "way/592032187"
+    },
+    {
+      "id": "istinye",
+      "tr": "İstinye",
+      "en": "İstinye",
+      "match": [
+        "İstinye"
+      ],
+      "osm": "node/6502486594"
+    },
+    {
+      "id": "beykoz",
+      "tr": "Beykoz",
+      "en": "Beykoz",
+      "match": [
+        "Beykoz"
+      ],
+      "osm": "way/739105702"
+    },
+    {
+      "id": "pasabahce",
+      "tr": "Paşabahçe",
+      "en": "Paşabahçe",
+      "match": [
+        "Paşabahçe"
+      ]
+    },
+    {
+      "id": "cubuklu",
+      "tr": "Çubuklu",
+      "en": "Çubuklu",
+      "match": [
+        "Çubuklu"
+      ],
+      "osm": "way/525436006"
     }
   ]
 }
