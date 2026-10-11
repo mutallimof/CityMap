@@ -12,7 +12,7 @@ interface Venue {
   extra?: string[];
 }
 const { venues } = JSON.parse(await (await import('node:fs/promises')).readFile('data/catalog/venues.json', 'utf8')) as { venues: Venue[] };
-const only = process.env.VENUES?.split(',');
+const only = process.env.VENUES ? process.env.VENUES.split(',') : null;
 const extraUrls = (process.env.EXTRA_URLS ?? '').split(/\s+/).filter(Boolean);
 mkdirSync('probe', { recursive: true });
 const summary: Record<string, unknown>[] = [];
