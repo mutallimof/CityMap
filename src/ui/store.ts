@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { NO_EVENT_FILTERS, type EventFilters } from '../events/events';
 
 export type Lang = 'tr' | 'en';
 export type Selection = { kind: 'vessel'; id: string } | { kind: 'pier'; id: string } | { kind: 'place'; id: string } | { kind: 'guide'; id: string } | null;
@@ -21,6 +22,8 @@ export interface UiState {
   search: boolean;
   /** Map legend popover open. */
   legend: boolean;
+  /** Event chips: only venues with matching events. */
+  ev: EventFilters;
   hint: boolean;
   sheetSnap: SheetSnap;
 }
@@ -65,6 +68,7 @@ export const ui = createStore<UiState>({
   openNow: false,
   search: false,
   legend: false,
+  ev: NO_EVENT_FILTERS,
   timePanel: false,
   hint: true,
   sheetSnap: 'peek',

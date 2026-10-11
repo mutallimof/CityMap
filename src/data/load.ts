@@ -7,6 +7,7 @@ import districtsUrl from '../../data/districts.geojson?url';
 import routesUrl from '../../data/routes.geojson?url';
 import linesUrl from '../../data/lines.json?url';
 import placesUrl from '../../data/places.geojson?url';
+import venuePlacesUrl from '../../data/venue-places.geojson?url';
 import landmarksUrl from '../../data/landmarks.geojson?url';
 import type { PlaceProps } from '../places/types';
 
@@ -45,7 +46,15 @@ export const loadPiers = () => getJson<FeatureCollection<Point, PierProps>>(pier
 export const loadDistricts = () => getJson<FeatureCollection<Point, DistrictProps>>(districtsUrl);
 export const loadRoutes = () => getJson<FeatureCollection<LineString, RouteProps>>(routesUrl);
 export const loadLines = async () => (await getJson<{ lines: LineSpec[] }>(linesUrl)).lines;
-export const loadPlaces = () => getJson<FeatureCollection<Point, PlaceProps>>(placesUrl);
+/** Featured places + event venues (both from OSM; venues come from scripts/build-venues.ts). */
+export async function loadPlaces(): Promise<FeatureCollection<Point, PlaceProps>> {
+  const [places, venues] = await Promise.all([
+    getJson<FeatureCollection<Point, PlaceProps>>(placesUrl),
+    getJson<FeatureCollection<Point, PlaceProps>>(venuePlacesUrl),
+  ]);
+  const ids = new Set(places.features.map((f) => f.properties.id));
+  return { ...places, features: [...places.features, ...venues.features.filter((f) => !ids.has(f.properties.id))] };
+}
 
 export interface LandmarkProps {
   id: string;

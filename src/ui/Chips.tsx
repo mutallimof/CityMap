@@ -1,11 +1,19 @@
 import { useT, type StringKey } from './i18n';
 import { ui, useUi, type Category } from './store';
+import type { EventFilters } from '../events/events';
 
 const CATS: { id: Category; icon: string }[] = [
   { id: 'food', icon: '🍽' },
   { id: 'culture', icon: '🎭' },
   { id: 'shopping', icon: '🛍' },
   { id: 'park', icon: '🌳' },
+];
+
+const EV: { key: keyof EventFilters; icon: string; label: StringKey }[] = [
+  { key: 'today', icon: '✦', label: 'evToday' },
+  { key: 'weekend', icon: '☀', label: 'evWeekend' },
+  { key: 'workshops', icon: '✂', label: 'evWorkshops' },
+  { key: 'free', icon: '◎', label: 'evFree' },
 ];
 
 /** One scrollable chip row: map layers (Ferries, Routes) then Open now and place categories. */
@@ -24,6 +32,15 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
       </button>
       {withCategories && (
         <>
+          <span className="chips__sep" />
+          {EV.map((c) => {
+            const on = s.ev[c.key];
+            return (
+              <button key={c.key} className={`chip chip--ev ${on ? 'chip--on' : ''}`} aria-pressed={on} onClick={() => ui.set((st) => ({ ev: { ...st.ev, [c.key]: !st.ev[c.key] } }))}>
+                <span aria-hidden>{c.icon}</span> {t(c.label)}
+              </button>
+            );
+          })}
           <span className="chips__sep" />
           <button className={`chip chip--open ${s.openNow ? 'chip--on' : ''}`} aria-pressed={s.openNow} onClick={() => ui.set({ openNow: !s.openNow })}>
             <span className="chip__open" aria-hidden /> {t('openNowChip')}

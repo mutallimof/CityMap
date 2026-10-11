@@ -6,6 +6,8 @@ import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { PlaceIcon } from './PlaceIcon';
 import { PierHint } from './Extras';
+import { StorySection } from '../../stories/StorySection';
+import { EventsSection } from '../../events/EventsSection';
 import { placeLink, places, share } from './context';
 
 function useStoreVersion(): void {
@@ -124,6 +126,10 @@ export function PlaceBody({ id }: { id: string }) {
         </dl>
       )}
       {loading && <small className="muted">{t('checkingOsm')}</small>}
+
+      <EventsSection placeId={id} />
+
+      <StorySection osm={p.osm} />
 
       <PierHint lngLat={p.lngLat} />
 

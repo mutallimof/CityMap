@@ -61,7 +61,7 @@ jobs:
         run: |
           git config user.name "data-refresh-bot"
           git config user.email "data-refresh-bot@users.noreply.github.com"
-          git add data/events.json data/stories.json data/events-log.json 2>/dev/null || true
+          for f in data/events.json data/stories.json data/events-log.json; do if [ -f "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
           else

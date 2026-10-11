@@ -17,3 +17,21 @@
 @keyframes sel-pop { from { transform: scale(0.6); opacity: 0; } }
 @keyframes sel-ring { 0% { transform: scale(0.6); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
 .motion-reduced .sel-pin__ring, .motion-reduced .sel-pin__inner { animation: none; }
+
+/* ===== Event happening now: pulsing rings on the ground under the venue pin ===== */
+.evpulse { width: 0; height: 0; pointer-events: none; }
+.evpulse__ring {
+  position: absolute;
+  left: -22px;
+  top: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #e8485a;
+  box-shadow: 0 0 12px rgba(232, 72, 90, 0.6);
+  animation: evpulse 2.2s ease-out infinite;
+}
+.evpulse__ring--2 { animation-delay: 1.1s; }
+@keyframes evpulse { 0% { transform: scale(0.4); opacity: 0.95; } 100% { transform: scale(2.1); opacity: 0; } }
+.motion-reduced .evpulse__ring { animation: none; transform: scale(1.2); opacity: 0.7; }
+.motion-reduced .evpulse__ring--2 { display: none; }

@@ -5,7 +5,9 @@ import { CITY_SOURCE, LANDMARK_SOURCE } from '../map/city';
 import type { LandmarkProps } from '../data/load';
 import { osmFromTileId } from '../osm/nominatim';
 import type { Category } from '../ui/store';
-import { ICON_KINDS, iconImage, kindOfPlace, POI_KINDS, type IconKind } from './icons';
+import { ICON_KINDS, iconImage, kindOfPlace, POI_KINDS, storyIcon, type IconKind } from './icons';
+import type { Story } from '../stories/stories';
+import { anyEventFilter, events, NO_EVENT_FILTERS, type EventFilters } from '../events/events';
 import type { PlacesStore } from './store';
 import type { Place, PlaceCategory } from './types';
 
@@ -16,7 +18,8 @@ import type { Place, PlaceCategory } from './types';
  * malls / bazaars, parks, viewpoints, landmarks); they appear by zoom and OpenMapTiles rank, with
  * names only for the most important.
  */
-export const LAYERS = { poi: 'poi', landmarks: 'landmark-icons', featured: 'featured' } as const;
+export const LAYERS = { poi: 'poi', stories: 'stories', landmarks: 'landmark-icons', featured: 'featured' } as const;
+const STORY_SOURCE = 'stories';
 const FEATURED_SOURCE = 'featured';
 
 export const CATEGORY_OF: Record<IconKind, PlaceCategory> = {
@@ -173,7 +176,7 @@ export class PlaceLayers {
         // Zoomed out only the well-known places.
         filter: ['step', ['zoom'], ['all', ['get', 'vis'], ['get', 'major']], p.allPinsZoom, ['get', 'vis']] as unknown as FilterSpecification,
         layout: {
-          'icon-image': ['concat', 'feat-', ['get', 'icon'], ['case', ['get', 'open'], '-o', '']],
+          'icon-image': ['concat', 'feat-', ['get', 'icon'], ['case', ['get', 'ev'], '-ev', ''], ['case', ['get', 'open'], '-o', '']],
           'icon-anchor': 'bottom',
           'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1],
           'icon-padding': 2,
@@ -208,6 +211,9 @@ export class PlaceLayers {
       const hot = glowPoi ? 1 : 0.55;
       put(`feat-${k}`, iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }));
       put(`feat-${k}-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }), ic.featuredSize));
+      // A venue with an event today glows warm gold.
+      put(`feat-${k}-ev`, iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: ic.eventGlow }));
+      put(`feat-${k}-ev-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: ic.eventGlow }), ic.featuredSize));
     }
     put('landmark-big', iconImage('landmark', { size: ic.landmarkSize, glow: this.state.night ? 0.9 : 0.5 }));
   }
@@ -223,7 +229,8 @@ export class PlaceLayers {
     return ['step', ['zoom'], rank(r[0]), 16, rank(r[1]), 17, rank(r[2]), 18, base] as unknown as FilterSpecification;
   }
 
-  private featuredData(categories: Category[], openNow: boolean, nowMs: number): GeoJSON.FeatureCollection {
+  private featuredData(categories: Category[], openNow: boolean, nowMs: number, ev: EventFilters = NO_EVENT_FILTERS): GeoJSON.FeatureCollection {
+    const evOn = anyEventFilter(ev);
     const s = this.store;
     return {
       type: 'FeatureCollection',
@@ -237,7 +244,9 @@ export class PlaceLayers {
           major: !!p.major,
           fav: s.favourites.has(p.id),
           open: s.open(p.id, nowMs).state === 'open',
-          vis: s.visible(p.id, { categories, openNow }, nowMs),
+          // With an event chip on, only venues with matching events stay on the map.
+          vis: evOn ? events.placeMatches(p.id, ev, nowMs) && s.visible(p.id, { categories, openNow }, nowMs) : s.visible(p.id, { categories, openNow }, nowMs),
+          ev: events.status(p.id, nowMs) !== null,
         },
         geometry: { type: 'Point', coordinates: p.lngLat },
       })),
@@ -245,18 +254,20 @@ export class PlaceLayers {
   }
 
   /** Filters, time (open now), language and light — cheap; only changed things are re-sent. */
-  update(f: { categories: Category[]; openNow: boolean; nowMs: number; night: number; golden: number; lang: 'tr' | 'en' }): void {
+  update(f: { categories: Category[]; openNow: boolean; nowMs: number; night: number; golden: number; lang: 'tr' | 'en'; ev: EventFilters }): void {
     const map = this.map;
     const night = f.night > 0.5;
     const golden = f.golden > 0.35 && !night;
     const minute = Math.floor(f.nowMs / 60_000);
-    const key = `${f.categories.join()}|${f.openNow}|${minute}|${[...this.store.favourites].join()}`;
+    const evOn = anyEventFilter(f.ev);
+    const key = `${f.categories.join()}|${f.openNow}|${minute}|${[...this.store.favourites].join()}|${JSON.stringify(f.ev)}|${events.all.length}`;
     if (key !== this.state.key) {
       this.state.key = key;
-      (map.getSource(FEATURED_SOURCE) as GeoJSONSource).setData(this.featuredData(f.categories, f.openNow, f.nowMs));
+      (map.getSource(FEATURED_SOURCE) as GeoJSONSource).setData(this.featuredData(f.categories, f.openNow, f.nowMs, f.ev));
       map.setFilter(LAYERS.poi, this.poiFilter(f.categories));
       // Map POIs carry no opening hours, so "open now" shows only places whose hours we know.
-      map.setLayoutProperty(LAYERS.poi, 'visibility', f.openNow ? 'none' : 'visible');
+      map.setLayoutProperty(LAYERS.poi, 'visibility', f.openNow || evOn ? 'none' : 'visible');
+      if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'visibility', evOn ? 'none' : 'visible');
     }
     if (night !== this.state.night || golden !== this.state.golden) {
       this.state.night = night;
@@ -266,16 +277,66 @@ export class PlaceLayers {
       map.setPaintProperty(LAYERS.poi, 'text-color', textColor(night));
       map.setPaintProperty(LAYERS.featured, 'text-color', textColor(night));
       map.setPaintProperty(LAYERS.landmarks, 'text-color', night ? '#F3CB6B' : '#8A6410');
+      if (map.getLayer(LAYERS.stories)) {
+        map.setPaintProperty(LAYERS.stories, 'text-color', night ? '#F0CC7A' : '#7A5A12');
+        map.setPaintProperty(LAYERS.stories, 'text-halo-color', haloColor(night));
+      }
     }
     if (f.lang !== this.state.lang) {
       this.state.lang = f.lang;
       map.setLayoutProperty(LAYERS.featured, 'text-field', ['step', ['zoom'], '', CONFIG.places.featuredNamesFrom, this.nameField()]);
       map.setLayoutProperty(LAYERS.landmarks, 'text-field', this.nameField());
+      if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'text-field', ['step', ['zoom'], '', CONFIG.places.storyNamesFrom, this.nameField()]);
     }
   }
 
   /** What's under a tap: a featured place id, a landmark, or a map POI as a Place. */
-  at(point: { x: number; y: number }): { featured: string } | { landmark: LandmarkProps & { lngLat: [number, number] } } | { poi: Place } | null {
+  /**
+   * Historic places with a story (Wikipedia/Wikidata) get a subtle gold book marker, above map POIs
+   * and below landmarks / featured places; their tile POIs are skipped so nothing doubles up.
+   */
+  setStories(list: Story[]): void {
+    const map = this.map;
+    const featured = new Set(this.store.places.map((p) => p.osm));
+    const data: GeoJSON.FeatureCollection = {
+      type: 'FeatureCollection',
+      features: list
+        .filter((st) => !featured.has(st.osm))
+        .map((st) => ({ type: 'Feature', properties: { osm: st.osm, name: st.name.tr || st.name.en, nameEn: st.name.en || st.name.tr, kind: st.kind }, geometry: { type: 'Point', coordinates: st.lngLat } })),
+    };
+    this.skip = [...new Set([...this.skip, ...list.map((st) => tileIdFromOsm(st.osm)).filter((x): x is number => x !== null)])];
+    this.state.key = ''; // re-apply the POI filter with the new skip list on the next update
+    if (map.getSource(STORY_SOURCE)) {
+      (map.getSource(STORY_SOURCE) as GeoJSONSource).setData(data);
+      return;
+    }
+    if (!map.hasImage('story')) map.addImage('story', storyIcon(CONFIG.icons.storySize), { pixelRatio: 2 });
+    map.addSource(STORY_SOURCE, { type: 'geojson', data });
+    map.addLayer(
+      {
+        id: LAYERS.stories,
+        type: 'symbol',
+        source: STORY_SOURCE,
+        minzoom: CONFIG.places.storiesFrom,
+        layout: {
+          'icon-image': 'story',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], CONFIG.places.storiesFrom, 0.75, 16, 1],
+          'icon-padding': 4,
+          'text-field': ['step', ['zoom'], '', CONFIG.places.storyNamesFrom, this.nameField()],
+          'text-font': ['Noto Sans Italic'],
+          'text-size': 11.5,
+          'text-offset': [0, 1.0],
+          'text-anchor': 'top',
+          'text-max-width': 9,
+          'text-optional': true,
+        },
+        paint: { 'text-color': this.state.night ? '#F0CC7A' : '#7A5A12', 'text-halo-color': haloColor(this.state.night), 'text-halo-width': 1.5 },
+      },
+      LAYERS.landmarks,
+    );
+  }
+
+  at(point: { x: number; y: number }): { featured: string } | { landmark: LandmarkProps & { lngLat: [number, number] } } | { story: string } | { poi: Place } | null {
     const r = 18;
     const box: [PointLike, PointLike] = [
       [point.x - r, point.y - r],
@@ -284,6 +345,10 @@ export class PlaceLayers {
     const near = (fs: MapGeoJSONFeature[]) => fs.sort((a, b) => this.dist(a, point) - this.dist(b, point))[0];
     const feat = near(this.map.queryRenderedFeatures(box, { layers: [LAYERS.featured] }));
     if (feat) return { featured: String(feat.properties.id) };
+    if (this.map.getLayer(LAYERS.stories)) {
+      const st = near(this.map.queryRenderedFeatures(box, { layers: [LAYERS.stories] }));
+      if (st) return { story: String(st.properties.osm) };
+    }
     const lm = near(this.map.queryRenderedFeatures(box, { layers: [LAYERS.landmarks] }));
     if (lm) return { landmark: { ...(lm.properties as LandmarkProps), lngLat: (lm.geometry as Point).coordinates as [number, number] } };
     const poi = near(this.map.queryRenderedFeatures(box, { layers: [LAYERS.poi] }));

@@ -306,6 +306,8 @@ export interface IconOpts {
   glow?: number;
   /** Featured style: white ring + a little tail (pin). */
   pin?: boolean;
+  /** Halo colour (default: the category colour). */
+  glowColor?: string;
 }
 
 /** Canvas with one icon; the shape sits at the top, a pin tail (if any) below. */
@@ -324,9 +326,10 @@ export function iconCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
   const cy = w / 2;
   const c = color(k);
   if (o.glow) {
+    const gc = o.glowColor ?? c;
     const grd = g.createRadialGradient(cx, cy, r * 0.6, cx, cy, r + pad);
-    grd.addColorStop(0, hexA(c, 0.55 * o.glow));
-    grd.addColorStop(1, hexA(c, 0));
+    grd.addColorStop(0, hexA(gc, Math.min(0.95, 0.55 * o.glow)));
+    grd.addColorStop(1, hexA(gc, 0));
     g.fillStyle = grd;
     g.fillRect(0, 0, w, w);
   }
@@ -374,4 +377,46 @@ export function iconUrl(k: IconKind, size = 26): string {
 function hexA(hex: string, a: number): string {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/** Subtle "has a story" marker: cream disc, thin gold ring, small open book. */
+export function storyIcon(size: number, dpr = 2): ImageData {
+  const w = Math.ceil(size + 6);
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = w * dpr;
+  const g = cv.getContext('2d')!;
+  g.scale(dpr, dpr);
+  const c = w / 2;
+  const r = size / 2;
+  g.save();
+  g.shadowColor = 'rgba(15, 20, 30, 0.25)';
+  g.shadowBlur = 3;
+  g.shadowOffsetY = 1;
+  g.beginPath();
+  g.arc(c, c, r, 0, Math.PI * 2);
+  g.fillStyle = '#FFF8EA';
+  g.fill();
+  g.restore();
+  g.lineWidth = 1.6;
+  g.strokeStyle = CONFIG.icons.storyColor;
+  g.stroke();
+  // open book
+  const u = r * 0.55;
+  g.fillStyle = CONFIG.icons.storyColor;
+  g.beginPath();
+  g.moveTo(c, c - u * 0.55);
+  g.quadraticCurveTo(c - u * 0.5, c - u * 0.9, c - u * 1.05, c - u * 0.6);
+  g.lineTo(c - u * 1.05, c + u * 0.75);
+  g.quadraticCurveTo(c - u * 0.5, c + u * 0.45, c, c + u * 0.8);
+  g.quadraticCurveTo(c + u * 0.5, c + u * 0.45, c + u * 1.05, c + u * 0.75);
+  g.lineTo(c + u * 1.05, c - u * 0.6);
+  g.quadraticCurveTo(c + u * 0.5, c - u * 0.9, c, c - u * 0.55);
+  g.fill();
+  g.strokeStyle = '#FFF8EA';
+  g.lineWidth = 1;
+  g.beginPath();
+  g.moveTo(c, c - u * 0.5);
+  g.lineTo(c, c + u * 0.75);
+  g.stroke();
+  return g.getImageData(0, 0, cv.width, cv.height);
 }

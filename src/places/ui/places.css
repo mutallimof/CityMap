@@ -207,3 +207,37 @@ a.pill { text-decoration: none; color: inherit; display: inline-flex; align-item
 .guide__txt { display: grid; gap: 2px; }
 .guide__txt small { font-size: 12.5px; line-height: 1.35; }
 .guide__leg { margin: 0 0 0 12px; padding: 2px 0 4px 26px; border-left: 2px dashed rgba(127, 127, 127, 0.4); font-size: 12.5px; font-weight: 700; }
+
+/* story (history) */
+.story { display: grid; gap: 10px; }
+.story .section { margin: 4px 0 0; color: #a87a12; }
+:root[data-night='1'] .story .section { color: #f0c86a; }
+.story__photo { margin: 0; display: grid; gap: 4px; }
+.story__photo img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 14px; background: rgba(127, 127, 127, 0.15); }
+.story__photo figcaption { font-size: 11px; color: var(--muted); line-height: 1.35; }
+.story__photo figcaption a, .story__credit a, .story__more a { color: inherit; }
+.story__facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.story__fact { display: grid; padding: 6px 10px; border-radius: 12px; background: rgba(224, 161, 0, 0.12); }
+.story__fact dt { font-size: 11px; }
+.story__fact dd { white-space: normal; font-weight: 800; font-size: 13.5px; }
+.story__text { margin: 0; font-size: 14.5px; line-height: 1.5; }
+.story__more { margin: 0; font-weight: 800; }
+.story__credit { font-size: 11px; }
+
+/* events at a venue */
+.events { display: grid; gap: 8px; }
+.evlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.evlist__item { display: grid; gap: 3px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--panel-border); background: rgba(255, 255, 255, 0.45); }
+:root[data-night='1'] .evlist__item { background: rgba(255, 255, 255, 0.05); }
+.evlist__item--live { box-shadow: inset 3px 0 0 #e8485a; }
+.evlist__when { font-size: 12.5px; font-weight: 800; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.evlist__live { color: #fff; background: #e8485a; border-radius: 99px; padding: 1px 7px; font-size: 11px; }
+.evlist__title { font-weight: 800; font-size: 15px; line-height: 1.3; color: inherit; text-decoration: none; }
+.evlist__meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12.5px; }
+.evlist__meta a { color: inherit; font-weight: 800; }
+.evtag { padding: 1px 8px; border-radius: 99px; font-weight: 800; font-size: 11px; background: rgba(127, 127, 127, 0.15); }
+.evtag--workshop { background: rgba(215, 149, 26, 0.2); }
+.evtag--concert, .evtag--festival { background: rgba(142, 91, 224, 0.18); }
+.evtag--theatre, .evtag--dance { background: rgba(210, 58, 63, 0.16); }
+.evtag--exhibition, .evtag--talk { background: rgba(47, 93, 168, 0.16); }
+.evtag--free { background: rgba(34, 181, 115, 0.2); }

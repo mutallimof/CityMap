@@ -20,7 +20,9 @@
     "data:piers": "tsx scripts/build-piers.ts",
     "data:landmarks": "NODE_USE_ENV_PROXY=1 tsx scripts/build-landmarks.ts",
     "data:stories": "tsx scripts/stories/build-stories.ts",
-    "validate:data": "tsx scripts/validate-data.ts"
+    "validate:data": "tsx scripts/validate-data.ts",
+    "data:venues": "NODE_USE_ENV_PROXY=1 tsx scripts/build-venues.ts",
+    "data:events": "NODE_USE_ENV_PROXY=1 tsx scripts/events/scrape.ts"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

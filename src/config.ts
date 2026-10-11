@@ -420,6 +420,9 @@ export const CONFIG = {
     poiNameRank: 20,
     /** Featured place names from this zoom. */
     featuredNamesFrom: 13.8,
+    /** Story markers (historic places with a Wikipedia story) and their names from these zooms. */
+    storiesFrom: 13.6,
+    storyNamesFrom: 15.4,
   },
 
   weather: {
@@ -484,6 +487,12 @@ export const CONFIG = {
     poiPadding: 7,
     featuredSize: 32,
     landmarkSize: 30,
+    /** "Has a story" marker. */
+    storySize: 18,
+    storyColor: '#B8891E',
+    /** Venues with an event today glow in this colour; "on now" adds a pulsing ring. */
+    eventGlow: '#FFB938',
+    eventPulse: '#E8485A',
   },
 
   /** Guide routes on the map. */

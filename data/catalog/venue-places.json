@@ -1,0 +1,85 @@
+{
+ "_comment": "Event venues added to the map as featured places. Names/match only — coordinates come from OpenStreetMap (OpenFreeMap tiles) via scripts/build-venues.ts, searched around a named pier.",
+ "venues": [
+  {
+   "id": "arter",
+   "name": "Arter",
+   "kind": "gallery",
+   "match": "^Arter$",
+   "near": "karakoy",
+   "radius": 3
+  },
+  {
+   "id": "salt-galata",
+   "name": "SALT Galata",
+   "kind": "gallery",
+   "match": "^SALT Galata",
+   "near": "karakoy",
+   "radius": 1
+  },
+  {
+   "id": "salt-beyoglu",
+   "name": "SALT Beyoğlu",
+   "kind": "gallery",
+   "match": "^SALT Beyo",
+   "near": "karakoy",
+   "radius": 2
+  },
+  {
+   "id": "akbank-sanat",
+   "name": "Akbank Sanat",
+   "kind": "arts_centre",
+   "match": "Akbank Sanat|Akbank Art",
+   "near": "karakoy",
+   "radius": 2
+  },
+  {
+   "id": "salon-iksv",
+   "name": "Salon İKSV",
+   "kind": "concert_hall",
+   "match": "İKSV|IKSV|Salon İ",
+   "near": "karakoy",
+   "radius": 2
+  },
+  {
+   "id": "muze-gazhane",
+   "name": "Müze Gazhane",
+   "kind": "museum",
+   "match": "^Müze Gazhane",
+   "near": "kadikoy",
+   "radius": 3
+  },
+  {
+   "id": "fatih-resat-nuri",
+   "name": "Fatih Reşat Nuri Sahnesi",
+   "kind": "theatre",
+   "match": "Reşat Nuri",
+   "near": "eminonu",
+   "radius": 3
+  },
+  {
+   "id": "sadabad-sahnesi",
+   "name": "Kağıthane Sadabad Sahnesi",
+   "kind": "theatre",
+   "match": "Sadabad Sahne|Sadabad Kültür|Kağıthane Sadabad",
+   "near": "karakoy",
+   "radius": 4
+  },
+  {
+   "id": "babylon",
+   "name": "Babylon",
+   "kind": "concert_hall",
+   "match": "^Babylon",
+   "near": "besiktas",
+   "radius": 4
+  },
+  {
+   "id": "nardis-jazz-club",
+   "name": "Nardis Jazz Club",
+   "kind": "bar",
+   "match": "^Nardis",
+   "near": "karakoy",
+   "radius": 2
+  }
+ ]
+}

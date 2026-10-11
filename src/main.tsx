@@ -34,6 +34,11 @@ import './places/ui/places.css';
 import { PlacesStore } from './places/store';
 import { SelectedPlaceMarker } from './places/pins';
 import { PlaceLayers } from './places/place-layers';
+import { setStories, storyFor, type Story } from './stories/stories';
+import storiesUrl from '../data/stories.json?url';
+import eventsUrl from '../data/events.json?url';
+import { events, type CityEvent } from './events/events';
+import { EventPulses } from './events/pulses';
 import { setSearchData } from './search/SearchPanel';
 import guidesCatalog from '../data/catalog/guides.json';
 import { resolveGuide, type GuideDeps, type GuideSpec } from './guides/guides';
@@ -135,6 +140,13 @@ async function boot() {
       openPlace(p.id);
       return { kind: 'place', id: p.id };
     }
+    if ('story' in hit) {
+      const st = storyFor(hit.story);
+      if (!st) return undefined;
+      const p = store.add({ id: `osm:${st.osm}`, name: st.name.tr || st.name.en, nameEn: st.name.en || null, category: 'culture', kind: st.kind, osm: st.osm, district: null, hours: null, cuisine: null, lngLat: st.lngLat, source: 'osm' });
+      openPlace(p.id);
+      return { kind: 'place', id: p.id };
+    }
     const p = store.add(hit.poi);
     openPlace(p.id);
     return { kind: 'place', id: p.id };
@@ -176,12 +188,15 @@ async function boot() {
   bindGuideSelection();
 
   const picked = new SelectedPlaceMarker(map);
+  const pulses = new EventPulses(map);
   let labelState = '';
   const refreshPins = () => {
     const s = ui.get();
     const selectedId = s.selection?.kind === 'place' ? s.selection.id : null;
     const night = daylight.theme.night;
-    placeLayers.update({ categories: s.categories, openNow: s.openNow, nowMs: clock.now(), night, golden: night < 0.5 ? daylight.theme.golden : 0, lang: s.lang });
+    const nowMs = clock.now();
+    placeLayers.update({ categories: s.categories, openNow: s.openNow, nowMs, night, golden: night < 0.5 ? daylight.theme.golden : 0, lang: s.lang, ev: s.ev });
+    pulses.update(store.places.filter((p) => events.status(p.id, nowMs) === 'now' && store.visible(p.id, s, nowMs)).map((p) => ({ id: p.id, lngLat: p.lngLat })));
     const ls = `${s.lang}|${night > 0.5}`;
     if (ls !== labelState) {
       labelState = ls;
@@ -191,6 +206,7 @@ async function boot() {
     picked.show(selectedId ? store.byId.get(selectedId) ?? null : null);
   };
   store.onChange(refreshPins);
+  events.onChange(refreshPins);
   ui.subscribe(refreshPins);
   daylight.onChange(refreshPins);
   clock.onChange(refreshPins);
@@ -210,6 +226,20 @@ async function boot() {
   );
 
   hideLoader();
+  // Events (scraped daily) and stories (history) load after the map is up — never blocking.
+  void fetch(eventsUrl)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((j: { events: CityEvent[] } | null) => j && events.set(j.events))
+    .catch(() => undefined);
+  void fetch(storiesUrl)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((j: { stories: Record<string, Story> } | null) => {
+      if (!j) return;
+      setStories(j.stories);
+      placeLayers.setStories(Object.values(j.stories));
+      refreshPins();
+    })
+    .catch(() => undefined);
   if (params.get('adaptive') !== '0')
     setTimeout(
       () =>

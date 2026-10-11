@@ -107,9 +107,8 @@ function checkStories(): void {
 }
 
 if (process.argv[1]?.endsWith('validate-data.ts')) {
-  const places = new Set(
-    (JSON.parse(readFileSync('data/places.geojson', 'utf8')) as { features: { properties: { id: string } }[] }).features.map((f) => f.properties.id),
-  );
+  const ids = (file: string) => (JSON.parse(readFileSync(file, 'utf8')) as { features: { properties: { id: string } }[] }).features.map((f) => f.properties.id);
+  const places = new Set([...ids('data/places.geojson'), ...ids('data/venue-places.geojson')]);
   checkEvents(places);
   checkStories();
   if (problems.length) {
