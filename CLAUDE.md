@@ -26,6 +26,8 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
    before/after in `docs/design-pass/`.
 8. ✅ Chunk 3 (user, 2026-10-10): colourful OSM city (OpenFreeMap), live weather + seasons, places by zoom
    (real data only), search, Open now, guides, snapshot share, PWA, adaptive effects.
+11. ✅ Chunk 5 (user, 2026-10-11, iPhone testing): filters, green forests, far-view edge, more places, gull facts,
+   sounds, `?skyline=1` test.
 10. ✅ Chunk 4 (user, 2026-10-11): cinematic ferries, history stories (Wikidata/Wikipedia/Commons), venue events
    (daily scrapers on GitHub Actions), refresh workflow with validation.
 
@@ -56,6 +58,7 @@ npm run data:venues      # event venues from OFM tiles → data/venue-places.geo
 npm run data:stories     # GitHub Actions only (sandbox can't reach Wikimedia) → data/stories.json
 npm run data:events      # GitHub Actions only → data/events.json + data/events-log.json (FORCE=1, VENUES=a,b)
 npm run validate:data    # gate before committing refreshed data
+npm run data:featured    # GitHub Actions only (Overpass) → data/places-auto.geojson (monthly with stories)
 ```
 
 ## Conventions
@@ -244,4 +247,26 @@ npm run validate:data    # gate before committing refreshed data
     `data/event-venues.geojson` (loaded with the places; `osm` = '' when the hit isn't the venue itself → sheet shows
     the address, no OSM link). Moda Sahnesi is placed but has no events: its site publishes no dates (reseller only).
   - *Deploy:* only the `gh-pages` branch publish remains (the Actions-Pages job always failed; Pages uses the branch).
+- **Chunk 5 (user, 2026-10-11).**
+  - *Filters:* `src/places/filters.ts` is the one rule for pins, feed and the "N places here · Show all" hint.
+    Category chips are on/off toggles that combine (empty = All; selecting all four = All); "All" resets
+    categories + Open now + event chips. With any filter on, matching pins show at every zoom (not only `major`).
+    Map POIs hide only for Open now / event chips (they have no hours/events); story markers follow Culture.
+  - *Edge of the data box:* the background is land-coloured and OFM `water` polygons (`city-outer-water`) carry the
+    sea beyond our coastline box, under the water shader, which fades out over the last 5 % of the box. Box-edge
+    shoreline segments use a 1e-4° tolerance (simplification moves them slightly).
+  - *Forests:* wood stays green in every season; seasons show as `crownPattern` tree crowns (192 px tile, clumps)
+    over wood/parks from z9: autumn leaves, spring blossom, green in summer/winter, white crowns under snow.
+  - *More places:* `scripts/build-featured.ts` picks ~330 OSM places by detail score (hours, website, cuisine,
+    phone, Wikidata), no chains/fast food/excluded names, spread round-robin over a ~2 km grid; Overpass in a 4×4
+    grid of boxes (split again on timeouts; failed parts keep earlier picks; >25 % missing → keep the file).
+    Map POIs from z13.6 but only rank ≤ 6 per tile until z15.
+  - *Gull facts:* the first 2 gulls are golden (instance colour, 1.35× size); tap (34 px, height-corrected) → a
+    bubble that follows the gull 9 s; `src/fun/facts.ts` = 21 checked facts TR/EN, shown from a shuffled deck.
+  - *Sound:* `src/audio/sound.ts`, all synthesised (no files): waves (brown noise + swell), gull calls, a horn on
+    real-time departures within ~6 km·2^(13−z) of the centre. Off by default; `navigator.audioSession = ambient`
+    (iOS silent switch); reduce-motion = waves only; suspended while hidden.
+  - *Skyline test (`?skyline=1`):* `src/map/skyline.ts` — line-gradient light shows on the three Bosphorus bridges
+    (rainbow / red-white chase / pulse, ~15 fps), halo + core on Maiden's / Galata Tower, warm halos on story
+    mosques/palaces/towers/fortresses; fades in with night.
 
