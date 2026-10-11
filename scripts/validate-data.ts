@@ -106,8 +106,7 @@ function checkStories(): void {
   console.log(`stories: ${list.length} (committed ${before})`);
 }
 
-function checkVenues(): void {
-  const file = 'data/event-venues.geojson';
+function checkVenues(file = 'data/event-venues.geojson', label = 'event venues'): void {
   if (!existsSync(file)) return;
   const [w, s, e, n] = CONFIG.bounds;
   const seen = new Set<string>();
@@ -119,13 +118,18 @@ function checkVenues(): void {
     seen.add(id);
     if (!(lon > w && lon < e && lat > s && lat < n)) bad(`${file} ${id}: outside the map`);
   }
-  console.log(`event venues: ${seen.size}`);
+  if (file.endsWith('places-auto.geojson')) {
+    const before = committed<{ features: unknown[] }>(file)?.features?.length ?? 0;
+    if (before >= 50 && seen.size < before * 0.5) bad(`${file}: ${seen.size} places vs ${before} committed — refusing`);
+  }
+  console.log(`${label}: ${seen.size}`);
 }
 
 if (process.argv[1]?.endsWith('validate-data.ts')) {
   const ids = (file: string) => (JSON.parse(readFileSync(file, 'utf8')) as { features: { properties: { id: string } }[] }).features.map((f) => f.properties.id);
-  const places = new Set([...ids('data/places.geojson'), ...ids('data/venue-places.geojson'), ...ids('data/event-venues.geojson')]);
+  const places = new Set([...ids('data/places.geojson'), ...ids('data/venue-places.geojson'), ...ids('data/event-venues.geojson'), ...ids('data/places-auto.geojson')]);
   checkVenues();
+  checkVenues('data/places-auto.geojson', 'auto-featured places');
   checkEvents(places);
   checkStories();
   if (problems.length) {

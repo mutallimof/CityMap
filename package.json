@@ -22,7 +22,8 @@
     "data:stories": "tsx scripts/stories/build-stories.ts",
     "validate:data": "tsx scripts/validate-data.ts",
     "data:venues": "NODE_USE_ENV_PROXY=1 tsx scripts/build-venues.ts",
-    "data:events": "NODE_USE_ENV_PROXY=1 tsx scripts/events/scrape.ts"
+    "data:events": "NODE_USE_ENV_PROXY=1 tsx scripts/events/scrape.ts",
+    "data:featured": "tsx scripts/build-featured.ts"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

@@ -418,10 +418,10 @@ export const CONFIG = {
     nearbyM: 900,
     walkMPerMin: 80,
     /** Map POIs (OSM cafés, shops, museums, parks…) fade in from this zoom; names from poiNamesFrom. */
-    poiFrom: 14.8,
+    poiFrom: 13.6,
     poiNamesFrom: 16,
-    /** Max OpenMapTiles rank (a per-tile importance order) shown below z16 / z17 / z18, then all. */
-    poiRanks: [24, 60, 140] as [number, number, number],
+    /** Max OpenMapTiles rank (a per-tile importance order) shown below z15 / z16 / z17 / z18, then all. */
+    poiRanks: [6, 24, 60, 140] as [number, number, number, number],
     /** Below z17.4 only POIs up to this rank get a name. */
     poiNameRank: 20,
     /** Featured place names from this zoom. */

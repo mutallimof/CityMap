@@ -9,6 +9,7 @@ import linesUrl from '../../data/lines.json?url';
 import placesUrl from '../../data/places.geojson?url';
 import venuePlacesUrl from '../../data/venue-places.geojson?url';
 import eventVenuesUrl from '../../data/event-venues.geojson?url';
+import placesAutoUrl from '../../data/places-auto.geojson?url';
 import landmarksUrl from '../../data/landmarks.geojson?url';
 import type { PlaceProps } from '../places/types';
 
@@ -50,7 +51,7 @@ export const loadLines = async () => (await getJson<{ lines: LineSpec[] }>(lines
 /** Featured places + event venues (OSM via scripts/build-venues.ts; geocoded by the event scraper). */
 export async function loadPlaces(): Promise<FeatureCollection<Point, PlaceProps>> {
   const [places, ...venues] = await Promise.all(
-    [placesUrl, venuePlacesUrl, eventVenuesUrl].map((u) => getJson<FeatureCollection<Point, PlaceProps>>(u)),
+    [placesUrl, venuePlacesUrl, eventVenuesUrl, placesAutoUrl].map((u) => getJson<FeatureCollection<Point, PlaceProps>>(u)),
   );
   const ids = new Set(places.features.map((f) => f.properties.id));
   const extra = venues.flatMap((v) => v.features).filter((f) => !ids.has(f.properties.id) && (ids.add(f.properties.id), true));

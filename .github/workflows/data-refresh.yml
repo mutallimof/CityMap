@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       what:
-        description: events, stories or both
+        description: events, stories, places (auto-featured) or both (= all)
         default: both
       venues:
         description: only these venue ids, comma-separated (re-fetches them today; for fixing a scraper)
@@ -43,19 +43,23 @@ jobs:
         run: |
           W="${{ github.event.inputs.what }}"
           if [ -z "$W" ]; then
-            if [ "${{ github.event.schedule }}" = "43 2 3 * *" ]; then W=stories; else W=events; fi
+            if [ "${{ github.event.schedule }}" = "43 2 3 * *" ]; then W=stories,places; else W=events; fi
           fi
           echo "what=$W" >> "$GITHUB_OUTPUT"
           echo "Refreshing: $W"
       - name: Scrape venue events
-        if: steps.what.outputs.what == 'events' || steps.what.outputs.what == 'both'
+        if: contains(steps.what.outputs.what, 'events') || steps.what.outputs.what == 'both'
         run: npm run data:events
         continue-on-error: true
         env:
           VENUES: ${{ github.event.inputs.venues }}
           FORCE: ${{ github.event.inputs.venues != '' && '1' || '' }}
+      - name: Pick featured places
+        if: contains(steps.what.outputs.what, 'places') || steps.what.outputs.what == 'both'
+        run: npm run data:featured
+        continue-on-error: true
       - name: Build stories
-        if: steps.what.outputs.what == 'stories' || steps.what.outputs.what == 'both'
+        if: contains(steps.what.outputs.what, 'stories') || steps.what.outputs.what == 'both'
         run: npm run data:stories
         continue-on-error: true
       - name: Validate data (fails → nothing is committed or deployed)
@@ -65,7 +69,7 @@ jobs:
         run: |
           git config user.name "data-refresh-bot"
           git config user.email "data-refresh-bot@users.noreply.github.com"
-          for f in data/events.json data/stories.json data/events-log.json data/event-venues.geojson data/venue-geocode.json; do if [ -f "$f" ]; then git add "$f"; fi; done
+          for f in data/events.json data/stories.json data/events-log.json data/event-venues.geojson data/venue-geocode.json data/places-auto.geojson; do if [ -f "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
           else

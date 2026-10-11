@@ -227,7 +227,7 @@ export class PlaceLayers {
     const base = ['all', ['in', ['get', 'class'], ['literal', ALLOWED_CLASSES]], ['in', ['get', 'subclass'], ['literal', subs]], ['has', 'name'], ['!', ['in', ['to-number', ['id'], 0], ['literal', this.skip.length ? this.skip : [-1]]]]];
     const rank = (n: number) => [...base, ['<=', ['coalesce', ['get', 'rank'], 99], n]];
     const r = CONFIG.places.poiRanks;
-    return ['step', ['zoom'], rank(r[0]), 16, rank(r[1]), 17, rank(r[2]), 18, base] as unknown as FilterSpecification;
+    return ['step', ['zoom'], rank(r[0]), 15, rank(r[1]), 16, rank(r[2]), 17, rank(r[3]), 18, base] as unknown as FilterSpecification;
   }
 
   private featuredData(categories: Category[], openNow: boolean, nowMs: number, ev: EventFilters = NO_EVENT_FILTERS): GeoJSON.FeatureCollection {
