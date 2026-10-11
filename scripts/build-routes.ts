@@ -1,14 +1,15 @@
 /**
  * Route generator: for every line leg (berth → berth) find a water path that prefers open
  * water, then string-pull and smooth it into a natural curve. Writes:
- *   data/routes.geojson — one LineString per line (outbound), with stop vertex indices
- *   data/lines.json     — line specs (plan §4.6 format) + resolved berth ids
+ *   data/routes.geojson — one LineString per leg (pier → pier), for every pair of piers a line sails:
+ *                         its simulated pattern + every consecutive pair of calls in data/timetables.json
+ *   data/lines.json     — line specs + resolved berth ids
  * Each leg is validated with the same exact check as scripts/validate-routes.ts.
- * Optional `via` waypoints per leg in data/catalog/lines.json steer a route by hand.
+ * Optional `via` waypoints per leg ("from>to") in data/catalog/lines.json steer a route by hand.
  *
  * Run: npm run data:routes
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import type { Feature, FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson';
 import { shorelineFromLand } from '../src/map/shoreline';
 import { DATA_BBOX } from './bbox';
@@ -16,6 +17,7 @@ import { localProj } from './lib/local-proj';
 import { chaikinSafe, findPath, rasterize, segmentOk, stringPull } from './lib/nav-grid';
 import { CoastIndex } from './lib/route-check';
 import { ROUTE_RULES } from './lib/route-rules';
+import type { TimetableFile } from '../src/sim/timetable-data';
 
 const CELL_M = 20;
 const PATH = { minClear: 70, comfortClear: 350, hugPenalty: 4, endpointRadius: 180 };
@@ -38,6 +40,7 @@ interface CatalogLine {
   name: { tr: string; en: string };
   color: string;
   stops: string[];
+  pattern: string[];
   berths: Record<string, string>;
   via?: Record<string, [number, number][]>;
   toCheck?: string[];
@@ -57,6 +60,7 @@ interface PierProps {
 const land = JSON.parse(readFileSync('data/land.geojson', 'utf8')) as FeatureCollection<Polygon | MultiPolygon>;
 const piers = JSON.parse(readFileSync('data/piers.geojson', 'utf8')) as FeatureCollection<Point, PierProps>;
 const catalog = JSON.parse(readFileSync('data/catalog/lines.json', 'utf8')).lines as CatalogLine[];
+const timetables = existsSync('data/timetables.json') ? (JSON.parse(readFileSync('data/timetables.json', 'utf8')) as TimetableFile) : null;
 
 const [w, s, e, n] = DATA_BBOX;
 const proj = localProj(w, s, (s + n) / 2);
@@ -104,63 +108,74 @@ function approachOf(b: BerthProps, toward: [number, number]): [number, number] {
   return [bx, by];
 }
 
+/** Every pier pair a line sails: its pattern (main) + every consecutive pair of calls in its real timetable. */
+function legPairs(line: CatalogLine): { from: string; to: string; main: boolean }[] {
+  const out: { from: string; to: string; main: boolean }[] = [];
+  const seen = new Set<string>();
+  const add = (from: string, to: string, main: boolean) => {
+    if (seen.has(`${from}>${to}`) || seen.has(`${to}>${from}`)) return;
+    seen.add(`${from}>${to}`);
+    out.push({ from, to, main });
+  };
+  for (let k = 0; k < line.pattern.length - 1; k++) add(line.pattern[k], line.pattern[k + 1], true);
+  for (const t of timetables?.lines[line.id]?.trips ?? []) for (let k = 0; k < t.calls.length - 1; k++) add(t.calls[k].stop, t.calls[k + 1].stop, false);
+  return out;
+}
+
 let failed = 0;
 const routes: Feature[] = [];
 const linesOut = [];
 for (const line of catalog) {
-  const berths = line.stops.map((p) => berthOf(line, p));
-  const coords: [number, number][] = [];
-  const stopVertex: number[] = [];
-  const legLengths: number[] = [];
-  for (let k = 0; k < berths.length - 1; k++) {
-    const from = proj.toXY(berths[k].lngLat);
-    const to = proj.toXY(berths[k + 1].lngLat);
-    const a0 = approachOf(berths[k], to);
-    const a1 = approachOf(berths[k + 1], from);
+  for (const s of line.pattern) if (!line.stops.includes(s)) throw new Error(`${line.id}: pattern stop ${s} not in stops`);
+  for (const { from: fromId, to: toId, main } of legPairs(line)) {
+    if (!line.stops.includes(fromId) || !line.stops.includes(toId)) throw new Error(`${line.id}: timetable calls at ${fromId}/${toId}, not in stops`);
+    const [b0, b1] = [berthOf(line, fromId), berthOf(line, toId)];
+    const from = proj.toXY(b0.lngLat);
+    const to = proj.toXY(b1.lngLat);
+    const a0 = approachOf(b0, to);
+    const a1 = approachOf(b1, from);
     // Relaxed clearance only near the berths (not at hand-placed via points).
     const rule = { clear: LOS_CLEAR, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
-    const pts = [a0, ...(line.via?.[String(k)] ?? []).map((c) => proj.toXY(c)), a1];
+    const pts = [a0, ...(line.via?.[`${fromId}>${toId}`] ?? []).map((c) => proj.toXY(c)), a1];
     let pulled: [number, number][] = [from];
     for (let v = 0; v < pts.length - 1; v++) {
       const raw = findPath(grid, pts[v], pts[v + 1], PATH);
-      if (!raw) throw new Error(`${line.id} leg ${k}: no water path`);
+      if (!raw) throw new Error(`${line.id} ${fromId} → ${toId}: no water path`);
       pulled = [...pulled, ...stringPull(grid, raw, rule)];
     }
     pulled.push(to);
     const leg = chaikinSafe(grid, pulled, SMOOTH_ITER, { ...rule, clear: SMOOTH_CLEAR });
     const ll = leg.map((p) => proj.toLngLat(p).map((v) => Number(v.toFixed(6))) as [number, number]);
     const check = coast.checkLeg(ll, ROUTE_RULES.minCoastM, ROUTE_RULES.endExemptM);
-    const tag = `${line.stops[k]} → ${line.stops[k + 1]}`;
+    const tag = `${fromId} → ${toId}${main ? '' : ' (timetable)'}`;
     if (check.violations.length) {
       failed++;
       const v = check.violations[0];
-      console.log(`  ✗ ${line.id.padEnd(16)} ${tag.padEnd(30)} ${check.violations.length} bad samples, first: ${v.kind} at ${v.along.toFixed(0)} m (${v.at.map((x) => x.toFixed(5))})`);
+      console.log(`  ✗ ${line.id.padEnd(24)} ${tag.padEnd(36)} ${check.violations.length} bad samples, first: ${v.kind} at ${v.along.toFixed(0)} m (${v.at.map((x) => x.toFixed(5))})`);
     } else {
-      console.log(`  ✓ ${line.id.padEnd(16)} ${tag.padEnd(30)} ${(check.length / 1000).toFixed(2)} km, ${ll.length} pts, min coast ${check.minCoastM.toFixed(0)} m`);
+      console.log(`  ✓ ${line.id.padEnd(24)} ${tag.padEnd(36)} ${(check.length / 1000).toFixed(2)} km, ${ll.length} pts, min coast ${check.minCoastM.toFixed(0)} m`);
     }
-    stopVertex.push(coords.length === 0 ? 0 : coords.length - 1);
-    coords.push(...(coords.length ? ll.slice(1) : ll));
-    legLengths.push(Math.round(check.length));
+    routes.push({
+      type: 'Feature',
+      properties: { id: `${line.id}:${fromId}>${toId}`, lineId: line.id, color: line.color, from: fromId, to: toId, main },
+      geometry: { type: 'LineString', coordinates: ll },
+    });
   }
-  stopVertex.push(coords.length - 1);
-  const routeId = `route-${line.id}`;
-  routes.push({ type: 'Feature', properties: { id: routeId, lineId: line.id, color: line.color, stops: line.stops, stopVertex }, geometry: { type: 'LineString', coordinates: coords } });
   linesOut.push({
     id: line.id,
     name: line.name,
     color: line.color,
     stops: line.stops,
+    pattern: line.pattern,
     berths: line.stops.map((p) => berthOf(line, p).id),
-    routeId,
     service: line.service,
-    simulated: true,
     ...(line.toCheck ? { toCheck: line.toCheck } : {}),
   });
 }
 
 writeFileSync('data/routes.geojson', JSON.stringify({ type: 'FeatureCollection', features: routes }));
 writeFileSync('data/lines.json', JSON.stringify({ lines: linesOut }, null, 2) + '\n');
-console.log(`\nWrote data/routes.geojson (${routes.length} routes) and data/lines.json`);
+console.log(`\nWrote data/routes.geojson (${routes.length} legs) and data/lines.json`);
 if (failed) {
   console.error(`✗ ${failed} legs fail validation — add "via" waypoints in data/catalog/lines.json or tune PATH.`);
   process.exit(1);

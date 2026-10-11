@@ -30,8 +30,11 @@ export interface StopBerth {
 
 export interface LinePath {
   lineId: string;
+  /** Leg geometries, indexed like the line's LegSpec list. */
   legs: LegPath[];
-  /** One per stop (outbound order); absent when berth data isn't available. */
+  /** Pier position per stop (where docked vessels sit). */
+  stopPoint: LngLat[];
+  /** One per stop; absent when berth data isn't available. */
   berths?: StopBerth[];
 }
 
@@ -46,11 +49,11 @@ export function legPath(coords: LngLat[], refLat = coords[0][1]): LegPath {
   return { coords, cum, length: cum[cum.length - 1], kx };
 }
 
-/** Split a whole-line LineString at the stop vertices into legs. */
+/** Split a whole-line LineString at the stop vertices into consecutive legs (stop k → k+1). */
 export function linePath(lineId: string, coords: LngLat[], stopVertex: number[], refLat?: number): LinePath {
   const legs: LegPath[] = [];
   for (let k = 0; k < stopVertex.length - 1; k++) legs.push(legPath(coords.slice(stopVertex[k], stopVertex[k + 1] + 1), refLat));
-  return { lineId, legs };
+  return { lineId, legs, stopPoint: stopVertex.map((i) => coords[i]) };
 }
 
 function segmentAt(p: LegPath, d: number): number {

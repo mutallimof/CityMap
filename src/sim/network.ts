@@ -1,14 +1,17 @@
 import type { FeatureCollection, LineString } from 'geojson';
-import { linePath, type LinePath, type LngLat, type StopBerth } from './path';
+import { legPath, type LinePath, type LngLat, type StopBerth } from './path';
 import type { LineInput } from './schedule';
-import type { LineSpec } from './types';
+import type { LegSpec, LineSpec } from './types';
 
+/** One route leg in data/routes.geojson: geometry from pier `from` to pier `to` (sailed either way). */
 export interface RouteProps {
   id: string;
   lineId: string;
   color: string;
-  stops: string[];
-  stopVertex: number[];
+  from: string;
+  to: string;
+  /** Part of the line's main pattern (vs. a leg only some timetabled trips sail). */
+  main: boolean;
 }
 
 export interface Network {
@@ -29,25 +32,33 @@ export function slotOf(index: number): number {
 }
 
 /**
- * Join line specs with their route geometry; leg lengths come from the geometry itself.
+ * Join line specs with their route legs; leg lengths come from the geometry itself.
  * `berths` (from piers.geojson) adds per-stop docking geometry and shared-berth slots.
  */
-export function buildNetwork(
-  lines: LineSpec[],
-  routes: FeatureCollection<LineString, RouteProps>,
-  refLat: number,
-  berths: BerthGeometry[] = [],
-): Network {
+export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineString, RouteProps>, refLat: number, berths: BerthGeometry[] = []): Network {
   const berthById = new Map(berths.map((b) => [b.id, b]));
   const usersOf = new Map<string, string[]>();
   for (const l of lines) for (const b of new Set(l.berths ?? [])) usersOf.set(b, [...(usersOf.get(b) ?? []), l.id].sort());
-  const byId = new Map(routes.features.map((f) => [f.properties.id, f]));
   const paths = new Map<string, LinePath>();
   const inputs: LineInput[] = lines.map((line) => {
-    const r = byId.get(line.routeId);
-    if (!r) throw new Error(`${line.id}: route ${line.routeId} missing`);
-    if (r.properties.stopVertex.length !== line.stops.length) throw new Error(`${line.id}: route stops don't match line stops`);
-    const p = linePath(line.id, r.geometry.coordinates as LngLat[], r.properties.stopVertex, refLat);
+    const legs: LegSpec[] = [];
+    const geoms = [];
+    const stopPoint: (LngLat | undefined)[] = line.stops.map(() => undefined);
+    for (const f of routes.features) {
+      if (f.properties.lineId !== line.id) continue;
+      const from = line.stops.indexOf(f.properties.from);
+      const to = line.stops.indexOf(f.properties.to);
+      if (from < 0 || to < 0) throw new Error(`${f.properties.id}: stop not on line ${line.id}`);
+      const coords = f.geometry.coordinates as LngLat[];
+      const g = legPath(coords, refLat);
+      geoms.push(g);
+      legs.push({ from, to, length: g.length });
+      stopPoint[from] ??= coords[0];
+      stopPoint[to] ??= coords[coords.length - 1];
+    }
+    const missing = line.stops.filter((_, i) => !stopPoint[i]);
+    if (missing.length) throw new Error(`${line.id}: no route reaches ${missing.join(', ')}`);
+    const p: LinePath = { lineId: line.id, legs: geoms, stopPoint: stopPoint as LngLat[] };
     if (line.berths && line.berths.every((id) => berthById.has(id))) {
       p.berths = line.berths.map((id): StopBerth => {
         const g = berthById.get(id)!;
@@ -55,7 +66,7 @@ export function buildNetwork(
       });
     }
     paths.set(line.id, p);
-    return { line, geometry: { legLengths: p.legs.map((l) => l.length) } };
+    return { line, legs };
   });
   return { lines, inputs, paths };
 }

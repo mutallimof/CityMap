@@ -21,7 +21,7 @@ describe.each([SHUTTLE, MULTI])('buildLineDay($line.id)', (input) => {
   });
 
   it('runs every timetabled origin departure exactly once', () => {
-    const origin = departures.filter((d) => d.direction === 'out' && d.stopId === input.line.stops[0]).map((d) => d.t);
+    const origin = departures.filter((d) => d.tripId.endsWith(':out') && d.stopId === input.line.stops[0]).map((d) => d.t);
     expect(origin).toEqual(originDepartures(input.line.service, DEFAULT_PARAMS.peakWindows));
   });
 
@@ -41,8 +41,10 @@ describe.each([SHUTTLE, MULTI])('buildLineDay($line.id)', (input) => {
           expect(s.stopIndex).toBe(at);
           expect(s.t1 - s.t0).toBeGreaterThanOrEqual(dwell - 1e-9);
         } else {
-          const from = s.direction === 'out' ? s.legIndex : s.legIndex + 1;
-          const to = s.direction === 'out' ? s.legIndex + 1 : s.legIndex;
+          const leg = input.legs[s.legIndex];
+          const [from, to] = s.dir === 'out' ? [leg.from, leg.to] : [leg.to, leg.from];
+          expect([s.fromStop, s.toStop]).toEqual([from, to]);
+          expect(Math.abs(to - from)).toBe(1);
           expect(from).toBe(at);
           at = to;
           expect(to).toBeGreaterThanOrEqual(0);
@@ -75,8 +77,8 @@ describe.each([SHUTTLE, MULTI])('buildLineDay($line.id)', (input) => {
 });
 
 describe('buildDaySchedule', () => {
-  it('rejects geometry that does not match the stop count', () => {
-    expect(() => buildLineDay({ ...SHUTTLE, geometry: { legLengths: [1, 2] } }, DAY)).toThrow();
+  it('rejects a pattern the legs cannot sail', () => {
+    expect(() => buildLineDay({ ...SHUTTLE, legs: [] }, DAY)).toThrow();
   });
 
   it('merges lines with departures sorted by time', () => {

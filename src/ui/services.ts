@@ -7,6 +7,8 @@ import type { WeatherController } from '../weather/controller';
 import type { PierProps } from '../data/load';
 import type { Network } from '../sim/network';
 import type { DaySchedule, LineSpec } from '../sim/types';
+import type { LineMode } from '../sim/schedule';
+import type { TimetableFile } from '../sim/timetable-data';
 
 /** Everything the UI needs from the map/sim side, set once at boot. */
 export interface Services {
@@ -16,7 +18,9 @@ export interface Services {
   ferries: VapurLayer;
   weather: WeatherController;
   network: Network;
-  getDay: (day: number) => DaySchedule;
+  getDay: (day: number) => DaySchedule & { modes: Record<string, LineMode> };
+  /** The real timetable file (source credit), or null. */
+  timetables: TimetableFile | null;
   lines: LineSpec[];
   lineById: Map<string, LineSpec>;
   piers: FeatureCollection<Point, PierProps>;

@@ -9,8 +9,8 @@ const getDay = cachedDays((d) => buildDaySchedule([SHUTTLE, MULTI], d));
 
 describe('findSegment', () => {
   const segs = [
-    { kind: 'dock', t0: 0, t1: 10, stopIndex: 0, direction: 'out' },
-    { kind: 'dock', t0: 10, t1: 20, stopIndex: 0, direction: 'out' },
+    { kind: 'dock', t0: 0, t1: 10, stopIndex: 0, arrive: null, depart: null },
+    { kind: 'dock', t0: 10, t1: 20, stopIndex: 0, arrive: null, depart: null },
   ] as const;
   it('binary-searches half-open intervals', () => {
     expect(findSegment([...segs], -1)).toBe(-1);
@@ -55,7 +55,7 @@ describe('vesselStateAt', () => {
   });
 
   it('reports next stop, ETA and trip progress', () => {
-    const leg = v.segments.find((s) => s.kind === 'leg' && s.direction === 'out' && s.legIndex === 1)!;
+    const leg = v.segments.find((s) => s.kind === 'leg' && s.dir === 'out' && s.legIndex === 1)!;
     const s = vesselStateAt(v, (leg.t0 + leg.t1) / 2)!;
     expect(s.nextStopIndex).toBe(2);
     expect(s.eta).toBeCloseTo((leg.t1 - leg.t0) / 2);

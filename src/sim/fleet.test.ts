@@ -8,7 +8,7 @@ import { MULTI } from './fixtures';
 
 // Geometry matching MULTI's stops w-x-y-z: three legs heading north/east/north.
 const path = linePath('w-z', [[29, 41], [29, 41.0226], [29.006, 41.0226], [29.006, 41.0597]], [0, 1, 2, 3], 41);
-const input = { ...MULTI, geometry: { legLengths: path.legs.map((l) => l.length) } };
+const input = { ...MULTI, legs: path.legs.map((l, i) => ({ from: i, to: i + 1, length: l.length })) };
 const getDay = cachedDays((d) => buildDaySchedule([input], d));
 const paths = new Map([['w-z', path]]);
 const DAY = 20_000;

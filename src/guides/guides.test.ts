@@ -24,9 +24,11 @@ const deps: GuideDeps = {
     return f && { name: { tr: f.properties.name, en: f.properties.nameEn }, lngLat: f.geometry.coordinates, icon: '' };
   },
   line: (id) => {
-    const r = routes.find((x: { properties: { lineId: string } }) => x.properties.lineId === id);
+    const legs = routes
+      .filter((x: { properties: { lineId: string } }) => x.properties.lineId === id)
+      .map((x: { properties: { from: string; to: string }; geometry: { coordinates: [number, number][] } }) => ({ from: x.properties.from, to: x.properties.to, coords: x.geometry.coordinates }));
     const l = lines.find((x: { id: string }) => x.id === id);
-    return r && l && { coords: r.geometry.coordinates, stops: r.properties.stops, stopVertex: r.properties.stopVertex, color: l.color };
+    return l && legs.length ? { legs, color: l.color } : undefined;
   },
 };
 
@@ -42,7 +44,13 @@ describe('guides', () => {
   });
 
   it('ferry legs follow the route in travel direction', () => {
-    const line = { coords: [[0, 0], [1, 0], [2, 0], [3, 0]] as [number, number][], stops: ['a', 'b', 'c'], stopVertex: [0, 2, 3], color: '#000' };
+    const line = {
+      legs: [
+        { from: 'a', to: 'b', coords: [[0, 0], [1, 0], [2, 0]] as [number, number][] },
+        { from: 'b', to: 'c', coords: [[2, 0], [3, 0]] as [number, number][] },
+      ],
+      color: '#000',
+    };
     expect(ferryLeg(line, 'a', 'b')).toEqual([[0, 0], [1, 0], [2, 0]]);
     expect(ferryLeg(line, 'c', 'b')).toEqual([[3, 0], [2, 0]]);
     expect(ferryLeg(line, 'a', 'x')).toBeNull();

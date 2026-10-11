@@ -26,8 +26,8 @@ export interface GuideDeps {
   place(id: string): Located | undefined;
   pier(id: string): Located | undefined;
   landmark(id: string): Located | undefined;
-  /** A line's route geometry + the vertex index of each of its stops. */
-  line(id: string): { coords: [number, number][]; stops: string[]; stopVertex: number[]; color: string } | undefined;
+  /** A line's route legs (pier → pier geometry, sailed either way). */
+  line(id: string): { legs: { from: string; to: string; coords: [number, number][] }[]; color: string } | undefined;
 }
 
 export interface GuideStop extends Located {
@@ -57,14 +57,13 @@ function locate(ref: string, d: GuideDeps): Located | undefined {
   return undefined;
 }
 
-/** Part of a line's route between two of its stops (either direction). */
+/** A line's route leg between two of its piers (either direction), or null. */
 export function ferryLeg(line: NonNullable<ReturnType<GuideDeps['line']>>, from: string, to: string): [number, number][] | null {
-  const a = line.stops.indexOf(from);
-  const b = line.stops.indexOf(to);
-  if (a < 0 || b < 0 || a === b) return null;
-  const [i, j] = [line.stopVertex[a], line.stopVertex[b]];
-  const seg = line.coords.slice(Math.min(i, j), Math.max(i, j) + 1);
-  return i <= j ? seg : seg.reverse();
+  for (const l of line.legs) {
+    if (l.from === from && l.to === to) return l.coords;
+    if (l.from === to && l.to === from) return [...l.coords].reverse();
+  }
+  return null;
 }
 
 /** Guide spec → stops with coordinates + drawable legs. Throws on a dangling reference. Pure. */

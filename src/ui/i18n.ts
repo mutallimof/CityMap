@@ -2,6 +2,10 @@ import { useUi, type Lang } from './store';
 
 const STRINGS = {
   simulated: { tr: 'Simüle sefer', en: 'Simulated schedule' },
+  liveTimetable: { tr: 'Resmî tarife', en: 'Live timetable' },
+  timetableCredit: { tr: 'Saatler', en: 'Times' },
+  oldPier: { tr: 'Eski iskele', en: 'old pier' },
+  newPier: { tr: 'Yeni iskele', en: 'new pier' },
   tapHint: { tr: 'Bir vapura — ya da altın bir martıya — dokun', en: 'Tap a vapur — or a golden gull' },
   now: { tr: 'Şimdi', en: 'Now' },
   next: { tr: 'Sonraki', en: 'Next' },
@@ -97,7 +101,7 @@ const STRINGS = {
   guide: { tr: 'Rehber', en: 'Guide' },
   stops: { tr: 'durak', en: 'stops' },
   hoursShort: { tr: 'sa', en: 'h' },
-  guideNote: { tr: 'Yürüyüş çizgileri kuş uçuşudur; vapur saatleri simüledir.', en: 'Walking lines are as the crow flies; ferry times are simulated.' },
+  guideNote: { tr: 'Yürüyüş çizgileri kuş uçuşudur; vapur saatleri hattın tarifesinden (yoksa simüle).', en: 'Walking lines are as the crow flies; ferry times come from each line’s timetable (simulated where there is none).' },
   snapshot: { tr: 'Anı fotoğrafı', en: 'Snapshot' },
   snapshotSaved: { tr: 'Görsel indirildi', en: 'Image saved' },
   searchPlaceholder: { tr: 'Mekân, sokak, semt…', en: 'Places, streets, neighbourhoods…' },

@@ -81,3 +81,22 @@ See the decisions log in `CLAUDE.md` for how each piece works.
 
 Next ideas: an events feed / "tonight" list, per-event share cards, more venues once they appear in OSM
 (Akbank Sanat, Salon İKSV), stage-level places for multi-stage venues, story trails (walks linking stories).
+
+## What got built (real timetables, 2026-10-11)
+
+- **Real ferry timetables** from the official Şehir Hatları winter timetable 2026-27 (PDF, valid
+  7 Sep 2026 – 27 Jun 2027). The operator's site blocks GitHub's servers, so the PDF is downloaded by hand.
+  It is parsed from word positions (`scripts/timetables/parse-tarife.py`), checked against the rendered
+  pages, turned into trips per line (`rules.ts`) and validated before every build.
+- **Lines now match the operator's lines:** Kadıköy – Karaköy – Eminönü (replaces our Kadıköy – Karaköy
+  and Kadıköy – Eminönü), Üsküdar – Karaköy – Eminönü, Kadıköy – Beşiktaş (plus Fri/Sat night trips via
+  Karaköy), Kabataş – Adalar (via Kadıköy, some via Eminönü / to Bostancı), Uzun Boğaz Turu.
+- **Sim generalised:** a trip is any sequence of calls on a graph of route legs. Printed times are
+  kept to the second, and the leg speed is fitted to them. The simulated schedule is the fallback (per
+  line, labelled), automatically after the validity date.
+- **Holidays:** public holidays run the Sunday timetable (`data/catalog/holidays.json`, Diyanet + Law 2429).
+- Each line is labelled "Live timetable" or "Simulated schedule". The global badge is gone. Pier
+  boards show printed times, the old/new Kadıköy pier for night trips, and a source credit.
+
+Next ideas: departure alerts ("Plan my evening"), Turyol / Dentur Avrasya lines (their sites are
+reachable from Actions), the Kısa Boğaz Turu, the old vs new Kadıköy pier as two berths.

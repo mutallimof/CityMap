@@ -428,6 +428,21 @@ export const CONFIG = {
     speeds: [1, 10, 60],
   },
 
+  /** Real timetables (data/timetables.json): how printed times become vessel motion. */
+  timetable: {
+    /** A vessel waits at a pier up to this long for its next trip (Uzun Boğaz Turu breaks 2 h 35 at Anadolu Kavağı). */
+    maxLayoverMin: 170,
+    /** Shortest turnaround between two trips of one vessel. */
+    minTurnMin: 2,
+    /** Shortest stop at a pier mid-trip when the printed times are tight (s). */
+    minDwellS: 60,
+    /** Plausible cruise speeds when fitting a leg to printed times; outside → the validator rejects the data. */
+    minCruiseKmh: 9,
+    maxCruiseKmh: 34,
+    /** Warn (data + console, not on screen) when the timetable expires within this many days. */
+    expiryWarnDays: 30,
+  },
+
   places: {
     /** Below this zoom only well-known featured pins show (Wikidata / high importance). */
     allPinsZoom: 12.4,

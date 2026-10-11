@@ -1,6 +1,8 @@
 # Refreshes the static data the site ships with, then builds and deploys:
 #   - events: every day (venue scrapers, facts only, polite; see scripts/events)
 #   - stories: once a month (OSM + Wikidata + Wikipedia + Commons; see scripts/stories)
+#   - ferry timetables: checked every run (validate:data); a warning in the run summary from 30 days
+#     before the timetable ends (it comes from the operator's PDF by hand — scripts/timetables/README.md)
 # Data is validated first; nothing is committed or deployed when it's empty or broken.
 name: Refresh data (events daily, stories monthly)
 

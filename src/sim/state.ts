@@ -25,23 +25,26 @@ export function vesselStateAt(v: Vessel, t: number): VesselState | null {
   const base = {
     vesselId: v.id,
     lineId: v.lineId,
-    direction: seg.direction,
     phaseElapsed: t - seg.t0,
     phaseRemaining: seg.t1 - t,
     serviceElapsed: t - first,
     serviceRemaining: last - t,
   };
   if (seg.kind === 'dock') {
+    const trip = seg.trip;
     return {
       ...base,
       phase: 'docked',
       stopIndex: seg.stopIndex,
+      arrive: seg.arrive,
+      depart: seg.depart,
       distance: 0,
       legLength: 0,
       speed: 0,
       nextStopIndex: seg.stopIndex,
       eta: 0,
-      tripProgress: seg.trip ? (t - seg.trip.t0) / (seg.trip.t1 - seg.trip.t0) : 0,
+      trip,
+      tripProgress: trip ? Math.min(1, Math.max(0, (t - trip.t0) / (trip.t1 - trip.t0))) : 1,
     };
   }
   const prof = legProfile(seg.length, seg.cruise, seg.ramp);
@@ -50,11 +53,14 @@ export function vesselStateAt(v: Vessel, t: number): VesselState | null {
     ...base,
     phase: 'underway',
     legIndex: seg.legIndex,
+    dir: seg.dir,
+    fromStopIndex: seg.fromStop,
     distance: distanceAt(prof, local),
     legLength: seg.length,
     speed: speedAt(prof, local),
-    nextStopIndex: seg.direction === 'out' ? seg.legIndex + 1 : seg.legIndex,
+    nextStopIndex: seg.toStop,
     eta: seg.t1 - t,
+    trip: seg.trip,
     tripProgress: (t - seg.trip.t0) / (seg.trip.t1 - seg.trip.t0),
   };
 }
@@ -96,8 +102,8 @@ export function nextDepartures(getDay: (day: number) => DaySchedule, stopId: str
 }
 
 /** Memoising wrapper so per-frame queries don't rebuild a day's schedule. */
-export function cachedDays(build: (day: number) => DaySchedule, keep = 4): (day: number) => DaySchedule {
-  const cache = new Map<number, DaySchedule>();
+export function cachedDays<T extends DaySchedule>(build: (day: number) => T, keep = 4): (day: number) => T {
+  const cache = new Map<number, T>();
   return (day) => {
     let s = cache.get(day);
     if (!s) {

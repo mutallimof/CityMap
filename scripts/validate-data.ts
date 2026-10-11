@@ -2,14 +2,17 @@
  * Validates the refreshed data files before anything is committed or deployed (CI gate):
  *   data/events.json  — facts only, valid dates, https links (no ticket resellers), known places
  *   data/stories.json — OSM ref, name, position in our area, Wikipedia text + link, licensed photo
+ *   data/timetables.json — real ferry timetables (scripts/timetables/validate.ts); warns in the run
+ *                         summary when the timetable ends within 30 days
  * Also refuses a refresh that suddenly loses most of the data compared with the committed file
  * (a site redesign or an outage must not wipe the map). Exit code 1 on any problem.
  *
  * Run: npm run validate:data
  */
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { CONFIG } from '../src/config';
+import { validateTimetables } from './timetables/validate';
 
 export const CATEGORIES = ['concert', 'theatre', 'dance', 'exhibition', 'workshop', 'talk', 'festival', 'film', 'kids', 'other'] as const;
 export const RESELLERS = /(^|\.)(biletix|passo|bubilet|biletinial|mobilet)\./i;
@@ -132,6 +135,13 @@ if (process.argv[1]?.endsWith('validate-data.ts')) {
   checkVenues('data/places-auto.geojson', 'auto-featured places');
   checkEvents(places);
   checkStories();
+  const tt = validateTimetables();
+  for (const p of tt.problems) bad(`timetables: ${p}`);
+  console.log(`timetables: ${tt.summary.at(-1)}`);
+  for (const w of tt.warnings) {
+    console.log(`::warning::${w}`);
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `⚠️ ${w}\n`);
+  }
   if (problems.length) {
     console.error(`✗ ${problems.length} problem(s):\n  ` + problems.slice(0, 50).join('\n  '));
     process.exit(1);

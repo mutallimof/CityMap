@@ -25,7 +25,6 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
             {formatHHMM(toIstanbul(now).seconds)}
             {!live && <span className="chip__dot" title="not live" />}
           </b>
-          <span className="badge">{t('simulated')}</span>
         </span>
         {clock.speed !== 1 && <span className="chip__speed">{clock.speed}×</span>}
       </button>

@@ -1,11 +1,14 @@
 import type { FeatureCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon } from 'geojson';
 import type { RouteProps } from '../sim/network';
 import type { LineSpec } from '../sim/types';
+import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
 import landUrl from '../../data/land.geojson?url';
 import piersUrl from '../../data/piers.geojson?url';
 import districtsUrl from '../../data/districts.geojson?url';
 import routesUrl from '../../data/routes.geojson?url';
 import linesUrl from '../../data/lines.json?url';
+import timetablesUrl from '../../data/timetables.json?url';
+import holidaysUrl from '../../data/catalog/holidays.json?url';
 import placesUrl from '../../data/places.geojson?url';
 import venuePlacesUrl from '../../data/venue-places.geojson?url';
 import eventVenuesUrl from '../../data/event-venues.geojson?url';
@@ -48,6 +51,14 @@ export const loadPiers = () => getJson<FeatureCollection<Point, PierProps>>(pier
 export const loadDistricts = () => getJson<FeatureCollection<Point, DistrictProps>>(districtsUrl);
 export const loadRoutes = () => getJson<FeatureCollection<LineString, RouteProps>>(routesUrl);
 export const loadLines = async () => (await getJson<{ lines: LineSpec[] }>(linesUrl)).lines;
+/** Real timetables / holiday calendar; null (→ simulated schedule) if missing or unreadable. */
+const orNull = <T>(p: Promise<T>) =>
+  p.catch((e: unknown) => {
+    console.warn(e);
+    return null;
+  });
+export const loadTimetables = () => orNull(getJson<TimetableFile>(timetablesUrl));
+export const loadHolidays = () => orNull(getJson<HolidayFile>(holidaysUrl));
 /** Featured places + event venues (OSM via scripts/build-venues.ts; geocoded by the event scraper). */
 export async function loadPlaces(): Promise<FeatureCollection<Point, PlaceProps>> {
   const [places, ...venues] = await Promise.all(

@@ -10,7 +10,8 @@ import { createMap } from './map/createMap';
 import { setLabelLang, setLabelNight } from './map/labels';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
-import { loadLines, loadPlaces, loadRoutes } from './data/load';
+import { loadHolidays, loadLines, loadPlaces, loadRoutes, loadTimetables } from './data/load';
+import { expiryWarning, realTripSource } from './sim/real';
 import { buildNetwork } from './sim/network';
 import { buildDaySchedule } from './sim/schedule';
 import { cachedDays } from './sim/state';
@@ -77,11 +78,13 @@ async function boot() {
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
   const deep = parseDeepLink();
   const intro = withIntro && !deep;
-  const [{ map, piers, land, city, districts, landmarks }, lines, routes, placeData] = await Promise.all([
+  const [{ map, piers, land, city, districts, landmarks }, lines, routes, placeData, timetables, holidays] = await Promise.all([
     createMap(container, intro),
     loadLines(),
     loadRoutes(),
     loadPlaces(),
+    loadTimetables(),
+    loadHolidays(),
   ]);
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
@@ -98,7 +101,12 @@ async function boot() {
     inputs = r.inputs;
     console.info(`stress mode: ${stress} vessels → every line every ${r.headway} min`);
   }
-  const getDay = cachedDays((day) => buildDaySchedule(inputs, day));
+  // Real timetables where valid for the date and sailable on our routes; the simulated schedule otherwise.
+  const legsOf = (id: string) => inputs.find((i) => i.line.id === id)?.legs ?? [];
+  const real = stress > 0 ? undefined : realTripSource(timetables, holidays, legsOf, (m) => console.warn(`timetable: ${m} → simulated`));
+  const getDay = cachedDays((day) => buildDaySchedule(inputs, day, undefined, real));
+  const expiry = expiryWarning(timetables, toIstanbul(Date.now()).day);
+  if (expiry) console.warn(expiry);
   const colors = new Map(lines.map((l) => [l.id, l.color]));
 
   const ferries = new VapurLayer({
@@ -121,7 +129,7 @@ async function boot() {
   water.motion = reduced ? 0.25 : 1;
   ferries.reduceMotion = reduced;
   const pierById = new Map(piers.features.map((f) => [f.properties.id, { ...f.properties, lngLat: f.geometry.coordinates as [number, number] }]));
-  setServices({ map, clock, daylight, ferries, weather, network, getDay, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
+  setServices({ map, clock, daylight, ferries, weather, network, getDay, timetables, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
   // Places — all real OpenStreetMap data: featured pins + every map POI (revealed by zoom).
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });
@@ -187,8 +195,8 @@ async function boot() {
       return f && { name: { tr: f.properties.name ?? id, en: f.properties.nameEn ?? id }, lngLat: (f.geometry as GeoJSON.Point).coordinates as [number, number], icon: '' };
     },
     line: (id) => {
-      const r = routes.features.find((x) => x.properties.lineId === id);
-      return r && { coords: r.geometry.coordinates as [number, number][], stops: r.properties.stops, stopVertex: r.properties.stopVertex, color: lineColor.get(id) ?? '#E0A100' };
+      const legs = routes.features.filter((x) => x.properties.lineId === id).map((x) => ({ from: x.properties.from, to: x.properties.to, coords: x.geometry.coordinates as [number, number][] }));
+      return legs.length ? { legs, color: lineColor.get(id) ?? '#E0A100' } : undefined;
     },
   };
   setGuides(

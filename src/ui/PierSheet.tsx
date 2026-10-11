@@ -5,8 +5,12 @@ import { useTicker } from './hooks';
 import { formatWait, useT } from './i18n';
 import { services } from './services';
 import { useUi } from './store';
+import { TimetableBadge, TimetableCredit } from './timetable';
 
-/** Pier: next 5 departures by line with minutes-to-go, then what's nearby. */
+/**
+ * Pier: next 5 departures by line with minutes-to-go (printed times for lines on their real timetable,
+ * labelled otherwise), then what's nearby.
+ */
 export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
   useTicker(1000);
   const t = useT();
@@ -31,13 +35,16 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
                 <small className="muted">
                   {' '}
                   {t('to')} {name(d.toStopId)}
-                </small>
+                  {d.pier && ` · ${t(d.pier === 'old' ? 'oldPier' : 'newPier')}`}
+                </small>{' '}
+                {!d.real && <TimetableBadge real={false} />}
               </span>
               <b className="deps__wait">{formatWait(d.inSeconds, lang)}</b>
             </li>
           );
         })}
       </ul>
+      {deps.some((d) => d.real) && <TimetableCredit />}
       {nearby}
     </div>
   );

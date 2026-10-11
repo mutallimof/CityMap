@@ -52,24 +52,12 @@ export function dockedHeading(arrival: number | null, departure: number | null, 
   return side;
 }
 
-/** Arrival and departure poses for a docked vessel at stop i (null when there is none). */
+/** Arrival and departure poses for a docked vessel (null when it appears / retires here). */
 function dockPoses(s: VesselState, path: LinePath): { at: Pose; arrival: Pose | null; departure: Pose | null } {
-  const i = s.stopIndex!;
   const legs = path.legs;
-  const n = legs.length;
-  const first = s.phaseElapsed === s.serviceElapsed; // spawn dock: never arrived
-  const last = s.phaseRemaining === s.serviceRemaining; // retire dock: never departs
-  let arrival: Pose | null;
-  let departure: Pose | null;
-  if (s.direction === 'out') {
-    arrival = i === 0 ? (first ? null : poseOnLeg(legs[0], legs[0].length, 'back')) : poseOnLeg(legs[i - 1], legs[i - 1].length, 'out');
-    departure = i < n ? poseOnLeg(legs[i], 0, 'out') : null;
-  } else {
-    arrival = i === n ? poseOnLeg(legs[n - 1], legs[n - 1].length, 'out') : poseOnLeg(legs[i], legs[i].length, 'back');
-    departure = i > 0 ? poseOnLeg(legs[i - 1], 0, 'back') : null;
-  }
-  if (last) departure = null;
-  const at = arrival ?? departure ?? poseOnLeg(legs[Math.min(i, n - 1)], i === n ? legs[n - 1].length : 0, 'out');
+  const arrival = s.arrive ? poseOnLeg(legs[s.arrive.leg], legs[s.arrive.leg].length, s.arrive.dir) : null;
+  const departure = s.depart ? poseOnLeg(legs[s.depart.leg], 0, s.depart.dir) : null;
+  const at = arrival ?? departure ?? { lngLat: path.stopPoint[s.stopIndex!], bearing: 0 };
   return { at, arrival, departure };
 }
 
@@ -79,11 +67,10 @@ export function vesselPose(v: Vessel, path: LinePath, t: number, p: DockingParam
   if (!s) return null;
   if (s.phase === 'underway') {
     const leg = path.legs[s.legIndex!];
-    const pose = poseOnLeg(leg, s.distance, s.direction);
+    const pose = poseOnLeg(leg, s.distance, s.dir!);
     // Near either end of the leg, blend toward that end's berth.
-    const fromStop = s.direction === 'out' ? s.legIndex! : s.legIndex! + 1;
     const toEnd = s.legLength - s.distance;
-    const near = s.distance < toEnd ? { stop: fromStop, d: s.distance } : { stop: s.nextStopIndex, d: toEnd };
+    const near = s.distance < toEnd ? { stop: s.fromStopIndex!, d: s.distance } : { stop: s.nextStopIndex, d: toEnd };
     const b = path.berths?.[near.stop];
     return { state: s, vessel: v, t, ...pose, berth: b && { ...b, weight: 1 - smooth(near.d / p.berthBlendM) } };
   }

@@ -1,0 +1,192 @@
+{
+  "_comment": "Where our 6 lines' tables sit in the Şehir Hatları timetable PDF (winter 2026-27). Hand-written from the rendered pages; the parser checks the headers and refuses anything that doesn't match. bbox = [x0, top, x1, bottom] in PDF points around the data cells only. Columns are listed left→right; perStop > 1 = the stop's departures continue in the next column (read down, then the next column). kind: dep (KALKIŞ / departure) | arr (VARIŞ / arrival). header = text expected above the column (rotated headers read bottom→top).",
+  "pdf": { "validFrom": "2026-09-07", "validTo": "2027-06-27", "titleWords": ["KIŞ", "TARİFESİ", "EYLÜL", "HAZİRAN"] },
+  "tables": [
+    {
+      "id": "kadikoy-karakoy-eminonu",
+      "page": 4,
+      "title": "KADIKÖY - KARAKÖY - EMİNÖNÜ HATTI",
+      "days": "HER GÜN",
+      "bbox": [30, 49, 200, 309],
+      "headerBand": [36, 48],
+      "perStop": 2,
+      "columns": [
+        { "stop": "kadikoy", "kind": "dep", "header": "KADIKÖY" },
+        { "stop": "karakoy", "kind": "dep", "header": "KARAKÖY" },
+        { "stop": "eminonu", "kind": "dep", "header": "EMİNÖNÜ" }
+      ],
+      "footnotes": {
+        "*": "Cumartesi, pazar ve resmi tatil günleri yapılmaz.",
+        "**": "Pazar ve resmi tatil günleri yapılmaz.",
+        "***": "Karaköy İskelesi’nde yolcu almaz."
+      }
+    },
+    {
+      "id": "uskudar-karakoy-eminonu",
+      "page": 5,
+      "title": "ÜSKÜDAR - KARAKÖY - EMİNÖNÜ HATTI",
+      "days": "HER GÜN",
+      "bbox": [30, 64, 200, 305],
+      "headerBand": [52, 63],
+      "perStop": 2,
+      "columns": [
+        { "stop": "uskudar", "kind": "dep", "header": "ÜSKÜDAR" },
+        { "stop": "karakoy", "kind": "dep", "header": "KARAKÖY" },
+        { "stop": "eminonu", "kind": "dep", "header": "EMİNÖNÜ" }
+      ],
+      "footnotes": { "*": "Pazar ve resmi tatil günleri yapılmaz." }
+    },
+    {
+      "id": "kadikoy-besiktas",
+      "page": 6,
+      "title": "KADIKÖY - BEŞİKTAŞ HATTI",
+      "days": "HER GÜN",
+      "bbox": [25, 63, 200, 186],
+      "headerBand": [51, 62],
+      "perStop": 3,
+      "columns": [
+        { "stop": "kadikoy", "kind": "dep", "header": "KADIKÖY" },
+        { "stop": "besiktas", "kind": "dep", "header": "BEŞİKTAŞ" }
+      ],
+      "footnotes": {
+        "*": "Cumartesi, pazar ve resmi tatil günleri yapılmaz.",
+        "**": "Pazar ve resmi tatil günleri yapılmaz."
+      }
+    },
+    {
+      "id": "kadikoy-karakoy-besiktas-night",
+      "page": 6,
+      "title": "KADIKÖY - KARAKÖY - BEŞİKTAŞ HATTI",
+      "days": "CUMAYI CUMARTESİYE ve CUMARTESİYİ PAZARA BAĞLAYAN GECELER",
+      "bbox": [25, 247, 200, 304],
+      "headerBand": [236, 246],
+      "perStop": 1,
+      "columns": [
+        { "stop": "kadikoy", "kind": "dep", "header": "KADIKÖY" },
+        { "stop": "karakoy", "kind": "dep", "header": "KARAKÖY" },
+        { "stop": "besiktas", "kind": "dep", "header": "BEŞİKTAŞ" }
+      ],
+      "footnotes": {
+        "*": "Kadıköy (Eski) İskelesi’nden yapılır.",
+        "**": "Kadıköy (Yeni) İskelesi’nden yapılır."
+      }
+    },
+    {
+      "id": "kabatas-adalar-weekday-out",
+      "page": 12,
+      "title": "KABATAŞ - ADALAR HATTI",
+      "days": "HAFTA İÇİ VE CUMARTESİ GÜNLERİ",
+      "bbox": [25, 77, 205, 175],
+      "headerBand": [48, 77],
+      "rotatedHeaders": true,
+      "perStop": 1,
+      "columns": [
+        { "stop": "kabatas", "kind": "dep", "header": "KABATAŞ" },
+        { "stop": "eminonu", "kind": "dep", "header": "EMİNÖNÜ" },
+        { "stop": "kadikoy", "kind": "dep", "header": "KADIKÖY" },
+        { "stop": "kinaliada", "kind": "dep", "header": "KINALIADA" },
+        { "stop": "burgazada", "kind": "dep", "header": "BURGAZADA" },
+        { "stop": "heybeliada", "kind": "dep", "header": "HEYBELİADA" },
+        { "stop": "buyukada", "kind": "dep", "header": "BÜYÜKADA" },
+        { "stop": "bostanci", "kind": "arr", "header": "BOSTANCI" }
+      ]
+    },
+    {
+      "id": "kabatas-adalar-weekday-back",
+      "page": 12,
+      "title": "KABATAŞ - ADALAR HATTI",
+      "days": "HAFTA İÇİ VE CUMARTESİ GÜNLERİ",
+      "bbox": [25, 206, 205, 304],
+      "headerBand": [178, 206],
+      "rotatedHeaders": true,
+      "perStop": 1,
+      "columns": [
+        { "stop": "bostanci", "kind": "dep", "header": "BOSTANCI" },
+        { "stop": "buyukada", "kind": "dep", "header": "BÜYÜKADA" },
+        { "stop": "heybeliada", "kind": "dep", "header": "HEYBELİADA" },
+        { "stop": "burgazada", "kind": "dep", "header": "BURGAZADA" },
+        { "stop": "kinaliada", "kind": "dep", "header": "KINALIADA" },
+        { "stop": "kadikoy", "kind": "arr", "header": "KADIKÖY" },
+        { "stop": "eminonu", "kind": "arr", "header": "EMİNÖNÜ" },
+        { "stop": "kabatas", "kind": "arr", "header": "KABATAŞ" }
+      ]
+    },
+    {
+      "id": "kabatas-adalar-sunday-out",
+      "page": 13,
+      "title": "KABATAŞ - ADALAR HATTI",
+      "days": "PAZAR VE RESMİ TATİL GÜNLERİ",
+      "bbox": [25, 81, 205, 174],
+      "headerBand": [53, 81],
+      "rotatedHeaders": true,
+      "perStop": 1,
+      "columns": [
+        { "stop": "kabatas", "kind": "dep", "header": "KABATAŞ" },
+        { "stop": "eminonu", "kind": "dep", "header": "EMİNÖNÜ" },
+        { "stop": "kadikoy", "kind": "dep", "header": "KADIKÖY" },
+        { "stop": "kinaliada", "kind": "dep", "header": "KINALIADA" },
+        { "stop": "burgazada", "kind": "dep", "header": "BURGAZADA" },
+        { "stop": "heybeliada", "kind": "dep", "header": "HEYBELİADA" },
+        { "stop": "buyukada", "kind": "dep", "header": "BÜYÜKADA" },
+        { "stop": "bostanci", "kind": "arr", "header": "BOSTANCI" }
+      ]
+    },
+    {
+      "id": "kabatas-adalar-sunday-back",
+      "page": 13,
+      "title": "KABATAŞ - ADALAR HATTI",
+      "days": "PAZAR VE RESMİ TATİL GÜNLERİ",
+      "bbox": [25, 209, 205, 304],
+      "headerBand": [180, 212],
+      "rotatedHeaders": true,
+      "perStop": 1,
+      "columns": [
+        { "stop": "bostanci", "kind": "dep", "header": "BOSTANCI" },
+        { "stop": "buyukada", "kind": "dep", "header": "BÜYÜKADA" },
+        { "stop": "heybeliada", "kind": "dep", "header": "HEYBELİADA" },
+        { "stop": "burgazada", "kind": "dep", "header": "BURGAZADA" },
+        { "stop": "kinaliada", "kind": "dep", "header": "KINALIADA" },
+        { "stop": "kadikoy", "kind": "arr", "header": "KADIKÖY" },
+        { "stop": "eminonu", "kind": "arr", "header": "EMİNÖNÜ" },
+        { "stop": "kabatas", "kind": "arr", "header": "KABATAŞ" }
+      ]
+    },
+    {
+      "id": "uzun-bogaz-out",
+      "page": 35,
+      "title": "UZUN BOĞAZ TURU - NOSTALJİK TUR",
+      "days": "HER GÜN",
+      "bbox": [20, 122, 215, 136],
+      "headerBand": [103, 112],
+      "perStop": 1,
+      "columns": [
+        { "stop": "eminonu", "kind": "dep", "header": "EMİNÖNÜ" },
+        { "stop": "besiktas", "kind": "dep", "header": "BEŞİKTAŞ" },
+        { "stop": "uskudar", "kind": "dep", "header": "ÜSKÜDAR" },
+        { "stop": "kanlica", "kind": "dep", "header": "KANLICA" },
+        { "stop": "sariyer", "kind": "dep", "header": "SARIYER" },
+        { "stop": "rumeli-kavagi", "kind": "dep", "header": "R.KAVAĞI" },
+        { "stop": "anadolu-kavagi", "kind": "arr", "header": "A.KAVAĞI" }
+      ],
+      "notes": ["Anadolu Kavağı İskelesi’nde saat 15:00’e kadar mola verilmektedir."]
+    },
+    {
+      "id": "uzun-bogaz-back",
+      "page": 35,
+      "title": "UZUN BOĞAZ TURU - NOSTALJİK TUR",
+      "days": "HER GÜN",
+      "bbox": [20, 160, 215, 173],
+      "headerBand": [142, 151],
+      "perStop": 1,
+      "columns": [
+        { "stop": "anadolu-kavagi", "kind": "dep", "header": "A.KAVAĞI" },
+        { "stop": "rumeli-kavagi", "kind": "dep", "header": "R.KAVAĞI" },
+        { "stop": "sariyer", "kind": "dep", "header": "SARIYER" },
+        { "stop": "kanlica", "kind": "dep", "header": "KANLICA" },
+        { "stop": "uskudar", "kind": "dep", "header": "ÜSKÜDAR" },
+        { "stop": "besiktas", "kind": "dep", "header": "BEŞİKTAŞ" },
+        { "stop": "eminonu", "kind": "arr", "header": "EMİNÖNÜ" }
+      ]
+    }
+  ]
+}

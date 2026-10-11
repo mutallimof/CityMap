@@ -164,7 +164,7 @@ export function PierHint({ lngLat }: { lngLat: [number, number] }) {
         </span>
         <br />
         <small className="muted">
-          {dep && line ? `${t('nextFerry')}: ${line.name[lang]} · ${formatWait(dep.inSeconds, lang)}` : t('noDepartures')}
+          {dep && line ? `${t('nextFerry')}: ${line.name[lang]} · ${formatWait(dep.inSeconds, lang)}${dep.real ? '' : ` (${t('simulated')})`}` : t('noDepartures')}
         </small>
       </span>
     </button>

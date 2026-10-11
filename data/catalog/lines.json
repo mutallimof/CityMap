@@ -1,70 +1,59 @@
 {
-  "_comment": "Ferry lines (real lines, SIMULATED schedules). stops = pier ids in outbound order; inbound reverses them. berths maps pierId → berth id where a line uses a non-main berth. via = optional extra water waypoints [lon, lat] per leg index to steer the route generator (none needed so far). toCheck = things for a human to verify.",
+  "_comment": "Ferry lines. stops = every pier the line calls at; pattern = the simulated fallback's outbound stop order (inbound reverses it). Real trips come from data/timetables.json (any order of stops; the route builder adds a leg for every pier pair a trip sails). berths maps pierId → berth id where a line uses a non-main berth. via = optional extra water waypoints [lon, lat] per leg key \"from>to\" to steer the route generator. toCheck = things for a human to verify.",
   "lines": [
     {
-      "id": "kadikoy-karakoy",
+      "id": "kadikoy-karakoy-eminonu",
       "name": {
-        "tr": "Kadıköy – Karaköy",
-        "en": "Kadıköy – Karaköy"
+        "tr": "Kadıköy – Karaköy – Eminönü",
+        "en": "Kadıköy – Karaköy – Eminönü"
       },
       "color": "#E0A100",
       "stops": [
         "kadikoy",
-        "karakoy"
+        "karakoy",
+        "eminonu"
+      ],
+      "pattern": [
+        "kadikoy",
+        "karakoy",
+        "eminonu"
       ],
       "berths": {
         "kadikoy": "kadikoy-sh",
-        "karakoy": "karakoy-kadikoy-uskudar"
+        "karakoy": "karakoy-kadikoy-uskudar",
+        "eminonu": "eminonu-kadikoy"
       },
       "service": {
         "first": "07:00",
         "last": "23:30",
-        "headwayPeak": 15,
-        "headwayOff": 30,
-        "dwellMin": 4,
-        "speedKmh": 24
-      }
-    },
-    {
-      "id": "kadikoy-eminonu",
-      "name": {
-        "tr": "Kadıköy – Eminönü",
-        "en": "Kadıköy – Eminönü"
-      },
-      "color": "#F08A5D",
-      "stops": [
-        "kadikoy",
-        "eminonu"
-      ],
-      "berths": {
-        "kadikoy": "kadikoy-sh",
-        "eminonu": "eminonu-kadikoy"
-      },
-      "service": {
-        "first": "07:10",
-        "last": "23:00",
         "headwayPeak": 20,
-        "headwayOff": 30,
+        "headwayOff": 20,
         "dwellMin": 4,
         "speedKmh": 24
-      }
+      },
+      "toCheck": [
+        "Kadıköy: our one Kadıköy berth (OSM 'Kadıköy 2 İskelesi'); the PDF's night trips name an old (Eski) and a new (Yeni) Kadıköy pier — which one is ours is not known."
+      ]
     },
     {
-      "id": "uskudar-eminonu",
+      "id": "uskudar-karakoy-eminonu",
       "name": {
-        "tr": "Üsküdar – Eminönü",
-        "en": "Üsküdar – Eminönü"
+        "tr": "Üsküdar – Karaköy – Eminönü",
+        "en": "Üsküdar – Karaköy – Eminönü"
       },
       "color": "#F4F1E8",
       "stops": [
         "uskudar",
+        "karakoy",
         "eminonu"
       ],
-      "berths": {},
-      "toCheck": [
-        "Which Eminönü berth serves Üsküdar? Using the main one (Şehir Hatları Kadıköy İskelesi).",
-        "Üsküdar berth: using node/6356616321 'Üsküdar İskelesi' (no operator tag)."
+      "pattern": [
+        "uskudar",
+        "eminonu"
       ],
+      "berths": {
+        "karakoy": "karakoy-kadikoy-uskudar"
+      },
       "service": {
         "first": "06:50",
         "last": "23:10",
@@ -72,7 +61,11 @@
         "headwayOff": 30,
         "dwellMin": 3,
         "speedKmh": 22
-      }
+      },
+      "toCheck": [
+        "Which Eminönü berth serves Üsküdar? Using the main one (Şehir Hatları Kadıköy İskelesi).",
+        "Üsküdar berth: using node/6356616321 'Üsküdar İskelesi' (no operator tag)."
+      ]
     },
     {
       "id": "kadikoy-besiktas",
@@ -83,14 +76,17 @@
       "color": "#8FD3F4",
       "stops": [
         "kadikoy",
+        "karakoy",
+        "besiktas"
+      ],
+      "pattern": [
+        "kadikoy",
         "besiktas"
       ],
       "berths": {
+        "karakoy": "karakoy-kadikoy-uskudar",
         "besiktas": "besiktas-kadikoy"
       },
-      "toCheck": [
-        "Which Kadıköy berth serves Beşiktaş? Using the main one (Kadıköy 2 İskelesi)."
-      ],
       "service": {
         "first": "07:15",
         "last": "22:45",
@@ -98,16 +94,29 @@
         "headwayOff": 30,
         "dwellMin": 4,
         "speedKmh": 24
-      }
+      },
+      "toCheck": [
+        "Which Kadıköy berth serves Beşiktaş? Using the main one (Kadıköy 2 İskelesi).",
+        "Night trips (Fri/Sat nights) call at Karaköy and sail from the old or new Kadıköy pier (PDF p. 6); we draw them at our one Kadıköy berth."
+      ]
     },
     {
       "id": "bogaz",
       "name": {
-        "tr": "Boğaz Hattı",
-        "en": "Bosphorus Line"
+        "tr": "Uzun Boğaz Turu",
+        "en": "Full Bosphorus Tour"
       },
       "color": "#E57BA6",
       "stops": [
+        "eminonu",
+        "besiktas",
+        "uskudar",
+        "kanlica",
+        "sariyer",
+        "rumeli-kavagi",
+        "anadolu-kavagi"
+      ],
+      "pattern": [
         "eminonu",
         "besiktas",
         "uskudar",
@@ -120,10 +129,6 @@
         "eminonu": "eminonu-bogaz",
         "besiktas": "besiktas-uskudar-bogaz"
       },
-      "toCheck": [
-        "Real Şehir Hatları long Bosphorus tour stop order (user, 2026-10-10); simulated headways 30/45 min. 19 km/h + 5 min dwells ≈ 1h53 one way, close to the real ~1h50.",
-        "Üsküdar: uses the main berth (node/6356616321)."
-      ],
       "service": {
         "first": "08:00",
         "last": "19:00",
@@ -131,23 +136,41 @@
         "headwayOff": 45,
         "dwellMin": 5,
         "speedKmh": 19
-      }
+      },
+      "toCheck": [
+        "Üsküdar: uses the main berth (node/6356616321).",
+        "Simulated fallback runs every 30/45 min; the real tour is once a day (10:35 from Eminönü, back 15:00 from Anadolu Kavağı)."
+      ]
     },
     {
       "id": "adalar",
       "name": {
-        "tr": "Adalar Hattı",
-        "en": "Islands Line"
+        "tr": "Kabataş – Adalar",
+        "en": "Kabataş – Islands"
       },
       "color": "#B5D96B",
       "stops": [
         "kabatas",
+        "eminonu",
+        "kadikoy",
+        "kinaliada",
+        "burgazada",
+        "heybeliada",
+        "buyukada",
+        "bostanci"
+      ],
+      "pattern": [
+        "kabatas",
+        "kadikoy",
         "kinaliada",
         "burgazada",
         "heybeliada",
         "buyukada"
       ],
-      "berths": {},
+      "berths": {
+        "eminonu": "eminonu-kadikoy",
+        "kadikoy": "kadikoy-sh"
+      },
       "service": {
         "first": "07:00",
         "last": "21:00",
