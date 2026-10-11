@@ -360,6 +360,9 @@ export const CONFIG = {
     factBubbleMs: 9000,
   },
 
+  /** Night skyline test mode (?skyline=1): bridge light-show cycle length (s) and glow colours. */
+  skyline: { showS: 14, litColor: '#FFD49A', towerColor: '#FFC46B' },
+
   /** Harbour sounds (Web Audio, synthesised): levels 0..1, zoom range, horn reach. */
   sound: {
     master: 0.8,

@@ -1,3 +1,4 @@
+import { Skyline } from './map/skyline';
 import { HarbourSound } from './audio/sound';
 import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
@@ -132,6 +133,8 @@ async function boot() {
     const on = ui.get().sound;
     if (on !== sound.enabled) sound.setEnabled(on);
   });
+  // Night skyline (test, ?skyline=1): bridge light shows, glowing Maiden's Tower, lit minarets.
+  const skyline = params.get('skyline') === '1' ? new Skyline(map, landmarks, reduced, () => daylight.theme.night) : null;
   // Golden seagulls tell Istanbul facts when tapped.
   const gullFacts = new GullFacts(map, ferries);
   setTapInterceptor((pt) => gullFacts.tap(pt));
@@ -250,6 +253,7 @@ async function boot() {
     .then((j: { stories: Record<string, Story> } | null) => {
       if (!j) return;
       setStories(j.stories);
+      skyline?.setStories(Object.values(j.stories));
       placeLayers.setStories(Object.values(j.stories));
       refreshPins();
     })
