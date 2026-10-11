@@ -16,6 +16,7 @@ export interface AppSlots {
   topExtra?: ReactNode;
   placeSheet?: (id: string) => { header: ReactNode; body: ReactNode };
   guideSheet?: (id: string) => { header: ReactNode; body: ReactNode };
+  planSheet?: (id: string) => { header: ReactNode; body: ReactNode };
   nearbyPier?: (id: string) => ReactNode;
   feed?: { header: ReactNode; body: ReactNode };
   categories?: boolean;
@@ -29,6 +30,7 @@ function content(sel: Selection, slots: AppSlots): { header: ReactNode; body: Re
   if (sel.kind === 'vessel') return { header: <VesselHeader id={sel.id} />, body: <VesselSheet id={sel.id} /> };
   if (sel.kind === 'pier') return { header: <PierHeader id={sel.id} />, body: <PierSheet id={sel.id} nearby={slots.nearbyPier?.(sel.id)} /> };
   if (sel.kind === 'guide') return slots.guideSheet?.(sel.id) ?? null;
+  if (sel.kind === 'plan') return slots.planSheet?.(sel.id) ?? null;
   return slots.placeSheet?.(sel.id) ?? null;
 }
 

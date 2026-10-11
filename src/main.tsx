@@ -53,10 +53,14 @@ import { flyTo, openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
 import { NearbyPlaces, WeatherChip } from './places/ui/Extras';
+import { addPlanLayers } from './plan/runtime';
+import { bindPlanSelection, openPlan, PlanBody, PlanHeader } from './plan/ui';
+import { decodePlan } from './plan/share';
+import { planStore } from './plan/store';
 
-function parseDeepLink(): { kind: 'place' | 'pier' | 'guide'; id: string } | null {
-  const m = /^#(place|pier|guide)=(.+)$/.exec(location.hash);
-  return m ? { kind: m[1] as 'place' | 'pier' | 'guide', id: decodeURIComponent(m[2]) } : null;
+function parseDeepLink(): { kind: 'place' | 'pier' | 'guide' | 'plan'; id: string } | null {
+  const m = /^#(place|pier|guide|plan)=(.+)$/.exec(location.hash);
+  return m ? { kind: m[1] as 'place' | 'pier' | 'guide' | 'plan', id: decodeURIComponent(m[2]) } : null;
 }
 import { stressInputs } from './sim/stress';
 
@@ -210,6 +214,8 @@ async function boot() {
     }),
   );
   bindGuideSelection();
+  addPlanLayers(map);
+  bindPlanSelection();
 
   const picked = new SelectedPlaceMarker(map);
   const pulses = new EventPulses(map);
@@ -255,6 +261,7 @@ async function boot() {
       topExtra={<WeatherChip />}
       feed={{ header: <FeedHeader />, body: <FeedBody extra={<GuidesRow />} /> }}
       guideSheet={(id) => ({ header: <GuideHeader id={id} />, body: <GuideBody id={id} /> })}
+      planSheet={(id) => ({ header: <PlanHeader id={id} />, body: <PlanBody id={id} /> })}
       placeSheet={(id) => ({ header: <PlaceHeader id={id} />, body: <PlaceBody id={id} /> })}
       nearbyPier={(id) => <NearbyPlaces pierId={id} />}
     />,
@@ -292,6 +299,12 @@ async function boot() {
   if (deep?.kind === 'place') openPlace(deep.id);
   if (deep?.kind === 'pier') openPier(deep.id);
   if (deep?.kind === 'guide') openGuide(deep.id);
+  if (deep?.kind === 'plan') {
+    // A shared plan: read-only until copied; a broken / old link shows a message, never crashes.
+    const shared = decodePlan(deep.id);
+    planStore.set({ shared, sharedBroken: !shared });
+    openPlan('shared');
+  }
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.

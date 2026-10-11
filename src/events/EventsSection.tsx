@@ -4,6 +4,7 @@ import { useT, type StringKey } from '../ui/i18n';
 import { services } from '../ui/services';
 import { useUi } from '../ui/store';
 import { dayOf, events, isLongRun, isNow, startMs, endMs, type CityEvent } from './events';
+import { AddEventToPlan } from '../plan/ui';
 
 const fmtTime = (ms: number) => new Date(ms + 3 * 3_600_000).toISOString().slice(11, 16);
 function fmtDay(ms: number, now: number, lang: 'tr' | 'en'): string {
@@ -53,6 +54,7 @@ export function EventsSection({ placeId }: { placeId: string }) {
                     {t('tickets')} ↗
                   </a>
                 )}
+                {!isLongRun(e) && <AddEventToPlan eventId={e.id} />}
               </div>
             </li>
           );

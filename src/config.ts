@@ -481,6 +481,35 @@ export const CONFIG = {
     storyNamesFrom: 15.4,
   },
 
+  /** Planner (src/plan). Times in minutes since midnight. */
+  plan: {
+    /** Numbered plan stops on the map. */
+    stopColor: '#2E6FD8',
+    eveningStartMin: 18 * 60,
+    dayStartMin: 10 * 60,
+    /** A several-day plan moves the next place to the next day once a day would end after this. */
+    dayEndMin: 22 * 60,
+    /** Gap left between stops when placing the next one. */
+    gapMin: 15,
+    /** Events / places up to this time after midnight belong to the evening before. */
+    nightUntilMin: 6 * 60,
+    eventDefaultMin: 120,
+    eventMaxMin: 300,
+    allDayMinutes: 120,
+    maxDays: 7,
+    /** Arriving up to this late isn't flagged. */
+    lateToleranceMin: 2,
+    /** Default visit length by place category. */
+    placeMinutes: { food: 90, culture: 90, shopping: 60, park: 60, view: 30, default: 60 },
+    /**
+     * Approximate walking: straight line × factor at kmh; walk when ≤ maxKm, else look for a ferry from
+     * piers within maxPierKm (closest piersPerSide), departing within searchHours.
+     */
+    walk: { factor: 1.3, kmh: 4.5, maxKm: 2.5, maxPierKm: 1.6, piersPerSide: 3, searchHours: 12 },
+    /** Share links: whole plan in the URL hash, at most maxChars characters and maxStops stops. */
+    share: { maxChars: 2000, maxStops: 20 },
+  },
+
   events: {
     /** How often (ms) "happening now" rings are re-matched to the pins actually drawn. */
     pulseCheckMs: 3000,

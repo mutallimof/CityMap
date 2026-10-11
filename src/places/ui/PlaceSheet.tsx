@@ -9,6 +9,7 @@ import { PierHint } from './Extras';
 import { StorySection } from '../../stories/StorySection';
 import { EventsSection } from '../../events/EventsSection';
 import { placeLink, places, share } from './context';
+import { AddPlaceToPlan } from '../../plan/ui';
 
 function useStoreVersion(): void {
   const [, setV] = useState(0);
@@ -72,6 +73,7 @@ export function PlaceBody({ id }: { id: string }) {
         <button className={`pill ${fav ? 'pill--fav' : ''}`} onClick={() => store.toggleFavourite(id)} aria-pressed={fav}>
           {fav ? `♥ ${t('savedOne')}` : `♡ ${t('save')}`}
         </button>
+        <AddPlaceToPlan id={id} />
         <button className="pill" onClick={onShare}>
           ↗ {t('share')}
         </button>

@@ -33,13 +33,18 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 - **UI:** React over the map; filters = All + combinable category toggles + Open now + event chips; search; guides;
   pier boards with printed times + source credit; per-line "Live timetable" / "Simulated schedule" label;
   snapshot share; PWA; TR/EN; sound toggle (off by default); golden gulls tell facts; `?skyline=1` night test mode.
+- **Plan** (`src/plan`): Evening / Day / Several days; "Add to plan" on place sheets and event rows; timeline sheet
+  grouped by day (reorder, times, durations, remove); between stops only real connections (approx. walk / the
+  actual ferry / "No transport info"); warnings (closed, closes during visit, hours unknown, overlap, arrives late,
+  last ferry back, gone); stops numbered on the map, ferry legs on their real lanes; saved on the device; share
+  link `#plan=` (read-only view + "Copy to my plans").
 
 ## Commands
 ```bash
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
-                   #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= · keys: ` panel, s speed, n now
-npm test           # vitest (191 tests)
+                   #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
+npm test           # vitest (209 tests)
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
@@ -135,6 +140,23 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   collision boxes are the pin itself; sort key: favourites, event today, rank.
 - **Event glow/pulse:** glow = an event today (`isToday`) or on now; pulse ring = on now (`isNow`) AND its pin is
   actually drawn (`PlaceLayers.renderedFeatured`, re-checked on moveend + every 3 s). Long runs never glow/pulse.
+- **Planner** (`src/plan`: `model.ts` pure edits, `timeline.ts` pure connections/warnings, `share.ts` link codec,
+  `store.ts` device storage `plans:v1`, `runtime.ts` real data + map, `ui.tsx`; constants `CONFIG.plan`):
+  - Times = minutes since the stop's plan-day midnight (≥ 1440 = after midnight; events at 00:00–06:00 join the
+    evening before). Events keep their real start (re-read from data); places get the next free slot (after the
+    last stop + 15 min; moved to arrival if the way there is longer); reorder swaps places, jumps over events.
+  - **Walking is approximate:** straight line × 1.3 at 4.5 km/h; "walk" when ≤ 2.5 km. Otherwise a ferry: piers
+    within 1.6 km of each stop (closest 3 per side), published departures only (pier-board rule), from the
+    schedules the map uses (real timetable, holidays, Fri/Sat nights, simulated fallback → labelled); picks the
+    earliest arrival at the next stop, then the earliest departure. Nothing real → "No transport info". No buses,
+    metro, trams, suggestions, notifications or accounts.
+  - Last ferry back: when a day's last stop is too far to walk to its first stop, the latest departure that
+    gets back on that service day (incl. after midnight); warned when the plan ends after it.
+  - Closed checks only with OSM hours (exact closing minute); POIs tapped on the map keep their OSM position.
+  - Share link `#plan=1.<base64url JSON>`: kind, first day, days, per stop [type, ref, day, start, duration, name,
+    (lng, lat for POIs)]; ≤ 2000 characters and ≤ 20 stops (names shortened → dropped first); a 3-stop evening is
+    ≈ 290 characters. Decoding validates everything and never throws; missing places/events show "no longer
+    available" with the saved name.
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
 - **Sound:** synthesised Web Audio, off by default, `audioSession = ambient` (iOS silent switch), reduce-motion = waves only.
 - **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run
@@ -162,6 +184,6 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 
 ## Roadmap (next sessions, in order)
 1. ~~Real ferry timetables~~ — done (winter 2026-27). Next timetable ~27 Jun 2027: `scripts/timetables/README.md`.
-2. **"Plan my evening / trip"** — combine events, places and ferries into a plan, with ferry departure alerts.
+2. ~~"Plan my evening / trip"~~ — done (no alerts: no notifications by design).
 3. **Cleanup pass** — dead code, config consolidation, bundle splitting, test gaps, docs.
 4. **Cartoon-style redesign** — a playful illustrated look across map, ferries, icons and UI.

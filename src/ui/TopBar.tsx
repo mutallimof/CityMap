@@ -4,6 +4,7 @@ import { useTicker } from './hooks';
 import { useT } from './i18n';
 import { services } from './services';
 import { setLang, ui, useUi } from './store';
+import { PlanButton } from '../plan/ui';
 
 export function TopBar({ extra }: { extra?: React.ReactNode }) {
   useTicker(500);
@@ -30,6 +31,7 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
       </button>
       {extra}
       <span className="topbar__spacer" />
+      <PlanButton />
       <button className="iconbtn" onClick={() => ui.set({ search: true })} aria-label={t('search')}>
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
           <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
