@@ -80,6 +80,15 @@
    "match": "^Nardis",
    "near": "karakoy",
    "radius": 2
+  },
+  {
+   "id": "lutfi-kirdar",
+   "name": "Lütfi Kırdar Kongre ve Sergi Sarayı",
+   "kind": "concert_hall",
+   "match": "Lütfi Kırdar",
+   "near": "kabatas",
+   "radius": 4,
+   "nominatim": "Lütfi Kırdar, İstanbul"
   }
  ]
 }

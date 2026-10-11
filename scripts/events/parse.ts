@@ -7,7 +7,7 @@ const MONTHS: Record<string, number> = {
   temmuz: 7, tem: 7, ağustos: 8, ağu: 8, eylül: 9, eyl: 9, ekim: 10, eki: 10, kasım: 11, kas: 11, aralık: 12, ara: 12,
 };
 const MONTH_RE = '(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık|Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)';
-const WEEKDAY_RE = '(?:Pazartesi|Salı|Çarşamba|Perşembe|Cuma|Cumartesi|Pazar|Pzt|Sal|Çar|Per|Cum|Cmt|Paz)';
+const WEEKDAY_RE = '(?:Pazartesi|Salı|Çarşamba|Perşembe|Cumartesi|Cuma|Pazar|Pzt|Pts|Sal|Çrş|Çar|Prş|Per|Cum|Cts|Cmt|Pzr|Paz)\\.?';
 
 export const monthOf = (s: string): number => MONTHS[s.toLocaleLowerCase('tr')] ?? 0;
 
@@ -126,9 +126,16 @@ export function guessCategory(...hints: string[]): string {
 
 export const isFree = (text: string) => /ücretsiz|ucretsiz|free (admission|entry|of charge)|giriş serbest/i.test(text);
 
+const AMOUNT = String.raw`\d{1,3}(?:\.\d{3})+(?:,\d{2})?|\d{2,5}(?:,\d{2})?`;
+/** "850,00 TL" → "850,00 TL"; price tiers "2.000 / 1.500 / 650 TL" → "650–2.000 TL". */
 export function priceIn(text: string): string | undefined {
-  const m = /(\d{2,5}(?:[.,]\d{2})?)\s*(?:TL|₺)/.exec(text);
-  return m ? `${m[1]} TL` : undefined;
+  const m = new RegExp(`((?:(?:${AMOUNT})\\s*/\\s*)*(?:${AMOUNT}))\\s*(?:TL|₺)`).exec(text);
+  if (!m) return undefined;
+  const tiers = m[1].split('/').map((x) => x.trim());
+  if (tiers.length === 1) return `${tiers[0]} TL`;
+  const val = (x: string) => Number(x.replace(/\./g, '').replace(',', '.'));
+  const sorted = [...tiers].sort((a, b) => val(a) - val(b));
+  return `${sorted[0]}–${sorted[sorted.length - 1]} TL`;
 }
 
 export const RESELLER = /(^|\.)(biletix|passo|bubilet|biletinial|mobilet)\./i;

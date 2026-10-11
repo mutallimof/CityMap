@@ -192,6 +192,30 @@
      41.025305
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "lutfi-kirdar",
+    "name": "Lütfi Kırdar Kongre ve Sergi Sarayı",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "concert_hall",
+    "osm": "way/59595671",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.989807,
+     41.047484
+    ]
+   }
   }
  ]
 }

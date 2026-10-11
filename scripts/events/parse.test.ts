@@ -29,6 +29,8 @@ describe('event parsing', () => {
     expect(guessCategory('Off the Record', 'Söyleşi')).toBe('talk');
     expect(isFree('Etkinlik ücretsizdir.')).toBe(true);
     expect(priceIn('Tam | 850,00 TL | Öğrenci')).toBe('850,00 TL');
+    expect(priceIn('Bilet Fiyatları: 2.000 / 1.500 / 1.100 / 650 TL | Öğrenci')).toBe('650–2.000 TL');
+    expect(findOccurrences('AÇILIŞ KONSERİ | 9 Ekim 2026 Prş 20.00 | Lütfi Kırdar', now)).toEqual([{ start: '2026-10-09T20:00:00+03:00' }]);
     expect(pageTitle('<html><h1> Oscar </h1></html>')).toBe('Oscar');
     expect(ticketLink('<a href="https://www.biletix.com/x">Bilet</a><a href="/bilet/12">Bilet al</a>', 'https://v.example/a')).toBe('https://v.example/bilet/12');
     expect(htmlToText('<p>A</p><script>x</script><p>B</p>')).toBe('A | B |');

@@ -4,6 +4,7 @@
  *   out: data/venue-places.geojson (same properties as data/places.geojson)
  * Run: npm run data:venues
  */
+import { CONFIG } from '../src/config';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { VectorTile } from '@mapbox/vector-tile';
 import { PbfReader } from 'pbf';
@@ -15,6 +16,8 @@ interface Entry {
   match: string;
   near: string;
   radius?: number;
+  /** Nominatim query when the venue isn't a POI in the tiles. */
+  nominatim?: string;
 }
 const Z = 14;
 const CACHE = 'data/raw/tiles';
@@ -56,6 +59,16 @@ for (const v of cat.venues) {
         hits.push({ name, id: Number(f.id), coords: g.coordinates, cls: `${f.properties.class}/${f.properties.subclass}` });
       }
     }
+  if (!hits.length && v.nominatim) {
+    // Not a tile POI (e.g. conference centres): ask Nominatim (OSM data), bounded to our area, ≤ 1 req/s.
+    await new Promise((r) => setTimeout(r, 1100));
+    const [w, s, e, n] = CONFIG.bounds;
+    const q = new URLSearchParams({ q: v.nominatim, format: 'jsonv2', limit: '5', bounded: '1', viewbox: `${w},${n},${e},${s}` });
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?${q}`, { headers: { 'User-Agent': 'IstanbulLivingCity/0.1 (github.com/mutallimof/CityMap) build-venues' } });
+    const list = res.ok ? ((await res.json()) as { osm_type: string; osm_id: number; category: string; type: string; name: string; lat: string; lon: string }[]) : [];
+    const m = list.find((x) => ['amenity', 'tourism', 'leisure', 'building'].includes(x.category) && re.test(x.name));
+    if (m) hits.push({ name: m.name, id: m.osm_id * 10 + ({ node: 1, way: 2, relation: 3 } as Record<string, number>)[m.osm_type], coords: [Number(m.lon), Number(m.lat)], cls: `${m.category}/${m.type} (nominatim)` });
+  }
   const uniq = [...new Map(hits.map((h) => [h.id, h])).values()];
   if (!uniq.length) {
     console.warn(`  ✗ ${v.id}: no OSM POI matching /${v.match}/ near ${v.near}`);

@@ -26,7 +26,8 @@
     ["pera muzesi", "pera-muzesi"],
     ["istanbul modern", "istanbul-modern-sanat-muzesi"],
     ["kurucesme acikhava", "paraf-kurucesme-acikhava"],
-    ["garaj istanbul", "garaj-istanbul"]
+    ["garaj istanbul", "garaj-istanbul"],
+    ["lutfi kirdar", "lutfi-kirdar"]
   ],
   "venues": [
     { "id": "arter", "name": "Arter", "site": "https://www.arter.org.tr", "scraper": "arter", "place": "arter" },
