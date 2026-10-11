@@ -60,13 +60,13 @@ export interface PlannedTrip {
   real: boolean;
 }
 
-/** The leg between two stops and the way it's sailed, or null if the line has none. */
+/**
+ * The leg between two stops and the way it's sailed, or null if the line has none. A lane drawn in
+ * this direction (from → to) wins; otherwise the opposite lane is sailed backwards.
+ */
 export function findLeg(legs: LegSpec[], from: number, to: number): (LegRef & { length: number }) | null {
-  for (let i = 0; i < legs.length; i++) {
-    const l = legs[i];
-    if (l.from === from && l.to === to) return { leg: i, dir: 'out', length: l.length };
-    if (l.from === to && l.to === from) return { leg: i, dir: 'back', length: l.length };
-  }
+  for (let i = 0; i < legs.length; i++) if (legs[i].from === from && legs[i].to === to) return { leg: i, dir: 'out', length: legs[i].length };
+  for (let i = 0; i < legs.length; i++) if (legs[i].from === to && legs[i].to === from) return { leg: i, dir: 'back', length: legs[i].length };
   return null;
 }
 

@@ -212,6 +212,14 @@ export const CONFIG = {
     width: [1.2, 3] as [number, number],
     opacity: 0.45,
     dash: [2, 2] as [number, number],
+    /**
+     * Traffic lanes (scripts/build-routes.ts): each direction of a leg is shifted to the right of travel
+     * by baseM + gapM × lane index (lines sharing > shareMinM of water within shareNearM get different
+     * indices), easing in from taperStartM to taperEndM from each berth, ≥ minCoastM from land, and
+     * never lengthening a leg by more than maxStretch nor beyond what its tightest printed time can sail
+     * (smaller shift instead).
+     */
+    lanes: { baseM: 28, gapM: 26, taperStartM: 110, taperEndM: 420, minCoastM: 60, stepM: 10, smoothN: 10, shareNearM: 90, shareMinM: 400, maxStretch: 0.04, roundN: 5 },
   },
 
   ferries: {
@@ -444,7 +452,11 @@ export const CONFIG = {
   },
 
   places: {
-    /** Below this zoom only well-known featured pins show (Wikidata / high importance). */
+    /**
+     * Featured pins by zoom: rank 0 (well known / event today) always, rank 1 (curated) from rankZooms[0],
+     * rank 2 (auto-picked) from rankZooms[1], every pin from allPinsZoom; collisions keep them apart.
+     */
+    rankZooms: [10.6, 11.4] as [number, number],
     allPinsZoom: 12.4,
     /** Pins closer than this (CSS px) to a higher-priority pin shrink to dots. */
     declutterPx: 40,
@@ -467,6 +479,11 @@ export const CONFIG = {
     /** Story markers (historic places with a Wikipedia story) and their names from these zooms. */
     storiesFrom: 13.6,
     storyNamesFrom: 15.4,
+  },
+
+  events: {
+    /** How often (ms) "happening now" rings are re-matched to the pins actually drawn. */
+    pulseCheckMs: 3000,
   },
 
   weather: {
@@ -530,6 +547,8 @@ export const CONFIG = {
     /** Extra collision space around map POIs (px): fewer icons at once. */
     poiPadding: 7,
     featuredSize: 32,
+    /** Compact featured pins below CONFIG.places.allPinsZoom (no glow margin → more fit without overlap). */
+    miniScale: 0.72,
     landmarkSize: 30,
     /** "Has a story" marker. */
     storySize: 18,

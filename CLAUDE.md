@@ -39,7 +39,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
                    #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= · keys: ` panel, s speed, n now
-npm test           # vitest (183 tests)
+npm test           # vitest (191 tests)
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
@@ -54,7 +54,7 @@ ids/names/rules (no coordinates).
 |---|---|---|---|
 | `land.geojson` | `data:coastline` | osmdata land-polygons (download in `data/raw`, see script header) | manual |
 | `piers.geojson`, `districts.geojson` | `data:fetch-nominatim` → `data:piers` | Nominatim | manual |
-| `routes.geojson` (one feature per leg), `lines.json` | `data:routes` (+ `validate:routes` in build) | A* on water grid; legs = pattern + every pier pair in `timetables.json` | manual |
+| `routes.geojson` (one feature per directed lane), `lines.json` | `data:routes` (+ `validate:routes` in build) | A* on water grid; legs = pattern + every pier pair in `timetables.json`, two lanes each | manual |
 | `timetables-source.json` → `timetables.json` | `parse-tarife.py` → `data:timetables` (+ `validate:timetables` in build) | Şehir Hatları PDF (by hand, never committed) | ~twice a year, see `scripts/timetables/README.md` |
 | `catalog/holidays.json` | hand-written | Diyanet calendar + Law 2429 | with each timetable |
 | `places.geojson` (67 curated) | `data:fetch-places` → `data:places` | Nominatim | manual |
@@ -112,8 +112,14 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   vessel). This is a reading of the layout, not printed explicitly — see Known issues. Footnotes mapped by text.
 - **Routes** are generated (A* on 20 m water grid, string pulling, clearance-safe smoothing) then committed and
   validated (5 m sampling vs shoreline). Berths = shore point + 30 m seaward; approach points run along the shore;
-  shared berths moor abreast. Lines don't avoid each other. Each berth is approached from the side the raw A*
-  water path arrives from (not the other pier's straight-line side — that made hairpins in İstinye bay).
+  shared berths moor abreast. Each berth is approached from the side the raw A* water path arrives from (not the
+  other pier's straight-line side — that made hairpins in İstinye bay).
+- **Lanes** (`scripts/lib/lanes.ts`, `CONFIG.routes.lanes`): every leg is two directed lanes, shifted to the right of
+  travel by 28 + 26 × lane index m (lines sharing > 400 m of water get different indices: 0/1/2), eased in 110→420 m
+  from each berth (berths unchanged, docked vessels may overlap), clamped ≥ 60 m from land and to half the local
+  bend radius, corners rounded; a lane may lengthen its leg ≤ 4% and never beyond what its tightest printed time
+  can sail (Arnavutköy → Bebek stays on the centreline). `findLeg` prefers the lane in the travel direction.
+  Open-water overlaps (two vessels < 40 m) went from ≈20 to ≈5 min/day.
 - **Rendering:** one shared three.js renderer + `LocalFrame` (local metres around the camera centre, float64 matrix on
   CPU). The local→mercator matrix flips y: open ribbons must be `DoubleSide`. Raw shaders end with
   `#include <colorspace_fragment>`.
@@ -124,6 +130,11 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - **Buildings:** OFM z14 merges same-height buildings → `buildings://` protocol + workers re-pack them.
 - **Filters:** `src/places/filters.ts` is the single rule for pins, feed and hint; with any filter on, matches show
   at every zoom; tile POIs hide only for Open now / event chips; story markers follow Culture.
+- **Featured pins zoomed out:** `featuredRank` 0 = well known / event today / filter match, 1 = curated, 2 = auto;
+  rank 0 always, 1 from z10.6, 2 from z11.4, fading in; compact pins (`featm-*`, no glow margin) below z12.4 so
+  collision boxes are the pin itself; sort key: favourites, event today, rank.
+- **Event glow/pulse:** glow = an event today (`isToday`) or on now; pulse ring = on now (`isNow`) AND its pin is
+  actually drawn (`PlaceLayers.renderedFeatured`, re-checked on moveend + every 3 s). Long runs never glow/pulse.
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
 - **Sound:** synthesised Web Audio, off by default, `audioSession = ambient` (iOS silent switch), reduce-motion = waves only.
 - **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run

@@ -59,11 +59,10 @@ function locate(ref: string, d: GuideDeps): Located | undefined {
 
 /** A line's route leg between two of its piers (either direction), or null. */
 export function ferryLeg(line: NonNullable<ReturnType<GuideDeps['line']>>, from: string, to: string): [number, number][] | null {
-  for (const l of line.legs) {
-    if (l.from === from && l.to === to) return l.coords;
-    if (l.from === to && l.to === from) return [...l.coords].reverse();
-  }
-  return null;
+  const exact = line.legs.find((l) => l.from === from && l.to === to);
+  if (exact) return exact.coords;
+  const back = line.legs.find((l) => l.from === to && l.to === from);
+  return back ? [...back.coords].reverse() : null;
 }
 
 /** Guide spec → stops with coordinates + drawable legs. Throws on a dangling reference. Pure. */

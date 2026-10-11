@@ -1,8 +1,10 @@
 /**
  * Route generator: for every line leg (berth → berth) find a water path that prefers open
  * water, then string-pull and smooth it into a natural curve. Writes:
- *   data/routes.geojson — one LineString per leg (pier → pier), for every pair of piers a line sails:
- *                         its simulated pattern + every consecutive pair of calls in data/timetables.json
+ *   data/routes.geojson — one LineString per directed lane (pier → pier), for every pair of piers a line
+ *                         sails (its simulated pattern + every consecutive pair of calls in
+ *                         data/timetables.json), both directions: shifted to the right of travel
+ *                         (CONFIG.routes.lanes), so directions and lines sharing water run side by side
  *   data/lines.json     — line specs + resolved berth ids
  * Each leg is validated with the same exact check as scripts/validate-routes.ts.
  * Optional `via` waypoints per leg ("from>to") in data/catalog/lines.json steer a route by hand.
@@ -18,6 +20,8 @@ import { chaikinSafe, findPath, rasterize, segmentOk, stringPull } from './lib/n
 import { CoastIndex } from './lib/route-check';
 import { ROUTE_RULES } from './lib/route-rules';
 import type { TimetableFile } from '../src/sim/timetable-data';
+import { CONFIG } from '../src/config';
+import { laneIndices, laneOf, polylineLength } from './lib/lanes';
 
 const CELL_M = 20;
 const PATH = { minClear: 70, comfortClear: 350, hugPenalty: 4, endpointRadius: 180 };
@@ -136,9 +140,37 @@ function legPairs(line: CatalogLine): { from: string; to: string; main: boolean 
   return out;
 }
 
+/**
+ * Longest lane (m) the tightest printed time between two consecutive calls (from → to) can still sail
+ * at CONFIG.timetable.maxCruiseKmh, with a 3% margin — mirrors scripts/timetables/validate.ts.
+ */
+function maxLaneLength(lineId: string, from: string, to: string): number {
+  let max = Infinity;
+  const sec = (v: string) => Number(v.slice(0, 2)) * 3600 + Number(v.slice(3, 5)) * 60;
+  for (const t of timetables?.lines[lineId]?.trips ?? []) {
+    t.calls.forEach((c, i) => {
+      const n = t.calls[i + 1];
+      const a = c.dep ?? c.arr;
+      const b = n && (n.arr ?? n.dep);
+      if (!n || c.stop !== from || n.stop !== to || !a || !b) return;
+      const D = sec(b) - sec(a) - (n.arr ? 0 : CONFIG.timetable.minDwellS) - (c.dep ? 0 : CONFIG.timetable.minDwellS);
+      max = Math.min(max, (CONFIG.timetable.maxCruiseKmh / 3.6) * (D - CONFIG.sim.rampSeconds) * 0.97);
+    });
+  }
+  return max;
+}
+
 let failed = 0;
 const routes: Feature[] = [];
 const linesOut = [];
+interface Centre {
+  line: CatalogLine;
+  fromId: string;
+  toId: string;
+  main: boolean;
+  xy: [number, number][];
+}
+const centres: Centre[] = [];
 for (const line of catalog) {
   for (const s of line.pattern) if (!line.stops.includes(s)) throw new Error(`${line.id}: pattern stop ${s} not in stops`);
   for (const { from: fromId, to: toId, main } of legPairs(line)) {
@@ -161,22 +193,7 @@ for (const line of catalog) {
       pulled = [...pulled, ...stringPull(grid, raw, rule)];
     }
     pulled.push(to);
-    const leg = chaikinSafe(grid, pulled, SMOOTH_ITER, { ...rule, clear: SMOOTH_CLEAR });
-    const ll = leg.map((p) => proj.toLngLat(p).map((v) => Number(v.toFixed(6))) as [number, number]);
-    const check = coast.checkLeg(ll, ROUTE_RULES.minCoastM, ROUTE_RULES.endExemptM);
-    const tag = `${fromId} → ${toId}${main ? '' : ' (timetable)'}`;
-    if (check.violations.length) {
-      failed++;
-      const v = check.violations[0];
-      console.log(`  ✗ ${line.id.padEnd(24)} ${tag.padEnd(36)} ${check.violations.length} bad samples, first: ${v.kind} at ${v.along.toFixed(0)} m (${v.at.map((x) => x.toFixed(5))})`);
-    } else {
-      console.log(`  ✓ ${line.id.padEnd(24)} ${tag.padEnd(36)} ${(check.length / 1000).toFixed(2)} km, ${ll.length} pts, min coast ${check.minCoastM.toFixed(0)} m`);
-    }
-    routes.push({
-      type: 'Feature',
-      properties: { id: `${line.id}:${fromId}>${toId}`, lineId: line.id, color: line.color, from: fromId, to: toId, main },
-      geometry: { type: 'LineString', coordinates: ll },
-    });
+    centres.push({ line, fromId, toId, main, xy: chaikinSafe(grid, pulled, SMOOTH_ITER, { ...rule, clear: SMOOTH_CLEAR }) });
   }
   linesOut.push({
     id: line.id,
@@ -190,9 +207,58 @@ for (const line of catalog) {
   });
 }
 
+// Lanes: lines sharing water get different lane widths; each direction keeps to its right.
+const L = CONFIG.routes.lanes;
+const laneIdx = laneIndices(
+  catalog.map((l) => ({ id: l.id, legs: centres.filter((c) => c.line.id === l.id && c.main).map((c) => c.xy) })),
+  L.shareNearM,
+  L.shareMinM,
+);
+const clearAt = ([x, y]: [number, number]) => {
+  const [i, j] = [Math.floor(x / CELL_M), Math.floor(y / CELL_M)];
+  if (i < 0 || j < 0 || i >= grid.nx || j >= grid.ny || grid.land[j * grid.nx + i]) return 0;
+  return grid.clear[j * grid.nx + i] - CELL_M; // cell-centre distance → conservative
+};
+const toLL = (xy: [number, number][]) => xy.map((p) => proj.toLngLat(p).map((v) => Number(v.toFixed(6))) as [number, number]);
+for (const c of centres) {
+  const offset = L.baseM + L.gapM * laneIdx.get(c.line.id)!;
+  for (const [fromId, toId, xy] of [
+    [c.fromId, c.toId, c.xy],
+    [c.toId, c.fromId, [...c.xy].reverse()],
+  ] as const) {
+    // Shift as far as the coast check allows without stretching the leg much (printed times stay
+    // sailable): full lane, then ¾, ½, ¼, none (centreline).
+    let ll: [number, number][] = [];
+    let check!: ReturnType<typeof coast.checkLeg>;
+    let shift = 0;
+    const centreLen = polylineLength(xy as [number, number][]);
+    for (const f of [1, 0.75, 0.5, 0.25, 0]) {
+      const lane = laneOf(xy as [number, number][], clearAt, { ...L, offsetM: offset * f });
+      ll = toLL(lane.pts);
+      check = coast.checkLeg(ll, ROUTE_RULES.minCoastM, ROUTE_RULES.endExemptM);
+      shift = lane.maxShift;
+      const len = polylineLength(lane.pts);
+      if (!check.violations.length && (f === 0 || (len <= centreLen * (1 + L.maxStretch) && len <= maxLaneLength(c.line.id, fromId, toId)))) break;
+    }
+    const tag = `${fromId} → ${toId}${c.main ? '' : ' (timetable)'}`;
+    if (check.violations.length) {
+      failed++;
+      const v = check.violations[0];
+      console.log(`  ✗ ${c.line.id.padEnd(24)} ${tag.padEnd(36)} ${check.violations.length} bad samples, first: ${v.kind} at ${v.along.toFixed(0)} m (${v.at.map((x) => x.toFixed(5))})`);
+    } else {
+      console.log(`  ✓ ${c.line.id.padEnd(24)} ${tag.padEnd(36)} ${(check.length / 1000).toFixed(2)} km, lane ${laneIdx.get(c.line.id)} shift ${shift.toFixed(0)}/${offset} m, min coast ${check.minCoastM.toFixed(0)} m`);
+    }
+    routes.push({
+      type: 'Feature',
+      properties: { id: `${c.line.id}:${fromId}>${toId}`, lineId: c.line.id, color: c.line.color, from: fromId, to: toId, main: c.main, lane: laneIdx.get(c.line.id) },
+      geometry: { type: 'LineString', coordinates: ll },
+    });
+  }
+}
+
 writeFileSync('data/routes.geojson', JSON.stringify({ type: 'FeatureCollection', features: routes }));
 writeFileSync('data/lines.json', JSON.stringify({ lines: linesOut }, null, 2) + '\n');
-console.log(`\nWrote data/routes.geojson (${routes.length} legs) and data/lines.json`);
+console.log(`\nWrote data/routes.geojson (${routes.length} directed lanes) and data/lines.json`);
 if (failed) {
   console.error(`✗ ${failed} legs fail validation — add "via" waypoints in data/catalog/lines.json or tune PATH.`);
   process.exit(1);

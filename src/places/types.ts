@@ -18,6 +18,8 @@ export interface PlaceProps {
   phone?: string | null;
   /** Well known (Wikidata / high importance): visible when zoomed out. */
   major?: boolean;
+  /** Picked automatically from OSM (data/places-auto.geojson), not hand-curated. */
+  auto?: boolean;
 }
 
 export interface Place extends PlaceProps {

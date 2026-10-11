@@ -39,3 +39,26 @@ describe('events', () => {
     expect(s.upcoming('p', now).map((e) => e.id)).toEqual(['a', 'b']);
   });
 });
+
+describe('glow and pulse rules (an event tomorrow never glows or pulses)', () => {
+  const ev = (start: string, extra: Partial<CityEvent> = {}): CityEvent => ({ id: start, venue: 'v', place: 'p', title: 't', start, category: 'concert', url: 'https://x.org', ...extra });
+  const at = (iso: string) => Date.parse(iso);
+  it('tomorrow evening: neither today nor now, the evening before or just before midnight', () => {
+    const e = ev('2026-10-12T21:00:00+03:00');
+    for (const t of ['2026-10-11T21:15:00+03:00', '2026-10-11T23:59:00+03:00']) {
+      expect(isToday(e, at(t))).toBe(false);
+      expect(isNow(e, at(t))).toBe(false);
+    }
+    const store = new EventsStore();
+    store.set([e]);
+    expect(store.status('p', at('2026-10-11T21:15:00+03:00'))).toBeNull();
+    expect(store.status('p', at('2026-10-12T09:00:00+03:00'))).toBe('today');
+    expect(store.status('p', at('2026-10-12T21:30:00+03:00'))).toBe('now');
+    expect(store.status('p', at('2026-10-12T23:30:00+03:00'))).toBeNull(); // over (2 h default)
+  });
+  it('an all-day event tomorrow does not glow today; long runs never glow or pulse', () => {
+    expect(isToday(ev('2026-10-12T00:00:00+03:00', { allDay: true }), at('2026-10-11T20:00:00+03:00'))).toBe(false);
+    const run = ev('2026-10-01T10:00:00+03:00', { end: '2026-10-30T18:00:00+03:00' });
+    expect(isToday(run, at('2026-10-11T12:00:00+03:00')) || isNow(run, at('2026-10-11T12:00:00+03:00'))).toBe(false);
+  });
+});

@@ -213,6 +213,16 @@ async function boot() {
 
   const picked = new SelectedPlaceMarker(map);
   const pulses = new EventPulses(map);
+  // "Happening now" rings: only for an event that is on right now, and only under a pin that is
+  // actually drawn (zoom filter + collisions) — never a ring floating over nothing.
+  const updatePulses = (nowMs = clock.now()) => {
+    const drawn = placeLayers.renderedFeatured();
+    pulses.update(store.places.filter((p) => drawn.has(p.id) && events.status(p.id, nowMs) === 'now').map((p) => ({ id: p.id, lngLat: p.lngLat })));
+  };
+  // The ferries keep the map repainting (no 'idle'): re-check once symbols are placed after a move or a pin
+  // update, and every few seconds (collisions change as ferries and labels move).
+  map.on('moveend', () => setTimeout(() => updatePulses(), 500));
+  setInterval(() => updatePulses(), CONFIG.events.pulseCheckMs);
   let labelState = '';
   const refreshPins = () => {
     const s = ui.get();
@@ -220,7 +230,7 @@ async function boot() {
     const night = daylight.theme.night;
     const nowMs = clock.now();
     placeLayers.update({ categories: s.categories, openNow: s.openNow, nowMs, night, golden: night < 0.5 ? daylight.theme.golden : 0, lang: s.lang, ev: s.ev });
-    pulses.update(store.places.filter((p) => events.status(p.id, nowMs) === 'now' && store.visible(p.id, s, nowMs)).map((p) => ({ id: p.id, lngLat: p.lngLat })));
+    setTimeout(() => updatePulses(nowMs), 400);
     const ls = `${s.lang}|${night > 0.5}`;
     if (ls !== labelState) {
       labelState = ls;

@@ -20,6 +20,16 @@ import type { Place, PlaceCategory } from './types';
  * names only for the most important.
  */
 export const LAYERS = { poi: 'poi', stories: 'stories', landmarks: 'landmark-icons', featured: 'featured' } as const;
+
+/**
+ * Importance of a featured pin when zoomed out: 0 = well known (Wikidata / high importance) or a venue
+ * with an event today, or any match while a filter is on; 1 = hand-curated places and event venues;
+ * 2 = auto-picked places. Lower ranks appear first (CONFIG.places.rankZooms).
+ */
+export function featuredRank(p: { major?: boolean; auto?: boolean }, filtered: boolean, eventToday: boolean): number {
+  if (p.major || filtered || eventToday) return 0;
+  return p.auto ? 2 : 1;
+}
 const STORY_SOURCE = 'stories';
 const FEATURED_SOURCE = 'featured';
 
@@ -174,10 +184,17 @@ export class PlaceLayers {
         id: LAYERS.featured,
         type: 'symbol',
         source: FEATURED_SOURCE,
-        // Zoomed out only the well-known places.
-        filter: ['step', ['zoom'], ['all', ['get', 'vis'], ['get', 'major']], p.allPinsZoom, ['get', 'vis']] as unknown as FilterSpecification,
+        // Zoomed out: places fade in by rank (0 = well known or an event today, 1 = curated, 2 = auto-picked);
+        // collisions keep them apart and the sort key lets the more important pin win.
+        filter: ['all', ['get', 'vis'], ['step', ['zoom'], ['<=', ['get', 'rank'], 0], p.rankZooms[0], ['<=', ['get', 'rank'], 1], p.rankZooms[1], ['<=', ['get', 'rank'], 2], p.allPinsZoom, true]] as unknown as FilterSpecification,
         layout: {
-          'icon-image': ['concat', 'feat-', ['get', 'icon'], ['case', ['get', 'ev'], '-ev', ''], ['case', ['get', 'open'], '-o', '']],
+          'icon-image': [
+            'step',
+            ['zoom'],
+            ['concat', 'featm-', ['get', 'icon'], ['case', ['get', 'ev'], '-ev', ''], ['case', ['get', 'open'], '-o', '']],
+            p.allPinsZoom,
+            ['concat', 'feat-', ['get', 'icon'], ['case', ['get', 'ev'], '-ev', ''], ['case', ['get', 'open'], '-o', '']],
+          ],
           'icon-anchor': 'bottom',
           'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1],
           'icon-padding': 2,
@@ -188,9 +205,16 @@ export class PlaceLayers {
           'text-offset': [0, 0.3],
           'text-max-width': 9,
           'text-optional': true,
-          'symbol-sort-key': ['case', ['get', 'fav'], 0, ['get', 'major'], 1, 2],
+          // Placement priority: favourites, then venues with an event today, then by rank.
+          'symbol-sort-key': ['case', ['get', 'fav'], -2, ['get', 'ev'], -1, ['get', 'rank']],
         },
-        paint: { 'text-color': textColor(false), 'text-halo-color': haloColor(false), 'text-halo-width': 1.6 },
+        paint: {
+          'text-color': textColor(false),
+          'text-halo-color': haloColor(false),
+          'text-halo-width': 1.6,
+          // Each rank fades in over half a zoom level as it appears.
+          'icon-opacity': ['interpolate', ['linear'], ['zoom'], p.rankZooms[0], ['case', ['<=', ['get', 'rank'], 0], 1, 0], p.rankZooms[0] + 0.5, ['case', ['<=', ['get', 'rank'], 1], 1, 0], p.rankZooms[1], ['case', ['<=', ['get', 'rank'], 1], 1, 0], p.rankZooms[1] + 0.5, 1],
+        },
       },
       before,
     );
@@ -211,6 +235,13 @@ export class PlaceLayers {
       put(`poi-${k}`, iconImage(k, { size: ic.poiSize, glow: glowPoi ? 1 : 0 }));
       const hot = glowPoi ? 1 : 0.55;
       put(`feat-${k}`, iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }));
+      // Compact pins for city zoom: no glow margin, so collision boxes are the pin itself and many more
+      // fit; venues with an event today keep a (smaller) warm glow.
+      const mini = ic.featuredSize * ic.miniScale;
+      put(`featm-${k}`, iconImage(k, { size: mini, pin: true }));
+      put(`featm-${k}-o`, withOpenDot(iconImage(k, { size: mini, pin: true }), mini));
+      put(`featm-${k}-ev`, iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: ic.eventGlow }));
+      put(`featm-${k}-ev-o`, withOpenDot(iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: ic.eventGlow }), mini));
       put(`feat-${k}-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }), ic.featuredSize));
       // A venue with an event today glows warm gold.
       put(`feat-${k}-ev`, iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: ic.eventGlow }));
@@ -246,6 +277,7 @@ export class PlaceLayers {
           // With a filter on, every match shows at any zoom (not only the well-known ones), so picking a
           // chip never leaves an empty map when zoomed out; collisions keep it tidy.
           major: !!p.major || active,
+          rank: featuredRank(p, active, events.status(p.id, nowMs) !== null),
           fav: s.favourites.has(p.id),
           open: s.open(p.id, nowMs).state === 'open',
           vis: placeVisible(s, p.id, f, nowMs),
@@ -291,6 +323,12 @@ export class PlaceLayers {
       map.setLayoutProperty(LAYERS.landmarks, 'text-field', this.nameField());
       if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'text-field', ['step', ['zoom'], '', CONFIG.places.storyNamesFrom, this.nameField()]);
     }
+  }
+
+  /** Ids of the featured pins actually drawn right now (after zoom filters and collisions). */
+  renderedFeatured(): Set<string> {
+    if (!this.map.getLayer(LAYERS.featured)) return new Set();
+    return new Set(this.map.queryRenderedFeatures({ layers: [LAYERS.featured] }).map((f) => String(f.properties?.id)));
   }
 
   /** What's under a tap: a featured place id, a landmark, or a map POI as a Place. */
