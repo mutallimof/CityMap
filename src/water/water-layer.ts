@@ -96,7 +96,9 @@ const FS = /* glsl */ `
     float patches = smoothstep(0.35, 0.8, noise(vPos * 0.006 + 3.1));
     float flick = noise(vPos * 0.03 + vec2(0.0, t * 0.3));
     col += uCityLight * shore * shore * uNight * patches * (0.12 + 0.5 * flick);
-    gl_FragColor = vec4(col, 1.0);
+    // Fade out at the edge of our coastline box into OpenFreeMap's flat water beyond it.
+    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+    gl_FragColor = vec4(col, smoothstep(0.0, 0.05, edge));
     #include <colorspace_fragment>
   }
 `;
@@ -164,6 +166,7 @@ export class WaterLayer implements CustomLayerInterface {
       },
       depthTest: false,
       depthWrite: false,
+      transparent: true,
     });
 
     // Lon/lat grid → local metres, uv = position in the lon/lat box (matches the texture).

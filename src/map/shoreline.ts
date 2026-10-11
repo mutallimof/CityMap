@@ -2,7 +2,8 @@ import type { FeatureCollection, MultiLineString, Polygon, MultiPolygon, Positio
 
 type BBox = readonly [number, number, number, number];
 
-const EPS = 1e-7;
+// ~10 m: simplification moves box-edge vertices slightly off the exact edge
+const EPS = 1e-4;
 
 function onSameEdge(a: Position, b: Position, [w, s, e, n]: BBox): boolean {
   const near = (v: number, edge: number) => Math.abs(v - edge) < EPS;

@@ -4,6 +4,7 @@ import { LAYER } from '../map/style';
 import { sunPosition } from '../time/sun';
 import { mixHex, themeAt, type Theme } from '../time/theme';
 import type { WaterLayer } from '../water/water-layer';
+import { OUTER_WATER } from '../map/city-setup';
 import type { VapurLayer } from '../ferries/vapur-layer';
 import type { ClockController } from './clock';
 import type { CityLook } from '../map/city';
@@ -144,7 +145,9 @@ export class DaylightController {
     const a = this.applied;
     const map = this.t.map;
     if (a && (Object.keys(p) as (keyof Palette)[]).every((k) => a[k] === p[k])) return;
-    map.setPaintProperty('water', 'background-color', p.water);
+    // background = land past our coastline box; OFM water polygons carry the sea there
+    map.setPaintProperty('water', 'background-color', p.land);
+    if (map.getLayer(OUTER_WATER)) map.setPaintProperty(OUTER_WATER, 'fill-color', p.water);
     map.setPaintProperty(LAYER.land, 'fill-color', p.land);
     map.setPaintProperty(LAYER.shoreHighlight, 'line-color', p.shoreHighlight);
     map.setPaintProperty(LAYER.innerShadow, 'line-color', p.landInnerShadow);

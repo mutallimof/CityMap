@@ -48,7 +48,7 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
       'atmosphere-blend': 0,
     },
     layers: [
-      { id: 'water', type: 'background', paint: { 'background-color': p.water } },
+      { id: 'water', type: 'background', paint: { 'background-color': p.land } },
       {
         id: LAYER.land,
         type: 'fill',
