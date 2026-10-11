@@ -75,16 +75,33 @@ export function bindMapInteractions(
   ui.subscribe(apply);
   apply();
 
-  // Follow mode: keep the selected vessel centred (eased) while following.
-  const follow = () => {
+  // Follow mode: a smooth camera glide — every frame the centre eases towards the vessel and the
+  // camera slowly turns to look along its course (critically damped, no jumps). Reduce-motion: centre only.
+  let last = performance.now();
+  let bearing: number | null = null;
+  const reduced = document.documentElement.classList.contains('motion-reduced');
+  const follow = (now: number) => {
+    const dt = Math.min(0.1, (now - last) / 1000);
+    last = now;
     const s = ui.get();
-    if (s.follow && s.selection?.kind === 'vessel') {
-      const d = ferries.drawn.get(s.selection.id);
-      if (d && !map.isMoving()) map.easeTo({ center: sharedFrame.lngLat([d.x, d.y]), duration: 600, easing: (t) => t });
-    }
-    setTimeout(follow, 500);
+    const d = s.follow && s.selection?.kind === 'vessel' ? ferries.drawn.get(s.selection.id) : undefined;
+    if (d && !map.isMoving()) {
+      const f = CONFIG.follow;
+      const [tlng, tlat] = sharedFrame.lngLat([d.x, d.y]);
+      const c = map.getCenter();
+      const k = 1 - Math.exp(-dt / (reduced ? 0.25 : f.tau));
+      const opts: { center: [number, number]; bearing?: number } = { center: [c.lng + (tlng - c.lng) * k, c.lat + (tlat - c.lat) * k] };
+      if (!reduced && f.rotate && d.pose.state.phase === 'underway') {
+        bearing ??= map.getBearing();
+        const diff = ((((d.pose.bearing - bearing) % 360) + 540) % 360) - 180;
+        bearing += diff * (1 - Math.exp(-dt / f.bearingTau));
+        opts.bearing = bearing;
+      }
+      map.jumpTo(opts);
+    } else bearing = null;
+    requestAnimationFrame(follow);
   };
-  follow();
+  requestAnimationFrame(follow);
 }
 
 export function select(sel: Selection): void {

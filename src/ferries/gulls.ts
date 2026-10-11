@@ -31,6 +31,8 @@ export interface GullTarget {
   y: number;
   fx: number;
   fy: number;
+  /** Higher = more attractive (e.g. just left a pier). */
+  priority?: number;
 }
 
 /**

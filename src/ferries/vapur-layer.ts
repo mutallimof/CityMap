@@ -93,7 +93,14 @@ export class VapurLayer implements CustomLayerInterface {
   private reflect!: THREE.InstancedMesh;
   private reflectMat!: THREE.MeshBasicMaterial;
   private lights = new PointSprites(MAX_VESSELS * 3, { additive: true, core: 1, minPx: 3, maxPx: 22 });
-  private smoke = new PointSprites(MAX_VESSELS * CONFIG.smoke.puffs, { additive: false, core: 0, minPx: 1, maxPx: 120 });
+  private smoke = new PointSprites(MAX_VESSELS * (CONFIG.smoke.puffs + CONFIG.moments.burstPuffs), { additive: false, core: 0, minPx: 1, maxPx: CONFIG.smoke.maxPx });
+  /** Horn rings (departures) and foam rings (arrivals): screen-facing rings. */
+  private rings = new PointSprites(MAX_VESSELS * 3, { additive: false, core: 2, minPx: 2, maxPx: 260 });
+  /** Docking splash droplets. */
+  private splash = new PointSprites(MAX_VESSELS * CONFIG.moments.splashDrops, { additive: false, core: 0, minPx: 1, maxPx: 18 });
+  /** Real time (s) each vessel last left a pier — horn, smoke burst, gulls. */
+  private departAt = new Map<string, number>();
+  private lastSimT: number | null = null;
   private gulls = new Gulls();
   private hemi!: THREE.HemisphereLight;
   private sun!: THREE.DirectionalLight;
@@ -179,7 +186,7 @@ export class VapurLayer implements CustomLayerInterface {
     this.reflect.renderOrder = 1;
     this.smoke.points.renderOrder = 3;
     this.lights.points.renderOrder = 4;
-    this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.lights.points);
+    this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.rings.points, this.splash.points, this.lights.points);
     this.scene.add(this.root);
 
     const l = CONFIG.light;
@@ -245,6 +252,13 @@ export class VapurLayer implements CustomLayerInterface {
     const canvas = this.map.getCanvas();
     this.lights.begin(canvas.width, canvas.height);
     this.smoke.begin(canvas.width, canvas.height);
+    this.rings.begin(canvas.width, canvas.height);
+    this.splash.begin(canvas.width, canvas.height);
+    // Departure / arrival moments only fire on smooth time; a scrub or jump would set them all off.
+    const simT = poses[0]?.t ?? null;
+    const smooth = simT !== null && this.lastSimT !== null && Math.abs(simT - this.lastSimT) < 300;
+    this.lastSimT = simT;
+    const fxOn = smooth && !this.reduceMotion;
     const gullTargets: GullTarget[] = [];
     this.visible = poses;
     const { m, q, e, p, s, c } = this.o;
@@ -263,7 +277,8 @@ export class VapurLayer implements CustomLayerInterface {
 
       // Settle bump: a damped surge/pitch when a vessel comes to rest at a pier (real time).
       const prev = this.lastPhase.get(id);
-      if (prev === 'underway' && v.state.phase === 'docked') this.bumpAt.set(id, tReal);
+      if (prev === 'underway' && v.state.phase === 'docked' && fxOn) this.bumpAt.set(id, tReal);
+      if (prev === 'docked' && v.state.phase === 'underway' && fxOn) this.departAt.set(id, tReal);
       this.lastPhase.set(id, v.state.phase);
       const bt = tReal - (this.bumpAt.get(id) ?? -1e9);
       const bump = bt < 6 && !this.reduceMotion ? Math.exp(-bt / f.bump.decayS) * Math.sin((2 * Math.PI * bt) / f.bump.periodS) : 0;
@@ -300,6 +315,7 @@ export class VapurLayer implements CustomLayerInterface {
       this.windows.setMatrixAt(n, m);
       if (this.night > 0.02) this.pushLights(m, grow);
       this.pushSmoke(v, px, py, fx, fy, exag, grow, tReal);
+      this.pushMoments(id, px, py, fx, fy, exag, tReal, B);
       this.accent.setColorAt(n, c.set(this.opts.lineColor(v.state.lineId)));
 
       q.setFromAxisAngle(this.zAxis, -heading * DEG);
@@ -317,13 +333,15 @@ export class VapurLayer implements CustomLayerInterface {
       this.reflect.setMatrixAt(n, m);
 
       if (v.state.speed > 0.05 || v.state.phase === 'underway') trails.push(this.trail(v, px, py, fx, fy, exag));
-      if (v.state.phase === 'underway' && v.state.speed > 2) gullTargets.push({ id, x: px, y: py, fx, fy });
+      // Gulls love a departing ferry: recent departures go first, then the ones near the view centre.
+      const sinceDepart = tReal - (this.departAt.get(id) ?? -1e9);
+      if (v.state.phase === 'underway' && (v.state.speed > 2 || sinceDepart < 90)) gullTargets.push({ id, x: px, y: py, fx, fy, priority: sinceDepart < CONFIG.moments.gullFollowS ? 1 : 0 });
       n++;
     }
     for (const id of this.drawn.keys()) if (!ids.has(id)) this.drawn.delete(id);
     this.ring.visible = !!this.selectedId && ids.has(this.selectedId);
     if (this.body.instanceColor) this.body.instanceColor.needsUpdate = true;
-    for (const id of this.lastPhase.keys()) if (!ids.has(id)) (this.lastPhase.delete(id), this.bumpAt.delete(id));
+    for (const id of this.lastPhase.keys()) if (!ids.has(id)) (this.lastPhase.delete(id), this.bumpAt.delete(id), this.departAt.delete(id));
     this.headings.retain(ids);
     this.trails.retain(ids);
     for (const mesh of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
@@ -333,10 +351,12 @@ export class VapurLayer implements CustomLayerInterface {
     this.reflect.visible = this.night > 0.02;
     this.lights.end();
     this.smoke.end();
+    this.rings.end();
+    this.splash.end();
     // Gulls follow the ferries nearest the view centre, only when zoomed in enough to see them.
     const mc = this.map.getCenter();
     const [ccx, ccy] = this.local([mc.lng, mc.lat]);
-    gullTargets.sort((a, b) => Math.hypot(a.x - ccx, a.y - ccy) - Math.hypot(b.x - ccx, b.y - ccy));
+    gullTargets.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0) || Math.hypot(a.x - ccx, a.y - ccy) - Math.hypot(b.x - ccx, b.y - ccy));
     this.gulls.update(gullTargets, tReal, dt, exag, this.gullsEnabled && !this.reduceMotion && this.map.getZoom() >= CONFIG.gulls.minZoom && this.night < 0.8);
     if (this.accent.instanceColor) this.accent.instanceColor.needsUpdate = true;
 
@@ -370,6 +390,68 @@ export class VapurLayer implements CustomLayerInterface {
       this.lights.push(w.x, w.y, w.z, col, alpha, size);
     }
   }
+
+  /**
+   * Cinematic moments (real time, decorative): on departure two horn rings expand from the
+   * funnel and a thick smoke burst rolls out; on arrival a foam ring spreads on the water and
+   * droplets splash up beside the hull (the hull's settle bump is in the main loop).
+   */
+  private pushMoments(id: string, px: number, py: number, fx: number, fy: number, exag: number, tReal: number, beam: number): void {
+    const mo = CONFIG.moments;
+    const k = CONFIG.ferries.lengthM / 70;
+    const fz = 14.6 * k * exag;
+    const funnelBack = CONFIG.ferries.lengthM * 0.06 * exag;
+    const dep = tReal - (this.departAt.get(id) ?? -1e9);
+    if (dep < mo.hornS + mo.hornGapS) {
+      for (let r = 0; r < 2; r++) {
+        const a = dep - r * mo.hornGapS;
+        if (a < 0 || a > mo.hornS) continue;
+        const u = a / mo.hornS;
+        this.rings.push(px - fx * funnelBack, py - fy * funnelBack, fz + 6 * exag, this.cHorn, (1 - u) ** 1.2, (6 + u * mo.hornGrowM) * exag);
+      }
+    }
+    if (dep < mo.burstS) {
+      const [wx, wy] = unitFromBearing(this.wind.toward);
+      this.cBurst.set(CONFIG.moments.burstColor).lerp(new THREE.Color(CONFIG.smoke.nightColor), this.night * 0.6);
+      for (let i = 0; i < mo.burstPuffs; i++) {
+        const a = dep - (i / mo.burstPuffs) * mo.burstS * 0.45;
+        if (a < 0) continue;
+        const u = a / mo.burstS;
+        const jitter = hash01(id + i) - 0.5;
+        const drift = this.wind.ms * a * exag * 0.8;
+        this.smoke.push(
+          px - fx * funnelBack + wx * drift + fy * jitter * 6 * exag,
+          py - fy * funnelBack + wy * drift - fx * jitter * 6 * exag,
+          fz + 2.2 * a * exag,
+          this.cBurst,
+          0.72 * Math.min(1, u * 10) * (1 - u) ** 1.4,
+          (10 + 14 * u) * exag,
+        );
+      }
+    }
+    const arr = tReal - (this.bumpAt.get(id) ?? -1e9);
+    if (arr < mo.splashS) {
+      const u = arr / mo.splashS;
+      this.rings.push(px, py, 0.5, this.cFoam, (1 - u) ** 2 * 0.7, beam * (0.8 + u * 2.2));
+      const g = 9.8 * exag;
+      for (let i = 0; i < mo.splashDrops; i++) {
+        const side = i % 2 ? 1 : -1;
+        const along = (hash01(id + 'a' + i) - 0.5) * 0.7 * CONFIG.ferries.lengthM * exag;
+        const out = (0.4 + hash01(id + 'o' + i)) * 3.2 * exag;
+        const up = (2.5 + hash01(id + 'u' + i) * 2.5) * exag;
+        const t = arr;
+        const z = up * t - 0.5 * g * t * t;
+        if (z < 0) continue;
+        const sx = px + fx * along + fy * side * (beam / 2 + out * t);
+        const sy = py + fy * along - fx * side * (beam / 2 + out * t);
+        this.splash.push(sx, sy, z, this.cFoam, 0.9 * (1 - u), 1.6 * exag);
+      }
+    }
+  }
+
+  private cHorn = new THREE.Color(CONFIG.moments.hornColor);
+  private cFoam = new THREE.Color('#F4FBFA');
+  private cBurst = new THREE.Color();
 
   /**
    * Funnel smoke: puffs leave the funnel, trail astern as the ship moves and drift downwind,

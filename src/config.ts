@@ -214,10 +214,10 @@ export const CONFIG = {
     beamM: 14,
     /** Size exaggeration by zoom: ~3–4× at city zoom, real size when zoomed right in. */
     exaggeration: [
-      [10, 5.6],
-      [11, 4.9],
-      [13, 3.4],
-      [16, 1],
+      [10, 6.4],
+      [11, 5.6],
+      [13, 3.9],
+      [16, 1.3],
     ] as [number, number][],
     /** Simulated seconds a vessel takes to grow in / shrink out (docked) when entering / leaving service. */
     appearSeconds: 90,
@@ -236,7 +236,7 @@ export const CONFIG = {
     /** Gentle roll/pitch/heave (degrees, seconds, metres at real scale); calmer when docked. */
     bob: { rollDeg: 1.6, rollPeriodS: 5.5, pitchDeg: 0.9, pitchPeriodS: 7.3, heaveM: 0.25, dockedFactor: 0.45, windFactor: 2.2 },
     /** Settle bump on arrival: damped surge + pitch (real seconds). */
-    bump: { surgeM: 1.6, pitchDeg: 1.4, periodS: 1.7, decayS: 1.1 },
+    bump: { surgeM: 2.4, pitchDeg: 2.2, periodS: 1.7, decayS: 1.2 },
     /** Soft contact shadow under the hull: size as multiples of (beam, length). */
     shadowScale: [1.9, 1.25] as [number, number],
     shadowColor: '#0B2730',
@@ -256,7 +256,7 @@ export const CONFIG = {
 
   wake: {
     /** Simulated seconds of track the wake covers at real scale (plan: ~20–30 s). */
-    seconds: 28,
+    seconds: 34,
     /** How much longer the wake gets with hull exaggeration (0 = not at all, 1 = proportional). */
     exagFactor: 0.6,
     /** Trail samples at real scale (spaced seconds/(samples−1) apart); more when exaggerated. */
@@ -264,11 +264,11 @@ export const CONFIG = {
     /** Cap on trail samples per vessel (mesh size = vessels × maxSamples × 3 vertices). */
     maxSamples: 48,
     /** V opening: half-width growth per metre behind the bow. */
-    spread: 0.3,
+    spread: 0.34,
     /** Max wake half-width, in beams. */
-    maxWidthBeams: 2.6,
+    maxWidthBeams: 3.1,
     color: '#F4FBFA',
-    opacity: 0.85,
+    opacity: 0.95,
     /** Speed (m/s) that counts as "full" wake. */
     cruiseMs: 6.5,
   },
@@ -299,24 +299,44 @@ export const CONFIG = {
   },
 
   smoke: {
-    puffs: 9,
-    lifeS: 7,
+    puffs: 14,
+    lifeS: 9,
     /** Bearing the wind blows towards (poyraz from the NE → towards SW). */
     windToward: 215,
     windMs: 2.2,
     riseMs: 1.6,
     /** How much of the ship's speed the puffs keep astern (0 = left behind at once). */
     sternDrift: 0.55,
-    sizeM: 8,
-    growM: 4.5,
-    alpha: 0.38,
-    dockedAlpha: 0.16,
+    sizeM: 11,
+    growM: 7.5,
+    alpha: 0.5,
+    dockedAlpha: 0.22,
+    /** Largest puff on screen (px). */
+    maxPx: 220,
     color: '#EEF0F1',
     nightColor: '#5F6670',
   },
 
+  /** Follow mode camera: centre easing (s), slow turn towards the vessel's course (s). */
+  follow: { tau: 0.9, bearingTau: 6, rotate: true },
+
+  /** Cinematic, decorative moments (real time): departure horn + smoke burst, arrival splash. */
+  moments: {
+    hornS: 2.2,
+    hornGapS: 0.9,
+    hornGrowM: 70,
+    hornColor: '#FFD983',
+    burstColor: '#8F979E',
+    burstS: 9,
+    burstPuffs: 10,
+    splashS: 1.4,
+    splashDrops: 12,
+    /** Seconds after departure that gulls prefer this ferry. */
+    gullFollowS: 120,
+  },
+
   gulls: {
-    count: 6,
+    count: 9,
     vessels: 3,
     minZoom: 13.2,
     spanM: 9,

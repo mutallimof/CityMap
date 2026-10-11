@@ -22,15 +22,21 @@ const VS = /* glsl */ `
 `;
 
 const FS = /* glsl */ `
-  uniform float uCore;     // 0 = soft puff, 1 = bright light with a hot core
+  uniform float uCore;     // 0 = soft puff, 1 = bright light with a hot core, 2 = thin ring
   varying vec3 vColor;
   varying float vAlpha;
   void main() {
     float r = length(gl_PointCoord - 0.5) * 2.0;
     if (r > 1.0) discard;
-    float soft = 1.0 - smoothstep(0.25, 1.0, r);
-    float core = 1.0 - smoothstep(0.0, 0.35, r);
-    float a = vAlpha * mix(soft, soft * 0.55 + core, uCore);
+    float a;
+    if (uCore > 1.5) {
+      a = vAlpha * smoothstep(0.55, 0.75, r) * (1.0 - smoothstep(0.86, 1.0, r));
+    } else {
+      // Puffs: a wide, gaussian-ish falloff reads as soft smoke rather than a disc.
+      float soft = exp(-r * r * 3.2) * (1.0 - smoothstep(0.75, 1.0, r));
+      float core = 1.0 - smoothstep(0.0, 0.35, r);
+      a = vAlpha * mix(soft, soft * 0.55 + core, uCore);
+    }
     gl_FragColor = vec4(vColor, a);
     #include <colorspace_fragment>
   }
