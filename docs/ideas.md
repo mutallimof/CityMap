@@ -69,3 +69,15 @@ See the decisions log in `CLAUDE.md` for how each piece works.
 - **PWA**: manifest, icons, iOS splash screens, full-screen, service worker.
 - **Adaptive effects**: resolution drops first, then particles and gulls, then window lights, then
   3D buildings.
+
+## What got built (chunk 4, 2026-10-11)
+
+- **Cinematic ferries:** bigger boats, soft wind-blown smoke, horn rings + smoke burst on departure, foam
+  splash + bump on arrival, a stronger wake, gulls trailing ferries that just left, a gliding Follow camera.
+- **Stories:** ~500 historic places (OSM features with a `wikidata` tag) get a book marker and a Story section:
+  Wikipedia summary (TR/EN), year built, architect, style, a Commons photo with credit. Pre-fetched monthly.
+- **Events:** daily scrapers for Istanbul venues (facts only), events attached to real OSM venues; pins glow
+  with an event today and pulse while one is on; Today · This weekend · Workshops · Free chips.
+
+Next ideas: an events feed / "tonight" list, per-event share cards, more venues once they appear in OSM
+(Akbank Sanat, Salon İKSV), stage-level places for multi-stage venues, story trails (walks linking stories).

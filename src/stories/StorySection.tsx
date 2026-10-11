@@ -11,6 +11,7 @@ export function StorySection({ osm }: { osm: string }) {
   const t = useT();
   const lang = useUi((s) => s.lang);
   const [, force] = useState(0);
+  const [broken, setBroken] = useState<string | null>(null); // photo that failed to load (offline etc.)
   useEffect(() => onStories(() => force((n) => n + 1)), []);
   const s = storyFor(osm);
   if (!s) return null;
@@ -22,9 +23,9 @@ export function StorySection({ osm }: { osm: string }) {
   return (
     <section className="story">
       <h3 className="section">✦ {t('story')}</h3>
-      {s.photo && (
+      {s.photo && broken !== s.photo.thumb && (
         <figure className="story__photo">
-          <img src={s.photo.thumb} alt={s.name[lang] || s.name.tr} loading="lazy" decoding="async" />
+          <img src={s.photo.thumb} alt={s.name[lang] || s.name.tr} loading="lazy" decoding="async" onError={() => setBroken(s.photo?.thumb ?? null)} />
           <figcaption>
             <a href={s.photo.page} target="_blank" rel="noopener noreferrer">
               {t('photo')}: {s.photo.artist}

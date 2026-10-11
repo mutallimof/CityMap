@@ -49,6 +49,8 @@ interface Venue {
   links?: string;
   skip?: string;
   maxPages?: number;
+  /** Why this venue isn't scraped right now (kept in the config so it's easy to turn back on). */
+  disabled?: string;
 }
 
 export interface Ev {
@@ -67,7 +69,7 @@ export interface Ev {
 }
 
 interface VenueLog {
-  status: 'ok' | 'failed' | 'blocked' | 'kept' | 'skipped';
+  status: 'ok' | 'empty' | 'failed' | 'blocked' | 'kept' | 'skipped';
   lastRun: string;
   lastOk?: string;
   count: number;
@@ -208,7 +210,7 @@ async function sehir(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
 }
 
 // ── Generic: list pages → same-site detail pages; facts from the text right under the <h1> ───────
-async function generic(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
+async function generic(v: Venue): Promise<{ events: Ev[]; unplaced: number; note: string }> {
   const re = new RegExp(v.links!);
   const skip = v.skip ? new RegExp(v.skip) : null;
   const pages: string[] = [];
@@ -231,6 +233,7 @@ async function generic(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
   if (!listed) throw lastErr ?? new Error('no list page loaded');
   const events: Ev[] = [];
   let unplaced = 0;
+  let undated = 0;
   for (const url of pages.slice(0, v.maxPages ?? 20)) {
     const r = await politeGet(url);
     if (r.status !== 200) continue;
@@ -240,7 +243,10 @@ async function generic(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
     const head = htmlToText(below).slice(0, 450);
     const title = pageTitle(r.text);
     const occ = dedupe(findOccurrences(head, now));
-    if (!title || !occ.length) continue;
+    if (!title || !occ.length) {
+      undated++;
+      continue;
+    }
     const place = (v.placeFromText ? placeIn(head) : null) ?? v.place ?? null;
     if (!place) {
       unplaced++;
@@ -254,10 +260,10 @@ async function generic(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
     if (t) extra.tickets = t;
     for (const o of occ) events.push(make(v, place, title, o, url, extra));
   }
-  return { events, unplaced };
+  return { events, unplaced, note: `${listed} list page(s), ${pages.length} detail link(s), ${undated} without a date` };
 }
 
-async function scrape(v: Venue): Promise<{ events: Ev[]; unplaced: number }> {
+async function scrape(v: Venue): Promise<{ events: Ev[]; unplaced: number; note?: string }> {
   if (v.scraper === 'arter') return { events: await arter(v), unplaced: 0 };
   if (v.scraper === 'akbank') return akbank(v);
   if (v.scraper === 'sehir') return sehir(v);
@@ -293,17 +299,23 @@ async function main() {
       if (last) log[v.id] = { ...last, count: old.length };
       continue;
     }
+    if (v.disabled) {
+      log[v.id] = { status: 'skipped', lastRun: last?.lastRun ?? stamp, count: 0, message: v.disabled };
+      console.log(`· ${v.id}: skipped — ${v.disabled}`);
+      continue;
+    }
     console.log(`→ ${v.id} (${v.scraper})`);
     try {
-      const { events, unplaced } = await scrape(v);
+      const { events, unplaced, note } = await scrape(v);
       const good = dedupeIds(events.filter(sane)).slice(0, MAX_PER_VENUE);
       if (!good.length && old.length) {
         keep('kept', `0 events now (layout change?)${unplaced ? `, ${unplaced} not on the map` : ''}`);
         continue;
       }
       all.push(...good);
-      log[v.id] = { status: 'ok', lastRun: stamp, lastOk: stamp, count: good.length, ...(unplaced ? { unplaced } : {}) };
-      console.log(`✓ ${v.id}: ${good.length} events${unplaced ? ` (${unplaced} at venues not on the map)` : ''}`);
+      const status = good.length ? 'ok' : 'empty';
+      log[v.id] = { status, lastRun: stamp, lastOk: good.length ? stamp : last?.lastOk, count: good.length, ...(unplaced ? { unplaced } : {}), ...(note ? { message: note } : {}) };
+      console.log(`${good.length ? '✓' : '·'} ${v.id}: ${good.length} events${unplaced ? ` (${unplaced} at venues not on the map)` : ''}${note ? ` — ${note}` : ''}`);
     } catch (e) {
       keep(e instanceof Blocked ? 'blocked' : 'failed', e instanceof Error ? `${e.message}${e.cause ? ` (${String((e.cause as Error).message ?? e.cause)})` : ''}` : String(e));
     }

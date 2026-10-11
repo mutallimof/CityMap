@@ -13,6 +13,9 @@ on:
       what:
         description: events, stories or both
         default: both
+      venues:
+        description: only these venue ids, comma-separated (re-fetches them today; for fixing a scraper)
+        default: ''
 
 permissions:
   contents: write
@@ -50,6 +53,9 @@ jobs:
         if: steps.what.outputs.what == 'events' || steps.what.outputs.what == 'both'
         run: npm run data:events
         continue-on-error: true
+        env:
+          VENUES: ${{ github.event.inputs.venues }}
+          FORCE: ${{ github.event.inputs.venues != '' && '1' || '' }}
       - name: Build stories
         if: steps.what.outputs.what == 'stories' || steps.what.outputs.what == 'both'
         run: npm run data:stories

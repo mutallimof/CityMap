@@ -55,7 +55,7 @@
     {
       "id": "borusan", "name": "Borusan Sanat", "site": "https://www.borusansanat.com", "scraper": "generic", "placeFromText": true,
       "lists": ["https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/sezon-konserleri_Yb2A/", "https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/ozel-etkinlikler_YEAx/"],
-      "links": "^/tr/etkinlikler_95gY/[^/]+/[^/]+/[^/]+/$"
+      "links": "^/tr/etkinlikler_95gY/[^/]+/(konser|etkinlik)_[^/]+/$"
     },
     {
       "id": "iksv", "name": "İKSV", "site": "https://www.iksv.org", "scraper": "generic", "placeFromText": true,
@@ -64,6 +64,7 @@
     },
     {
       "id": "salon-iksv", "name": "Salon İKSV", "site": "https://www.fibasaloniksv.com", "scraper": "generic", "placeFromText": true,
+      "disabled": "venue not in OpenStreetMap; programme is client-rendered from /plugins/iksv/plugins.ashx (programSalon=4582, lang=tr)",
       "lists": ["https://www.fibasaloniksv.com/tr/program", "https://www.fibasaloniksv.com/"],
       "links": "^/tr/(program|etkinlik)/[^/]+"
     },
@@ -84,8 +85,9 @@
     },
     {
       "id": "moda-sahnesi", "name": "Moda Sahnesi", "site": "https://www.modasahnesi.com", "scraper": "generic", "placeFromText": true,
+      "disabled": "venue not in OpenStreetMap (robots.txt allows us; /events/<slug>/ pages)",
       "lists": ["https://www.modasahnesi.com/oyun/"],
-      "links": "^/events/[^/]+/$"
+      "links": "^/events/[^/]+/?$"
     }
   ]
 }

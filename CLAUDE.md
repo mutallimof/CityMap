@@ -26,6 +26,8 @@ Full plan: `docs/plan.md`. **Build only Phase 0 (§4).** No backend, no accounts
    before/after in `docs/design-pass/`.
 8. ✅ Chunk 3 (user, 2026-10-10): colourful OSM city (OpenFreeMap), live weather + seasons, places by zoom
    (real data only), search, Open now, guides, snapshot share, PWA, adaptive effects.
+10. ✅ Chunk 4 (user, 2026-10-11): cinematic ferries, history stories (Wikidata/Wikipedia/Commons), venue events
+   (daily scrapers on GitHub Actions), refresh workflow with validation.
 
 ## Commands
 ```bash
@@ -50,6 +52,10 @@ npm run data:landmarks   # OpenFreeMap tiles (cached in data/raw/tiles) → data
 node scripts/build-icons.cjs  # icon.svg → PWA icons + iOS splashes (needs Playwright/Chromium)
 npm run data:routes      # → data/routes.geojson + data/lines.json from data/catalog/lines.json (A* in water)
 npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m from coast
+npm run data:venues      # event venues from OFM tiles → data/venue-places.geojson (catalog: data/catalog/venue-places.json)
+npm run data:stories     # GitHub Actions only (sandbox can't reach Wikimedia) → data/stories.json
+npm run data:events      # GitHub Actions only → data/events.json + data/events-log.json (FORCE=1, VENUES=a,b)
+npm run validate:data    # gate before committing refreshed data
 ```
 
 ## Conventions
@@ -201,3 +207,32 @@ npm run validate:routes  # also runs in `npm run build`; fails on land / < 30 m 
   - *Layout (390 px):* clock chip stacks time over "Simulated schedule"; search + TR/EN are icon buttons; camera
     sits in the sheet header; a soft scrim under the HUD hides map icons beneath the controls.
   - *Ferries:* exaggeration 5.6× at z10, 4.9× at z11 (was 4×) so they read as boats when zoomed out.
+
+- **Chunk 4 (user, 2026-10-11).**
+  - *Ferries:* bigger at every zoom (6.4× z10 → 1.3× z16); soft gaussian smoke puffs drifting with real wind;
+    departure = two gold horn rings from the funnel + dark smoke burst; arrival = foam ring + droplets + bump;
+    gulls prefer ferries that just left; Follow = rAF glide (centre + bearing ease). Moments are detected from sim
+    phase changes and skipped on time jumps (> 300 s/frame) and under reduce-motion.
+  - *Stories:* `scripts/stories/build-stories.ts` (monthly, Actions): Overpass features with `wikidata` + a
+    story kind → Wikidata (P571/P84/P149/P18, sitelinks) → Wikipedia REST summaries TR/EN (trimmed at sentence
+    ends) → Commons thumbnail with artist + licence (free licences only). Static `data/stories.json`; phones never
+    call Wikimedia. Map: book marker layer `stories` (collision below landmark/featured), italic names from
+    z15.4; story ids are removed from the POI layer. Sheet: Story section with credit "Text: Wikipedia, CC BY-SA".
+  - *Events:* venues + scraper settings in `data/catalog/venues.json` (internal, never shown). Scrapers:
+    Arter (its own JSON endpoint), Akbank Sanat (calendar page), Şehir Tiyatroları (play pages → sessions per
+    stage), generic list → detail (facts read only from the text under `<h1>`). Facts only (title, time, place,
+    category, free/price, page + official ticket link). `http.ts`: robots.txt (403 on robots = blocked), ≥ 4 s per
+    host, clear UA, 25 s timeout; ≤ 1 run/day per venue (20 h guard). Resellers never fetched/linked. Place =
+    venue default or aliases / map-place names found in the venue text; events at venues not on our map are
+    dropped (counted as `unplaced`). Failure / block / sudden zero → keep that venue's last good events; per-venue
+    status in `data/events-log.json`. Venues missing from our places come from OFM tiles via `build-venues.ts`
+    (Akbank Sanat and Salon İKSV are not in OSM by name → their own-stage events can't be placed).
+  - *Event UI:* featured pin images `feat-<icon>-ev` glow (gold) with an event today; DOM pulse ring while one
+    is on (static under reduce-motion). Multi-day runs (> 30 h, exhibitions) never glow/pulse but count for
+    Today/Weekend filters. Chips Today · This weekend (time window, OR) · Workshops · Free (AND); with any event
+    chip on, only matching featured venues show (POI + story layers hidden).
+  - *Refresh:* `.github/workflows/data-refresh.yml` — events daily 06:17 Istanbul, stories on the 3rd monthly;
+    scrapers `continue-on-error`, then `validate:data` (schema, https, no resellers, known places, refuses big
+    drops vs committed / empty after non-empty) → commit to phase-0 → calls `deploy.yml` (workflow_call; bot pushes
+    don't trigger workflows). Sandbox can't reach venue sites: develop through Actions runs.
+
