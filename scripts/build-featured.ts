@@ -90,8 +90,11 @@ const slug = (s: string) =>
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** One Overpass query for a small box, trying each endpoint with backoff (the servers 504 on big boxes). */
-async function overpassBox(bb: string): Promise<OsmEl[]> {
+type Box = [number, number, number, number]; // s, w, n, e
+
+/** One Overpass query for a small box, trying each endpoint with backoff; null if all fail. */
+async function overpassBox(b: Box): Promise<OsmEl[] | null> {
+  const bb = b.map((x) => x.toFixed(4)).join(',');
   const q = `[out:json][timeout:120];
 (
   nwr["amenity"~"^(cafe|restaurant|bar|pub|ice_cream|theatre|cinema|arts_centre|marketplace)$"]["name"](${bb});
@@ -100,7 +103,7 @@ async function overpassBox(bb: string): Promise<OsmEl[]> {
   nwr["leisure"~"^(park|garden)$"]["name"](${bb});
 );
 out tags center;`;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < 2; attempt++) {
     for (const url of OVERPASS) {
       try {
         const res = await fetch(url, { method: 'POST', body: new URLSearchParams({ data: q }), headers: { 'User-Agent': UA, 'Content-Type': 'application/x-www-form-urlencoded' } });
@@ -112,24 +115,50 @@ out tags center;`;
     }
     await sleep(15_000 * (attempt + 1));
   }
-  throw new Error(`Overpass failed for ${bb}`);
+  return null;
+}
+
+/** A box, split in four when the servers time out on it; parts that still fail are reported back. */
+async function fetchBox(b: Box, depth: number, failed: Box[]): Promise<OsmEl[]> {
+  const els = await overpassBox(b);
+  if (els) return els;
+  if (depth >= 1) {
+    failed.push(b);
+    return [];
+  }
+  const [s, w, n, e] = b;
+  const ms = (s + n) / 2;
+  const mw = (w + e) / 2;
+  const parts: Box[] = [
+    [s, w, ms, mw],
+    [s, mw, ms, e],
+    [ms, w, n, mw],
+    [ms, mw, n, e],
+  ];
+  const out: OsmEl[] = [];
+  for (const p of parts) {
+    out.push(...(await fetchBox(p, depth + 1, failed)));
+    await sleep(3000);
+  }
+  return out;
 }
 
 /** The map area as a 4×4 grid of small queries, one after another with a pause (polite). */
-async function overpass(): Promise<OsmEl[]> {
+async function overpass(): Promise<{ els: OsmEl[]; failed: Box[] }> {
   const [w, s, e, n] = CONFIG.bounds;
   const N = 4;
   const out: OsmEl[] = [];
+  const failed: Box[] = [];
   for (let i = 0; i < N; i++)
     for (let j = 0; j < N; j++) {
-      const bb = [s + ((n - s) * j) / N, w + ((e - w) * i) / N, s + ((n - s) * (j + 1)) / N, w + ((e - w) * (i + 1)) / N].map((x) => x.toFixed(4)).join(',');
-      const els = await overpassBox(bb);
+      const b: Box = [s + ((n - s) * j) / N, w + ((e - w) * i) / N, s + ((n - s) * (j + 1)) / N, w + ((e - w) * (i + 1)) / N];
+      const els = await fetchBox(b, 0, failed);
       console.log(`Overpass box ${i * N + j + 1}/${N * N}: ${els.length} elements`);
       out.push(...els);
       await sleep(3000);
     }
   const seen = new Set<string>();
-  return out.filter((el) => !seen.has(`${el.type}/${el.id}`) && (seen.add(`${el.type}/${el.id}`), true));
+  return { els: out.filter((el) => !seen.has(`${el.type}/${el.id}`) && (seen.add(`${el.type}/${el.id}`), true)), failed };
 }
 
 async function main() {
@@ -140,7 +169,15 @@ async function main() {
   const excluded = (name: string) => exclude.some((x) => name.toLocaleLowerCase('tr').includes(x.toLocaleLowerCase('tr')));
   const [w, s, e, n] = CONFIG.bounds;
 
-  const els = await overpass();
+  const { els, failed } = await overpass();
+  const [W, S, E, N] = CONFIG.bounds;
+  const area = (b: Box) => (b[2] - b[0]) * (b[3] - b[1]);
+  const missing = failed.reduce((a, b) => a + area(b), 0) / ((N - S) * (E - W));
+  if (missing > 0.25) throw new Error(`Overpass: ${Math.round(missing * 100)}% of the map failed — keeping the committed places`);
+  // where Overpass failed, keep last time's picks
+  const inside = (c: number[], b: Box) => c[1] >= b[0] && c[1] < b[2] && c[0] >= b[1] && c[0] < b[3];
+  const kept = existsSync(OUT) ? (JSON.parse(readFileSync(OUT, 'utf8')) as { features: GeoJSON.Feature[] }).features.filter((f) => failed.some((b) => inside((f.geometry as GeoJSON.Point).coordinates, b))) : [];
+  if (failed.length) console.log(`${failed.length} small box(es) failed (${Math.round(missing * 100)}% of the map): kept ${kept.length} earlier places there`);
   const byCat = new Map<Category, { el: OsmEl; c: { category: Category; kind: string }; cell: string; score: number; lon: number; lat: number }[]>();
   const seenNames = new Set<string>();
   for (const el of els) {
@@ -157,8 +194,8 @@ async function main() {
     (byCat.get(c.category) ?? byCat.set(c.category, []).get(c.category)!).push({ el, c, cell, score: score(t), lon, lat });
   }
 
-  const features: GeoJSON.Feature[] = [];
-  const used = new Set<string>();
+  const features: GeoJSON.Feature[] = [...kept];
+  const used = new Set<string>(kept.map((f) => String(f.properties?.id)));
   for (const [cat, quota] of Object.entries(QUOTA) as [Category, number][]) {
     const picked = spread(byCat.get(cat) ?? [], quota);
     console.log(`${cat}: ${picked.length} of ${(byCat.get(cat) ?? []).length} candidates`);
