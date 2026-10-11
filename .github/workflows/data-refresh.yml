@@ -19,8 +19,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: data-refresh
@@ -67,7 +65,7 @@ jobs:
         run: |
           git config user.name "data-refresh-bot"
           git config user.email "data-refresh-bot@users.noreply.github.com"
-          for f in data/events.json data/stories.json data/events-log.json; do if [ -f "$f" ]; then git add "$f"; fi; done
+          for f in data/events.json data/stories.json data/events-log.json data/event-venues.geojson data/venue-geocode.json; do if [ -f "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
           else

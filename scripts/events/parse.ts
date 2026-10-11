@@ -46,7 +46,10 @@ export function pageTitle(html: string): string {
   const og = /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i.exec(html) ?? /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i.exec(html);
   const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(html);
   const t = clean(h1?.[1] ?? '') || clean(og?.[1] ?? '');
-  return t.replace(/\s*[|–-]\s*(İstanbul Modern|Pera Müzesi|SALT|Salt|Arter|İKSV|Borusan.*|Akbank Sanat|İBB.*)$/i, '').trim();
+  return t
+    .replace(/\s*[|–-]\s*(İstanbul Modern|Pera Müzesi|SALT|Salt|Arter|İKSV|Borusan.*|Akbank Sanat|İBB.*)$/i, '')
+    .replace(new RegExp(`^\\d{1,2}\\s+${MONTH_RE}\\s+\\d{4}\\s+`, 'i'), '') // "15 Ekim 2026 Ada Sanlıman" (Babylon)
+    .trim();
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -84,7 +87,13 @@ export function findOccurrences(text: string, now: Date): Occurrence[] {
     out.push({ start: iso(y1, m1, Number(m[1])), end: iso(y2, m2, Number(m[4]), 23, 59), allDay: true });
     ranges.push([m.index!, m.index! + m[0].length]);
   }
-  const single = new RegExp(`(\\d{1,2})\\s+${MONTH_RE}\\.?\\s*(\\d{4})?(?:\\s*,?\\s*${WEEKDAY_RE})?(?:\\s*[·/,|]?\\s*(?:\\|\\s*)?(?:saat\\s*)?(\\d{1,2})[.:](\\d{2}))?`, 'gi');
+  // "9 Haziran 2026 - Devam Ediyor" (ongoing): a run that ends today — the daily refresh extends it
+  for (const m of text.matchAll(new RegExp(`(\\d{1,2})\\s+${MONTH_RE}\\s+(\\d{4})\\s*[–—-]\\s*(?:devam ediyor|süresiz|ongoing)`, 'gi'))) {
+    const today = new Date(now.getTime() + 3 * 3_600_000);
+    out.push({ start: iso(Number(m[3]), monthOf(m[2]), Number(m[1])), end: iso(today.getUTCFullYear(), today.getUTCMonth() + 1, today.getUTCDate(), 23, 59), allDay: true });
+    ranges.push([m.index!, m.index! + m[0].length]);
+  }
+  const single = new RegExp(`(\\d{1,2})\\s+${MONTH_RE}\\.?\\s*(\\d{4})?(?:\\s*[,/]?\\s*${WEEKDAY_RE})?(?:\\s*[·/,|]?\\s*(?:\\|\\s*)?(?:saat\\s*)?(\\d{1,2})[.:](\\d{2}))?`, 'gi');
   for (const m of text.matchAll(single)) {
     if (ranges.some(([a, b]) => m.index! >= a && m.index! < b)) continue;
     const mon = monthOf(m[2]);
@@ -207,3 +216,18 @@ export const norm = (s: string) =>
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+
+/** "ELMA LABRADOR ÇİMEN" → "Elma Labrador Çimen" (shouty list titles); mixed-case titles are kept. */
+export function titleCase(s: string): string {
+  if (s !== s.toLocaleUpperCase('tr')) return s.trim();
+  return s
+    .toLocaleLowerCase('tr')
+    .replace(/(^|[\s("“'‘-])(\p{L})/gu, (_, a: string, b: string) => a + b.toLocaleUpperCase('tr'))
+    .trim();
+}
+
+/** Unix seconds → Istanbul local ISO time (+03:00). */
+export function isoFromUnix(sec: number): string {
+  const d = new Date(sec * 1000 + 3 * 3_600_000);
+  return iso(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes());
+}

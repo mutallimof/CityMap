@@ -26,22 +26,6 @@
    "radius": 2
   },
   {
-   "id": "akbank-sanat",
-   "name": "Akbank Sanat",
-   "kind": "arts_centre",
-   "match": "Akbank Sanat|Akbank Art",
-   "near": "karakoy",
-   "radius": 2
-  },
-  {
-   "id": "salon-iksv",
-   "name": "Salon İKSV",
-   "kind": "concert_hall",
-   "match": "İKSV|IKSV|Salon İ",
-   "near": "karakoy",
-   "radius": 2
-  },
-  {
    "id": "muze-gazhane",
    "name": "Müze Gazhane",
    "kind": "museum",
@@ -89,6 +73,60 @@
    "near": "kabatas",
    "radius": 4,
    "nominatim": "Lütfi Kırdar, İstanbul"
+  },
+  {
+   "id": "akbank-sanat",
+   "name": "Akbank Sanat",
+   "kind": "arts_centre",
+   "match": "A[Kk] ?[Bb]ank Sanat",
+   "near": "karakoy",
+   "radius": 2,
+   "nominatim": "AK Bank Sanat Galerisi, Beyoğlu"
+  },
+  {
+   "id": "sakip-sabanci-muzesi",
+   "name": "Sakıp Sabancı Müzesi",
+   "kind": "museum",
+   "match": "Sakıp Sabancı Müze",
+   "near": "emirgan",
+   "radius": 2,
+   "nominatim": "Sakıp Sabancı Müzesi, Emirgan"
+  },
+  {
+   "id": "borusan-contemporary",
+   "name": "Borusan Contemporary",
+   "kind": "gallery",
+   "match": "Borusan Contemporary|Perili Köşk",
+   "near": "bebek",
+   "radius": 3,
+   "nominatim": "Borusan Contemporary, Rumelihisarı"
+  },
+  {
+   "id": "fisekhane",
+   "name": "Fişekhane",
+   "kind": "arts_centre",
+   "match": "^Fişekhane$",
+   "near": "eminonu",
+   "radius": 1,
+   "nominatim": "Fişekhane, Zeytinburnu"
+  },
+  {
+   "id": "dasdas",
+   "name": "DasDas",
+   "kind": "theatre",
+   "match": "^DasDas",
+   "near": "kadikoy",
+   "radius": 1,
+   "nominatim": "DasDas, Ataşehir"
+  },
+  {
+   "id": "uniq-istanbul",
+   "name": "UNIQ İstanbul",
+   "kind": "concert_hall",
+   "match": "^UNIQ",
+   "near": "emirgan",
+   "radius": 3,
+   "nominatim": "UNIQ Istanbul, Maslak"
   }
  ]
 }

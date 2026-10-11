@@ -216,6 +216,150 @@
      41.047484
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "akbank-sanat",
+    "name": "Akbank Sanat",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "arts_centre",
+    "osm": "node/4889959432",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.983108,
+     41.03594
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sakip-sabanci-muzesi",
+    "name": "Sakıp Sabancı Müzesi",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "museum",
+    "osm": "node/554083364",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.05563,
+     41.106018
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "borusan-contemporary",
+    "name": "Borusan Contemporary",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "gallery",
+    "osm": "way/884165212",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.056563,
+     41.089071
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "fisekhane",
+    "name": "Fişekhane",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "arts_centre",
+    "osm": "way/539673047",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.90546,
+     40.983352
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "dasdas",
+    "name": "DasDas",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/13598331749",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.12492,
+     40.994104
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uniq-istanbul",
+    "name": "UNIQ İstanbul",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "concert_hall",
+    "osm": "way/544489364",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.007865,
+     41.108031
+    ]
+   }
   }
  ]
 }

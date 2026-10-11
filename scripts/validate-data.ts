@@ -106,9 +106,26 @@ function checkStories(): void {
   console.log(`stories: ${list.length} (committed ${before})`);
 }
 
+function checkVenues(): void {
+  const file = 'data/event-venues.geojson';
+  if (!existsSync(file)) return;
+  const [w, s, e, n] = CONFIG.bounds;
+  const seen = new Set<string>();
+  for (const f of (JSON.parse(readFileSync(file, 'utf8')) as { features: { properties: { id: string; name: string }; geometry: { coordinates: [number, number] } }[] }).features) {
+    const { id, name } = f.properties;
+    const [lon, lat] = f.geometry.coordinates;
+    if (!id || !name) bad(`${file}: venue without id/name`);
+    if (seen.has(id)) bad(`${file}: duplicate venue ${id}`);
+    seen.add(id);
+    if (!(lon > w && lon < e && lat > s && lat < n)) bad(`${file} ${id}: outside the map`);
+  }
+  console.log(`event venues: ${seen.size}`);
+}
+
 if (process.argv[1]?.endsWith('validate-data.ts')) {
   const ids = (file: string) => (JSON.parse(readFileSync(file, 'utf8')) as { features: { properties: { id: string } }[] }).features.map((f) => f.properties.id);
-  const places = new Set([...ids('data/places.geojson'), ...ids('data/venue-places.geojson')]);
+  const places = new Set([...ids('data/places.geojson'), ...ids('data/venue-places.geojson'), ...ids('data/event-venues.geojson')]);
+  checkVenues();
   checkEvents(places);
   checkStories();
   if (problems.length) {

@@ -7,8 +7,10 @@ export interface PlaceProps {
   nameEn: string | null;
   category: PlaceCategory;
   kind: string;
-  /** "node/123" | "way/123" | "relation/123" */
+  /** "node/123" | "way/123" | "relation/123"; '' for an event venue placed from its official address. */
   osm: string;
+  /** Official address (event venues geocoded from it). */
+  address?: string | null;
   district: string | null;
   hours: string | null;
   cuisine: string | null;

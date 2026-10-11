@@ -112,6 +112,7 @@ const STRINGS = {
   cuisine: { tr: 'Mutfak', en: 'Cuisine' },
   checkingOsm: { tr: 'OpenStreetMap’e bakılıyor…', en: 'Checking OpenStreetMap…' },
   viewOnOsm: { tr: 'OSM’de gör', en: 'View on OSM' },
+  address: { tr: 'Adres', en: 'Address' },
   zoomForMore: { tr: 'Daha fazla mekân için yakınlaş', en: 'Zoom in for more places' },
   demo: { tr: 'DEMO', en: 'DEMO' },
   all: { tr: 'Tümü', en: 'All' },

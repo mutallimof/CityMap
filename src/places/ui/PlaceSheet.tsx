@@ -97,8 +97,14 @@ export function PlaceBody({ id }: { id: string }) {
         </div>
       )}
 
-      {(p.website || p.phone || p.cuisine) && (
+      {(p.website || p.phone || p.cuisine || p.address) && (
         <dl className="facts">
+          {p.address && (
+            <>
+              <dt>{t('address')}</dt>
+              <dd>{p.address}</dd>
+            </>
+          )}
           {p.website && (
             <>
               <dt>{t('website')}</dt>
@@ -134,10 +140,15 @@ export function PlaceBody({ id }: { id: string }) {
       <PierHint lngLat={p.lngLat} />
 
       <p className="place__credit muted">
-        © OpenStreetMap ·{' '}
-        <a href={`https://www.openstreetmap.org/${p.osm}`} target="_blank" rel="noopener noreferrer">
-          {t('viewOnOsm')}
-        </a>
+        © OpenStreetMap
+        {p.osm && (
+          <>
+            {' · '}
+            <a href={`https://www.openstreetmap.org/${p.osm}`} target="_blank" rel="noopener noreferrer">
+              {t('viewOnOsm')}
+            </a>
+          </>
+        )}
       </p>
     </div>
   );

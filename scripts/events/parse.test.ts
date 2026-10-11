@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findOccurrences, norm, parseDateList, guessCategory, htmlToText, inferYear, isFree, pageTitle, priceIn, ticketLink } from './parse';
+import { findOccurrences, isoFromUnix, norm, parseDateList, titleCase, guessCategory, htmlToText, inferYear, isFree, pageTitle, priceIn, ticketLink } from './parse';
 
 const now = new Date('2026-10-11T10:00:00Z');
 
@@ -42,5 +42,15 @@ describe('event parsing', () => {
     expect(parseDateList("15 Kasım 2026'ya kadar", now)).toEqual([{ start: '2026-10-11T00:00:00+03:00', end: '2026-11-15T23:59:00+03:00', allDay: true }]);
     expect(parseDateList('Her Perşembe', now)).toEqual([]);
     expect(norm('Kağıthane Sadabad Sahnesi')).toBe('kagithane sadabad sahnesi');
+  });
+
+  it('new venue formats', () => {
+    expect(findOccurrences('Melis Öğüt Quartet | 12 Ekim 2026 / Pazartesi | 21:30 | - | 00:00 | 1000 TL', now)[0]).toEqual({ start: '2026-10-12T21:30:00+03:00' });
+    expect(findOccurrences('15.10.2026 | 21:00 | Babylon', now)).toEqual([{ start: '2026-10-15T21:00:00+03:00' }]);
+    expect(pageTitle('<h1>15 Ekim 2026 Ada Sanlıman - Ada Sings Amy Winehouse</h1>')).toBe('Ada Sanlıman - Ada Sings Amy Winehouse');
+    expect(titleCase('ELMA LABRADOR ÇİMEN')).toBe('Elma Labrador Çimen');
+    expect(titleCase('Pinokyo Müzikali')).toBe('Pinokyo Müzikali');
+    expect(findOccurrences('Yoko Ono | Sergi | 9 Haziran 2026 - Devam Ediyor', now)).toEqual([{ start: '2026-06-09T00:00:00+03:00', end: '2026-10-11T23:59:00+03:00', allDay: true }]);
+    expect(isoFromUnix(1792603800)).toBe('2026-10-21T20:30:00+03:00');
   });
 });

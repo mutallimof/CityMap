@@ -235,4 +235,13 @@ npm run validate:data    # gate before committing refreshed data
     scrapers `continue-on-error`, then `validate:data` (schema, https, no resellers, known places, refuses big
     drops vs committed / empty after non-empty) → commit to phase-0 → calls `deploy.yml` (workflow_call; bot pushes
     don't trigger workflows). Sandbox can't reach venue sites: develop through Actions runs.
+  - *Venues not in OSM (user, 2026-10-11):* `data/catalog/extra-venues.json` = name + official address + contact page.
+    The scraper (`scripts/events/venues-geo.ts`) first checks street + number appear on the venue's own contact page
+    (mismatch → logged with what the page says, venue left off), then geocodes with Nominatim (bounded, ≥ 1.1 s):
+    house-number POI/building, else a street < 350 m long. Multi-venue programmes (Akbank, Kumbaracı50, BKM, Şehir)
+    resolve unknown venue lines by name in OSM (every significant word must match a real POI; online/Zoom skipped;
+    ≤ 40 lookups/run; cache `data/venue-geocode.json`, misses retried after 30 days). Output
+    `data/event-venues.geojson` (loaded with the places; `osm` = '' when the hit isn't the venue itself → sheet shows
+    the address, no OSM link). Moda Sahnesi is placed but has no events: its site publishes no dates (reseller only).
+  - *Deploy:* only the `gh-pages` branch publish remains (the Actions-Pages job always failed; Pages uses the branch).
 

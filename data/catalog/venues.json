@@ -1,94 +1,430 @@
 {
-  "_comment": "Internal config for the event scrapers (scripts/events/scrape.ts) — never shown in the UI. One entry per venue site. `scraper`: arter | akbank | sehir | generic (list pages → same-site detail pages, facts read from the text right under the <h1>). `place` = map place (data/places.geojson or data/venue-places.geojson) the events attach to; multi-venue programmes resolve their place from the text via `aliases` (accent-free, lower-case substrings), then by the names of map places. Events whose place isn't on the map are dropped. Ticket resellers (Biletix, Passo, Bubilet, …) are never fetched or linked.",
-  "aliases": [
-    ["zorlu psm", "zorlu-center"],
-    ["zorlu center", "zorlu-center"],
-    ["borusan muzik evi", "borusan-art-center"],
-    ["babylon", "babylon"],
-    ["nardis", "nardis-jazz-club"],
-    ["arter", "arter"],
-    ["salt beyoglu", "salt-beyoglu"],
-    ["salt galata", "salt-galata"],
-    ["harbiye muhsin ertugrul", "harbiye-muhsin-ertugrul-tiyatrosu"],
-    ["harbiye cemil topuzlu", "harbiye-cemil-topuzlu-acik-hava-tiyatros"],
-    ["harbiye acik hava", "harbiye-cemil-topuzlu-acik-hava-tiyatros"],
-    ["haldun taner", "haldun-taner-sahnesi"],
-    ["musahipzade celal", "uskudar-musahipzade-celal-sahnesi"],
-    ["resat nuri", "fatih-resat-nuri"],
-    ["sadabad", "sadabad-sahnesi"],
-    ["gazhane", "muze-gazhane"],
-    ["muammer karaca", "ibb-muammer-karaca-tiyatrosu"],
-    ["cemal resit rey", "cemal-resit-rey-konser-salonu"],
-    ["crr konser", "cemal-resit-rey-konser-salonu"],
-    ["ataturk kultur merkezi", "ataturk-kultur-merkezi"],
-    ["akm ", "ataturk-kultur-merkezi"],
-    ["sureyya operasi", "sureyya-operasi"],
-    ["pera muzesi", "pera-muzesi"],
-    ["istanbul modern", "istanbul-modern-sanat-muzesi"],
-    ["kurucesme acikhava", "paraf-kurucesme-acikhava"],
-    ["garaj istanbul", "garaj-istanbul"],
-    ["lutfi kirdar", "lutfi-kirdar"]
+ "_comment": "Internal config for the event scrapers (scripts/events/scrape.ts) — never shown in the UI. One entry per venue site. `scraper`: arter | akbank | sehir | generic (list pages → same-site detail pages, facts read from the text right under the <h1>). `place` = map place (data/places.geojson or data/venue-places.geojson) the events attach to; multi-venue programmes resolve their place from the text via `aliases` (accent-free, lower-case substrings), then by the names of map places. Events whose place isn't on the map are dropped. Ticket resellers (Biletix, Passo, Bubilet, …) are never fetched or linked.",
+ "aliases": [
+  [
+   "zorlu psm",
+   "zorlu-center"
   ],
-  "venues": [
-    { "id": "arter", "name": "Arter", "site": "https://www.arter.org.tr", "scraper": "arter", "place": "arter" },
-    { "id": "akbank-sanat", "name": "Akbank Sanat", "site": "https://www.akbanksanat.com", "scraper": "akbank", "lists": ["https://www.akbanksanat.com/etkinlik-takvimi"] },
-    { "id": "sehir-tiyatrolari", "name": "İBB Şehir Tiyatroları", "site": "https://sehirtiyatrolari.ibb.istanbul", "scraper": "sehir", "lists": ["https://sehirtiyatrolari.ibb.istanbul/"], "maxPages": 30 },
-    {
-      "id": "istanbul-modern", "name": "İstanbul Modern", "site": "https://www.istanbulmodern.org", "scraper": "generic", "place": "istanbul-modern-sanat-muzesi",
-      "lists": ["https://www.istanbulmodern.org/", "https://www.istanbulmodern.org/etkinlikler/guncel"],
-      "links": "^/etkinlikler/[a-z0-9-]+$", "skip": "^/etkinlikler/(guncel|gecmis|egitim|sergi|sinema|soylesi|uyelik|duyuru-k-\\d+)$"
-    },
-    {
-      "id": "salt", "name": "SALT", "site": "https://saltonline.org", "scraper": "generic", "placeFromText": true,
-      "lists": ["https://saltonline.org/tr", "https://saltonline.org/tr/program"],
-      "links": "^/tr/[a-z0-9-]+-\\d+$", "skip": "(politika|bilgilendirme|aydinlatma|arsiv|fonlari|grant|eklenenler)"
-    },
-    {
-      "id": "pera", "name": "Pera Müzesi", "site": "https://www.peramuzesi.org.tr", "scraper": "generic", "place": "pera-muzesi",
-      "lists": ["https://www.peramuzesi.org.tr/", "https://www.peramuzesi.org.tr/etkinlikler"],
-      "links": "^/(etkinlik|pera-ogrenme/[a-z-]+|pera-film/[a-z-]+)/[^/]+/\\d+$"
-    },
-    {
-      "id": "ibb-kultur", "name": "İBB Kültür Sanat", "site": "https://kultursanat.istanbul", "scraper": "generic", "placeFromText": true,
-      "lists": ["https://kultursanat.istanbul/etkinliklerimiz", "https://kultursanat.istanbul/"],
-      "links": "^/etkinliklerimiz/\\d+/[^/]+$"
-    },
-    {
-      "id": "borusan", "name": "Borusan Sanat", "site": "https://www.borusansanat.com", "scraper": "generic", "placeFromText": true,
-      "lists": ["https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/sezon-konserleri_Yb2A/", "https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/ozel-etkinlikler_YEAx/"],
-      "links": "^/tr/etkinlikler_95gY/[^/]+/(konser|etkinlik)_[^/]+/$"
-    },
-    {
-      "id": "iksv", "name": "İKSV", "site": "https://www.iksv.org", "scraper": "generic", "placeFromText": true,
-      "lists": ["https://www.iksv.org/tr/etkinlikler/etkinlikler", "https://muzik.iksv.org/tr", "https://tiyatro.iksv.org/tr", "https://caz.iksv.org/tr"],
-      "links": "^/tr/(etkinlik|etkinlikler|program|konser|oyun|gosteri)[^?]*/[a-z0-9-]*\\d+[a-z0-9-]*$"
-    },
-    {
-      "id": "salon-iksv", "name": "Salon İKSV", "site": "https://www.fibasaloniksv.com", "scraper": "generic", "placeFromText": true,
-      "disabled": "venue not in OpenStreetMap; programme is client-rendered from /plugins/iksv/plugins.ashx (programSalon=4582, lang=tr)",
-      "lists": ["https://www.fibasaloniksv.com/tr/program", "https://www.fibasaloniksv.com/"],
-      "links": "^/tr/(program|etkinlik)/[^/]+"
-    },
-    {
-      "id": "crr", "name": "Cemal Reşit Rey Konser Salonu", "site": "https://crr.istanbul", "scraper": "generic", "place": "cemal-resit-rey-konser-salonu",
-      "lists": ["https://crr.istanbul/", "https://www.crrkonsersalonu.org/"],
-      "links": "^/(tr/)?(etkinlik|etkinlikler|konser)/[^/]+"
-    },
-    {
-      "id": "zorlu-psm", "name": "Zorlu PSM", "site": "https://www.zorlupsm.com", "scraper": "generic", "place": "zorlu-center",
-      "lists": ["https://www.zorlupsm.com/etkinlikler", "https://www.zorlupsm.com/"],
-      "links": "^/(tr/)?etkinlik(ler)?/[^/]+$"
-    },
-    {
-      "id": "akm", "name": "Atatürk Kültür Merkezi", "site": "https://akmistanbul.gov.tr", "scraper": "generic", "place": "ataturk-kultur-merkezi",
-      "lists": ["https://akmistanbul.gov.tr/tr/etkinlikler", "https://akmistanbul.gov.tr/"],
-      "links": "^/tr/etkinlik(ler)?/[^/]+"
-    },
-    {
-      "id": "moda-sahnesi", "name": "Moda Sahnesi", "site": "https://www.modasahnesi.com", "scraper": "generic", "placeFromText": true,
-      "disabled": "venue not in OpenStreetMap (robots.txt allows us; /events/<slug>/ pages)",
-      "lists": ["https://www.modasahnesi.com/oyun/"],
-      "links": "^/events/[^/]+/?$"
-    }
+  [
+   "zorlu center",
+   "zorlu-center"
+  ],
+  [
+   "borusan muzik evi",
+   "borusan-art-center"
+  ],
+  [
+   "babylon",
+   "babylon"
+  ],
+  [
+   "nardis",
+   "nardis-jazz-club"
+  ],
+  [
+   "arter",
+   "arter"
+  ],
+  [
+   "salt beyoglu",
+   "salt-beyoglu"
+  ],
+  [
+   "salt galata",
+   "salt-galata"
+  ],
+  [
+   "harbiye muhsin ertugrul",
+   "harbiye-muhsin-ertugrul-tiyatrosu"
+  ],
+  [
+   "harbiye cemil topuzlu",
+   "harbiye-cemil-topuzlu-acik-hava-tiyatros"
+  ],
+  [
+   "harbiye acik hava",
+   "harbiye-cemil-topuzlu-acik-hava-tiyatros"
+  ],
+  [
+   "haldun taner",
+   "haldun-taner-sahnesi"
+  ],
+  [
+   "musahipzade celal",
+   "uskudar-musahipzade-celal-sahnesi"
+  ],
+  [
+   "resat nuri",
+   "fatih-resat-nuri"
+  ],
+  [
+   "sadabad",
+   "sadabad-sahnesi"
+  ],
+  [
+   "gazhane",
+   "muze-gazhane"
+  ],
+  [
+   "muammer karaca",
+   "ibb-muammer-karaca-tiyatrosu"
+  ],
+  [
+   "cemal resit rey",
+   "cemal-resit-rey-konser-salonu"
+  ],
+  [
+   "crr konser",
+   "cemal-resit-rey-konser-salonu"
+  ],
+  [
+   "ataturk kultur merkezi",
+   "ataturk-kultur-merkezi"
+  ],
+  [
+   "akm ",
+   "ataturk-kultur-merkezi"
+  ],
+  [
+   "sureyya operasi",
+   "sureyya-operasi"
+  ],
+  [
+   "pera muzesi",
+   "pera-muzesi"
+  ],
+  [
+   "istanbul modern",
+   "istanbul-modern-sanat-muzesi"
+  ],
+  [
+   "kurucesme acikhava",
+   "paraf-kurucesme-acikhava"
+  ],
+  [
+   "garaj istanbul",
+   "garaj-istanbul"
+  ],
+  [
+   "lutfi kirdar",
+   "lutfi-kirdar"
+  ],
+  [
+   "maximum uniq",
+   "uniq-istanbul"
+  ],
+  [
+   "uniq hall",
+   "uniq-istanbul"
+  ],
+  [
+   "uniq acik hava",
+   "uniq-istanbul"
+  ],
+  [
+   "volkswagen arena",
+   "uniq-istanbul"
+  ],
+  [
+   "bkm mutfak",
+   "bkm-mutfak"
+  ],
+  [
+   "salon iksv",
+   "salon-iksv"
+  ],
+  [
+   "akbank sanat",
+   "akbank-sanat"
+  ],
+  [
+   "moda sahnesi",
+   "moda-sahnesi"
+  ],
+  [
+   "kumbaraci50",
+   "kumbaraci50"
+  ],
+  [
+   "kumbaraci 50",
+   "kumbaraci50"
+  ],
+  [
+   "dasdas",
+   "dasdas"
+  ],
+  [
+   "fisekhane",
+   "fisekhane"
   ]
+ ],
+ "venues": [
+  {
+   "id": "arter",
+   "name": "Arter",
+   "site": "https://www.arter.org.tr",
+   "scraper": "arter",
+   "place": "arter"
+  },
+  {
+   "id": "akbank-sanat",
+   "name": "Akbank Sanat",
+   "site": "https://www.akbanksanat.com",
+   "scraper": "akbank",
+   "lists": [
+    "https://www.akbanksanat.com/etkinlik-takvimi"
+   ]
+  },
+  {
+   "id": "sehir-tiyatrolari",
+   "name": "İBB Şehir Tiyatroları",
+   "site": "https://sehirtiyatrolari.ibb.istanbul",
+   "scraper": "sehir",
+   "lists": [
+    "https://sehirtiyatrolari.ibb.istanbul/"
+   ],
+   "maxPages": 30
+  },
+  {
+   "id": "istanbul-modern",
+   "name": "İstanbul Modern",
+   "site": "https://www.istanbulmodern.org",
+   "scraper": "generic",
+   "place": "istanbul-modern-sanat-muzesi",
+   "lists": [
+    "https://www.istanbulmodern.org/",
+    "https://www.istanbulmodern.org/etkinlikler/guncel"
+   ],
+   "links": "^/etkinlikler/[a-z0-9-]+$",
+   "skip": "^/etkinlikler/(guncel|gecmis|egitim|sergi|sinema|soylesi|uyelik|duyuru-k-\\d+)$"
+  },
+  {
+   "id": "salt",
+   "name": "SALT",
+   "site": "https://saltonline.org",
+   "scraper": "generic",
+   "placeFromText": true,
+   "lists": [
+    "https://saltonline.org/tr",
+    "https://saltonline.org/tr/program"
+   ],
+   "links": "^/tr/[a-z0-9-]+-\\d+$",
+   "skip": "(politika|bilgilendirme|aydinlatma|arsiv|fonlari|grant|eklenenler)"
+  },
+  {
+   "id": "pera",
+   "name": "Pera Müzesi",
+   "site": "https://www.peramuzesi.org.tr",
+   "scraper": "generic",
+   "place": "pera-muzesi",
+   "lists": [
+    "https://www.peramuzesi.org.tr/",
+    "https://www.peramuzesi.org.tr/etkinlikler"
+   ],
+   "links": "^/(etkinlik|pera-ogrenme/[a-z-]+|pera-film/[a-z-]+)/[^/]+/\\d+$"
+  },
+  {
+   "id": "ibb-kultur",
+   "name": "İBB Kültür Sanat",
+   "site": "https://kultursanat.istanbul",
+   "scraper": "generic",
+   "placeFromText": true,
+   "lists": [
+    "https://kultursanat.istanbul/etkinliklerimiz",
+    "https://kultursanat.istanbul/"
+   ],
+   "links": "^/etkinliklerimiz/\\d+/[^/]+$"
+  },
+  {
+   "id": "borusan",
+   "name": "Borusan Sanat",
+   "site": "https://www.borusansanat.com",
+   "scraper": "generic",
+   "placeFromText": true,
+   "lists": [
+    "https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/sezon-konserleri_Yb2A/",
+    "https://www.borusansanat.com/tr/etkinlikler_95gY/bifo_9m59/ozel-etkinlikler_YEAx/"
+   ],
+   "links": "^/tr/etkinlikler_95gY/[^/]+/(konser|etkinlik)_[^/]+/$"
+  },
+  {
+   "id": "iksv",
+   "name": "İKSV",
+   "site": "https://www.iksv.org",
+   "scraper": "generic",
+   "placeFromText": true,
+   "lists": [
+    "https://www.iksv.org/tr/etkinlikler/etkinlikler",
+    "https://muzik.iksv.org/tr",
+    "https://tiyatro.iksv.org/tr",
+    "https://caz.iksv.org/tr"
+   ],
+   "links": "^/tr/(etkinlik|etkinlikler|program|konser|oyun|gosteri)[^?]*/[a-z0-9-]*\\d+[a-z0-9-]*$"
+  },
+  {
+   "id": "salon-iksv",
+   "name": "Salon İKSV",
+   "site": "https://www.fibasaloniksv.com",
+   "scraper": "salon",
+   "place": "salon-iksv"
+  },
+  {
+   "id": "crr",
+   "name": "Cemal Reşit Rey Konser Salonu",
+   "site": "https://crr.istanbul",
+   "scraper": "generic",
+   "place": "cemal-resit-rey-konser-salonu",
+   "lists": [
+    "https://crr.istanbul/",
+    "https://www.crrkonsersalonu.org/"
+   ],
+   "links": "^/(tr/)?(etkinlik|etkinlikler|konser)/[^/]+"
+  },
+  {
+   "id": "zorlu-psm",
+   "name": "Zorlu PSM",
+   "site": "https://www.zorlupsm.com",
+   "scraper": "generic",
+   "place": "zorlu-center",
+   "lists": [
+    "https://www.zorlupsm.com/etkinlikler",
+    "https://www.zorlupsm.com/"
+   ],
+   "links": "^/(tr/)?etkinlik(ler)?/[^/]+$"
+  },
+  {
+   "id": "akm",
+   "name": "Atatürk Kültür Merkezi",
+   "site": "https://akmistanbul.gov.tr",
+   "scraper": "generic",
+   "place": "ataturk-kultur-merkezi",
+   "lists": [
+    "https://akmistanbul.gov.tr/tr/etkinlikler",
+    "https://akmistanbul.gov.tr/"
+   ],
+   "links": "^/tr/etkinlik(ler)?/[^/]+"
+  },
+  {
+   "id": "moda-sahnesi",
+   "name": "Moda Sahnesi",
+   "site": "https://www.modasahnesi.com",
+   "scraper": "generic",
+   "place": "moda-sahnesi",
+   "lists": [
+    "https://www.modasahnesi.com/oyun/"
+   ],
+   "links": "^/events/[^/]+/?$",
+   "disabled": "on the map (official address), but the site publishes no dates: event pages are posters and the calendar loads through a nonce-protected AJAX call; dates appear only at the reseller (Biletinial), which we don't use"
+  },
+  {
+   "id": "nardis",
+   "name": "Nardis Jazz Club",
+   "site": "https://www.nardisjazz.com",
+   "scraper": "generic",
+   "place": "nardis-jazz-club",
+   "lists": [
+    "https://www.nardisjazz.com/"
+   ],
+   "links": "^/etkinlik/[^/]+/?$",
+   "maxPages": 25
+  },
+  {
+   "id": "babylon",
+   "name": "Babylon",
+   "site": "https://www.babylon.com.tr",
+   "scraper": "generic",
+   "place": "babylon",
+   "lists": [
+    "https://www.babylon.com.tr/tr/takvim",
+    "https://www.babylon.com.tr/"
+   ],
+   "links": "^/tr/etkinlik-detay/[^/]+/[^/]+$",
+   "maxPages": 25
+  },
+  {
+   "id": "fisekhane",
+   "name": "Fişekhane",
+   "site": "https://www.fisekhane.com",
+   "scraper": "fisekhane",
+   "place": "fisekhane",
+   "lists": [
+    "https://www.fisekhane.com/tr/etkinlikler.html"
+   ]
+  },
+  {
+   "id": "dasdas",
+   "name": "DasDas",
+   "site": "https://www.dasdas.com.tr",
+   "scraper": "dasdas",
+   "place": "dasdas",
+   "lists": [
+    "https://www.dasdas.com.tr/program?city=atasehir"
+   ]
+  },
+  {
+   "id": "kumbaraci50",
+   "name": "Kumbaracı50",
+   "site": "https://kumbaraci50.com",
+   "scraper": "kumbaraci",
+   "place": "kumbaraci50",
+   "lists": [
+    "https://kumbaraci50.com/program"
+   ]
+  },
+  {
+   "id": "borusan-contemporary",
+   "name": "Borusan Contemporary",
+   "site": "https://www.borusancontemporary.com",
+   "scraper": "listtext",
+   "place": "borusan-contemporary",
+   "lists": [
+    "https://www.borusancontemporary.com/tr/etkinlikler_18",
+    "https://www.borusancontemporary.com/tr/guncel-sergiler_12",
+    "https://www.borusancontemporary.com/tr/gelecek-sergiler_13"
+   ]
+  },
+  {
+   "id": "galata-rum-okulu",
+   "name": "Galata Rum Okulu",
+   "site": "https://galatarumokulu.org",
+   "scraper": "listtext",
+   "place": "galata-rum-okulu",
+   "lists": [
+    "https://galatarumokulu.org/tr/etkinlikler/",
+    "https://galatarumokulu.org/tr/sergiler/"
+   ]
+  },
+  {
+   "id": "sakip-sabanci",
+   "name": "Sakıp Sabancı Müzesi",
+   "site": "https://www.sakipsabancimuzesi.org",
+   "scraper": "listtext",
+   "place": "sakip-sabanci-muzesi",
+   "lists": [
+    "https://www.sakipsabancimuzesi.org/"
+   ],
+   "dropTitles": "^Sergiler Etkinlikler"
+  },
+  {
+   "id": "uniq",
+   "name": "UNIQ İstanbul",
+   "site": "https://www.uniqistanbul.com",
+   "scraper": "uniq",
+   "place": "uniq-istanbul",
+   "lists": [
+    "https://www.uniqistanbul.com/etkinlikler/"
+   ],
+   "maxPages": 25
+  },
+  {
+   "id": "bkm",
+   "name": "BKM",
+   "site": "https://bkmonline.net",
+   "scraper": "bkm",
+   "lists": [
+    "https://bkmonline.net/tr/etkinlikler"
+   ],
+   "maxPages": 20
+  }
+ ]
 }
