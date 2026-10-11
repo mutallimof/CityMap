@@ -30,7 +30,7 @@ export interface EventItem {
 }
 
 const problems: string[] = [];
-const bad = (msg: string) => problems.push(msg);
+const bad = (msg: string): void => void problems.push(msg);
 const isHttps = (u: unknown) => typeof u === 'string' && /^https:\/\/[^\s]+$/.test(u);
 const host = (u: string) => {
   try {
