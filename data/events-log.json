@@ -1,0 +1,92 @@
+{
+ "generated": "2026-10-11T14:09:36.552Z",
+ "venues": {
+  "arter": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 26
+  },
+  "akbank-sanat": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 3,
+   "unplaced": 37
+  },
+  "sehir-tiyatrolari": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 28,
+   "unplaced": 6
+  },
+  "istanbul-modern": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 3
+  },
+  "salt": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 6,
+   "unplaced": 8
+  },
+  "pera": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 6
+  },
+  "ibb-kultur": {
+   "status": "failed",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "count": 0,
+   "message": "fetch failed (Connect Timeout Error (attempted address: kultursanat.istanbul:443, timeout: 10000ms))"
+  },
+  "borusan": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 0
+  },
+  "iksv": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 0
+  },
+  "salon-iksv": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 0
+  },
+  "crr": {
+   "status": "failed",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "count": 0,
+   "message": "fetch failed (Connect Timeout Error (attempted address: www.crrkonsersalonu.org:443, timeout: 10000ms))"
+  },
+  "zorlu-psm": {
+   "status": "failed",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "count": 0,
+   "message": "fetch failed (Connect Timeout Error (attempted address: www.zorlupsm.com:443, timeout: 10000ms))"
+  },
+  "akm": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 7
+  },
+  "moda-sahnesi": {
+   "status": "ok",
+   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastOk": "2026-10-11T14:09:36.552Z",
+   "count": 0
+  }
+ }
+}
