@@ -74,7 +74,11 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
           else
             git commit -m "Data refresh ($(date -u +%F)): ${{ steps.what.outputs.what }}"
-            git push origin HEAD:phase-0
+            # someone may have pushed while we scraped: replay our data commit on top and retry
+            for i in 1 2 3; do
+              git pull --rebase -q origin phase-0 && git push origin HEAD:phase-0 && break
+              sleep $((i * 10))
+            done
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
