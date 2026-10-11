@@ -52,6 +52,8 @@ interface Venue {
   links?: string;
   skip?: string;
   maxPages?: number;
+  /** Category for items the title doesn't classify (e.g. "concert" at a music club). */
+  defaultCategory?: string;
   /** listtext: item titles to ignore (navigation that sits before a date). */
   dropTitles?: string;
   /** Why this venue isn't scraped right now (kept in the config so it's easy to turn back on). */
@@ -542,6 +544,7 @@ async function main() {
     console.log(`→ ${v.id} (${v.scraper})`);
     try {
       const { events, unplaced, note } = await scrape(v);
+      if (v.defaultCategory) for (const e of events) if (e.category === 'other') e.category = v.defaultCategory;
       const good = dedupeIds(events.filter(sane)).slice(0, MAX_PER_VENUE);
       if (!good.length && old.length) {
         keep('kept', `0 events now (layout change?)${unplaced ? `, ${unplaced} not on the map` : ''}`);

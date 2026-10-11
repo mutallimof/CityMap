@@ -266,7 +266,8 @@
    "name": "Salon İKSV",
    "site": "https://www.fibasaloniksv.com",
    "scraper": "salon",
-   "place": "salon-iksv"
+   "place": "salon-iksv",
+   "defaultCategory": "concert"
   },
   {
    "id": "crr",
@@ -326,7 +327,8 @@
     "https://www.nardisjazz.com/"
    ],
    "links": "^/etkinlik/[^/]+/?$",
-   "maxPages": 25
+   "maxPages": 25,
+   "defaultCategory": "concert"
   },
   {
    "id": "babylon",
@@ -339,7 +341,8 @@
     "https://www.babylon.com.tr/"
    ],
    "links": "^/tr/etkinlik-detay/[^/]+/[^/]+$",
-   "maxPages": 25
+   "maxPages": 25,
+   "defaultCategory": "concert"
   },
   {
    "id": "fisekhane",
@@ -414,7 +417,8 @@
    "lists": [
     "https://www.uniqistanbul.com/etkinlikler/"
    ],
-   "maxPages": 25
+   "maxPages": 25,
+   "defaultCategory": "concert"
   },
   {
    "id": "bkm",
