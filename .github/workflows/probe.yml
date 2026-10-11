@@ -17,10 +17,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx tsx scripts/events/probe.ts
+      - run: PROBE_JOBS="$(cat scripts/events/probe-jobs.json 2>/dev/null || echo '[]')" npx tsx scripts/events/probe.ts
         env:
           VENUES: ${{ vars.PROBE_VENUES }}
-          EXTRA_URLS: ''
       - name: Publish pages to probe-out
         run: |
           git config user.name "probe-bot"

@@ -1,0 +1,78 @@
+# Refreshes the static data the site ships with, then builds and deploys:
+#   - events: every day (venue scrapers, facts only, polite; see scripts/events)
+#   - stories: once a month (OSM + Wikidata + Wikipedia + Commons; see scripts/stories)
+# Data is validated first; nothing is committed or deployed when it's empty or broken.
+name: Refresh data (events daily, stories monthly)
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # 06:17 Istanbul — events
+    - cron: '43 2 3 * *' # 3rd of each month 05:43 Istanbul — stories
+  workflow_dispatch:
+    inputs:
+      what:
+        description: events, stories or both
+        default: both
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Decide what to refresh
+        id: what
+        run: |
+          W="${{ github.event.inputs.what }}"
+          if [ -z "$W" ]; then
+            if [ "${{ github.event.schedule }}" = "43 2 3 * *" ]; then W=stories; else W=events; fi
+          fi
+          echo "what=$W" >> "$GITHUB_OUTPUT"
+          echo "Refreshing: $W"
+      - name: Scrape venue events
+        if: steps.what.outputs.what == 'events' || steps.what.outputs.what == 'both'
+        run: npm run data:events
+        continue-on-error: true
+      - name: Build stories
+        if: steps.what.outputs.what == 'stories' || steps.what.outputs.what == 'both'
+        run: npm run data:stories
+        continue-on-error: true
+      - name: Validate data (fails → nothing is committed or deployed)
+        run: npm run validate:data
+      - name: Commit data
+        id: commit
+        run: |
+          git config user.name "data-refresh-bot"
+          git config user.email "data-refresh-bot@users.noreply.github.com"
+          git add data/events.json data/stories.json data/events-log.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
+          else
+            git commit -m "Data refresh ($(date -u +%F)): ${{ steps.what.outputs.what }}"
+            git push origin HEAD:phase-0
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: refresh
+    if: needs.refresh.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: phase-0

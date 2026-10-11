@@ -29,18 +29,20 @@ async function rulesFor(origin: string): Promise<Rules | 'blocked'> {
   return r;
 }
 
-async function timedFetch(url: string, accept = 'text/html,application/json;q=0.9,*/*;q=0.5'): Promise<Response> {
+async function timedFetch(url: string, accept = 'text/html,application/json;q=0.9,*/*;q=0.5', post?: { body: string; type: string }): Promise<Response> {
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), 25_000);
   try {
-    return await fetch(url, { headers: { 'User-Agent': USER_AGENT, Accept: accept, 'Accept-Language': 'tr,en;q=0.8' }, signal: ctl.signal, redirect: 'follow' });
+    const headers: Record<string, string> = { 'User-Agent': USER_AGENT, Accept: accept, 'Accept-Language': 'tr,en;q=0.8' };
+    if (post) headers['Content-Type'] = post.type;
+    return await fetch(url, { method: post ? 'POST' : 'GET', body: post?.body, headers, signal: ctl.signal, redirect: 'follow' });
   } finally {
     clearTimeout(t);
   }
 }
 
 /** GET a page if robots.txt allows it; waits so a host sees ≤ 1 request per MIN_DELAY_MS (or its Crawl-delay). */
-export async function politeGet(url: string, accept?: string): Promise<{ status: number; text: string; url: string }> {
+export async function politeGet(url: string, accept?: string, post?: { body: string; type: string }): Promise<{ status: number; text: string; url: string }> {
   const u = new URL(url);
   const rules = await rulesFor(u.origin);
   if (rules === 'blocked') throw new Blocked(`robots.txt forbidden (403) for ${u.origin}`);
@@ -49,8 +51,11 @@ export async function politeGet(url: string, accept?: string): Promise<{ status:
   const wait = (lastAt.get(u.host) ?? 0) + gap - Date.now();
   if (wait > 0) await sleep(wait);
   lastAt.set(u.host, Date.now());
-  const res = await timedFetch(url, accept);
+  const res = await timedFetch(url, accept, post);
   const text = await res.text();
-  console.log(`  GET ${res.status} ${url} (${text.length} B)`);
+  console.log(`  ${post ? 'POST' : 'GET'} ${res.status} ${url} (${text.length} B)`);
   return { status: res.status, text, url: res.url || url };
 }
+
+/** The site's own JSON endpoint behind its programme page (same robots/delay rules as pages). */
+export const politePost = (url: string, body: string, type: string, accept = 'application/json') => politeGet(url, accept, { body, type });

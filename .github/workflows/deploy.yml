@@ -4,6 +4,13 @@ on:
   push:
     branches: [phase-0]
   workflow_dispatch:
+  # Called by the data refresh job after it commits new data (pushes made with GITHUB_TOKEN
+  # don't trigger other workflows, so it deploys explicitly).
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -19,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
