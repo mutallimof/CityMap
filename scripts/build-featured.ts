@@ -88,10 +88,11 @@ const slug = (s: string) =>
     .replace(/^-|-$/g, '')
     .slice(0, 40);
 
-async function overpass(): Promise<OsmEl[]> {
-  const [w, s, e, n] = CONFIG.bounds;
-  const bb = `${s},${w},${n},${e}`;
-  const q = `[out:json][timeout:240];
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** One Overpass query for a small box, trying each endpoint with backoff (the servers 504 on big boxes). */
+async function overpassBox(bb: string): Promise<OsmEl[]> {
+  const q = `[out:json][timeout:120];
 (
   nwr["amenity"~"^(cafe|restaurant|bar|pub|ice_cream|theatre|cinema|arts_centre|marketplace)$"]["name"](${bb});
   nwr["shop"~"^(bakery|confectionery|pastry|mall|department_store)$"]["name"](${bb});
@@ -99,18 +100,36 @@ async function overpass(): Promise<OsmEl[]> {
   nwr["leisure"~"^(park|garden)$"]["name"](${bb});
 );
 out tags center;`;
-  for (const url of OVERPASS) {
-    try {
-      const res = await fetch(url, { method: 'POST', body: new URLSearchParams({ data: q }), headers: { 'User-Agent': UA, 'Content-Type': 'application/x-www-form-urlencoded' } });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const j = (await res.json()) as { elements: OsmEl[] };
-      console.log(`Overpass ${url}: ${j.elements.length} elements`);
-      return j.elements;
-    } catch (err) {
-      console.warn(`Overpass ${url} failed: ${(err as Error).message}`);
+  for (let attempt = 0; attempt < 3; attempt++) {
+    for (const url of OVERPASS) {
+      try {
+        const res = await fetch(url, { method: 'POST', body: new URLSearchParams({ data: q }), headers: { 'User-Agent': UA, 'Content-Type': 'application/x-www-form-urlencoded' } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return ((await res.json()) as { elements: OsmEl[] }).elements;
+      } catch (err) {
+        console.warn(`  Overpass ${new URL(url).host} (${bb}) failed: ${(err as Error).message}`);
+      }
     }
+    await sleep(15_000 * (attempt + 1));
   }
-  throw new Error('all Overpass endpoints failed');
+  throw new Error(`Overpass failed for ${bb}`);
+}
+
+/** The map area as a 4×4 grid of small queries, one after another with a pause (polite). */
+async function overpass(): Promise<OsmEl[]> {
+  const [w, s, e, n] = CONFIG.bounds;
+  const N = 4;
+  const out: OsmEl[] = [];
+  for (let i = 0; i < N; i++)
+    for (let j = 0; j < N; j++) {
+      const bb = [s + ((n - s) * j) / N, w + ((e - w) * i) / N, s + ((n - s) * (j + 1)) / N, w + ((e - w) * (i + 1)) / N].map((x) => x.toFixed(4)).join(',');
+      const els = await overpassBox(bb);
+      console.log(`Overpass box ${i * N + j + 1}/${N * N}: ${els.length} elements`);
+      out.push(...els);
+      await sleep(3000);
+    }
+  const seen = new Set<string>();
+  return out.filter((el) => !seen.has(`${el.type}/${el.id}`) && (seen.add(`${el.type}/${el.id}`), true));
 }
 
 async function main() {
