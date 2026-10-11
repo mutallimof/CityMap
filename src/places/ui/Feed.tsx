@@ -1,3 +1,4 @@
+import { placeVisible } from '../filters';
 import { useEffect, useState, type ReactNode } from 'react';
 import { CONFIG } from '../../config';
 import { formatHHMM } from '../../sim/time';
@@ -69,13 +70,14 @@ export function FeedBody({ extra }: { extra?: ReactNode }) {
   const lang = useUi((s) => s.lang);
   const openNow = useUi((s) => s.openNow);
   const categories = useUi((s) => s.categories);
+  const ev = useUi((s) => s.ev);
   const centre = useMapCentre();
   const [saved, setSaved] = useState(false);
   const store = places();
   const now = services().clock.now();
   const zoom = services().map.getZoom();
   const list = [...store.byId.values()]
-    .filter((p) => (saved ? store.favourites.has(p.id) : p.source === 'featured' && store.visible(p.id, { categories, openNow }, now)))
+    .filter((p) => (saved ? store.favourites.has(p.id) : p.source === 'featured' && placeVisible(store, p.id, { categories, openNow, ev }, now)))
     .map((p) => ({ p, d: distanceM(centre, p.lngLat), o: store.open(p.id, now) }))
     .sort((a, b) => a.d - b.d)
     .slice(0, 30);

@@ -1,13 +1,14 @@
 import type { ExpressionSpecification, FilterSpecification, GeoJSONSource, Map as MlMap, MapGeoJSONFeature, PointLike } from 'maplibre-gl';
 import type { FeatureCollection, MultiLineString, Point } from 'geojson';
 import { CONFIG } from '../config';
+import { filtersActive, placeVisible, poisVisible, storiesVisible } from './filters';
 import { CITY_SOURCE, LANDMARK_SOURCE } from '../map/city';
 import type { LandmarkProps } from '../data/load';
 import { osmFromTileId } from '../osm/nominatim';
 import type { Category } from '../ui/store';
 import { ICON_KINDS, iconImage, kindOfPlace, POI_KINDS, storyIcon, type IconKind } from './icons';
 import type { Story } from '../stories/stories';
-import { anyEventFilter, events, NO_EVENT_FILTERS, type EventFilters } from '../events/events';
+import { events, NO_EVENT_FILTERS, type EventFilters } from '../events/events';
 import type { PlacesStore } from './store';
 import type { Place, PlaceCategory } from './types';
 
@@ -230,7 +231,8 @@ export class PlaceLayers {
   }
 
   private featuredData(categories: Category[], openNow: boolean, nowMs: number, ev: EventFilters = NO_EVENT_FILTERS): GeoJSON.FeatureCollection {
-    const evOn = anyEventFilter(ev);
+    const f = { categories, openNow, ev };
+    const active = filtersActive(f);
     const s = this.store;
     return {
       type: 'FeatureCollection',
@@ -241,11 +243,12 @@ export class PlaceLayers {
           name: p.name,
           nameEn: p.nameEn ?? p.name,
           icon: kindOfPlace(p.kind, p.category),
-          major: !!p.major,
+          // With a filter on, every match shows at any zoom (not only the well-known ones), so picking a
+          // chip never leaves an empty map when zoomed out; collisions keep it tidy.
+          major: !!p.major || active,
           fav: s.favourites.has(p.id),
           open: s.open(p.id, nowMs).state === 'open',
-          // With an event chip on, only venues with matching events stay on the map.
-          vis: evOn ? events.placeMatches(p.id, ev, nowMs) && s.visible(p.id, { categories, openNow }, nowMs) : s.visible(p.id, { categories, openNow }, nowMs),
+          vis: placeVisible(s, p.id, f, nowMs),
           ev: events.status(p.id, nowMs) !== null,
         },
         geometry: { type: 'Point', coordinates: p.lngLat },
@@ -259,15 +262,15 @@ export class PlaceLayers {
     const night = f.night > 0.5;
     const golden = f.golden > 0.35 && !night;
     const minute = Math.floor(f.nowMs / 60_000);
-    const evOn = anyEventFilter(f.ev);
     const key = `${f.categories.join()}|${f.openNow}|${minute}|${[...this.store.favourites].join()}|${JSON.stringify(f.ev)}|${events.all.length}`;
     if (key !== this.state.key) {
       this.state.key = key;
       (map.getSource(FEATURED_SOURCE) as GeoJSONSource).setData(this.featuredData(f.categories, f.openNow, f.nowMs, f.ev));
       map.setFilter(LAYERS.poi, this.poiFilter(f.categories));
-      // Map POIs carry no opening hours, so "open now" shows only places whose hours we know.
-      map.setLayoutProperty(LAYERS.poi, 'visibility', f.openNow || evOn ? 'none' : 'visible');
-      if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'visibility', evOn ? 'none' : 'visible');
+      // Map POIs carry no opening hours or events; story markers are Culture.
+      const ff = { categories: f.categories, openNow: f.openNow, ev: f.ev };
+      map.setLayoutProperty(LAYERS.poi, 'visibility', poisVisible(ff) ? 'visible' : 'none');
+      if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'visibility', storiesVisible(ff) ? 'visible' : 'none');
     }
     if (night !== this.state.night || golden !== this.state.golden) {
       this.state.night = night;

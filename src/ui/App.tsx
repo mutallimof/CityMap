@@ -19,6 +19,8 @@ export interface AppSlots {
   nearbyPier?: (id: string) => ReactNode;
   feed?: { header: ReactNode; body: ReactNode };
   categories?: boolean;
+  /** Under the chips while a filter is on. */
+  filterHint?: ReactNode;
   introMs: number;
 }
 
@@ -39,6 +41,7 @@ export function App(slots: AppSlots) {
       <div className="hud-top">
         <TopBar extra={slots.topExtra} />
         <Chips withCategories={!!slots.categories} />
+        {slots.filterHint}
         <TimePanel />
       </div>
       <Legend />

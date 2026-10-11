@@ -1,3 +1,4 @@
+import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
 import '@fontsource/nunito/800.css';
 import './styles.css';
@@ -217,6 +218,7 @@ async function boot() {
     <App
       introMs={intro ? CONFIG.camera.intro.durationMs : 0}
       categories
+      filterHint={<FilterHint />}
       topExtra={<WeatherChip />}
       feed={{ header: <FeedHeader />, body: <FeedBody extra={<GuidesRow />} /> }}
       guideSheet={(id) => ({ header: <GuideHeader id={id} />, body: <GuideBody id={id} /> })}
