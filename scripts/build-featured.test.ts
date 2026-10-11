@@ -14,6 +14,7 @@ describe('auto-featured places', () => {
     expect(goodEnough({ name: 'X', opening_hours: 'a' }, 'food')).toBe(false);
     expect(goodEnough({ name: 'X', opening_hours: 'a', website: 'b', brand: 'Starbucks' }, 'food')).toBe(false);
     expect(goodEnough({ name: 'Park', wikidata: 'Q1' }, 'park')).toBe(true);
+    expect(goodEnough({ name: 'Kadıköy Belediyesi', wikidata: 'Q1' }, 'park')).toBe(false);
   });
 
   it('spreads picks over grid cells before taking seconds from busy ones', () => {

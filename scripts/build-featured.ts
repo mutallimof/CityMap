@@ -57,6 +57,8 @@ export function score(t: Record<string, string>): number {
 /** Good enough to feature: hours or Wikidata, plus one more useful detail. Parks/views: Wikidata or a website. */
 export function goodEnough(t: Record<string, string>, c: Category): boolean {
   if (!t.name || t.brand || t['brand:wikidata'] || t.amenity === 'fast_food') return false;
+  // a park "named" after the institution that runs it ("… Belediyesi") isn't a place name
+  if (/belediye|müdürlüğü|başkanlığı|bakanlığı/i.test(t.name)) return false;
   if (c === 'park' || c === 'view') return !!(t.wikidata || t.website || t['name:en']);
   const more = !!(t.website || t['contact:website'] || t.cuisine || t.phone || t['contact:phone']);
   return !!(t.opening_hours || t.wikidata) && more;
