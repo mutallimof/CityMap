@@ -1,1 +1,213 @@
-{"type":"FeatureCollection","features":[]}
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "ev-apartman-sahne",
+    "name": "Apartman Sahne",
+    "kind": "theatre",
+    "osm": "node/5601212240",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.030865,
+     41.002161
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "ev-baris-manco-kultur-merkezi",
+    "name": "Barış Manço Kültür Merkezi",
+    "kind": "concert_hall",
+    "osm": "way/694272066",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.025787,
+     40.988456
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "ev-bostanci-gosteri-merkezi",
+    "name": "Bostancı Gösteri Merkezi",
+    "kind": "arts_centre",
+    "osm": "way/499316052",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.102356,
+     40.956703
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "ev-caddebostan-kultur-merkezi",
+    "name": "Caddebostan Kültür Merkezi",
+    "kind": "arts_centre",
+    "osm": "way/164108939",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.064703,
+     40.967483
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "galata-rum-okulu",
+    "name": "Galata Rum Okulu",
+    "kind": "gallery",
+    "osm": "",
+    "address": "Kemeraltı Caddesi 25, Karaköy, Beyoğlu, İstanbul",
+    "website": "https://galatarumokulu.org",
+    "geocoded": "address"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.974905,
+     41.022178
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "kumbaraci50",
+    "name": "Kumbaracı50",
+    "kind": "theatre",
+    "osm": "",
+    "address": "Kumbaracı Yokuşu 50, Beyoğlu, İstanbul",
+    "website": "https://kumbaraci50.com",
+    "geocoded": "address"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.976747,
+     41.028643
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "moda-sahnesi",
+    "name": "Moda Sahnesi",
+    "kind": "theatre",
+    "osm": "",
+    "address": "Halil Etham Sokak 32, Caferağa, Kadıköy, İstanbul",
+    "website": "https://www.modasahnesi.com",
+    "geocoded": "address"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.029275,
+     40.986837
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "salon-iksv",
+    "name": "Salon İKSV",
+    "kind": "concert_hall",
+    "osm": "",
+    "address": "Sadi Konuralp Caddesi 5, Şişhane, Beyoğlu, İstanbul",
+    "website": "https://www.fibasaloniksv.com",
+    "geocoded": "address"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.971558,
+     41.028011
+    ]
+   }
+  }
+ ]
+}

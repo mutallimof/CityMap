@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-11T14:26:27.437Z",
+ "generated": "2026-10-11T15:08:59.206Z",
  "venues": {
   "arter": {
    "status": "ok",
@@ -9,10 +9,11 @@
   },
   "akbank-sanat": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 3,
-   "unplaced": 37
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 5,
+   "unplaced": 4,
+   "message": "not on the map: Frankhan Selectist · Minoa Pera · Çevrimiçi Platform – Zoom"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
@@ -61,10 +62,10 @@
    "count": 0
   },
   "salon-iksv": {
-   "status": "skipped",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "count": 0,
-   "message": "venue not in OpenStreetMap; programme is client-rendered from /plugins/iksv/plugins.ashx (programSalon=4582, lang=tr)"
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 34
   },
   "crr": {
    "status": "failed",
@@ -88,7 +89,79 @@
    "status": "skipped",
    "lastRun": "2026-10-11T14:09:36.552Z",
    "count": 0,
-   "message": "venue not in OpenStreetMap (robots.txt allows us; /events/<slug>/ pages)"
+   "message": "on the map (official address), but the site publishes no dates: event pages are posters and the calendar loads through a nonce-protected AJAX call; dates appear only at the reseller (Biletinial), which we don't use"
+  },
+  "nardis": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 25,
+   "message": "1 list page(s), 44 detail link(s), 0 without a date"
+  },
+  "babylon": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 26,
+   "message": "2 list page(s), 31 detail link(s), 0 without a date"
+  },
+  "fisekhane": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 39
+  },
+  "dasdas": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 79
+  },
+  "kumbaraci50": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 8
+  },
+  "borusan-contemporary": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 2
+  },
+  "galata-rum-okulu": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 2
+  },
+  "sakip-sabanci": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 1
+  },
+  "uniq": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 29
+  },
+  "bkm": {
+   "status": "ok",
+   "lastRun": "2026-10-11T15:08:59.206Z",
+   "lastOk": "2026-10-11T15:08:59.206Z",
+   "count": 13
   }
- }
+ },
+ "places": [
+  "salon-iksv: placed from short street (Sadi Konuralp Caddesi, Şişhane, Bedrettin, Bedrettin Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34440, Türkiye), address verified on the official page",
+  "moda-sahnesi: placed from short street (Halil Ethem Sokağı, Osmanağa Mahallesi, Kadıköy, İstanbul, Marmara Bölgesi, 34714, Türkiye), address verified on the official page",
+  "kumbaraci50: placed from house number (50, Kumbaracı Yokuşu, Şahkulu, Tomtom Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34421, Türkiye), address verified on the official page",
+  "galata-rum-okulu: placed from short street (Kemeraltı Caddesi, Karaköy, Kemankeş Karamustafa Paşa, Kemankeş Karamustafa Paşa Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34425, Türkiye), address verified on the official page",
+  "\"Barış Manço Kültür Merkezi\" → Barış Manço Kültür Merkezi (way/694272066, amenity/conference_centre)",
+  "\"Apartman Sahne\" → Apartman Sahne (node/5601212240, amenity/theatre)",
+  "\"Bostancı Gösteri Merkezi\" → Bostancı Gösteri Merkezi (way/499316052, amenity/arts_centre)",
+  "\"Caddebostan Kültür Merkezi\" → Caddebostan Kültür Merkezi (way/164108939, amenity/arts_centre)"
+ ]
 }
