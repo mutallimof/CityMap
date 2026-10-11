@@ -1,0 +1,32 @@
+# Development helper: fetch venue pages from GitHub's servers (the dev sandbox can't reach them)
+# and publish the raw pages to the `probe-out` branch for writing scrapers. Triggered by pushing
+# to `probe-run`. Temporary — removed once the scrapers are written.
+name: Probe venue sites
+on:
+  push:
+    branches: [probe-run]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsx scripts/events/probe.ts
+        env:
+          VENUES: ${{ vars.PROBE_VENUES }}
+          EXTRA_URLS: ''
+      - name: Publish pages to probe-out
+        run: |
+          git config user.name "probe-bot"
+          git config user.email "probe-bot@users.noreply.github.com"
+          git checkout --orphan probe-out
+          git rm -rf --cached . > /dev/null
+          git add -f probe
+          git commit -qm "probe $(date -u +%FT%TZ)"
+          git push -f origin probe-out

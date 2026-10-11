@@ -1,0 +1,19 @@
+{
+  "_comment": "Internal config for the event scrapers (not shown in the UI). One entry per venue site. `place` = id of the map place (data/places.geojson) the venue's events attach to; `stages` maps stage names on multi-stage sites to place ids. Ticket resellers (Biletix, Passo, Bubilet) are never fetched.",
+  "venues": [
+    { "id": "ibb-kultur", "name": "İBB Kültür Sanat", "site": "https://kultursanat.istanbul", "start": ["https://kultursanat.istanbul/etkinlikler", "https://kultursanat.istanbul/"] },
+    { "id": "crr", "name": "Cemal Reşit Rey Konser Salonu", "site": "https://www.crrkonsersalonu.org", "place": "cemal-resit-rey-konser-salonu", "start": ["https://crr.istanbul/", "https://www.crrkonsersalonu.org/"] },
+    { "id": "zorlu-psm", "name": "Zorlu PSM", "site": "https://www.zorlupsm.com", "place": "zorlu-center", "start": ["https://www.zorlupsm.com/etkinlikler", "https://www.zorlupsm.com/"] },
+    { "id": "iksv", "name": "İKSV", "site": "https://www.iksv.org", "start": ["https://www.iksv.org/tr/etkinlikler", "https://www.iksv.org/tr"] },
+    { "id": "salon-iksv", "name": "Salon İKSV", "site": "https://www.saloniksv.com", "start": ["https://www.saloniksv.com/tr/program", "https://www.saloniksv.com/"] },
+    { "id": "istanbul-modern", "name": "İstanbul Modern", "site": "https://www.istanbulmodern.org", "place": "istanbul-modern-sanat-muzesi", "start": ["https://www.istanbulmodern.org/etkinlikler", "https://www.istanbulmodern.org/"] },
+    { "id": "salt", "name": "SALT", "site": "https://saltonline.org", "start": ["https://saltonline.org/tr/program", "https://saltonline.org/tr"] },
+    { "id": "pera", "name": "Pera Müzesi", "site": "https://www.peramuzesi.org.tr", "place": "pera-muzesi", "start": ["https://www.peramuzesi.org.tr/etkinlikler", "https://www.peramuzesi.org.tr/"] },
+    { "id": "arter", "name": "Arter", "site": "https://www.arter.org.tr", "start": ["https://www.arter.org.tr/program", "https://www.arter.org.tr/"] },
+    { "id": "moda-sahnesi", "name": "Moda Sahnesi", "site": "https://www.modasahnesi.com", "start": ["https://www.modasahnesi.com/program", "https://www.modasahnesi.com/"] },
+    { "id": "akbank-sanat", "name": "Akbank Sanat", "site": "https://www.akbanksanat.com", "start": ["https://www.akbanksanat.com/etkinlikler", "https://www.akbanksanat.com/"] },
+    { "id": "borusan", "name": "Borusan Sanat", "site": "https://www.borusansanat.com", "place": "borusan-art-center", "start": ["https://www.borusansanat.com/tr/takvim", "https://www.borusansanat.com/"] },
+    { "id": "sehir-tiyatrolari", "name": "İBB Şehir Tiyatroları", "site": "https://sehirtiyatrolari.ibb.istanbul", "start": ["https://sehirtiyatrolari.ibb.istanbul/", "https://ibbsehirtiyatrolari.istanbul/"] },
+    { "id": "akm", "name": "Atatürk Kültür Merkezi", "site": "https://akmistanbul.gov.tr", "place": "ataturk-kultur-merkezi", "start": ["https://akmistanbul.gov.tr/tr/etkinlikler", "https://akmistanbul.gov.tr/"] }
+  ]
+}
