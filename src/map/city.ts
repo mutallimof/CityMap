@@ -98,10 +98,10 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       type: 'fill',
       source: CITY_SOURCE,
       'source-layer': 'landcover',
-      minzoom: 12,
+      minzoom: 9,
       filter: ['any', ['==', ['get', 'class'], 'wood'], ['in', ['get', 'subclass'], ['literal', ['park', 'garden']]]],
       layout: { visibility: p.blossom.length ? 'visible' : 'none' },
-      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z([[12, 0.2], [15, 0.5]]) },
+      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z(CONFIG.city.crowns.opacity) },
     },
     {
       id: CITY_LAYER.tulips,
@@ -382,7 +382,7 @@ export class CityLook {
     const key = p.blossom.join(',');
     if (key !== this.blossomKey) {
       this.blossomKey = key;
-      if (p.blossom.length) putImage(map, IMG.blossom, dotPattern(p.blossom, 64, 14, 1.8, 7));
+      if (p.blossom.length) putImage(map, IMG.blossom, crownPattern(p.blossom, 7));
       this.visible(CITY_LAYER.blossom, p.blossom.length > 0);
     }
     this.visible(CITY_LAYER.tulips, tulips);
@@ -463,6 +463,36 @@ export function dotPattern(colors: readonly string[], size: number, count: numbe
         g.fill();
       }
   }
+  return g.getImageData(0, 0, size, size);
+}
+
+/** Transparent tile with clumps of coloured dots — tree crowns (autumn leaves, blossom, snow). Wraps. */
+export function crownPattern(colors: readonly string[], seed: number): ImageData {
+  const c = CONFIG.city.crowns;
+  const size = c.tile;
+  const [, g] = canvas(size, size);
+  const rand = rng(seed);
+  for (let k = 0; k < c.clumps; k++) {
+    const cx = rand() * size;
+    const cy = rand() * size;
+    const dots = 4 + Math.floor(rand() * 5);
+    for (let i = 0; i < dots; i++) {
+      const a = rand() * Math.PI * 2;
+      const d = rand() * 6.5;
+      const x = cx + Math.cos(a) * d;
+      const y = cy + Math.sin(a) * d;
+      const r = c.dotR[0] + rand() * (c.dotR[1] - c.dotR[0]);
+      g.globalAlpha = 0.7 + rand() * 0.3;
+      g.fillStyle = colors[Math.floor(rand() * colors.length)];
+      for (const dx of [-size, 0, size])
+        for (const dy of [-size, 0, size]) {
+          g.beginPath();
+          g.arc(x + dx, y + dy, r, 0, Math.PI * 2);
+          g.fill();
+        }
+    }
+  }
+  g.globalAlpha = 1;
   return g.getImageData(0, 0, size, size);
 }
 

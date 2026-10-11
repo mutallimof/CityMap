@@ -171,11 +171,17 @@ export const CONFIG = {
     goldenTintAmount: 0.22,
     /** Vegetation by season (day colours; night palette stays dark). */
     seasons: {
-      spring: { grass: '#C4E9A2', park: '#B9E39A', wood: '#9AD38B', blossom: ['#C77DD8', '#F2A6C9', '#E58FB8'] },
-      summer: { grass: '#B0DD8B', park: '#A7D886', wood: '#80C274', blossom: [] as string[] },
-      autumn: { grass: '#D3DA98', park: '#CBD58C', wood: '#E3B271', blossom: ['#E8692F', '#F2A23A', '#C9472E'] },
-      winter: { grass: '#9DC59A', park: '#97C294', wood: '#5C9A78', blossom: [] as string[] },
+      // Forests stay green all year; the season shows as clumps of colour over the trees (`crowns`).
+      spring: { grass: '#C4E9A2', park: '#B9E39A', wood: '#8ECB7E', blossom: ['#F2A6C9', '#FFFFFF', '#C77DD8', '#E58FB8'] },
+      summer: { grass: '#B0DD8B', park: '#A7D886', wood: '#80C274', blossom: ['#6AAE5E', '#92CC7C', '#5E9F55'] },
+      autumn: { grass: '#C9D894', park: '#BCD58C', wood: '#86AE6A', blossom: ['#E8692F', '#F2A23A', '#D9B23A', '#C9472E', '#F2C44E'] },
+      winter: { grass: '#9DC59A', park: '#97C294', wood: '#6FA77F', blossom: ['#5A946C', '#7DB489', '#4E8862'] },
     },
+    /** Seasonal tree crowns over forests and parks: tile size (px), clumps per tile, dot radius, opacity by zoom. */
+    crowns: { tile: 192, clumps: 46, dotR: [2.2, 4.2] as [number, number], opacity: [[9, 0.55], [12, 0.62], [16, 0.55]] as [number, number][] },
+    /** Snow on trees: white crowns, forests keep most of their green. */
+    snowCrowns: ['#FFFFFF', '#F1F5F9', '#E3EBF2'],
+    snowOnWood: 0.22,
     /** Spring tulips in Emirgan Korusu (red / yellow / pink / white dots). */
     tulips: ['#E8344A', '#F7C531', '#F57FB0', '#FFFFFF', '#E8344A', '#FF8A3D'],
   },
