@@ -102,6 +102,13 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   (`applyPaper`, generated texture, `mix-blend-mode: multiply`, `style.paper`); classic vapur with a thin ink
   outline; Fraunces headings / district names, Patrick Hand place / street / pier names.
 
+### Night theme (`src/themes/night.ts`)
+- Navy land and sea all day (day = a lighter blue hour, dusk pinker, night deepest; weather still applies), streets
+  glowing by day too (`style.dayGlow`), cyan coast foam, neon-outlined vapurs, glowing bubble pins (`pinGlow`) and
+  names (`labelBlur`), dark HUD always. **Glow clouds** (`style.heat`): heatmap layer `place-heat` on the featured
+  places source — real data only: place density, venues with an event today weigh 1, well-known places 0.32,
+  others 0.18; under roads / buildings, fades out by z17. No 3D trees / heroes (kept clean).
+
 ### Fonts (all SIL OFL 1.1, self-hosted from @fontsource packages; credits page `public/fonts-credits.html`)
 | Font | Used for | Copyright |
 |---|---|---|

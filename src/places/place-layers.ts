@@ -32,6 +32,7 @@ export function featuredRank(p: { major?: boolean; auto?: boolean }, filtered: b
   return p.auto ? 2 : 1;
 }
 const STORY_SOURCE = 'stories';
+const HEAT = 'place-heat';
 const FEATURED_SOURCE = 'featured';
 
 export const CATEGORY_OF: Record<IconKind, PlaceCategory> = {
@@ -247,6 +248,8 @@ export class PlaceLayers {
       },
       before,
     );
+    this.labelGlow();
+    this.applyHeat();
   }
 
   /** Places drawn as hero models in the active look (their pins / stars / story markers step aside). */
@@ -280,7 +283,7 @@ export class PlaceLayers {
       const glowPoi = (k === 'bar' && this.state.night) || (k === 'viewpoint' && this.state.golden);
       put(`poi-${k}`, iconImage(k, { size: ic.poiSize, glow: glowPoi ? 1 : 0 }));
       // Bubbles stay clean: only an event today (or a bar at night / a viewpoint at sunset) glows.
-      const hot = glowPoi ? 1 : look().style.pins === 'bubble' ? 0 : 0.55;
+      const hot = glowPoi ? 1 : look().style.pinGlow;
       put(`feat-${k}`, iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }));
       // Compact pins for city zoom: no glow margin, so collision boxes are the pin itself and many more
       // fit; venues with an event today keep a (smaller) warm glow.
@@ -391,11 +394,49 @@ export class PlaceLayers {
     map.setPaintProperty(LAYERS.poi, 'text-color', textColor(night));
     map.setPaintProperty(LAYERS.featured, 'text-color', textColor(night));
     map.setPaintProperty(LAYERS.landmarks, 'text-color', landmarkColor(night));
+    this.labelGlow();
+    this.applyHeat();
     if (map.getLayer(LAYERS.stories)) {
       map.setLayoutProperty(LAYERS.stories, 'text-font', [...look().labels.storyFont]);
       map.setPaintProperty(LAYERS.stories, 'text-color', storyColor(night));
       map.setPaintProperty(LAYERS.stories, 'text-halo-color', haloColor(night));
     }
+  }
+
+  /** Halo blur of place names (a soft glow in some looks; 0 = classic). */
+  private labelGlow(): void {
+    const b = look().style.labelBlur;
+    for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks, LAYERS.stories]) if (this.map.getLayer(l)) this.map.setPaintProperty(l, 'text-halo-blur', b);
+  }
+
+  /**
+   * Glow clouds over busy areas (themes with style.heat): a heatmap of the real featured places, venues
+   * with an event today weighing most. Drawn on the ground under the roads and buildings.
+   */
+  private applyHeat(): void {
+    const map = this.map;
+    const heat = look().style.heat;
+    if (!map.getLayer(HEAT)) {
+      if (heat <= 0) return;
+      map.addLayer(
+        {
+          id: HEAT,
+          type: 'heatmap',
+          source: FEATURED_SOURCE,
+          maxzoom: 17,
+          paint: {
+            'heatmap-weight': ['case', ['get', 'ev'], 1, ['get', 'major'], 0.32, 0.18],
+            'heatmap-radius': ['interpolate', ['exponential', 1.6], ['zoom'], 10, 18, 13, 46, 16, 120],
+            'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 10, 0.9, 14, 1.6, 16, 2],
+            'heatmap-color': ['interpolate', ['linear'], ['heatmap-density'], 0, 'rgba(0,0,0,0)', 0.1, 'rgba(80, 70, 220, 0.22)', 0.35, 'rgba(160, 80, 235, 0.42)', 0.65, 'rgba(255, 95, 170, 0.55)', 1, 'rgba(255, 190, 100, 0.68)'],
+            'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 10, heat * 0.9, 15.5, heat * 0.75, 17, 0],
+          },
+        },
+        map.getLayer('city-road-glow') ? 'city-road-glow' : undefined,
+      );
+    }
+    map.setLayoutProperty(HEAT, 'visibility', heat > 0 ? 'visible' : 'none');
+    if (heat > 0) map.setPaintProperty(HEAT, 'heatmap-opacity', ['interpolate', ['linear'], ['zoom'], 10, heat * 0.9, 15.5, heat * 0.75, 17, 0]);
   }
 
   /** Ids of the featured pins actually drawn right now (after zoom filters and collisions). */
@@ -445,7 +486,7 @@ export class PlaceLayers {
           'text-max-width': 9,
           'text-optional': true,
         },
-        paint: { 'text-color': storyColor(this.state.night), 'text-halo-color': haloColor(this.state.night), 'text-halo-width': 1.5 },
+        paint: { 'text-color': storyColor(this.state.night), 'text-halo-color': haloColor(this.state.night), 'text-halo-width': 1.5, 'text-halo-blur': look().style.labelBlur },
       },
       LAYERS.landmarks,
     );

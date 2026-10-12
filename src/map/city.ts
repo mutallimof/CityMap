@@ -438,9 +438,11 @@ export class CityLook {
     this.set(CITY_LAYER.roofs, 'fill-extrusion-opacity', buildingOpacity(1));
     this.set(CITY_LAYER.buildingsLit, 'fill-extrusion-opacity', buildingOpacity(litK));
     this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - litK * 0.999));
-    this.visible(CITY_LAYER.roadGlow, night > 0.05);
+    // Street lights glow at night (some looks keep a glow by day too: style.dayGlow).
+    const g = Math.max(night, look().style.dayGlow);
+    this.visible(CITY_LAYER.roadGlow, g > 0.05);
     // Street-light glow only once you're close enough to read streets; zoomed out it would be orange noise.
-    const glow = Math.round(night * look().city.lights.glowOpacity * 20) / 20;
+    const glow = Math.round(g * look().city.lights.glowOpacity * 20) / 20;
     this.set(CITY_LAYER.roadGlow, 'line-opacity', ['interpolate', ['linear'], ['zoom'], 12.6, 0, 14.2, glow]);
     this.visible(CITY_LAYER.bridgeLamps, night > 0.3);
     this.set(CITY_LAYER.bridgeLamps, 'line-opacity', Math.round(night * 20) / 20);

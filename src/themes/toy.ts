@@ -150,6 +150,8 @@ export const toy = defineTheme({
     heat: 0,
     dayGlow: 0,
     labelHalo: 2,
+    labelBlur: 0,
+    pinGlow: 0,
   },
   ui: {
     vars: {

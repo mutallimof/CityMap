@@ -73,4 +73,5 @@ export function setLabelFonts(map: MlMap): void {
   map.setLayoutProperty(LABEL_LAYERS.pier, 'text-font', [...t.city.font]);
   map.setPaintProperty(LABEL_LAYERS.district, 'text-halo-width', t.style.labelHalo);
   map.setPaintProperty(LABEL_LAYERS.pier, 'text-halo-width', t.style.labelHalo - 0.1);
+  for (const l of [LABEL_LAYERS.district, LABEL_LAYERS.pier]) map.setPaintProperty(l, 'text-halo-blur', t.style.labelBlur);
 }

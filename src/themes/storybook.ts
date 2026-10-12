@@ -150,6 +150,8 @@ export const storybook = defineTheme({
     heat: 0,
     dayGlow: 0,
     labelHalo: 1.6,
+    labelBlur: 0.6,
+    pinGlow: 0,
   },
   ui: {
     vars: {

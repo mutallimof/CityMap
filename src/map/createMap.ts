@@ -5,7 +5,7 @@ import { CONFIG } from '../config';
 import { buildStyle, SOURCE } from './style';
 import { initialCamera } from './intro';
 import { shorelineFromLand } from './shoreline';
-import { addMapLabels } from './labels';
+import { addMapLabels, setLabelFonts } from './labels';
 import { loadDistricts, loadLand, loadLandmarks, loadPiers, type DistrictProps, type LandmarkProps, type PierProps } from '../data/load';
 import { addCity } from './city-setup';
 import { registerBuildingsProtocol } from './buildings/protocol';
@@ -50,6 +50,7 @@ export async function createMap(container: HTMLElement, withIntro = false): Prom
 
   const city = addCity(map, landmarks);
   addMapLabels(map, districts, piers);
+  setLabelFonts(map);
 
   return { map, piers, land, city, districts, landmarks };
 }

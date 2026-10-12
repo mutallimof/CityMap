@@ -4,11 +4,12 @@
  * not saved), else the one saved on this device, else DEFAULT_THEME. `look()` is what drawing code reads.
  */
 import { classic } from './classic';
+import { night } from './night';
 import { storybook } from './storybook';
 import { toy } from './toy';
 import type { ThemeSpec } from './types';
 
-export const THEMES: ThemeSpec[] = [classic, toy, storybook];
+export const THEMES: ThemeSpec[] = [classic, toy, storybook, night];
 
 export const DEFAULT_THEME = 'classic';
 const KEY = 'theme:v1';

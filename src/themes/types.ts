@@ -76,8 +76,11 @@ export interface ThemeStyle {
   heat: number;
   /** Street glow by day too (0 = only at night, classic). */
   dayGlow: number;
-  /** Map label text width of the halo (px). */
+  /** Map label text width of the halo (px) and its blur (px; > 0 = a soft glow). */
   labelHalo: number;
+  labelBlur: number;
+  /** Halo around featured pins (0 = none; classic 0.55). */
+  pinGlow: number;
 }
 
 /** Everything that defines a look. Code reads it with `look()` (src/themes). */

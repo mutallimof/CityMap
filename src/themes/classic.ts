@@ -62,6 +62,8 @@ export const classic: ThemeSpec = {
     heat: 0,
     dayGlow: 0,
     labelHalo: 1.6,
+    labelBlur: 0,
+    pinGlow: 0.55,
   },
   // The HUD's original tokens live in src/ui/ui.css (:root); Classic changes nothing.
   ui: { vars: {}, nightVars: {} },
