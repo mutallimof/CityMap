@@ -14,7 +14,8 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 - No API keys, no backend: static data + keyless services (OpenFreeMap, Open-Meteo, Nominatim).
 - Priorities: beauty and smooth ferry motion → 60 fps on a mid-range phone → correctness (ferries never cross land;
   positions are a pure function of clock time). Respect reduce-motion everywhere.
-- **Every visual constant lives in `src/config.ts`.** Record decisions in this file.
+- **Every visual constant lives in `src/config.ts`** (shared tunables + the Classic look) **or in its theme's file in
+  `src/themes/`** (one file per look). Record decisions in this file.
 
 ## Current state (2026-10-12, city sound from real recordings)
 - **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
@@ -43,6 +44,24 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   closes during visit, hours unknown, overlap, arrives late, gone — no "last ferry" warning); stops numbered on the
   map, start / end as rings, ferry legs on their real lanes; saved on the device; share link `#plan=` (read-only
   view + "Copy to my plans"; start / end only with the share dialog's toggle, off by default).
+
+## Themes (switchable looks, `src/themes`)
+- A theme is a `ThemeSpec` (`src/themes/types.ts`): base palettes (day / sunset / night), city palettes + seasons,
+  shore / piers / routes, water, wake, vapur colours, night lights, smoke, gulls, light, weather colours, icon
+  colours, label colours + fonts, guide / plan colours, `style` knobs (water marks, building caps, toy vapur, bubble
+  pins, 3D trees / landmarks, paper grain, heat glow…) and `ui` (CSS tokens day + night, extra CSS, lazy `assets`).
+- **Classic** (`classic.ts`) = the original look, built from CONFIG (no visual change: screenshots diff within
+  animation noise vs v0.1.0). Drawing code reads `look()` (never CONFIG for themed values).
+- **Add a theme:** one file `src/themes/<id>.ts` exporting `defineTheme({ id, name, blurb, card, …only what
+  changes })` (deep-merged over Classic; arrays replace) + one line in `THEMES` (`registry.ts`). The registry test
+  checks every theme has Classic's shape. Day/night from the sun, live weather and seasons apply to every theme
+  (they blend the theme's own palettes).
+- Choice: `?theme=<id>` (test switch, not saved) › saved on the device (`localStorage theme:v1`) › `DEFAULT_THEME`.
+  Switcher: palette button in the top bar → preview cards (`src/ui/ThemePanel.tsx`, original mini-map SVGs).
+- **Live switch**, no reload: a soft veil in the new land colour (`src/themes/dom.ts`, instant with reduce-motion),
+  then every module re-reads the look: `retheme()` on CityLook, VapurLayer (+ gulls), WeatherLayer, PlaceLayers,
+  DaylightController (re-applies palette / water / light), `basePaint` / `guidePaint` / `planPaint` triples,
+  `setLabelFonts`; the HUD gets `data-theme` + a generated `<style>` of tokens. React re-renders via `useTheme()`.
 
 ## Sound sources (all Wikimedia Commons; licence and author re-checked on each file page by `data:audio`)
 | File(s) | Commons file | Author | Licence |
@@ -131,7 +150,7 @@ ids/names/rules (no coordinates).
 coast distance field · `src/map` style, city (OFM) layers + look, buildings protocol/workers, skyline ·
 `src/places` stores, filters, layers, icons, sheets · `src/events`, `src/stories`, `src/fun` (gull facts),
 `src/audio` (city sound: `mix.ts` pure levels, `engine.ts` Web Audio), `src/weather`, `src/time` (sun/palette), `src/ui` (React HUD, store, i18n),
-`src/app` (daylight, perf ladder, PWA), `scripts/` (data builders + scrapers, Turf only here; `scripts/timetables` PDF parser).
+`src/app` (daylight, perf ladder, PWA), `src/themes` (looks: registry, Classic, others), `scripts/` (data builders + scrapers, Turf only here; `scripts/timetables` PDF parser).
 Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest 5.
 
 ## Key decisions & traps (keep in mind)

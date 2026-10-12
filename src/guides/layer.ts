@@ -1,5 +1,5 @@
+import { look } from '../themes';
 import type { GeoJSONSource, Map as MlMap } from 'maplibre-gl';
-import { CONFIG } from '../config';
 import { guideGeoJSON, type ResolvedGuide } from './guides';
 
 const SRC = 'guide';
@@ -27,7 +27,7 @@ export function addGuideLayers(map: MlMap): void {
       source: SRC,
       filter: ['==', ['get', 'mode'], 'walk'],
       layout: { 'line-join': 'round', 'line-cap': 'round' },
-      paint: { 'line-color': CONFIG.guides.walkColor, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.5, 16, 5], 'line-dasharray': ['literal', [0.2, 1.8]] },
+      paint: { 'line-color': look().guides.walkColor, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.5, 16, 5], 'line-dasharray': ['literal', [0.2, 1.8]] },
     },
     before,
   );
@@ -37,7 +37,7 @@ export function addGuideLayers(map: MlMap): void {
       type: 'circle',
       source: SRC,
       filter: ['==', ['geometry-type'], 'Point'],
-      paint: { 'circle-radius': 11, 'circle-color': CONFIG.guides.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 },
+      paint: { 'circle-radius': 11, 'circle-color': look().guides.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 },
     },
     before,
   );
@@ -47,7 +47,7 @@ export function addGuideLayers(map: MlMap): void {
       type: 'symbol',
       source: SRC,
       filter: ['==', ['geometry-type'], 'Point'],
-      layout: { 'text-field': ['get', 'n'], 'text-font': [...CONFIG.city.fontBold], 'text-size': 12, 'text-allow-overlap': true, 'text-ignore-placement': true },
+      layout: { 'text-field': ['get', 'n'], 'text-font': [...look().city.fontBold], 'text-size': 12, 'text-allow-overlap': true, 'text-ignore-placement': true },
       paint: { 'text-color': '#FFFFFF' },
     },
     before,
@@ -56,4 +56,14 @@ export function addGuideLayers(map: MlMap): void {
 
 export function showGuide(map: MlMap, g: ResolvedGuide | null): void {
   (map.getSource(SRC) as GeoJSONSource | undefined)?.setData(g ? guideGeoJSON(g) : EMPTY);
+}
+
+/** Theme-dependent paint of the guide layers (re-applied on a theme switch). */
+export function guidePaint(): [string, string, unknown][] {
+  const t = look();
+  return [
+    ['guide-walk', 'line-color', t.guides.walkColor],
+    ['guide-stops', 'circle-color', t.guides.stopColor],
+    ['guide-num', 'layout:text-font', [...t.city.fontBold]],
+  ];
 }

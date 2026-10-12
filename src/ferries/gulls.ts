@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import * as THREE from 'three';
 import { CONFIG } from '../config';
 
@@ -51,15 +52,25 @@ export class Gulls {
 
   constructor() {
     const g = CONFIG.gulls;
-    this.mesh = new THREE.InstancedMesh(gullGeometry(), new THREE.MeshBasicMaterial({ color: g.color, side: THREE.DoubleSide }), g.count);
+    this.mesh = new THREE.InstancedMesh(gullGeometry(), new THREE.MeshBasicMaterial({ color: look().gulls.color, side: THREE.DoubleSide }), g.count);
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.mesh.frustumCulled = false;
     this.mesh.count = 0;
     // golden "fact" gulls (tappable) — instance colours multiply the white material
     const white = new THREE.Color('#FFFFFF');
-    const gold = new THREE.Color(g.factColor);
+    const gold = new THREE.Color(look().gulls.factColor);
     for (let i = 0; i < g.count; i++) this.mesh.setColorAt(i, i < g.factCount ? gold : white);
     this.gulls = Array.from({ length: g.count }, (_, i) => ({ vesselId: null, cx: 0, cy: 0, init: false, phase: (i * 2.399) % (Math.PI * 2) }));
+  }
+
+  /** Theme switch: gull colours. */
+  retheme(): void {
+    const g = CONFIG.gulls;
+    (this.mesh.material as THREE.MeshBasicMaterial).color.set(look().gulls.color);
+    const white = new THREE.Color('#FFFFFF');
+    const gold = new THREE.Color(look().gulls.factColor);
+    for (let i = 0; i < g.count; i++) this.mesh.setColorAt(i, i < g.factCount ? gold : white);
+    if (this.mesh.instanceColor) this.mesh.instanceColor.needsUpdate = true;
   }
 
   /** `targets`: candidate vessels (underway, near the view centre first). */

@@ -2,7 +2,8 @@
  * Headless screenshot of the running dev server (npm run dev) with real WebGL (SwiftShader).
  *   node scripts/dev/shot.mjs <out.png> "<query/hash>" [waitMs=9000] [width=430] [height=860]
  * e.g. node scripts/dev/shot.mjs /tmp/a.png "adaptive=0&intro=0&t=19:00&view=29.0,41.02,14&theme=toy"
- * Env: EVAL='<js expr>' prints its JSON value after the wait. Uses the globally installed Playwright and
+ * Env: ACT='<js>' runs after the wait (then ACT_WAIT ms, default 2500) before the shot — dev globals like `ui`,
+ * `map` exist; EVAL='<js expr>' prints its JSON value after the shot. Uses the globally installed Playwright and
  * the pre-installed Chromium (PLAYWRIGHT_BROWSERS_PATH); tiles go through HTTPS_PROXY when set.
  * Always pass adaptive=0&intro=0 (headless runs at a few fps; the intro / adaptive ladder would interfere)
  * and set the camera with ?view= (camera jumps crash the headless browser).
@@ -43,6 +44,10 @@ await page.addInitScript(() => {
 const sep = qs.startsWith('?') || qs.startsWith('#') ? '' : '?';
 await page.goto(`${process.env.BASE_URL ?? 'http://localhost:5173/'}${sep}${qs}`, { waitUntil: 'load', timeout: 60000 });
 await page.waitForTimeout(+waitMs);
+if (process.env.ACT) {
+  await page.evaluate(process.env.ACT);
+  await page.waitForTimeout(+(process.env.ACT_WAIT ?? 2500));
+}
 await page.screenshot({ path: out });
 if (process.env.EVAL) console.log('eval:', JSON.stringify(await page.evaluate(process.env.EVAL)));
 if (logs.length) console.log(logs.slice(0, 15).join('\n'));

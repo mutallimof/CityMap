@@ -5,6 +5,7 @@ import { useT } from './i18n';
 import { services } from './services';
 import { setLang, ui, useUi } from './store';
 import { PlanButton } from '../plan/ui';
+import { ThemeButton } from './ThemePanel';
 
 export function TopBar({ extra }: { extra?: React.ReactNode }) {
   useTicker(500);
@@ -31,6 +32,7 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
       </button>
       {extra}
       <span className="topbar__spacer" />
+      <ThemeButton />
       <PlanButton />
       <button className="iconbtn" onClick={() => ui.set({ search: true })} aria-label={t('search')}>
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>

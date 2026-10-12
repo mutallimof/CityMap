@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { Map as MlMap } from 'maplibre-gl';
 import { CONFIG, type Palette } from '../config';
 import { LAYER } from '../map/style';
@@ -83,7 +84,7 @@ export class DaylightController {
     const palette = weatherPalette(theme.palette, c, theme.night);
     this.applyMap(palette);
     this.t.city.apply(cityLook({ night: theme.night, golden, season, wet: c.rain, snow: c.snow, cloud: c.cloud }), theme.night, season === 'spring');
-    const d = CONFIG.daylight;
+    const d = look().daylight;
     const lf = lightFactor(c);
     const sunColor = mixHex(d.sunDay, d.sunGolden, golden);
     const sea = chop(c);
@@ -91,13 +92,13 @@ export class DaylightController {
       deep: palette.water,
       shallow: palette.waterShallow,
       night: theme.night,
-      sparkle: (CONFIG.water.sparkleDay + (CONFIG.water.sparkleGolden - CONFIG.water.sparkleDay) * golden) * (1 - theme.night) * lf * lf,
+      sparkle: (look().water.sparkleDay + (look().water.sparkleGolden - look().water.sparkleDay) * golden) * (1 - theme.night) * lf * lf,
       sunColor: theme.night > 0.6 ? d.moon : sunColor,
       sunAzimuth: theme.night > 0.6 ? (sun.azimuth + 180) % 360 : sun.azimuth,
       rain: c.rain,
       chop: sea,
     });
-    const l = CONFIG.light;
+    const l = look().light;
     const sunAz = theme.night > 0.6 ? (sun.azimuth + 180) % 360 : sun.azimuth;
     this.t.ferries.setLighting({
       sunAzimuth: sunAz,
@@ -117,17 +118,25 @@ export class DaylightController {
     this.t.weatherLayer.set({ rain: c.rain, snow: c.snow, fog: c.fog, thunder: c.thunder, windToward: (c.windFrom + 180) % 360, windMs: c.windMs, night: theme.night });
     // 3D buildings: light from the sun (or moon), softer under cloud.
     // Night: a pale, nearly neutral light so facades keep their value (a blue moon tint muddies them).
-    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), CONFIG.city.lights.moonLight, theme.night), (0.4 - theme.night * 0.18) * (0.75 + 0.25 * lf));
+    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), look().city.lights.moonLight, theme.night), (0.4 - theme.night * 0.18) * (0.75 + 0.25 * lf));
     const root0 = document.documentElement;
     root0.dataset.season = season;
     root0.dataset.weather = c.rain > 0.3 ? 'rain' : c.snow > 0.3 ? 'snow' : c.fog > 0.3 ? 'fog' : 'clear';
     root0.classList.toggle('season-spring', season === 'spring');
     const root = document.documentElement;
-    root.style.setProperty('--label-text', mixHex(CONFIG.colors.labelText, CONFIG.colors.labelTextNight, theme.night));
-    root.style.setProperty('--label-halo', mixHex(CONFIG.colors.labelHaloHex, CONFIG.colors.labelHaloNight, theme.night) + 'D9');
+    root.style.setProperty('--label-text', mixHex(look().colors.labelText, look().colors.labelTextNight, theme.night));
+    root.style.setProperty('--label-halo', mixHex(look().colors.labelHaloHex, look().colors.labelHaloNight, theme.night) + 'D9');
     root.style.setProperty('--water', theme.palette.water);
     root.dataset.night = theme.night > 0.5 ? '1' : '0';
     if (changed) for (const fn of this.listeners) fn();
+  }
+
+  /** Theme switch: forget what was applied and re-apply everything for the new look. */
+  retheme(): void {
+    this.applied = null;
+    this.lightKey = '';
+    this.update();
+    for (const fn of this.listeners) fn();
   }
 
   private lightKey = '';

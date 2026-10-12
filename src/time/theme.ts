@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import { CONFIG, type Palette } from '../config';
 
 export interface Theme {
@@ -44,7 +45,7 @@ export function themeAt(elevation: number): Theme {
   const night = smooth((0 - elevation) / (0 - nightBelow)); // 0 at horizon → 1 at nightBelow
   // Golden: rises below dayAbove, peaks at the horizon, gone by nightBelow.
   const golden = elevation >= 0 ? 1 - smooth(elevation / dayAbove) : 1 - smooth(-elevation / -nightBelow);
-  const { day, sunset, night: nightP } = CONFIG.colors;
+  const { day, sunset, night: nightP } = look().colors;
   const lit = mixPalette(day, sunset, golden * 0.85);
   return { night, golden, palette: mixPalette(lit, nightP, night) };
 }

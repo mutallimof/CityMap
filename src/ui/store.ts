@@ -22,6 +22,8 @@ export interface UiState {
   search: boolean;
   /** Map legend popover open. */
   legend: boolean;
+  /** Map style (theme) picker open. */
+  themes: boolean;
   /** Event chips: only venues with matching events. */
   ev: EventFilters;
   hint: boolean;
@@ -70,6 +72,7 @@ export const ui = createStore<UiState>({
   openNow: false,
   search: false,
   legend: false,
+  themes: false,
   ev: NO_EVENT_FILTERS,
   timePanel: false,
   hint: true,

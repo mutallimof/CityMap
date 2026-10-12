@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import * as THREE from 'three';
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
@@ -157,10 +158,10 @@ export class WaterLayer implements CustomLayerInterface {
         uNight: { value: 0 },
         uSparkle: { value: 1 },
         uMotion: { value: 1 },
-        uDeep: { value: new THREE.Color(CONFIG.colors.day.water) },
-        uShallow: { value: new THREE.Color(CONFIG.colors.day.waterShallow) },
+        uDeep: { value: new THREE.Color(look().colors.day.water) },
+        uShallow: { value: new THREE.Color(look().colors.day.waterShallow) },
         uSunColor: { value: new THREE.Color('#ffffff') },
-        uCityLight: { value: new THREE.Color(w.cityLight) },
+        uCityLight: { value: new THREE.Color(look().water.cityLight) },
         uSunDir: { value: new THREE.Vector2(0, -1) },
         uCentre: { value: new THREE.Vector2() },
         uViewR: { value: 5000 },
@@ -201,6 +202,7 @@ export class WaterLayer implements CustomLayerInterface {
     const a = (u.sunAzimuth * Math.PI) / 180;
     m.uSunDir.value.set(Math.sin(a), Math.cos(a));
     m.uRain.value = u.rain ?? 0;
+    m.uCityLight.value.set(look().water.cityLight);
     m.uChop.value = u.chop ?? 0;
   }
 

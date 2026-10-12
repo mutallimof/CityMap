@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import * as THREE from 'three';
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from 'maplibre-gl';
 import { CONFIG } from '../config';
@@ -154,8 +155,8 @@ export class WeatherLayer implements CustomLayerInterface {
         uCentre: { value: new THREE.Vector2() },
         uFwd: { value: new THREE.Vector2(0, 1) },
         uViewR: { value: 5000 },
-        uAlpha: { value: w.fogAlpha },
-        uColor: { value: new THREE.Color(w.fogColor) },
+        uAlpha: { value: look().weather.fogAlpha },
+        uColor: { value: new THREE.Color(look().weather.fogColor) },
       },
       ...common,
     });
@@ -183,8 +184,8 @@ export class WeatherLayer implements CustomLayerInterface {
           uSpeed: { value: snow ? w.snowSpeed : w.rainSpeed },
           uSlant: { value: 0 },
           uSnow: { value: snow ? 1 : 0 },
-          uColor: { value: new THREE.Color(snow ? '#ffffff' : w.rainColor) },
-          uAlpha: { value: snow ? 0.9 : w.rainAlpha },
+          uColor: { value: new THREE.Color(snow ? '#ffffff' : look().weather.rainColor) },
+          uAlpha: { value: snow ? 0.9 : look().weather.rainAlpha },
         },
         ...common,
       });
@@ -200,6 +201,17 @@ export class WeatherLayer implements CustomLayerInterface {
     this.flash = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.flashMat);
     this.flash.frustumCulled = false;
     this.screenScene.add(this.flash);
+  }
+
+  private fogDay = new THREE.Color(look().weather.fogColor);
+  private fogNight = new THREE.Color(look().weather.fogNight);
+
+  /** Theme switch: fog and rain colours. */
+  retheme(): void {
+    const w = look().weather;
+    this.fogDay.set(w.fogColor);
+    this.fogNight.set(w.fogNight);
+    this.rainMat?.uniforms.uColor.value.set(w.rainColor);
   }
 
   set(v: WeatherVisuals): void {
@@ -234,8 +246,8 @@ export class WeatherLayer implements CustomLayerInterface {
       u.uCentre.value.set(cx, cy);
       u.uFwd.value.set(Math.sin(b), Math.cos(b));
       u.uViewR.value = R;
-      u.uColor.value.set(w.fogColor).lerp(new THREE.Color(w.fogNight), v.night);
-      u.uAlpha.value = w.fogAlpha * (1 - v.night * 0.25);
+      u.uColor.value.copy(this.fogDay).lerp(this.fogNight, v.night);
+      u.uAlpha.value = look().weather.fogAlpha * (1 - v.night * 0.25);
       this.fogMesh.position.set(cx, cy, 0);
       this.fogMesh.scale.set(R * 6, R * 6, 1);
       this.camera.projectionMatrix = sharedFrame.projection(args);
@@ -257,7 +269,7 @@ export class WeatherLayer implements CustomLayerInterface {
     };
     setP(this.rain, this.rainMat, v.rain, w.rainDrops);
     setP(this.snow, this.snowMat, v.snow, w.snowFlakes);
-    this.rainMat.uniforms.uAlpha.value = w.rainAlpha * (1 - v.night * 0.4);
+    this.rainMat.uniforms.uAlpha.value = look().weather.rainAlpha * (1 - v.night * 0.4);
 
     // Lightning: random double flicker, mean `lightningEveryS` apart.
     let flash = 0;

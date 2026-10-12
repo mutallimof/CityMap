@@ -1,3 +1,4 @@
+import { look } from '../../themes';
 import { addProtocol } from 'maplibre-gl';
 import { CONFIG } from '../../config';
 import BuildingsWorker from './worker?worker';
@@ -23,7 +24,7 @@ export async function registerBuildingsProtocol(): Promise<void> {
       else p.resolve(e.data.data!);
     };
   let next = 0;
-  const b = CONFIG.city.buildings;
+  const b = look().city.buildings;
   addProtocol(BUILDINGS_PROTOCOL, (params) => {
     const m = /^buildings:\/\/(\d+)\/(\d+)\/(\d+)/.exec(params.url);
     if (!m) return Promise.reject(new Error(`bad url ${params.url}`));

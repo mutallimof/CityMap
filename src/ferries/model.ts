@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { CONFIG } from '../config';
@@ -79,7 +80,7 @@ function cylinder(rTop: number, rBottom: number, z0: number, z1: number, color: 
 
 export function buildVapur(): VapurGeometry {
   const { lengthM: L, beamM: B } = CONFIG.ferries;
-  const c = CONFIG.colors.vapur;
+  const c = look().colors.vapur;
   const k = L / 70; // proportions designed for a 70 m vessel
 
   const parts = [

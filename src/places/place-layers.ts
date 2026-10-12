@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { ExpressionSpecification, FilterSpecification, GeoJSONSource, Map as MlMap, MapGeoJSONFeature, PointLike } from 'maplibre-gl';
 import type { FeatureCollection, MultiLineString, Point } from 'geojson';
 import { CONFIG } from '../config';
@@ -101,8 +102,10 @@ export function placeFromFeature(f: Feat): Place | null {
   };
 }
 
-const textColor = (night: boolean) => (night ? '#ECE4D6' : '#4A3D30');
-const haloColor = (night: boolean) => (night ? 'rgba(18,22,30,0.92)' : 'rgba(255,250,242,0.95)');
+const textColor = (night: boolean) => (night ? look().labels.poiNight : look().labels.poi);
+const haloColor = (night: boolean) => (night ? look().labels.poiHaloNight : look().labels.poiHalo);
+const landmarkColor = (night: boolean) => (night ? look().labels.landmarkNight : look().labels.landmark);
+const storyColor = (night: boolean) => (night ? look().labels.storyNight : look().labels.story);
 
 export class PlaceLayers {
   private skip: number[];
@@ -135,7 +138,7 @@ export class PlaceLayers {
           'icon-padding': ic.poiPadding,
           // Names only for the important ones until you're close in.
           'text-field': ['step', ['zoom'], '', p.poiNamesFrom, ['case', ['<=', ['coalesce', ['get', 'rank'], 999], CONFIG.places.poiNameRank], ['coalesce', ['get', 'name'], ''], ''], 17.4, ['coalesce', ['get', 'name'], '']],
-          'text-font': [...CONFIG.city.fontBold],
+          'text-font': [...look().labels.placeFont],
           'text-size': 11,
           'text-offset': [0, 1.05],
           'text-anchor': 'top',
@@ -159,13 +162,13 @@ export class PlaceLayers {
         id: LAYERS.landmarks,
         type: 'symbol',
         source: LANDMARK_SOURCE,
-        minzoom: CONFIG.city.landmarkLabelsFrom - 1,
+        minzoom: look().city.landmarkLabelsFrom - 1,
         filter: ['all', ['==', ['geometry-type'], 'Point'], ['!=', ['get', 'kind'], 'tulips']],
         layout: {
           'icon-image': 'landmark-big',
           'icon-padding': 2,
           'text-field': this.nameField(),
-          'text-font': [...CONFIG.city.fontBold],
+          'text-font': [...look().labels.placeFont],
           'text-size': 12.5,
           'text-offset': [0, 1.3],
           'text-anchor': 'top',
@@ -173,7 +176,7 @@ export class PlaceLayers {
           'text-optional': true,
           'symbol-sort-key': 0,
         },
-        paint: { 'text-color': '#8A6410', 'text-halo-color': haloColor(false), 'text-halo-width': 1.6 },
+        paint: { 'text-color': landmarkColor(false), 'text-halo-color': haloColor(false), 'text-halo-width': 1.6 },
       },
       before,
     );
@@ -199,7 +202,7 @@ export class PlaceLayers {
           'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1],
           'icon-padding': 2,
           'text-field': ['step', ['zoom'], '', p.featuredNamesFrom, this.nameField()],
-          'text-font': [...CONFIG.city.fontBold],
+          'text-font': [...look().labels.placeFont],
           'text-size': 12.5,
           'text-anchor': 'top',
           'text-offset': [0, 0.3],
@@ -240,12 +243,12 @@ export class PlaceLayers {
       const mini = ic.featuredSize * ic.miniScale;
       put(`featm-${k}`, iconImage(k, { size: mini, pin: true }));
       put(`featm-${k}-o`, withOpenDot(iconImage(k, { size: mini, pin: true }), mini));
-      put(`featm-${k}-ev`, iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: ic.eventGlow }));
-      put(`featm-${k}-ev-o`, withOpenDot(iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: ic.eventGlow }), mini));
+      put(`featm-${k}-ev`, iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: look().icons.eventGlow }));
+      put(`featm-${k}-ev-o`, withOpenDot(iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: look().icons.eventGlow }), mini));
       put(`feat-${k}-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }), ic.featuredSize));
       // A venue with an event today glows warm gold.
-      put(`feat-${k}-ev`, iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: ic.eventGlow }));
-      put(`feat-${k}-ev-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: ic.eventGlow }), ic.featuredSize));
+      put(`feat-${k}-ev`, iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: look().icons.eventGlow }));
+      put(`feat-${k}-ev-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: look().icons.eventGlow }), ic.featuredSize));
     }
     put('landmark-big', iconImage('landmark', { size: ic.landmarkSize, glow: this.state.night ? 0.9 : 0.5 }));
   }
@@ -311,9 +314,9 @@ export class PlaceLayers {
       for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks]) map.setPaintProperty(l, 'text-halo-color', haloColor(night));
       map.setPaintProperty(LAYERS.poi, 'text-color', textColor(night));
       map.setPaintProperty(LAYERS.featured, 'text-color', textColor(night));
-      map.setPaintProperty(LAYERS.landmarks, 'text-color', night ? '#F3CB6B' : '#8A6410');
+      map.setPaintProperty(LAYERS.landmarks, 'text-color', landmarkColor(night));
       if (map.getLayer(LAYERS.stories)) {
-        map.setPaintProperty(LAYERS.stories, 'text-color', night ? '#F0CC7A' : '#7A5A12');
+        map.setPaintProperty(LAYERS.stories, 'text-color', storyColor(night));
         map.setPaintProperty(LAYERS.stories, 'text-halo-color', haloColor(night));
       }
     }
@@ -322,6 +325,27 @@ export class PlaceLayers {
       map.setLayoutProperty(LAYERS.featured, 'text-field', ['step', ['zoom'], '', CONFIG.places.featuredNamesFrom, this.nameField()]);
       map.setLayoutProperty(LAYERS.landmarks, 'text-field', this.nameField());
       if (map.getLayer(LAYERS.stories)) map.setLayoutProperty(LAYERS.stories, 'text-field', ['step', ['zoom'], '', CONFIG.places.storyNamesFrom, this.nameField()]);
+    }
+  }
+
+  /** Theme switch: icons, label colours and fonts. */
+  retheme(): void {
+    const map = this.map;
+    const night = this.state.night;
+    this.addImages();
+    if (map.hasImage('story')) map.updateImage('story', storyIcon(CONFIG.icons.storySize));
+    const font = [...look().labels.placeFont];
+    for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks]) {
+      map.setLayoutProperty(l, 'text-font', font);
+      map.setPaintProperty(l, 'text-halo-color', haloColor(night));
+    }
+    map.setPaintProperty(LAYERS.poi, 'text-color', textColor(night));
+    map.setPaintProperty(LAYERS.featured, 'text-color', textColor(night));
+    map.setPaintProperty(LAYERS.landmarks, 'text-color', landmarkColor(night));
+    if (map.getLayer(LAYERS.stories)) {
+      map.setLayoutProperty(LAYERS.stories, 'text-font', [...look().labels.storyFont]);
+      map.setPaintProperty(LAYERS.stories, 'text-color', storyColor(night));
+      map.setPaintProperty(LAYERS.stories, 'text-halo-color', haloColor(night));
     }
   }
 
@@ -364,14 +388,14 @@ export class PlaceLayers {
           'icon-size': ['interpolate', ['linear'], ['zoom'], CONFIG.places.storiesFrom, 0.75, 16, 1],
           'icon-padding': 4,
           'text-field': ['step', ['zoom'], '', CONFIG.places.storyNamesFrom, this.nameField()],
-          'text-font': ['Noto Sans Italic'],
+          'text-font': [...look().labels.storyFont],
           'text-size': 11.5,
           'text-offset': [0, 1.0],
           'text-anchor': 'top',
           'text-max-width': 9,
           'text-optional': true,
         },
-        paint: { 'text-color': this.state.night ? '#F0CC7A' : '#7A5A12', 'text-halo-color': haloColor(this.state.night), 'text-halo-width': 1.5 },
+        paint: { 'text-color': storyColor(this.state.night), 'text-halo-color': haloColor(this.state.night), 'text-halo-width': 1.5 },
       },
       LAYERS.landmarks,
     );

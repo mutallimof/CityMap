@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { ExpressionSpecification, Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, Point } from 'geojson';
 import { CONFIG } from '../config';
@@ -27,28 +28,28 @@ export function addMapLabels(map: MlMap, districts: FeatureCollection<Point, Nam
     maxzoom: l.districtMaxZoom,
     layout: {
       'text-field': ['upcase', field('tr')],
-      'text-font': [...CONFIG.city.fontBold],
+      'text-font': [...look().city.fontBold],
       'text-size': ['interpolate', ['linear'], ['zoom'], 11, 11, 14, 13.5],
       'text-letter-spacing': 0.14,
       'text-max-width': 12,
       'symbol-sort-key': 0,
     },
-    paint: { 'text-color': CONFIG.colors.labelText, 'text-halo-color': CONFIG.colors.labelHaloHex, 'text-halo-width': 1.6, 'text-opacity': 0.85 },
+    paint: { 'text-color': look().colors.labelText, 'text-halo-color': look().colors.labelHaloHex, 'text-halo-width': 1.6, 'text-opacity': 0.85 },
   });
   map.addLayer({
     id: LABEL_LAYERS.pier,
     type: 'symbol',
     source: 'labels-pier',
-    minzoom: CONFIG.piers.labelMinZoom,
+    minzoom: look().piers.labelMinZoom,
     layout: {
       'text-field': field('tr'),
-      'text-font': [...CONFIG.city.font],
+      'text-font': [...look().city.font],
       'text-size': 11.5,
       'text-anchor': 'top',
       'text-offset': [0, 0.8],
       'text-optional': true,
     },
-    paint: { 'text-color': '#1F5E6E', 'text-halo-color': CONFIG.colors.labelHaloHex, 'text-halo-width': 1.5 },
+    paint: { 'text-color': look().labels.pier, 'text-halo-color': look().colors.labelHaloHex, 'text-halo-width': 1.5 },
   });
 }
 
@@ -58,8 +59,18 @@ export function setLabelLang(map: MlMap, lang: 'tr' | 'en'): void {
 }
 
 export function setLabelNight(map: MlMap, night: boolean): void {
-  map.setPaintProperty(LABEL_LAYERS.district, 'text-color', night ? CONFIG.colors.labelTextNight : CONFIG.colors.labelText);
-  map.setPaintProperty(LABEL_LAYERS.district, 'text-halo-color', night ? CONFIG.colors.labelHaloNight : CONFIG.colors.labelHaloHex);
-  map.setPaintProperty(LABEL_LAYERS.pier, 'text-color', night ? '#9FD3DE' : '#1F5E6E');
-  map.setPaintProperty(LABEL_LAYERS.pier, 'text-halo-color', night ? CONFIG.colors.labelHaloNight : CONFIG.colors.labelHaloHex);
+  const t = look();
+  map.setPaintProperty(LABEL_LAYERS.district, 'text-color', night ? t.colors.labelTextNight : t.colors.labelText);
+  map.setPaintProperty(LABEL_LAYERS.district, 'text-halo-color', night ? t.colors.labelHaloNight : t.colors.labelHaloHex);
+  map.setPaintProperty(LABEL_LAYERS.pier, 'text-color', night ? t.labels.pierNight : t.labels.pier);
+  map.setPaintProperty(LABEL_LAYERS.pier, 'text-halo-color', night ? t.colors.labelHaloNight : t.colors.labelHaloHex);
+}
+
+/** Theme switch: fonts and halo widths (colours follow with setLabelNight). */
+export function setLabelFonts(map: MlMap): void {
+  const t = look();
+  map.setLayoutProperty(LABEL_LAYERS.district, 'text-font', [...t.city.fontBold]);
+  map.setLayoutProperty(LABEL_LAYERS.pier, 'text-font', [...t.city.font]);
+  map.setPaintProperty(LABEL_LAYERS.district, 'text-halo-width', t.style.labelHalo);
+  map.setPaintProperty(LABEL_LAYERS.pier, 'text-halo-width', t.style.labelHalo - 0.1);
 }

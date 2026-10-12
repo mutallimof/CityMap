@@ -4,8 +4,8 @@
  * plan drawn on the map: numbered stops, start / end points, walks as dotted lines, ferry legs along
  * their real lanes.
  */
+import { look } from '../themes';
 import type { FilterSpecification, GeoJSONSource, Map as MlMap } from 'maplibre-gl';
-import { CONFIG } from '../config';
 import { events } from '../events/events';
 import { openAt } from '../places/store';
 import { places } from '../places/ui/context';
@@ -79,7 +79,7 @@ function connectionFeatures(c: Connection, a: [number, number], b: [number, numb
   if (pa) out.push(walkLine(a, pa));
   if (pb) out.push(walkLine(pb, b));
   const coords = rideCoords(c.lineId, c.via);
-  if (coords.length > 1) out.push({ type: 'Feature', properties: { mode: 'ferry', color: s.lineById.get(c.lineId)?.color ?? CONFIG.guides.stopColor }, geometry: { type: 'LineString', coordinates: coords } });
+  if (coords.length > 1) out.push({ type: 'Feature', properties: { mode: 'ferry', color: s.lineById.get(c.lineId)?.color ?? look().guides.stopColor }, geometry: { type: 'LineString', coordinates: coords } });
   return out;
 }
 
@@ -117,12 +117,12 @@ export function addPlanLayers(map: MlMap): void {
   map.addSource(SRC, { type: 'geojson', data: EMPTY });
   const before = map.getLayer('weather') ? 'weather' : undefined;
   map.addLayer({ id: 'plan-ferry', type: 'line', source: SRC, filter: ['==', ['get', 'mode'], 'ferry'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 3.5, 16, 8], 'line-opacity': 0.95 } }, before);
-  map.addLayer({ id: 'plan-walk', type: 'line', source: SRC, filter: ['==', ['get', 'mode'], 'walk'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': CONFIG.guides.walkColor, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.5, 16, 5], 'line-dasharray': ['literal', [0.2, 1.8]] } }, before);
+  map.addLayer({ id: 'plan-walk', type: 'line', source: SRC, filter: ['==', ['get', 'mode'], 'walk'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': look().guides.walkColor, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.5, 16, 5], 'line-dasharray': ['literal', [0.2, 1.8]] } }, before);
   const isEnd: FilterSpecification = ['has', 'end'];
-  map.addLayer({ id: 'plan-ends', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 10, 'circle-color': '#FFFFFF', 'circle-stroke-color': CONFIG.plan.endColor, 'circle-stroke-width': 4 } }, before);
-  map.addLayer({ id: 'plan-ends-dot', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 3.5, 'circle-color': CONFIG.plan.endColor } }, before);
-  map.addLayer({ id: 'plan-stops', type: 'circle', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], paint: { 'circle-radius': 12, 'circle-color': CONFIG.plan.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 } }, before);
-  map.addLayer({ id: 'plan-num', type: 'symbol', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], layout: { 'text-field': ['get', 'n'], 'text-font': [...CONFIG.city.fontBold], 'text-size': 12.5, 'text-allow-overlap': true, 'text-ignore-placement': true }, paint: { 'text-color': '#FFFFFF' } }, before);
+  map.addLayer({ id: 'plan-ends', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 10, 'circle-color': '#FFFFFF', 'circle-stroke-color': look().plan.endColor, 'circle-stroke-width': 4 } }, before);
+  map.addLayer({ id: 'plan-ends-dot', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 3.5, 'circle-color': look().plan.endColor } }, before);
+  map.addLayer({ id: 'plan-stops', type: 'circle', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], paint: { 'circle-radius': 12, 'circle-color': look().plan.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 } }, before);
+  map.addLayer({ id: 'plan-num', type: 'symbol', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], layout: { 'text-field': ['get', 'n'], 'text-font': [...look().city.fontBold], 'text-size': 12.5, 'text-allow-overlap': true, 'text-ignore-placement': true }, paint: { 'text-color': '#FFFFFF' } }, before);
 }
 
 export function showPlanOnMap(days: DayTimeline[] | null): void {
@@ -136,4 +136,16 @@ export function fitPlan(days: DayTimeline[]): void {
   const xs = pts.map((p) => p[0]);
   const ys = pts.map((p) => p[1]);
   services().map.fitBounds([Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)], { padding: { top: 150, bottom: Math.round(window.innerHeight * 0.5), left: 50, right: 50 }, maxZoom: 15, duration: 1200 });
+}
+
+/** Theme-dependent paint of the plan layers (re-applied on a theme switch). */
+export function planPaint(): [string, string, unknown][] {
+  const t = look();
+  return [
+    ['plan-walk', 'line-color', t.guides.walkColor],
+    ['plan-ends', 'circle-stroke-color', t.plan.endColor],
+    ['plan-ends-dot', 'circle-color', t.plan.endColor],
+    ['plan-stops', 'circle-color', t.plan.stopColor],
+    ['plan-num', 'layout:text-font', [...t.city.fontBold]],
+  ];
 }

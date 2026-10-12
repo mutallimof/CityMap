@@ -1,3 +1,9 @@
+import { look, onTheme } from './themes';
+import { applyThemeDom, softFade } from './themes/dom';
+import { basePaint, setStyleProps } from './map/style';
+import { setLabelFonts } from './map/labels';
+import { guidePaint } from './guides/layer';
+import { clearIconUrls } from './places/icons';
 import { Skyline } from './map/skyline';
 import { browserDeps, CitySound } from './audio/engine';
 import { distM, hearRadiusM } from './audio/mix';
@@ -56,7 +62,7 @@ import { flyTo, openPier, openPlace, setPlaces } from './places/ui/context';
 import { FeedBody, FeedHeader } from './places/ui/Feed';
 import { PlaceBody, PlaceHeader } from './places/ui/PlaceSheet';
 import { NearbyPlaces, WeatherChip } from './places/ui/Extras';
-import { addPlanLayers } from './plan/runtime';
+import { addPlanLayers, planPaint } from './plan/runtime';
 import { bindPlanSelection, openPlan, PlanBody, PlanHeader } from './plan/ui';
 import { decodePlan } from './plan/share';
 import { planStore } from './plan/store';
@@ -68,11 +74,12 @@ function parseDeepLink(): { kind: 'place' | 'pier' | 'guide' | 'plan'; id: strin
 import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
+  void applyThemeDom(look());
   const r = document.documentElement.style;
-  r.setProperty('--water', CONFIG.colors.day.water);
-  r.setProperty('--label-text', CONFIG.colors.labelText);
-  r.setProperty('--label-halo', CONFIG.colors.labelHalo);
-  r.setProperty('--font', CONFIG.labels.fontFamily);
+  r.setProperty('--water', look().colors.day.water);
+  r.setProperty('--label-text', look().colors.labelText);
+  r.setProperty('--label-halo', look().colors.labelHalo);
+  r.setProperty('--font', look().labels.fontFamily);
 }
 
 async function boot() {
@@ -326,6 +333,29 @@ async function boot() {
     planStore.set({ shared, sharedBroken: !shared });
     openPlan('shared');
   }
+
+  // Live theme switch: a soft veil, then every layer re-reads look() (src/themes).
+  onTheme((t) =>
+    softFade(
+      t.card.land,
+      async () => {
+        await applyThemeDom(t);
+        applyCssTokens();
+        clearIconUrls();
+        setStyleProps(map, [...basePaint(), ...guidePaint(), ...planPaint()]);
+        setLabelFonts(map);
+        city.retheme();
+        ferries.retheme();
+        weatherLayer.retheme();
+        placeLayers.retheme();
+        labelState = '';
+        daylight.retheme();
+        refreshPins();
+        await new Promise<void>((r) => setTimeout(r, 600)); // let the map repaint under the veil
+      },
+      reduced,
+    ),
+  );
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.

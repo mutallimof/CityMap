@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { ExpressionSpecification, MapMouseEvent } from 'maplibre-gl';
 import { CONFIG } from '../config';
 import { LAYER } from '../map/style';
@@ -85,7 +86,7 @@ export function bindMapInteractions(
       const lineId = s.selection?.kind === 'vessel' ? ferries.drawn.get(s.selection.id)?.pose.state.lineId : undefined;
       const opacity: ExpressionSpecification | number = lineId
         ? ['case', ['==', ['get', 'lineId'], lineId], 0.95, CONFIG.selection.routeDimOpacity]
-        : CONFIG.routes.opacity;
+        : look().routes.opacity;
       map.setPaintProperty(LAYER.routes, 'line-opacity', opacity);
     }
     prev = s;

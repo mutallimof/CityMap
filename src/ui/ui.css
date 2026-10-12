@@ -599,3 +599,41 @@
   .chip--weather { min-width: 0; flex-shrink: 1; overflow: hidden; }
   .chip--weather .chip__demo { display: none; }
 }
+
+/* ---- Map style (theme) picker ---- */
+.themes {
+  position: absolute;
+  top: calc(var(--safe-top) + 104px);
+  right: 12px;
+  width: min(340px, calc(100vw - 24px));
+  max-height: calc(100vh - var(--safe-top) - 260px);
+  overflow-y: auto;
+  pointer-events: auto;
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  z-index: 6;
+}
+.themes__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.themecard {
+  display: grid;
+  gap: 4px;
+  padding: 6px 6px 8px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  background: rgba(127, 127, 127, 0.08);
+  text-align: left;
+  transition: transform 150ms var(--ease), border-color 200ms var(--ease);
+}
+.themecard:active { transform: scale(0.97); }
+.themecard--on { border-color: var(--accent); background: rgba(127, 127, 127, 0.04); }
+.themecard__art { width: 100%; height: auto; border-radius: 9px; display: block; }
+.themecard__name { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-weight: 800; font-size: 14px; }
+.themecard__on { font-size: 10.5px; font-weight: 800; color: var(--accent-ink); background: var(--accent); padding: 1px 6px; border-radius: 99px; }
+.themecard__blurb { font-size: 11.5px; line-height: 1.3; color: var(--muted); }

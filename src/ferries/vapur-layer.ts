@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import * as THREE from 'three';
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from 'maplibre-gl';
 import { sharedFrame, sharedRenderer } from '../three/context';
@@ -163,18 +164,18 @@ export class VapurLayer implements CustomLayerInterface {
     this.accent = new THREE.InstancedMesh(geo.accent, new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true }), MAX_VESSELS);
     const shadowGeo = new THREE.PlaneGeometry(1, 1);
     const shadowMat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(CONFIG.ferries.shadowColor),
+      color: new THREE.Color(look().ferries.shadowColor),
       alphaMap: shadowTexture(),
       transparent: true,
-      opacity: CONFIG.ferries.shadowOpacity,
+      opacity: look().ferries.shadowOpacity,
       depthWrite: false,
     });
     this.shadow = new THREE.InstancedMesh(shadowGeo, shadowMat, MAX_VESSELS);
     this.anchors = geo.anchors;
-    this.windowMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.vapur.windows });
+    this.windowMat = new THREE.MeshBasicMaterial({ color: look().colors.vapur.windows });
     this.windows = new THREE.InstancedMesh(geo.windows, this.windowMat, MAX_VESSELS);
     this.reflectMat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(CONFIG.nightLights.reflection),
+      color: new THREE.Color(look().nightLights.reflection),
       alphaMap: streakTexture(),
       transparent: true,
       opacity: 0,
@@ -203,13 +204,41 @@ export class VapurLayer implements CustomLayerInterface {
     this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.rings.points, this.splash.points, this.lights.points);
     this.scene.add(this.root);
 
-    const l = CONFIG.light;
+    const l = look().light;
     this.hemi = new THREE.HemisphereLight(l.sky, l.ground, l.hemiIntensity);
     this.hemi.position.set(0, 0, 1);
     this.scene.add(this.hemi);
     this.sun = new THREE.DirectionalLight(l.sun, l.sunIntensity);
     this.setLighting({ sunAzimuth: l.sunAzimuth, sunElevation: l.sunElevation, sunColor: l.sun, sunIntensity: l.sunIntensity, sky: l.sky, ground: l.ground, hemiIntensity: l.hemiIntensity, night: 0 });
     this.scene.add(this.sun);
+  }
+
+  /** Theme switch: hull model and colours, shadow, night lights, gulls (lighting follows from daylight). */
+  retheme(): void {
+    if (!this.body) return;
+    const geo = buildVapur();
+    for (const [mesh, g] of [
+      [this.body, geo.body],
+      [this.accent, geo.accent],
+      [this.windows, geo.windows],
+    ] as const) {
+      mesh.geometry.dispose();
+      mesh.geometry = g;
+    }
+    this.anchors = geo.anchors;
+    const t = look();
+    const sm = this.shadow.material as THREE.MeshBasicMaterial;
+    sm.color.set(t.ferries.shadowColor);
+    sm.opacity = t.ferries.shadowOpacity;
+    this.reflectMat.color.set(t.nightLights.reflection);
+    this.cRed.set(t.nightLights.port);
+    this.cGreen.set(t.nightLights.starboard);
+    this.cWhite.set(t.nightLights.masthead);
+    this.cHorn.set(t.moments.hornColor);
+    this.cBurstBase.set(t.moments.burstColor);
+    this.cSmokeDay.set(t.smoke.color);
+    this.cSmokeNight.set(t.smoke.nightColor);
+    this.gulls.retheme();
   }
 
   /** Light the fleet for the current sun/moon (called by the day/night controller). */
@@ -224,8 +253,8 @@ export class VapurLayer implements CustomLayerInterface {
     this.hemi.groundColor.set(l.ground);
     this.hemi.intensity = l.hemiIntensity;
     this.night = l.night;
-    const nl = CONFIG.nightLights;
-    this.windowMat.color.set(CONFIG.colors.vapur.windows).lerp(new THREE.Color(nl.windowGlow), Math.min(1, l.night * 1.2));
+    const nl = look().nightLights;
+    this.windowMat.color.set(look().colors.vapur.windows).lerp(new THREE.Color(nl.windowGlow), Math.min(1, l.night * 1.2));
     this.reflectMat.opacity = nl.reflectionOpacity * l.night ** 2;
   }
 
@@ -333,7 +362,7 @@ export class VapurLayer implements CustomLayerInterface {
       this.shadow.setMatrixAt(n, m);
 
       // Night: a warm light streak on the water, stretching towards the viewer.
-      const nl = CONFIG.nightLights;
+      const nl = look().nightLights;
       q.setFromAxisAngle(this.zAxis, -viewBack * DEG);
       p.set(px + vbx * L * nl.reflectionLength * 0.5, py + vby * L * nl.reflectionLength * 0.5, 0.2);
       s.set(B * nl.reflectionWidth * grow, L * nl.reflectionLength * grow, 1);
@@ -369,7 +398,7 @@ export class VapurLayer implements CustomLayerInterface {
     if (this.accent.instanceColor) this.accent.instanceColor.needsUpdate = true;
 
     const w = CONFIG.wake;
-    this.wake.update(trails, { hullLength: L, beam: B, spread: w.spread, maxWidthBeams: w.maxWidthBeams, color: c.set(w.color), opacity: w.opacity }, tReal);
+    this.wake.update(trails, { hullLength: L, beam: B, spread: w.spread, maxWidthBeams: w.maxWidthBeams, color: c.set(look().wake.color), opacity: look().wake.opacity }, tReal);
 
     this.camera.projectionMatrix = sharedFrame.projection(args);
     this.renderer.resetState();
@@ -379,16 +408,16 @@ export class VapurLayer implements CustomLayerInterface {
 
   private zAxis = new THREE.Vector3(0, 0, 1);
   private tmpV = new THREE.Vector3();
-  private cRed = new THREE.Color(CONFIG.nightLights.port);
-  private cGreen = new THREE.Color(CONFIG.nightLights.starboard);
-  private cWhite = new THREE.Color(CONFIG.nightLights.masthead);
+  private cRed = new THREE.Color(look().nightLights.port);
+  private cGreen = new THREE.Color(look().nightLights.starboard);
+  private cWhite = new THREE.Color(look().nightLights.masthead);
   private cSmoke = new THREE.Color();
 
   /** Port (red), starboard (green) and masthead (white) lights, from the hull's model matrix. */
   private pushLights(m: THREE.Matrix4, grow: number): void {
     const a = this.anchors;
     const alpha = this.night * grow * (1 - this.fog * 0.5);
-    const size = CONFIG.nightLights.sizeM;
+    const size = look().nightLights.sizeM;
     for (const [anchor, col] of [
       [a.port, this.cRed],
       [a.starboard, this.cGreen],
@@ -420,7 +449,7 @@ export class VapurLayer implements CustomLayerInterface {
     }
     if (dep < mo.burstS) {
       const [wx, wy] = unitFromBearing(this.wind.toward);
-      this.cBurst.set(CONFIG.moments.burstColor).lerp(new THREE.Color(CONFIG.smoke.nightColor), this.night * 0.6);
+      this.cBurst.copy(this.cBurstBase).lerp(this.cSmokeNight, this.night * 0.6);
       for (let i = 0; i < mo.burstPuffs; i++) {
         const a = dep - (i / mo.burstPuffs) * mo.burstS * 0.45;
         if (a < 0) continue;
@@ -457,7 +486,10 @@ export class VapurLayer implements CustomLayerInterface {
     }
   }
 
-  private cHorn = new THREE.Color(CONFIG.moments.hornColor);
+  private cHorn = new THREE.Color(look().moments.hornColor);
+  private cBurstBase = new THREE.Color(look().moments.burstColor);
+  private cSmokeDay = new THREE.Color(look().smoke.color);
+  private cSmokeNight = new THREE.Color(look().smoke.nightColor);
   private cFoam = new THREE.Color('#F4FBFA');
   private cBurst = new THREE.Color();
 
@@ -474,8 +506,8 @@ export class VapurLayer implements CustomLayerInterface {
     const speed = v.state.speed; // m/s real; the visual trail scales with exaggeration
     const seed = hash01(v.state.vesselId) * sm.lifeS;
     const life = this.reduceMotion ? sm.lifeS * 1.6 : sm.lifeS;
-    const base = (v.state.phase === 'docked' ? sm.dockedAlpha : sm.alpha) * grow * (1 - this.night * 0.55);
-    this.cSmoke.set(sm.color).lerp(new THREE.Color(sm.nightColor), this.night);
+    const base = (v.state.phase === 'docked' ? look().smoke.dockedAlpha : look().smoke.alpha) * grow * (1 - this.night * 0.55);
+    this.cSmoke.copy(this.cSmokeDay).lerp(this.cSmokeNight, this.night);
     for (let i = 0; i < sm.puffs; i++) {
       const age = (((tReal + seed) / life + i / sm.puffs) % 1) * life;
       const u = age / life;

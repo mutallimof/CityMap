@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Chips } from './Chips';
 import { Fabs } from './Fabs';
 import { Legend } from './Legend';
+import { ThemePanel, useTheme } from './ThemePanel';
 import { SearchPanel } from '../search/SearchPanel';
 import { Hint } from './Hint';
 import { PierHeader, PierSheet } from './PierSheet';
@@ -35,6 +36,7 @@ function content(sel: Selection, slots: AppSlots): { header: ReactNode; body: Re
 }
 
 export function App(slots: AppSlots) {
+  useTheme(); // re-render lists / icons on a theme switch
   const sel = useUi((s) => s.selection);
   const snap = useUi((s) => s.sheetSnap);
   const c = content(sel, slots);
@@ -47,6 +49,7 @@ export function App(slots: AppSlots) {
         <TimePanel />
       </div>
       <Legend />
+      <ThemePanel />
       <SearchPanel />
       <Hint delayMs={slots.introMs} />
       <Sheet

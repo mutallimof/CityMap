@@ -1,4 +1,5 @@
-import { CONFIG, type Palette } from '../config';
+import { look } from '../themes';
+import type { Palette } from '../config';
 import { darken, desaturate, mixHex } from '../time/theme';
 import type { Conditions } from './conditions';
 
@@ -7,7 +8,7 @@ import type { Conditions } from './conditions';
  * rain darkens it further, fog pulls everything towards the fog colour, snow whitens the land. Pure.
  */
 export function weatherPalette(p: Palette, c: Conditions, night: number): Palette {
-  const w = CONFIG.weather;
+  const w = look().weather;
   const out = { ...p };
   const grey = Math.min(1, c.cloud * 0.55 + c.rain * 0.35 + c.snow * 0.2);
   if (grey > 0) {

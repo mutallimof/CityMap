@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { StyleSpecification, ExpressionSpecification } from 'maplibre-gl';
 import { CONFIG, type Palette } from '../config';
 
@@ -27,8 +28,8 @@ function byZoom([a, b]: readonly [number, number]): ExpressionSpecification {
  * Hand-built style: no tiles, no glyphs, no API keys. Water is the background;
  * land and shoreline come from our clipped OSM coastline.
  */
-export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
-  const s = CONFIG.shore;
+export function buildStyle(p: Palette = look().colors.day): StyleSpecification {
+  const s = look().shore;
   return {
     version: 8,
     glyphs: CONFIG.city.glyphs,
@@ -85,9 +86,9 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
           'line-color': ['get', 'color'],
-          'line-width': byZoom(CONFIG.routes.width),
-          'line-opacity': CONFIG.routes.opacity,
-          'line-dasharray': ['literal', CONFIG.routes.dash],
+          'line-width': byZoom(look().routes.width),
+          'line-opacity': look().routes.opacity,
+          'line-dasharray': ['literal', look().routes.dash],
         },
       },
       {
@@ -95,13 +96,42 @@ export function buildStyle(p: Palette = CONFIG.colors.day): StyleSpecification {
         type: 'circle',
         source: SOURCE.piers,
         paint: {
-          'circle-color': CONFIG.colors.pier,
-          'circle-radius': byZoom(CONFIG.piers.radius),
-          'circle-stroke-color': CONFIG.colors.pierStroke,
-          'circle-stroke-width': byZoom(CONFIG.piers.strokeWidth),
+          'circle-color': look().colors.pier,
+          'circle-radius': byZoom(look().piers.radius),
+          'circle-stroke-color': look().colors.pierStroke,
+          'circle-stroke-width': byZoom(look().piers.strokeWidth),
           'circle-pitch-alignment': 'map',
         },
       },
     ],
   };
+}
+
+/** Theme-dependent paint of the base layers, as [layer, property, value] (re-applied on a theme switch). */
+export function basePaint(): [string, string, unknown][] {
+  const t = look();
+  const s = t.shore;
+  return [
+    [LAYER.innerShadow, 'line-width', byZoom(s.innerShadowWidth)],
+    [LAYER.innerShadow, 'line-blur', byZoom(s.innerShadowBlur)],
+    [LAYER.innerShadow, 'line-offset', byZoom([-s.innerShadowWidth[0] / 2, -s.innerShadowWidth[1] / 2])],
+    [LAYER.innerShadow, 'line-opacity', s.innerShadowOpacity],
+    [LAYER.shoreHighlight, 'line-width', byZoom(s.highlightWidth)],
+    [LAYER.routes, 'line-width', byZoom(t.routes.width)],
+    [LAYER.routes, 'line-opacity', t.routes.opacity],
+    [LAYER.routes, 'line-dasharray', ['literal', t.routes.dash]],
+    [LAYER.piers, 'circle-color', t.colors.pier],
+    [LAYER.piers, 'circle-radius', byZoom(t.piers.radius)],
+    [LAYER.piers, 'circle-stroke-color', t.colors.pierStroke],
+    [LAYER.piers, 'circle-stroke-width', byZoom(t.piers.strokeWidth)],
+  ];
+}
+
+/** Sets [layer, property, value] triples; "layout:" before the property name means a layout property. */
+export function setStyleProps(map: import('maplibre-gl').Map, props: [string, string, unknown][]): void {
+  for (const [layer, prop, value] of props) {
+    if (!map.getLayer(layer)) continue;
+    if (prop.startsWith('layout:')) (map.setLayoutProperty as (l: string, p: string, v: unknown) => void).call(map, layer, prop.slice(7), value);
+    else (map.setPaintProperty as (l: string, p: string, v: unknown) => void).call(map, layer, prop, value);
+  }
 }

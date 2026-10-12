@@ -1,4 +1,4 @@
-import { CONFIG } from '../config';
+import { look } from '../themes';
 
 /**
  * One icon family for every place on the map, in lists and in the legend: a coloured shape with
@@ -26,7 +26,7 @@ export const SHAPE: Record<IconKind, Shape> = {
   landmark: 'star',
 };
 
-export const color = (k: IconKind): string => CONFIG.icons.colors[k];
+export const color = (k: IconKind): string => look().icons.colors[k];
 
 /** OpenMapTiles poi class/subclass → icon kind (only places useful to visitors and locals). */
 export const POI_KINDS: Record<string, IconKind> = {
@@ -367,6 +367,8 @@ export function iconImage(k: IconKind, o: IconOpts): ImageData {
 }
 
 const urlCache = new Map<string, string>();
+/** Theme switch: icon colours may change. */
+export const clearIconUrls = () => urlCache.clear();
 /** data: URL for lists / legend (cached). */
 export function iconUrl(k: IconKind, size = 26): string {
   const key = `${k}|${size}`;
@@ -402,11 +404,11 @@ export function storyIcon(size: number, dpr = 2): ImageData {
   g.fill();
   g.restore();
   g.lineWidth = 1.6;
-  g.strokeStyle = CONFIG.icons.storyColor;
+  g.strokeStyle = look().icons.storyColor;
   g.stroke();
   // open book
   const u = r * 0.55;
-  g.fillStyle = CONFIG.icons.storyColor;
+  g.fillStyle = look().icons.storyColor;
   g.beginPath();
   g.moveTo(c, c - u * 0.55);
   g.quadraticCurveTo(c - u * 0.5, c - u * 0.9, c - u * 1.05, c - u * 0.6);

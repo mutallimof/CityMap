@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import { CONFIG } from '../config';
 import { darken, desaturate, mixHex } from '../time/theme';
 import type { Season } from '../weather/conditions';
@@ -28,7 +29,7 @@ function mapPalette(p: CityPalette, fn: (key: string, c: string) => string): Cit
 }
 
 function base(which: 'day' | 'night'): CityPalette {
-  const src = CONFIG.city[which];
+  const src = look().city[which];
   const out = {} as Record<string, string | string[]>;
   for (const [k, v] of Object.entries(src)) out[k] = Array.isArray(v) ? [...v] : (v as string);
   out.blossom = [];
@@ -41,8 +42,8 @@ function base(which: 'day' | 'night'): CityPalette {
  * overcast mutes everything a little. Pure.
  */
 export function cityLook(i: CityLookInput): CityPalette {
-  const w = CONFIG.weather;
-  const s = CONFIG.city.seasons[i.season];
+  const w = look().weather;
+  const s = look().city.seasons[i.season];
   let day = base('day');
   day.grass = s.grass;
   day.park = s.park;
@@ -50,7 +51,7 @@ export function cityLook(i: CityLookInput): CityPalette {
   day.cemetery = mixHex(day.cemetery, s.grass, 0.5);
   day.pitch = mixHex(day.pitch, s.grass, 0.3);
   day.blossom = [...s.blossom];
-  day = mapPalette(day, (k, c) => (KEEP.has(k) || k === 'blossom' ? c : mixHex(c, CONFIG.city.goldenTint, i.golden * CONFIG.city.goldenTintAmount)));
+  day = mapPalette(day, (k, c) => (KEEP.has(k) || k === 'blossom' ? c : mixHex(c, look().city.goldenTint, i.golden * look().city.goldenTintAmount)));
 
   const night = base('night');
   night.blossom = day.blossom.map((c) => mixHex(c, '#20283A', 0.7));
@@ -67,13 +68,13 @@ export function cityLook(i: CityLookInput): CityPalette {
     const snowC = mixHex(w.snowDay, w.snowNight, i.night);
     const cover = i.snow * w.snowCover;
     p = mapPalette(p, (k, c) => {
-      if ((GROUND as readonly string[]).includes(k) || k === 'buildings') return mixHex(c, snowC, k === 'wood' ? cover * CONFIG.city.snowOnWood : cover);
+      if ((GROUND as readonly string[]).includes(k) || k === 'buildings') return mixHex(c, snowC, k === 'wood' ? cover * look().city.snowOnWood : cover);
       if ((ROADS as readonly string[]).includes(k)) return mixHex(c, snowC, cover * 0.45);
       if (k === 'blossom') return mixHex(c, snowC, cover);
       return c;
     });
     // snow on the trees: white crowns over still-green forests
-    if (cover > 0.2) p.blossom = CONFIG.city.snowCrowns.map((c) => mixHex(c, snowC, 0.3));
+    if (cover > 0.2) p.blossom = look().city.snowCrowns.map((c) => mixHex(c, snowC, 0.3));
   }
   if (i.wet > 0) {
     const wetC = mixHex(w.wetRoadDay, w.wetRoadNight, i.night);

@@ -1,3 +1,4 @@
+import { look } from '../themes';
 import type { Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, MultiLineString, Point } from 'geojson';
 import { CONFIG } from '../config';
@@ -28,7 +29,7 @@ export function addCity(map: MlMap, landmarks: FeatureCollection<Point | MultiLi
   const palette = cityLook({ night: 0, golden: 0, season: seasonOf(new Date()), wet: 0, snow: 0, cloud: 0 });
   // Beyond our coastline box the map continues on OpenFreeMap's own water polygons (flat), drawn under the
   // water shader; the background is land-coloured. Inside the box the shader + our land cover it all.
-  map.addLayer({ id: OUTER_WATER, type: 'fill', source: CITY_SOURCE, 'source-layer': 'water', paint: { 'fill-color': CONFIG.colors.day.water, 'fill-antialias': false } }, LAYER.land);
+  map.addLayer({ id: OUTER_WATER, type: 'fill', source: CITY_SOURCE, 'source-layer': 'water', paint: { 'fill-color': look().colors.day.water, 'fill-antialias': false } }, LAYER.land);
   for (const layer of cityLayers(palette, ids)) map.addLayer(layer, GROUND.has(layer.id) ? LAYER.innerShadow : LAYER.routes);
   return new CityLook(map, ids);
 }

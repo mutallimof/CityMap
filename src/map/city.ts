@@ -1,5 +1,5 @@
+import { look } from '../themes';
 import type { ExpressionSpecification, FilterSpecification, LayerSpecification, Map as MlMap } from 'maplibre-gl';
-import { CONFIG } from '../config';
 import type { CityPalette } from './city-look';
 
 /**
@@ -74,7 +74,7 @@ export interface CityIds {
 }
 
 export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
-  const c = CONFIG.city;
+  const c = look().city;
   return [
     {
       id: CITY_LAYER.landuse,
@@ -101,7 +101,7 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       minzoom: 9,
       filter: ['any', ['==', ['get', 'class'], 'wood'], ['in', ['get', 'subclass'], ['literal', ['park', 'garden']]]],
       layout: { visibility: p.blossom.length ? 'visible' : 'none' },
-      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z(CONFIG.city.crowns.opacity) },
+      paint: { 'fill-pattern': IMG.blossom, 'fill-opacity': Z(look().city.crowns.opacity) },
     },
     {
       id: CITY_LAYER.tulips,
@@ -281,7 +281,7 @@ function landusePaint(p: CityPalette) {
       p.pitch,
       p.residential[0],
     ] as unknown as ExpressionSpecification,
-    'fill-opacity': ['match', ['get', 'class'], ['residential', 'suburb', 'quarter', 'neighbourhood'], CONFIG.city.residentialOpacity, 0.9] as ExpressionSpecification,
+    'fill-opacity': ['match', ['get', 'class'], ['residential', 'suburb', 'quarter', 'neighbourhood'], look().city.residentialOpacity, 0.9] as ExpressionSpecification,
   };
 }
 
@@ -343,15 +343,17 @@ function buildingPaint(p: CityPalette, ids: CityIds) {
 }
 
 function buildingOpacity(k: number): ExpressionSpecification {
-  const [a, b] = CONFIG.city.buildingsFrom;
-  return ['interpolate', ['linear'], ['zoom'], a, 0, b, CONFIG.city.buildingOpacity * k];
+  const [a, b] = look().city.buildingsFrom;
+  return ['interpolate', ['linear'], ['zoom'], a, 0, b, look().city.buildingOpacity * k];
 }
 
 /** Paint that depends on the palette, as [layer, property, value] triples (for setPaintProperty). */
 export function cityPaint(p: CityPalette, ids: CityIds): [string, string, unknown][] {
   const out: [string, string, unknown][] = [];
   const add = (layer: string, paint: Record<string, unknown>) => Object.entries(paint).forEach(([k, v]) => out.push([layer, k, v]));
-  add(CITY_LAYER.landuse, { 'fill-color': landusePaint(p)['fill-color'] });
+  add(CITY_LAYER.landuse, { 'fill-color': landusePaint(p)['fill-color'], 'fill-opacity': landusePaint(p)['fill-opacity'] });
+  add(CITY_LAYER.roadGlow, { 'line-color': look().city.lights.glow });
+  add(CITY_LAYER.blossom, { 'fill-opacity': Z(look().city.crowns.opacity) });
   add(CITY_LAYER.landcover, { 'fill-color': landcoverPaint(p)['fill-color'] });
   add(CITY_LAYER.road, { 'line-color': roadColor(p) });
   add(CITY_LAYER.roadCasing, { 'line-color': roadCasingPaint(p)['line-color'] });
@@ -397,12 +399,19 @@ export class CityLook {
     this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - litK * 0.999));
     this.visible(CITY_LAYER.roadGlow, night > 0.05);
     // Street-light glow only once you're close enough to read streets; zoomed out it would be orange noise.
-    const glow = Math.round(night * CONFIG.city.lights.glowOpacity * 20) / 20;
+    const glow = Math.round(night * look().city.lights.glowOpacity * 20) / 20;
     this.set(CITY_LAYER.roadGlow, 'line-opacity', ['interpolate', ['linear'], ['zoom'], 12.6, 0, 14.2, glow]);
     this.visible(CITY_LAYER.bridgeLamps, night > 0.3);
     this.set(CITY_LAYER.bridgeLamps, 'line-opacity', Math.round(night * 20) / 20);
     this.set(CITY_LAYER.bridgeGlow, 'line-opacity', 0.3 + 0.4 * Math.round(night * 20) / 20);
     this.set(CITY_LAYER.landmarkGlow, 'circle-opacity', 0.35 + 0.4 * Math.round(night * 20) / 20);
+  }
+
+  /** Theme switch: fonts, pattern images (night facades, tulips, crowns) are rebuilt on the next apply(). */
+  retheme(): void {
+    this.blossomKey = '';
+    addCityImages(this.map);
+    this.map.setLayoutProperty(CITY_LAYER.streetLabels, 'text-font', [...look().city.font]);
   }
 
   private set(layer: string, prop: string, value: unknown): void {
@@ -468,7 +477,7 @@ export function dotPattern(colors: readonly string[], size: number, count: numbe
 
 /** Transparent tile with clumps of coloured dots — tree crowns (autumn leaves, blossom, snow). Wraps. */
 export function crownPattern(colors: readonly string[], seed: number): ImageData {
-  const c = CONFIG.city.crowns;
+  const c = look().city.crowns;
   const size = c.tile;
   const [, g] = canvas(size, size);
   const rand = rng(seed);
@@ -502,7 +511,7 @@ export function crownPattern(colors: readonly string[], seed: number): ImageData
  * (64 px) and irregular so no grid reads at a glance.
  */
 export function windowPattern(seed: number, share: number): ImageData {
-  const n = CONFIG.city.lights;
+  const n = look().city.lights;
   const size = 64;
   const [, g] = canvas(size, size);
   g.fillStyle = n.facade;
@@ -530,8 +539,8 @@ export function windowPattern(seed: number, share: number): ImageData {
 }
 
 export function addCityImages(map: MlMap): void {
-  const shares = [0, ...CONFIG.city.lights.litShares];
+  const shares = [0, ...look().city.lights.litShares];
   IMG.windows.forEach((id, i) => putImage(map, id, windowPattern(11 + i * 7, shares[i])));
-  putImage(map, IMG.tulips, dotPattern([...CONFIG.city.tulips], 48, 60, 2, 3));
+  putImage(map, IMG.tulips, dotPattern([...look().city.tulips], 48, 60, 2, 3));
   putImage(map, IMG.blossom, dotPattern(['#00000000'], 8, 1, 1, 1));
 }
