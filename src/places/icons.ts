@@ -314,8 +314,83 @@ export interface IconOpts {
   glowColor?: string;
 }
 
+/**
+ * Bubble style (themes with style.pins = 'bubble'): a round, slightly glossy bubble in the category colour
+ * with a thick white rim and the category glyph; pins get a short rounded tail and a soft ground shadow;
+ * an event today adds a warm halo. Original drawing.
+ */
+function bubbleCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
+  const dpr = o.dpr ?? 2;
+  const r = o.size / 2;
+  const pad = Math.ceil((o.glow ? r * 0.7 : 4) + 2);
+  const w = Math.ceil(2 * (r + pad));
+  const tail = o.pin ? Math.round(r * 0.62) : 0;
+  const h = w + tail;
+  const cv = document.createElement('canvas');
+  cv.width = w * dpr;
+  cv.height = h * dpr;
+  const g = cv.getContext('2d')!;
+  g.scale(dpr, dpr);
+  const cx = w / 2;
+  const cy = w / 2;
+  const c = color(k);
+  if (o.glow) {
+    const gc = o.glowColor ?? c;
+    const grd = g.createRadialGradient(cx, cy, r * 0.8, cx, cy, r + pad);
+    grd.addColorStop(0, hexA(gc, Math.min(0.9, 0.5 * o.glow)));
+    grd.addColorStop(1, hexA(gc, 0));
+    g.fillStyle = grd;
+    g.fillRect(0, 0, w, w);
+  }
+  if (o.pin) {
+    // Ground shadow under the tail tip.
+    g.fillStyle = 'rgba(30, 25, 60, 0.18)';
+    g.beginPath();
+    g.ellipse(cx, cy + r + tail - 1.5, r * 0.42, r * 0.14, 0, 0, Math.PI * 2);
+    g.fill();
+  }
+  // White bubble + tail, softly shadowed.
+  g.save();
+  g.shadowColor = 'rgba(40, 30, 80, 0.32)';
+  g.shadowBlur = r * 0.3;
+  g.shadowOffsetY = r * 0.1;
+  g.fillStyle = '#FFFFFF';
+  g.beginPath();
+  g.arc(cx, cy, r, 0, Math.PI * 2);
+  if (o.pin) {
+    g.moveTo(cx - r * 0.42, cy + r * 0.82);
+    g.quadraticCurveTo(cx - r * 0.1, cy + r + tail * 0.55, cx, cy + r + tail - 2);
+    g.quadraticCurveTo(cx + r * 0.1, cy + r + tail * 0.55, cx + r * 0.42, cy + r * 0.82);
+  }
+  g.fill();
+  g.restore();
+  // Coloured face with a gentle top highlight.
+  const ri = r - Math.max(2, r * 0.16);
+  const face = g.createLinearGradient(0, cy - ri, 0, cy + ri);
+  face.addColorStop(0, mixRgb(c, '#FFFFFF', 0.18));
+  face.addColorStop(1, c);
+  g.fillStyle = face;
+  g.beginPath();
+  g.arc(cx, cy, ri, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = 'rgba(255,255,255,0.28)';
+  g.beginPath();
+  g.ellipse(cx - ri * 0.28, cy - ri * 0.5, ri * 0.42, ri * 0.2, -0.5, 0, Math.PI * 2);
+  g.fill();
+  drawGlyph(g, k, cx, cy, ri * 1.05, c);
+  return cv;
+}
+
+function mixRgb(a: string, b: string, t: number): string {
+  const x = parseInt(a.slice(1), 16);
+  const y = parseInt(b.slice(1), 16);
+  const ch = (s: number) => Math.round(((x >> s) & 255) + (((y >> s) & 255) - ((x >> s) & 255)) * t);
+  return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+}
+
 /** Canvas with one icon; the shape sits at the top, a pin tail (if any) below. */
 export function iconCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
+  if (look().style.pins === 'bubble') return bubbleCanvas(k, o);
   const dpr = o.dpr ?? 2;
   const r = (o.size / 2) * (k === 'landmark' ? 1.12 : 1);
   const pad = Math.ceil((o.glow ? r * 0.75 : 3) + 2);

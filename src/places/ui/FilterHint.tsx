@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { NO_EVENT_FILTERS } from '../../events/events';
 import { services } from '../../ui/services';
 import { useTicker } from '../../ui/hooks';
 import { useT } from '../../ui/i18n';
-import { ui, useUi } from '../../ui/store';
+import { useUi } from '../../ui/store';
 import { filtersActive, placeVisible } from '../filters';
 import { places } from './context';
 
-/** While a filter is on: how many places match in view, and a one-tap way back to everything. */
+/** While a filter is on: how many places match in view (the chip row's Clear goes back to everything). */
 export function FilterHint() {
   const t = useT();
   const categories = useUi((s) => s.categories);
@@ -37,7 +36,6 @@ export function FilterHint() {
   return (
     <div className="filterhint" role="status">
       <span>{msg}</span>
-      <button onClick={() => ui.set({ categories: [], openNow: false, ev: NO_EVENT_FILTERS })}>{t('showAll')}</button>
     </div>
   );
 }

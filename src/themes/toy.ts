@@ -165,6 +165,12 @@ export const toy = defineTheme({
       '--chip-on-ink': '#FFFFFF',
       '--shadow': '0 4px 0 rgba(59, 47, 92, 0.1), 0 8px 22px rgba(59, 47, 92, 0.16)',
       '--radius': '22px',
+      '--font-display': "'Fredoka', 'Nunito', system-ui, sans-serif",
+      '--plan': '#5B6CFF',
+      '--plan-end': '#3B2F5C',
+      '--link': '#5B6CFF',
+      '--warn': '#E8455A',
+      '--guide': '#FFB020',
     },
     nightVars: {
       '--panel': 'rgba(36, 34, 74, 0.94)',
@@ -177,6 +183,19 @@ export const toy = defineTheme({
       '--chip-on': '#FFC23D',
       '--chip-on-ink': '#24224A',
       '--shadow': '0 4px 0 rgba(0, 0, 0, 0.25), 0 8px 22px rgba(0, 0, 0, 0.4)',
+      '--link': '#A9B3FF',
+      '--warn': '#FF8FA0',
     },
+    // Chunkier, rounder controls: white rims, a "pressable" bottom edge, bouncy taps.
+    css: `
+:root[data-theme='toy'] .chip { border: 2px solid rgba(255, 255, 255, 0.9); font-weight: 600; letter-spacing: 0.01em; }
+:root[data-theme='toy'][data-night='1'] .chip { border-color: rgba(255, 255, 255, 0.12); }
+:root[data-theme='toy'] .chip:active, :root[data-theme='toy'] .iconbtn:active { transform: translateY(2px) scale(0.97); }
+:root[data-theme='toy'] .iconbtn { border: 2px solid rgba(255, 255, 255, 0.9); }
+:root[data-theme='toy'] .sheet__title h2, :root[data-theme='toy'] .feedhead h2 { font-weight: 600; font-size: 21px; }
+:root[data-theme='toy'] .chip--clock b { font-weight: 600; font-size: 17px; }
+:root[data-theme='toy'] .pill { border-radius: 16px; font-weight: 800; }
+`,
+    assets: () => Promise.all([import('@fontsource/fredoka/500.css'), import('@fontsource/fredoka/600.css')]),
   },
 });

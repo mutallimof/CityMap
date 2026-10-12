@@ -125,7 +125,7 @@ const STRINGS = {
   all: { tr: 'Tümü', en: 'All' },
   soundOn: { tr: 'Sesi aç', en: 'Sound on' },
   soundOff: { tr: 'Sesi kapat', en: 'Sound off' },
-  allChip: { tr: 'Hepsi', en: 'All' },
+  clearChip: { tr: 'Temizle', en: 'Clear' },
   filterInView: { tr: 'Burada {n} yer', en: '{n} places here' },
   filterNoneHere: { tr: 'Burada yok · toplam {n}', en: 'None here · {n} in all' },
   showAll: { tr: 'Hepsini göster', en: 'Show all' },

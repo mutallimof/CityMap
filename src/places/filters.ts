@@ -23,10 +23,22 @@ export function placeVisible(store: PlacesStore, id: string, f: PlaceFilterState
   return !anyEventFilter(f.ev) || events.placeMatches(id, f.ev, nowMs);
 }
 
-/** Toggle one category chip; selecting every category is the same as "All" (back to none). */
+/** Toggle one category chip on / off (several can be on; none = everything). Plain toggles, no resets. */
 export function toggleCategory(list: Category[], c: Category): Category[] {
-  const next = list.includes(c) ? list.filter((x) => x !== c) : [...list, c];
-  return next.length === ALL_CATEGORIES.length ? [] : next;
+  return list.includes(c) ? list.filter((x) => x !== c) : [...list, c];
+}
+
+export const NO_FILTERS: PlaceFilterState = { categories: [], openNow: false, ev: { today: false, weekend: false, workshops: false, free: false } };
+
+/**
+ * The number an active chip shows: places that pass every active filter — for a category chip, only
+ * that category's share (so two category chips each show their own count).
+ */
+export function chipCount(ids: readonly string[], visible: (id: string, f: PlaceFilterState) => boolean, f: PlaceFilterState, category?: Category): number {
+  const g = category ? { ...f, categories: [category] } : f;
+  let n = 0;
+  for (const id of ids) if (visible(id, g)) n++;
+  return n;
 }
 
 /** Story markers (historic places) belong to Culture; they have no hours or events. */

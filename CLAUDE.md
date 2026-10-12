@@ -34,7 +34,8 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 - **Stories:** 509 historic places (Wikidata/Wikipedia/Commons), book markers.
 - **Events:** ~340 events from 24 configured venues (daily scrape), glow/pulse on pins, chips
   Today · This weekend · Workshops · Free.
-- **UI:** React over the map; filters = All + combinable category toggles + Open now + event chips; search; guides;
+- **UI:** React over the map; filters = plain on/off chips (categories, Open now, event chips; several at once; an
+  active chip is filled with a count; "Clear" while any is on); search; guides; map style picker (themes);
   pier boards with printed times + source credit; per-line "Live timetable" / "Simulated schedule" label;
   snapshot share; PWA; TR/EN; city sound from real recordings (off by default, see Sound); golden gulls tell facts; `?skyline=1` night test mode.
 - **Plan** (`src/plan`): Evening / Day / Several days; "Add to plan" on place sheets and event rows; timeline sheet
@@ -63,6 +64,13 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   DaylightController (re-applies palette / water / light), `basePaint` / `guidePaint` / `planPaint` triples,
   `setLabelFonts`; the HUD gets `data-theme` + a generated `<style>` of tokens. React re-renders via `useTheme()`.
 
+- **Pins** (`style.pins`): 'classic' = shape pins; 'bubble' = round glossy bubbles with a white rim, category glyph,
+  short tail and ground shadow (`bubbleCanvas` in `src/places/icons.ts`, also used by lists / legend); bubbles glow
+  only for an event today. Bubble pins "bounce in" by zoom: `featuredSize()` overshoots ×1.18 as each rank appears
+  and settles within 0.4 zoom (pure function of zoom). Rank fade-in / collisions unchanged.
+- **HUD tokens:** `--font-display` (headings, chips, clock), `--plan`, `--plan-end`, `--link`, `--warn`, `--guide`
+  (defaults = Classic in `ui.css`); theme fonts are OFL @fontsource packages loaded by `ui.assets` (lazy).
+
 ### Toy theme (`src/themes/toy.ts`)
 - Saturated pastels, cream land, cream roads with white casings; water: 3 soft colour bands, white coastal foam
   line + two breathing contour ripples (screen-px wide, from metres-per-pixel — not `fwidth(d)`, the 8-bit coast
@@ -83,6 +91,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   lines (suspension towers where the deck meets the shore, from the coast field). Models replace their pins /
   stars / story markers (names via `hero-labels`); tapping a model opens its place (featured pin, else the OSM
   building). The worker drops OSM buildings under hero footprints (`?x=1`). Constants: `CONFIG.scenery`.
+- UI: Fredoka (OFL, @fontsource/fredoka) for headings / chips, white-rimmed chunky controls (`ui.css`).
 - Toy vapur (`style.vapur.model`): rounder hull with bevelled edges, tall cabin, big funnel, cel shading
   (`style.toon` → `src/three/materials.ts`) and a constant-px outline (smooth-normal shell, back faces).
 
@@ -216,8 +225,9 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - **MapLibre:** worker URL set via `setWorkerUrl(...?url)`; never transform a DOM marker root; OMT `concat`
   filters didn't evaluate (match `subclass` + class guard); OMT `rank` is per tile; tile feature id = osm_id×10+1/2/3.
 - **Buildings:** OFM z14 merges same-height buildings → `buildings://` protocol + workers re-pack them.
-- **Filters:** `src/places/filters.ts` is the single rule for pins, feed and hint; with any filter on, matches show
-  at every zoom; tile POIs hide only for Open now / event chips; story markers follow Culture.
+- **Filters:** `src/places/filters.ts` is the single rule for pins, feed, hint and chip counts (`chipCount`); chips
+  are plain toggles (no "All", no reset when every category is on — decision 2026-10-12); with any filter on,
+  matches show at every zoom; tile POIs hide only for Open now / event chips; story markers follow Culture.
 - **Featured pins zoomed out:** `featuredRank` 0 = well known / event today / filter match, 1 = curated, 2 = auto;
   rank 0 always, 1 from z10.6, 2 from z11.4, fading in; compact pins (`featm-*`, no glow margin) below z12.4 so
   collision boxes are the pin itself; sort key: favourites, event today, rank.

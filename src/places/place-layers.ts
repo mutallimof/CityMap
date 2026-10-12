@@ -107,6 +107,32 @@ const haloColor = (night: boolean) => (night ? look().labels.poiHaloNight : look
 const landmarkColor = (night: boolean) => (night ? look().labels.landmarkNight : look().labels.landmark);
 const storyColor = (night: boolean) => (night ? look().labels.storyNight : look().labels.story);
 
+/**
+ * Featured pin size by zoom. Bubble pins "bounce in": as each rank appears (CONFIG.places.rankZooms /
+ * allPinsZoom) its pins overshoot a little and settle within half a zoom level (pure function of zoom, so it
+ * plays as you zoom in and never runs on its own).
+ */
+export function featuredSize(): ExpressionSpecification {
+  const base = (z: number) => (z <= 11 ? 0.72 : z <= 14 ? 0.72 + ((z - 11) / 3) * 0.18 : z <= 16 ? 0.9 + ((z - 14) / 2) * 0.1 : 1);
+  if (look().style.pins !== 'bubble') return ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1];
+  const p = CONFIG.places;
+  const appear: [number, number][] = [
+    [1, p.rankZooms[0]],
+    [2, p.rankZooms[1]],
+  ];
+  const stops = new Set<number>([10, 11, 14, 16]);
+  for (const [, z] of appear) for (const d of [0, 0.18, 0.4]) stops.add(Math.round((z + d) * 100) / 100);
+  const bounce = (dz: number) => (dz < 0 ? 0.5 : dz < 0.18 ? 0.5 + (dz / 0.18) * 0.68 : dz < 0.4 ? 1.18 - ((dz - 0.18) / 0.22) * 0.18 : 1);
+  const out: unknown[] = ['interpolate', ['linear'], ['zoom']];
+  for (const z of [...stops].sort((a, b) => a - b)) {
+    const cases: unknown[] = ['case'];
+    for (const [rank, az] of appear) cases.push(['==', ['get', 'rank'], rank], Math.round(base(z) * bounce(z - az) * 1000) / 1000);
+    cases.push(base(z));
+    out.push(z, cases);
+  }
+  return out as ExpressionSpecification;
+}
+
 export class PlaceLayers {
   private skip: number[];
   private state = { night: false, golden: false, lang: 'tr' as 'tr' | 'en', key: '' };
@@ -199,7 +225,7 @@ export class PlaceLayers {
             ['concat', 'feat-', ['get', 'icon'], ['case', ['get', 'ev'], '-ev', ''], ['case', ['get', 'open'], '-o', '']],
           ],
           'icon-anchor': 'bottom',
-          'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1],
+          'icon-size': featuredSize(),
           'icon-padding': 2,
           'text-field': ['step', ['zoom'], '', p.featuredNamesFrom, this.nameField()],
           'text-font': [...look().labels.placeFont],
@@ -250,7 +276,8 @@ export class PlaceLayers {
     for (const k of ICON_KINDS) {
       const glowPoi = (k === 'bar' && this.state.night) || (k === 'viewpoint' && this.state.golden);
       put(`poi-${k}`, iconImage(k, { size: ic.poiSize, glow: glowPoi ? 1 : 0 }));
-      const hot = glowPoi ? 1 : 0.55;
+      // Bubbles stay clean: only an event today (or a bar at night / a viewpoint at sunset) glows.
+      const hot = glowPoi ? 1 : look().style.pins === 'bubble' ? 0 : 0.55;
       put(`feat-${k}`, iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }));
       // Compact pins for city zoom: no glow margin, so collision boxes are the pin itself and many more
       // fit; venues with an event today keep a (smaller) warm glow.
@@ -347,6 +374,7 @@ export class PlaceLayers {
   retheme(): void {
     const map = this.map;
     const night = this.state.night;
+    map.setLayoutProperty(LAYERS.featured, 'icon-size', featuredSize());
     this.addImages();
     if (map.hasImage('story')) map.updateImage('story', storyIcon(CONFIG.icons.storySize));
     const font = [...look().labels.placeFont];
