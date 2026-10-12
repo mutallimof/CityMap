@@ -241,8 +241,12 @@ export const CONFIG = {
     dockTurnSeconds: 50,
     /** Route distance (m) over which a vessel eases into its berth slot / quay offset. */
     berthBlendM: 350,
-    /** Lines sharing a berth moor abreast: spacing between hulls, in (exaggerated) beams. */
+    /** Vessels at one berth at once moor abreast: spacing between hull centres, in (exaggerated) beams. */
     slotSpacing: 1.25,
+    /** A berth slot stays reserved this many sim seconds before an arrival and after a departure. */
+    slotPadS: 120,
+    /** A docking turn with a neighbour moored alongside is sailed over this route distance (m) instead of on the spot. */
+    tightTurnM: 160,
     /** Extra seaward clearance for exaggerated hulls at the quay (fraction of exaggerated beam). */
     quayClearance: 0.6,
     /** Real distance of berth points off the coastline (must match scripts/build-piers.ts). */

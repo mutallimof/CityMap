@@ -24,7 +24,7 @@ export interface StopBerth {
   along: number;
   /** Compass bearing from the coast to open water. */
   seaward: number;
-  /** Docking slot when several lines share the berth: 0 at the quay, 1, 2, … moored abreast outside it. */
+  /** Abreast slot: 0 at the quay, 1, 2, … moored outside it (set per dock stay by berths.ts). */
   slot: number;
 }
 

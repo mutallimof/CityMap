@@ -95,7 +95,7 @@ async function boot() {
   const [, s, , n] = CONFIG.bounds;
   const berths = piers.features.flatMap((f) => f.properties.berths);
   const network = buildNetwork(lines, routes, (s + n) / 2, berths);
-  const docking = { turnSeconds: CONFIG.ferries.dockTurnSeconds, berthBlendM: CONFIG.ferries.berthBlendM };
+  const docking = { turnSeconds: CONFIG.ferries.dockTurnSeconds, berthBlendM: CONFIG.ferries.berthBlendM, slotPadS: CONFIG.ferries.slotPadS, tightTurnM: CONFIG.ferries.tightTurnM };
   const clock = new ClockController();
   // ?stress=40 → denser all-day timetable with at least 40 vessels on the water (perf testing).
   const stress = Number(new URLSearchParams(location.search).get('stress'));

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from 'maplibre-gl';
 import { sharedFrame, sharedRenderer } from '../three/context';
 import { CONFIG } from '../config';
-import { vesselPose, type DockingParams, type VesselPose } from '../sim/fleet';
+import { berthOffset, vesselPose, type DockingParams, type VesselPose } from '../sim/fleet';
 import type { LinePath } from '../sim/path';
 import { HeadingSmoother, interpolateStops } from './headings';
 import { buildVapur } from './model';
@@ -233,19 +233,10 @@ export class VapurLayer implements CustomLayerInterface {
     return sharedFrame.local(lngLat);
   }
 
-  /**
-   * Seaward offset (local metres) near a pier: clears the quay for exaggerated hulls, and moors
-   * vessels of lines sharing a berth abreast (slot 1, 2, … further out) — never onto land.
-   */
+  /** Seaward offset (local metres) near a pier: quay clearance + abreast slot (pure, see sim/fleet). */
   private berthOffset(v: VesselPose, exag: number): [number, number] {
-    const b = v.berth;
-    if (!b || b.weight <= 0) return [0, 0];
     const f = CONFIG.ferries;
-    const [sx, sy] = unitFromBearing(b.seaward);
-    const beam = f.beamM * exag;
-    const quay = Math.max(0, (beam / 2) * (1 + f.quayClearance) - f.berthOffsetM);
-    const d = (quay + b.slot * beam * f.slotSpacing) * b.weight;
-    return [sx * d, sy * d];
+    return berthOffset(v.berth, { beamM: f.beamM * exag, quayClearance: f.quayClearance, berthOffsetM: f.berthOffsetM, slotSpacing: f.slotSpacing });
   }
 
   render(_gl: WebGLRenderingContext | WebGL2RenderingContext, args: CustomRenderMethodInput): void {

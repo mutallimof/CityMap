@@ -26,19 +26,12 @@ export interface BerthGeometry {
   seawardBearing: number;
 }
 
-/** Slot for lines sharing one berth: 0 at the quay, then 1, 2, … moored abreast further out. */
-export function slotOf(index: number): number {
-  return index;
-}
-
 /**
  * Join line specs with their route legs; leg lengths come from the geometry itself.
- * `berths` (from piers.geojson) adds per-stop docking geometry and shared-berth slots.
+ * `berths` (from piers.geojson) adds per-stop docking geometry (abreast slots are per stay: berths.ts).
  */
 export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineString, RouteProps>, refLat: number, berths: BerthGeometry[] = []): Network {
   const berthById = new Map(berths.map((b) => [b.id, b]));
-  const usersOf = new Map<string, string[]>();
-  for (const l of lines) for (const b of new Set(l.berths ?? [])) usersOf.set(b, [...(usersOf.get(b) ?? []), l.id].sort());
   const paths = new Map<string, LinePath>();
   const inputs: LineInput[] = lines.map((line) => {
     const legs: LegSpec[] = [];
@@ -62,7 +55,7 @@ export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineSt
     if (line.berths && line.berths.every((id) => berthById.has(id))) {
       p.berths = line.berths.map((id): StopBerth => {
         const g = berthById.get(id)!;
-        return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: slotOf(usersOf.get(id)!.indexOf(line.id)) };
+        return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0 };
       });
     }
     paths.set(line.id, p);
