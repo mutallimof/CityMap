@@ -235,7 +235,18 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   "tight": not swung on the spot but sailed over the first / last 160 m of the leg (direction fixed by the course
   at 160 m, so U-turns never flip). Slot offsets ease in over `berthBlendM` (≤ half a short leg). Overflow never
   moves to a pier's other OSM berth: its approach isn't routed/validated against the coast. Test: no docked hulls
-  overlap at any pier over a weekday and a Sunday (real size; same berth also at ×3.9); 1 s smoothness with berths.
+  overlap at any pier over a weekday and a Sunday (real size and ×3.9, incl. a pier's two OSM berths); 1 s smoothness.
+- **Blocked stays slide along the quay** (2026-10-12): a stay with a vessel moored OUTSIDE it when it arrives /
+  leaves (`DockInfo.blockedIn/Out`, berths.ts) doesn't cross that hull: over `slideM(hullM)` of route it first
+  slides along the quay (towards the side the route goes / comes from, astern if need be) by
+  min(1.2 hulls, 0.8 × slide distance), then swings out / in (turn direction fixed by the course where the slide
+  ends). `hullM` = drawn hull length passed in `DockingParams` each frame (pure f(schedule, t, zoom)); the wake
+  re-samples poses with the same berth info (`poseAt`). Test: no crossing at ×1.3 over a weekday; ≤ 60 s/day at
+  ×3.9 (only the 456 m Karaköy–Eminönü legs, shorter than two city-zoom hulls).
+- **Sibling berths spread** for long drawn hulls: berths of one pier < 350 m apart (`berthSpread`, network.ts) move
+  half the shortfall (1.08 hull − gap) apart along the line between them, weighted like the slot offset — Eminönü's
+  two berths (127 m) no longer overlap at city zoom; at real size nothing moves.
+- **Pier names on top** (`map.moveLayer(label-pier)` at the end of boot): drawn over docked hulls and placed first.
 - **Lanes** (`scripts/lib/lanes.ts`, `CONFIG.routes.lanes`): every leg is two directed lanes, shifted to the right of
   travel by 28 + 26 × lane index m (lines sharing > 400 m of water get different indices: 0/1/2), eased in 110→420 m
   from each berth (berths unchanged, docked vessels may overlap), clamped ≥ 60 m from land and to half the local
@@ -315,10 +326,16 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   row layout, the footnotes and the sailing times. One Kadıköy berth for both the old (Eski) and new (Yeni) pier
   (night trips keep the PDF's note). Arife half-days run the normal timetable (PDF says nothing). Some Bosphorus piers
   are unserved (Boğaz Hattı commuter line, Kısa Boğaz Turu not included; Kandilli, Küçüksu, Tarabya, Yeniköy).
-- Docked ferries no longer overlap (berth slots), but under way near a busy pier a vessel leaving the quay slot
-  still sails through one moored outside it (no shuffling / no waiting for the outer one), and lines still pass
-  through each other near shared piers. At city zoom (×3.9 hulls) Eminönü's two berths (127 m apart) overlap visually.
-- Bebek → Arnavutköy is printed as 5 min; over our 1.64 km route that fits to ≈33 km/h (limit 34).
+- Lines still pass through each other near shared piers (under way). City zoom only: a few seconds a day on the
+  456 m Karaköy–Eminönü legs a sliding vessel still touches a moored one (hulls drawn longer than the leg).
+- Bebek ↔ Arnavutköy (checked 2026-10-12, times unchanged): the PDF prints departures 5 min apart (e.g. Bebek 08:20,
+  Arnavutköy 08:25); with the 1 min dwell the sim sails 4 min. The OSM piers are 1.09 km apart in a straight line,
+  but our lanes run 1.55 km (→) / 1.67 km (←) around Akıntıburnu (≥ 60 m from land + lane offset): avg 23–25 km/h,
+  cruise 31 / 33.5 km/h with the 60 s ramps. Over a ~1.2 km line it would cruise ≈ 24 km/h, normal for a vapur:
+  the timetable is plausible, the speed comes from our route length. A tighter route around the cape would fix it.
+- Kadıköy old / new pier (night trips' PDF notes "Kadıköy (Eski)" / "(Yeni) İskelesi"): OSM has no pier named or
+  tagged as either — only "Kadıköy 2 İskelesi" (our berth, relation/19464376), unnamed / "Kadıköy" ferry terminals
+  and private (Turyol) piers — so mapping them would be guesswork; one berth stays, the board keeps the PDF's note.
 - Eminönü / Beşiktaş berths of Rumeli Kavağı – Eminönü: the Boğaz berths (PDF doesn't say).
 - No events from CRR, Zorlu PSM, İBB Kültür (connect timeouts from GitHub runners, likely geo-blocking).
   Moda Sahnesi is on the map but its site publishes no dates (reseller only). Borusan Sanat / İKSV return 0

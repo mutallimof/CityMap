@@ -26,6 +26,8 @@ export interface StopBerth {
   seaward: number;
   /** Abreast slot: 0 at the quay, 1, 2, … moored outside it (set per dock stay by berths.ts). */
   slot: number;
+  /** Away from the nearest sibling berth of the same pier: [unit east, unit north, distance m]. */
+  spread?: [number, number, number];
 }
 
 export interface LinePath {

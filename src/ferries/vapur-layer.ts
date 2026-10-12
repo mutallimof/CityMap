@@ -18,7 +18,10 @@ const DEG = Math.PI / 180;
 
 export interface VapurLayerOptions {
   /** Called once per frame; every vessel's pose for the current sim time. */
-  poses: () => VesselPose[];
+  /** Poses for the current sim time; `hullM` = drawn hull length (m) at the current zoom. */
+  poses: (hullM: number) => VesselPose[];
+  /** Re-sample one vessel's pose at another sim time with the same berth info (wake trail). */
+  poseAt?: (v: VesselPose, t: number, hullM: number) => VesselPose | null;
   paths: Map<string, LinePath>;
   docking: DockingParams;
   lineColor: (lineId: string) => string;
@@ -284,7 +287,7 @@ export class VapurLayer implements CustomLayerInterface {
   /** Seaward offset (local metres) near a pier: quay clearance + abreast slot (pure, see sim/fleet). */
   private berthOffset(v: VesselPose, exag: number): [number, number] {
     const f = CONFIG.ferries;
-    return berthOffset(v.berth, { beamM: f.beamM * exag, quayClearance: f.quayClearance, berthOffsetM: f.berthOffsetM, slotSpacing: f.slotSpacing });
+    return berthOffset(v.berth, { beamM: f.beamM * exag, quayClearance: f.quayClearance, berthOffsetM: f.berthOffsetM, slotSpacing: f.slotSpacing, lengthM: f.lengthM * exag });
   }
 
   render(_gl: WebGLRenderingContext | WebGL2RenderingContext, args: CustomRenderMethodInput): void {
@@ -297,7 +300,7 @@ export class VapurLayer implements CustomLayerInterface {
     const L = f.lengthM * exag;
     const B = f.beamM * exag;
 
-    const poses = this.opts.poses();
+    const poses = this.opts.poses(L);
     const ol = look().style.vapur.outline;
     this.outline.visible = ol > 0;
     if (ol > 0) {
@@ -556,7 +559,7 @@ export class VapurLayer implements CustomLayerInterface {
     // Past samples are stored unshifted; apply the current berth offset so they line up with the hull.
     const [x0, y0] = this.local(v.lngLat);
     const past = this.trails.get(v.state.vesselId, v.t, count, (time) => {
-      const pp = vesselPose(v.vessel, path, time, this.opts.docking);
+      const pp = this.opts.poseAt ? this.opts.poseAt(v, time, CONFIG.ferries.lengthM * exag) : vesselPose(v.vessel, path, time, this.opts.docking);
       if (!pp) return null;
       const [x, y] = this.local(pp.lngLat);
       const [bx, by] = unitFromBearing(pp.bearing);

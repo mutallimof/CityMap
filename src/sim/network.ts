@@ -24,6 +24,26 @@ export interface BerthGeometry {
   id: string;
   alongBearing: number;
   seawardBearing: number;
+  /** Berth point (OSM), when known: lets close sibling berths of one pier spread apart for long drawn hulls. */
+  lngLat?: LngLat;
+}
+
+/** Berths closer than this (m) belong to one pier for spreading (Eminönü 127 m, Beşiktaş 280 m apart). */
+const SIBLING_M = 350;
+
+/** Unit vector away from the nearest sibling berth and the distance to it (m), or undefined. */
+export function berthSpread(b: BerthGeometry, all: BerthGeometry[]): StopBerth['spread'] {
+  if (!b.lngLat) return undefined;
+  const kx = 111_320 * Math.cos((b.lngLat[1] * Math.PI) / 180);
+  let best: [number, number, number] | undefined;
+  for (const o of all) {
+    if (o.id === b.id || !o.lngLat) continue;
+    const dx = (b.lngLat[0] - o.lngLat[0]) * kx;
+    const dy = (b.lngLat[1] - o.lngLat[1]) * 110_574;
+    const d = Math.hypot(dx, dy);
+    if (d > 0 && d < SIBLING_M && (!best || d < best[2])) best = [dx / d, dy / d, d];
+  }
+  return best;
 }
 
 /**
@@ -55,7 +75,7 @@ export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineSt
     if (line.berths && line.berths.every((id) => berthById.has(id))) {
       p.berths = line.berths.map((id): StopBerth => {
         const g = berthById.get(id)!;
-        return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0 };
+        return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0, spread: berthSpread(g, berths) };
       });
     }
     paths.set(line.id, p);

@@ -24,6 +24,12 @@ export interface DockInfo {
   /** Another vessel is at the berth during the arrival / departure turn. */
   tightIn: boolean;
   tightOut: boolean;
+  /**
+   * A vessel is moored OUTSIDE this one (higher slot) when it arrives / leaves: it can't cross that hull,
+   * so it slides in / out along the quay first (fleet.ts).
+   */
+  blockedIn: boolean;
+  blockedOut: boolean;
 }
 
 export interface SlotParams {
@@ -102,10 +108,14 @@ export function daySlots(getDay: (day: number) => DaySchedule, day: number, path
     else byBerth.set(st.berth, [st]);
   }
   const r = new Map<Segment, DockInfo>();
+  const slotOf = (o: Stay) => slots.get(o.seg) ?? prevOwn.get(o.seg);
   for (const st of mine) {
     const others = byBerth.get(st.berth)!.filter((o) => o !== st);
     const meets = (a: number, b: number) => others.some((o) => o.t0 - p.padS < b && o.t1 + p.padS > a);
-    r.set(st.seg, { slot: slots.get(st.seg)!, tightIn: meets(st.t0, st.t0 + p.turnS), tightOut: meets(st.t1 - p.turnS, st.t1) });
+    const slot = slots.get(st.seg)!;
+    // Moored outside this stay at time t (slot known: this day's and the carried-in previous day's stays).
+    const outside = (t: number) => others.some((o) => o.t0 - p.padS < t && o.t1 + p.padS > t && (slotOf(o) ?? -1) > slot);
+    r.set(st.seg, { slot, tightIn: meets(st.t0, st.t0 + p.turnS), tightOut: meets(st.t1 - p.turnS, st.t1), blockedIn: outside(st.t0), blockedOut: outside(st.t1) });
   }
   full.set(s, r);
   return r;

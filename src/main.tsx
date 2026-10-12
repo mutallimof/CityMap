@@ -15,7 +15,7 @@ import '@fontsource/nunito/800.css';
 import './styles.css';
 import type { GeoJSONSource } from 'maplibre-gl';
 import { createMap } from './map/createMap';
-import { setLabelLang, setLabelNight } from './map/labels';
+import { LABEL_LAYERS, setLabelLang, setLabelNight } from './map/labels';
 import { mountDebugPanel } from './debug/panel';
 import { CONFIG } from './config';
 import { loadHolidays, loadLines, loadPlaces, loadRoutes, loadTimetables } from './data/load';
@@ -24,7 +24,7 @@ import { buildNetwork } from './sim/network';
 import { buildDaySchedule } from './sim/schedule';
 import { cachedDays } from './sim/state';
 import { toIstanbul } from './sim/time';
-import { fleetAt } from './sim/fleet';
+import { dockInfoFor, fleetAt, vesselPose } from './sim/fleet';
 import { ClockController } from './app/clock';
 import { VapurLayer } from './ferries/vapur-layer';
 import { WaterLayer } from './water/water-layer';
@@ -109,6 +109,8 @@ async function boot() {
   const berths = piers.features.flatMap((f) => f.properties.berths);
   const network = buildNetwork(lines, routes, (s + n) / 2, berths);
   const docking = { turnSeconds: CONFIG.ferries.dockTurnSeconds, berthBlendM: CONFIG.ferries.berthBlendM, slotPadS: CONFIG.ferries.slotPadS, tightTurnM: CONFIG.ferries.tightTurnM };
+  // The same with the drawn hull length of the moment (blocked vessels slide along the quay by it).
+  const live: typeof docking & { hullM?: number } = { ...docking };
   const clock = new ClockController();
   // ?stress=40 → denser all-day timetable with at least 40 vessels on the water (perf testing).
   const stress = Number(new URLSearchParams(location.search).get('stress'));
@@ -127,7 +129,13 @@ async function boot() {
   const colors = new Map(lines.map((l) => [l.id, l.color]));
 
   const ferries = new VapurLayer({
-    poses: () => fleetAt(getDay, network.paths, toIstanbul(clock.now()), docking),
+    poses: (hullM) => fleetAt(getDay, network.paths, toIstanbul(clock.now()), ((live.hullM = hullM), live)),
+    poseAt: (v, t, hullM) => {
+      const path = network.paths.get(v.state.lineId);
+      if (!path || v.day === undefined) return null;
+      live.hullM = hullM;
+      return vesselPose(v.vessel, path, t, live, dockInfoFor(getDay, v.day, network.paths, live));
+    },
     paths: network.paths,
     docking,
     lineColor: (id) => colors.get(id) ?? '#ffffff',
@@ -389,6 +397,9 @@ async function boot() {
       reduced,
     ),
   );
+
+  // Pier names on top of everything (drawn over docked hulls, and first in label placement).
+  map.moveLayer(LABEL_LAYERS.pier);
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.

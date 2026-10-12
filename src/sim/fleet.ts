@@ -13,6 +13,11 @@ export interface DockingParams {
   slotPadS?: number;
   /** A turn that can't be done on the spot (neighbour moored alongside) is sailed over this route distance (m). */
   tightTurnM?: number;
+  /**
+   * Drawn hull length (m, incl. zoom exaggeration). With it, a vessel that leaves (or reaches) a berth slot
+   * while another is moored outside it first slides along the quay past that hull, then swings out (in).
+   */
+  hullM?: number;
 }
 
 export interface VesselPose {
@@ -23,6 +28,8 @@ export interface VesselPose {
   lngLat: LngLat;
   /** Heading (compass degrees): path tangent underway, docking turn when docked. */
   bearing: number;
+  /** Service day the vessel's schedule belongs to (for re-sampling its poses with the same berth info). */
+  day?: number;
   /**
    * Berth the vessel is at or near, with weight 0..1 (1 = docked). The render layer uses it to
    * moor vessels abreast (slot) and push exaggerated hulls off the quay; weight fades with distance.
@@ -31,6 +38,15 @@ export interface VesselPose {
 }
 
 const smooth = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+
+/** Route distance (m) over which a blocked vessel slides along the quay and swings out / in. */
+export const slideM = (hullM: number) => hullM * 2.6 + 80;
+
+/** A lng/lat moved by (east, north) metres (local flat approximation; fine for a few hundred metres). */
+function offsetLngLat([lng, lat]: LngLat, east: number, north: number): LngLat {
+  return [lng + east / (111_320 * Math.cos((lat * Math.PI) / 180)), lat + north / 110_574];
+}
+const lerpLngLat = (a: LngLat, b: LngLat, t: number): LngLat => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 
 /** Signed angle difference in [-180, 180). */
 const wrap = (d: number) => ((((d % 360) + 540) % 360) - 180);
@@ -112,13 +128,51 @@ export function vesselPose(v: Vessel, path: LinePath, t: number, p: DockingParam
     const sailed = (side: number, ref: number, w: number) => (side + (wrap(ref - side) + wrap(bearing - ref)) * w + 360) % 360;
     if (info(before)?.tightOut) bearing = sailed(dockSide(before as Dock, path), poseOnLeg(leg, T, s.dir!).bearing, smooth(s.distance / T));
     if (info(after)?.tightIn) bearing = sailed(dockSide(after as Dock, path), poseOnLeg(leg, s.legLength - T, s.dir!).bearing, smooth(toEnd / T));
-    return { state: s, vessel: v, t, lngLat: pose.lngLat, bearing, berth: b && { ...b, slot: info(near.seg)?.slot ?? 0, weight: 1 - smooth(near.d / Math.min(p.berthBlendM, s.legLength / 2)) } };
+    let weight = 1 - smooth(near.d / Math.min(p.berthBlendM, s.legLength / 2));
+    let lngLat = pose.lngLat;
+    // Blocked by a vessel moored outside: slide along the quay past its hull first, then swing out / in.
+    const out = near.seg === before && info(before)?.blockedOut;
+    const inn = near.seg === after && info(after)?.blockedIn;
+    if (p.hullM && b && (out || inn)) {
+      const D = Math.min(s.legLength / 2, slideM(p.hullM));
+      if (near.d < D) {
+        const dock = (out ? before : after) as Dock;
+        const side = dockSide(dock, path);
+        const at = dockPoses(dock, path).at.lngLat;
+        const [ux, uy] = [Math.sin((side * Math.PI) / 180), Math.cos((side * Math.PI) / 180)];
+        // Slide along the quay towards the side the route goes (out) / comes from (in) — astern if need be —
+        // so the swing out / in never crosses back over the moored hull.
+        const endPose = poseOnLeg(leg, out ? D : s.legLength - D, s.dir!);
+        const end = endPose.lngLat;
+        const ex = (end[0] - at[0]) * 111_320 * Math.cos((at[1] * Math.PI) / 180);
+        const ey = (end[1] - at[1]) * 110_574;
+        // 1.2 hull lengths clears the moored hull; a short leg (drawn hulls longer than it) gets what fits.
+        const k = (ex * ux + ey * uy >= 0 ? 1 : -1) * Math.min(p.hullM * 1.2, D * 0.8);
+        const q1 = offsetLngLat(at, ux * k, uy * k);
+        const u = near.d / D;
+        if (u < 0.5) {
+          const a = smooth(u * 2);
+          lngLat = lerpLngLat(at, q1, a);
+          bearing = side;
+          weight = 1;
+        } else {
+          const a = smooth(u * 2 - 1);
+          lngLat = lerpLngLat(q1, pose.lngLat, a);
+          // Turn direction fixed by the course where the slide ends (never flips mid-turn).
+          bearing = sailed(side, endPose.bearing, a);
+          // From the slot (1) to the ordinary berth blend where the slide ends: continuous at both ends.
+          const wEnd = 1 - smooth(D / Math.min(p.berthBlendM, s.legLength / 2));
+          weight = 1 + (wEnd - 1) * a;
+        }
+      }
+    }
+    return { state: s, vessel: v, t, lngLat, bearing, berth: b && { ...b, slot: info(near.seg)?.slot ?? 0, weight } };
   }
   const seg = v.segments[i] as Dock;
   const { at: pose, arrival, departure } = dockPoses(seg, path);
   const b = path.berths?.[seg.stopIndex];
   const d = info(seg);
-  const bearing = dockedHeading(arrival?.bearing ?? null, departure?.bearing ?? null, b?.along ?? null, s.phaseElapsed, s.phaseRemaining, p.turnSeconds, d && { in: d.tightIn, out: d.tightOut });
+  const bearing = dockedHeading(arrival?.bearing ?? null, departure?.bearing ?? null, b?.along ?? null, s.phaseElapsed, s.phaseRemaining, p.turnSeconds, d && { in: d.tightIn || d.blockedIn, out: d.tightOut || d.blockedOut });
   return { state: s, vessel: v, t, lngLat: pose.lngLat, bearing, berth: b && { ...b, slot: d?.slot ?? 0, weight: 1 } };
 }
 
@@ -131,6 +185,8 @@ export interface BerthOffsetParams {
   berthOffsetM: number;
   /** Abreast spacing between hull centres (in beams). */
   slotSpacing: number;
+  /** Drawn hull length: sibling berths of one pier closer than this spread apart (along the line between them). */
+  lengthM?: number;
 }
 
 /**
@@ -142,7 +198,15 @@ export function berthOffset(b: VesselPose['berth'], o: BerthOffsetParams): [numb
   const r = (b.seaward * Math.PI) / 180;
   const quay = Math.max(0, (o.beamM / 2) * (1 + o.quayClearance) - o.berthOffsetM);
   const d = (quay + b.slot * o.beamM * o.slotSpacing) * b.weight;
-  return [Math.sin(r) * d, Math.cos(r) * d];
+  // Two OSM berths of one pier closer than a drawn hull (Eminönü at city zoom): each moves half the shortfall away.
+  const s = b.spread && o.lengthM ? Math.max(0, (o.lengthM * 1.08 - b.spread[2]) / 2) * b.weight : 0;
+  return [Math.sin(r) * d + (s && b.spread![0] * s), Math.cos(r) * d + (s && b.spread![1] * s)];
+}
+
+/** Slot / tight / blocked info of a service day's dock stays (cached per schedule in berths.ts). */
+export function dockInfoFor(getDay: (day: number) => DaySchedule, day: number, paths: Map<string, LinePath>, p: DockingParams): (seg: Segment) => DockInfo | undefined {
+  const slots = daySlots(getDay, day, paths, { padS: p.slotPadS ?? 120, turnS: p.turnSeconds });
+  return (seg) => slots.get(seg);
 }
 
 /**
@@ -157,12 +221,11 @@ export function fleetAt(getDay: (day: number) => DaySchedule, paths: Map<string,
     [at.day - 1, at.seconds + DAY_S],
     [at.day, at.seconds],
   ] as const) {
-    const slots = daySlots(getDay, day, paths, { padS: p.slotPadS ?? 120, turnS: p.turnSeconds });
-    const dockInfo = (seg: Segment) => slots.get(seg);
+    const dockInfo = dockInfoFor(getDay, day, paths, p);
     for (const v of getDay(day).vessels) {
       const path = paths.get(v.lineId);
       const pose = path && vesselPose(v, path, t, p, dockInfo);
-      if (pose) out.push(pose);
+      if (pose) out.push(((pose.day = day), pose));
     }
   }
   return out;
