@@ -73,7 +73,7 @@ create them): project history = this file + git.
 
 - **Pins** (`style.pins`): 'classic' = shape pins; 'bubble' = round glossy bubbles with a white rim, category glyph,
   short tail and ground shadow (`bubbleCanvas` in `src/places/icons.ts`, also used by lists / legend); bubbles glow
-  only for an event today. Bubble pins "bounce in" by zoom: `featuredSize()` overshoots ×1.18 as each rank appears
+  only for an event today. Pin images are drawn on demand (`src/places/pin-images.ts`, see Key decisions). Bubble pins "bounce in" by zoom: `featuredSize()` overshoots ×1.18 as each rank appears
   and settles within 0.4 zoom (pure function of zoom). Rank fade-in / collisions unchanged.
 - **HUD tokens:** `--font-display` (headings, chips, clock), `--plan`, `--plan-end`, `--link`, `--warn`, `--guide`
   (defaults = Classic in `ui.css`); theme fonts are OFL @fontsource packages loaded by `ui.assets` (lazy).
@@ -125,7 +125,9 @@ create them): project history = this file + git.
 | Fraunces 600 | Storybook headings, district names ("Storybook Serif") | The Fraunces Project Authors |
 - Map label fonts use MapLibre 6's style **`font-faces`** (`src/themes/fonts.ts`: woff2 files bundled with `?url`,
   Latin + Latin Extended + combining marks, drawn locally with TinySDF). Nothing downloads until a label uses it.
-  Classic labels keep OpenFreeMap's Noto glyphs. Rule for new fonts: OFL only, self-hosted, add here + credits page.
+  A last face per stack (the Latin file, `U+0-10FFFF`) sends every other character (⚓, Arabic forms, Greek…)
+  straight to local drawing in the browser's fallback font — before, MapLibre first asked OpenFreeMap for a
+  "Toy Rounded" range (404). Same glyph bitmaps (checked byte for byte). Classic labels keep OpenFreeMap's Noto glyphs. Rule for new fonts: OFL only, self-hosted, add here + credits page.
 
 ## Sound sources (all Wikimedia Commons; licence and author re-checked on each file page by `data:audio`)
 | File(s) | Commons file | Author | Licence |
@@ -157,6 +159,10 @@ npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stre
                    #   ?debug=0 ?motion=reduced|full ?theme=<id> · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
 node scripts/dev/shot.mjs out.png "adaptive=0&intro=0&debug=0&view=29,41.02,14" [waitMs]   # headless screenshot (real WebGL
                    #   via SwiftShader, needs the dev server; ~5 fps; never move the camera — jumps crash headless Chromium)
+BASE=/CityMap/ npm run build && BASE=/CityMap/ npx vite preview --port 4173 &
+BASE_URL=http://localhost:4173/CityMap/ node scripts/dev/profile.mjs out.json "adaptive=0&intro=0&theme=toy" 15000 3
+                   #   boot profile: loader gone, "usable", long tasks, JS time, app bytes (medians of N runs);
+                   #   FOCUS='^(iconImage|need)@index' + a `vite build --minify false` build = time under those functions
 npm test           # vitest
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
@@ -226,7 +232,7 @@ Grouped by feature; tests sit next to what they test (`*.test.ts`); non-obvious 
   textures (`city-patterns.ts`: crowns, tulips, night windows) + colours (`city-look.ts`), buildings protocol / workers,
   labels, intro camera, skyline · `src/scenery` toy trees / hero landmarks / bridges · `src/three` shared renderer,
   `LocalFrame`, toon materials.
-- `src/places` stores, filters, layers, icons, opening hours; `places/ui/` sheets, feed, extras · `src/events`,
+- `src/places` stores, filters, layers, icons (+ `pin-images.ts`: on-demand pin images), opening hours; `places/ui/` sheets, feed, extras · `src/events`,
   `src/stories`, `src/guides`, `src/search`, `src/share` (snapshot), `src/fun` (gull facts), `src/osm` (Nominatim).
 - `src/plan` planner (pure `model.ts` / `timeline.ts` / `share.ts`, `store.ts`, `runtime.ts`, `ui.tsx`, `points.tsx`).
 - `src/audio` city sound (`mix.ts` pure levels, `engine.ts` Web Audio) · `src/weather` conditions, palette under
@@ -291,6 +297,22 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - **Filters:** `src/places/filters.ts` is the single rule for pins, feed, hint and chip counts (`chipCount`); chips
   are plain toggles (no "All", no reset when every category is on — decision 2026-10-12); with any filter on,
   matches show at every zoom; tile POIs hide only for Open now / event chips; story markers follow Culture.
+- **Boot performance (2026-10-12):** nothing heavy runs before the map is usable.
+  - **Pin images on demand** (`src/places/pin-images.ts`, pure + tested): ids `poi-<kind>`, `feat-/featm-<kind>[-ev][-o]`,
+    `landmark-big`, `story` → a recipe (size, pin, glow, event glow, open dot). Drawn in MapLibre's
+    `map.setMissingStyleImageResolver` (awaited before a tile's icons are laid out). **Trap:** in MapLibre 6
+    `styleimagemissing` fires only *after* the tile's image request was answered — images added there arrive one
+    layout late (story markers never showed). The rest are prewarmed at idle (`requestIdleCallback`, ≤ 4 per
+    callback, `CONFIG.places.idleAfterMs` after the map is up). Night / sunset / theme change → `refresh()` redraws
+    only made images whose recipe key (incl. theme id) changed. Was ~110 images in one go at boot (1.6–2.1 s).
+  - Canvases read back with getImageData / toDataURL are CPU-backed (`willReadFrequently`: pins, list icons, city
+    patterns) — reading a GPU canvas back stalled the main thread (in headless Chromium ~5 ms per pin vs 0.4 ms).
+    They differ from the GPU canvas only in sub-pixel edge anti-aliasing (no difference in screenshots). Not used for
+    the coast field (`src/water/distance-field.ts`): there it flips ~670 mask pixels and would move the foam lines.
+  - **Stories** (`stories.json`, 635 kB) load once, when first needed (`storiesNeeded`: within 0.4 zoom of
+    `storiesFrom` — same zoom as `poiFrom`, so story places' tile POIs are skipped before POIs appear —, a place
+    sheet, `?skyline=1`) or at idle `idleAfterMs` after the map is up. Events still load right after the map is up
+    (the "event today" glow needs them).
 - **Featured pins zoomed out:** `featuredRank` 0 = well known / event today / filter match, 1 = curated, 2 = auto;
   rank 0 always, 1 from z10.6, 2 from z11.4, fading in; compact pins (`featm-*`, no glow margin) below z12.4 so
   collision boxes are the pin itself; sort key: favourites, event today, rank.
@@ -320,7 +342,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     plan, `d` [[day index, {s, e}]] per day; point = [name, lng, lat], 0 = none, 1 = same as start. Still version
     `1.`: links without `e`/`d` (all older links) open and start at the first stop (test keeps a real old link).
     Decoding validates everything and never throws; missing places/events show "no longer available".
-- **Attribution bar** (MapLibre's own, bottom right, lifted 140 px above the sheet's peek): OSM, OpenFreeMap /
+- **Attribution bar** (MapLibre's own, bottom right, lifted 140 px above the sheet's peek; rows keep 12 px + safe
+  area from both screen edges — at 390 px the top row used to touch / clip at the right on an iPhone): OSM, OpenFreeMap /
   OpenMapTiles, "Weather data by Open-Meteo.com" (`src/weather/credit.ts`, off for `?weather=` demos) and, while sound
   is on, the sounds credit. Extra credits ride on an empty source + invisible layer (`src/map/credit.ts`). Trap:
   maplibre-gl.css is imported after styles.css, so overrides of `.maplibregl-ctrl-*` need the extra
@@ -343,6 +366,9 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     hit area on an element with `all: unset` (position resets).
   - **Escape** closes the top-most thing (`src/ui/escape.ts`: search, map style, legend, time, sheet, expanded feed); a dialog
     that handles Escape itself (plan share) calls preventDefault first. aria labels use the language setting.
+- **Weather chip icon** (`src/weather/icon.ts`, tested for every WMO code + demo, day / night): colour emoji with
+  U+FE0F; fog is drawn (`FogIcon.tsx`, `CONFIG.weather.fogIcon`) — Apple draws 🌫 as a plain blurred grey square
+  (reported as a "grey square" on an iPhone 13 at night) and 🌁 is a square picture too; clear night = the clock's ☾.
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
   `osmSearch` (`src/search/osm.ts`): `null` = unreachable ("Couldn’t reach search"), `[]` = nothing found ("No results").
 - **Sound** (`src/audio`; constants `CONFIG.sound`): real recordings only (list + licences under "Sound sources").
@@ -411,6 +437,16 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   buildings. Tree crowns are 80-triangle icosahedra, ≤ 2600 instances.
 - No per-frame allocation of colours, projection matrices, the ferry layer's id set / trail list / gull targets or
   the gulls' lookup; the sim still builds pose objects per frame (`fleetAt`), small.
+- **Boot** (2026-10-12, `scripts/dev/profile.mjs`, production build, 390 × 844, fixed scene `t=12:00`, `intro=0`,
+  medians of 3; software WebGL — a phone differs): Toy loader gone 2.4 → 1.0 s, "usable" (last long task before
+  3 s quiet) 6.5 → 4.3 s, JS to usable 5.8 → 3.4 s, app bytes until usable 1972 → 1353 kB (stories deferred);
+  same shape for Classic / Storybook / Night. The remaining long tasks (~12, longest ~1 s) are MapLibre and
+  three.js shader compilation under SwiftShader, plus the coast field (~150 ms: GPU canvas read-back, kept for
+  pixel-identical coasts). Not measured on a real iPhone.
+- Sound download when switched on (one format; nothing before): a day city view loads 4 beds + gulls / bell / pier
+  ≈ 1.0 MB Opus / 1.2 MB AAC, night ≈ 0.8 MB; beds load only while audible (> 0.002) and are dropped after
+  150 s silent. Possible trims (not done, they change behaviour): load one gull clip at a time (−~90 kB), skip
+  beds below an audible level (water / street at night are ~0.05).
 - Bundle: app chunk ≈ 312 kB (112 kB gz); MapLibre, three.js and React in their own long-cached chunks; theme fonts
   (CSS + woff2) and the scenery layer load only when a look needs them.
 
@@ -420,5 +456,7 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 3. ~~Cartoon-style redesign~~ — done (2026-10-12): theme registry + Toy / Storybook / Night, Classic kept.
 4. ~~Cleanup pass~~ — done (2026-10-12): dead code / config / strings / CSS removed, ferry UI and city patterns
    regrouped, header comments, new tests, README + data-sources, plan.md untracked. Screenshots unchanged.
-5. **Real iPhone pass** — judge the looks on a device (GPU, battery), tune tree counts / roof caps there.
+5. **Real iPhone pass** — judge the looks on a device (GPU, battery), tune tree counts / roof caps there; check boot
+   (Safari Web Inspector timeline: long tasks, shader compile), the fog icon and the attribution rows.
 6. ~~Open-Meteo credit~~ — done (2026-10-12): attribution bar, see Key decisions.
+7. ~~Boot performance~~ — done (2026-10-12): on-demand pin images, deferred stories, no glyph 404s; see Key decisions.
