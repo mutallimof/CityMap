@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-12T11:01:45.255Z",
+ "generated": "2026-10-12T11:56:04.023Z",
  "venues": {
   "arter": {
    "status": "ok",
@@ -9,11 +9,11 @@
   },
   "akbank-sanat": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 3,
-   "unplaced": 4,
-   "message": "not on the map: Frankhan Selectist · Minoa Pera · Çevrimiçi Platform – Zoom"
+   "unplaced": 7,
+   "message": "not on the map: Minoa Pera · Çevrimiçi Platform – Zoom"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
@@ -68,8 +68,8 @@
   },
   "salon-iksv": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 34
   },
   "crr": {
@@ -99,68 +99,65 @@
   },
   "nardis": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 25,
    "message": "1 list page(s), 44 detail link(s), 0 without a date"
   },
   "babylon": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 26,
    "message": "2 list page(s), 31 detail link(s), 0 without a date"
   },
   "fisekhane": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 39
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
+   "count": 38
   },
   "dasdas": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 77
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
+   "count": 78
   },
   "kumbaraci50": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 7
   },
   "borusan-contemporary": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 2
   },
   "galata-rum-okulu": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 2
   },
   "sakip-sabanci": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 0
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
+   "count": 1
   },
   "uniq": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
    "count": 29
   },
   "bkm": {
    "status": "ok",
-   "lastRun": "2026-10-11T15:08:59.206Z",
-   "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 13
+   "lastRun": "2026-10-12T11:56:04.023Z",
+   "lastOk": "2026-10-12T11:56:04.023Z",
+   "count": 12
   }
- },
- "places": [
-  "\"Ümraniye Sahnesi\" → Haldun Alahaş Şehir Tiyatroları ve Ümraniye Sahnesi (way/1065911137, amenity/community_centre)"
- ]
+ }
 }
