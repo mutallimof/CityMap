@@ -31,6 +31,9 @@ page.on('console', (m) => {
   if (['error', 'warning'].includes(m.type())) logs.push(`${m.type()}: ${m.text().slice(0, 200)}`);
 });
 page.on('pageerror', (e) => logs.push(`pageerror: ${e.message}`));
+page.on('response', (r) => {
+  if (r.status() >= 400) logs.push(`http ${r.status()}: ${r.url().slice(0, 160)}`);
+});
 await page.addInitScript(() => {
   window.__long = [];
   try {

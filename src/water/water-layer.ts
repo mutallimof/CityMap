@@ -287,7 +287,7 @@ export class WaterLayer implements CustomLayerInterface {
     const [cx, cy] = sharedFrame.local([c.lng, c.lat]);
     m.uCentre.value.set(cx, cy);
     m.uViewR.value = 40_000 / 2 ** (this.map.getZoom() - 10);
-    this.camera.projectionMatrix = sharedFrame.projection(args);
+    sharedFrame.projection(args, this.camera.projectionMatrix);
     this.renderer.resetState();
     this.renderer.render(this.scene, this.camera);
   }

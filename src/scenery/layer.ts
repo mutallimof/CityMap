@@ -27,7 +27,7 @@ export interface Hero {
   place: string | null;
 }
 
-const MAX_TREES = 3200;
+const MAX_TREES = 2600;
 const DEG = Math.PI / 180;
 const S = CONFIG.scenery;
 
@@ -59,6 +59,8 @@ export class SceneryLayer implements CustomLayerInterface {
   private crownColors: string[] = ['#7BD86E'];
   private o = { m: new THREE.Matrix4(), q: new THREE.Quaternion(), p: new THREE.Vector3(), s: new THREE.Vector3(), c: new THREE.Color(), z: new THREE.Vector3(0, 0, 1) };
   private timer = 0;
+  /** Adaptive quality: share of trees kept (0 = none). */
+  treeShare = 1;
 
   constructor(
     private heroes: Hero[],
@@ -90,8 +92,8 @@ export class SceneryLayer implements CustomLayerInterface {
     const mp = st.models;
     const mat = () => sceneryMaterial(st.toon, { vertexColors: true });
     // Trees: a trunk and a round crown, instanced; crown colours per instance.
-    const crown = new THREE.IcosahedronGeometry(1, 2);
-    crown.translate(0, 0, 0);
+    // 80 triangles a crown: round enough for a lollipop, light enough for thousands on a phone.
+    const crown = new THREE.IcosahedronGeometry(1, 1);
     const trunk = new THREE.CylinderGeometry(0.16, 0.22, 1, 6);
     trunk.rotateX(Math.PI / 2);
     trunk.translate(0, 0, 0.5);
@@ -311,10 +313,10 @@ export class SceneryLayer implements CustomLayerInterface {
       h.mesh.scale.set(k, k, k);
     }
     this.bridges.visible = st.landmarks3d && zoom >= S.bridgesFrom;
-    const treesOn = st.trees3d && zoom >= S.treesFrom && this.trees.length > 0;
+    const treesOn = st.trees3d && zoom >= S.treesFrom && this.trees.length > 0 && this.treeShare > 0;
     this.crowns.visible = this.trunks.visible = treesOn;
-    if (treesOn && (this.treeKey !== `${this.trees.length}` || Math.abs(zoom - this.lastZoom) > 0.05)) this.layoutTrees(zoom);
-    this.camera.projectionMatrix = sharedFrame.projection(args);
+    if (treesOn && (this.treeKey !== `${this.trees.length}|${this.treeShare}` || Math.abs(zoom - this.lastZoom) > 0.05)) this.layoutTrees(zoom);
+    sharedFrame.projection(args, this.camera.projectionMatrix);
     this.renderer.resetState();
     this.renderer.render(this.scene, this.camera);
   }
@@ -326,6 +328,7 @@ export class SceneryLayer implements CustomLayerInterface {
     q.identity();
     let n = 0;
     for (const t of this.trees) {
+      if (t.r >= this.treeShare) continue; // r is uniform 0–1: a stable subset
       const size = (0.75 + t.r * 0.5) * exag * grow;
       const crownR = S.crownM * size;
       const trunkH = S.trunkM * size;
@@ -344,7 +347,7 @@ export class SceneryLayer implements CustomLayerInterface {
     this.crowns.instanceMatrix.needsUpdate = true;
     this.trunks.instanceMatrix.needsUpdate = true;
     if (this.crowns.instanceColor) this.crowns.instanceColor.needsUpdate = true;
-    this.treeKey = `${this.trees.length}`;
+    this.treeKey = `${this.trees.length}|${this.treeShare}`;
     this.lastZoom = zoom;
   }
 }

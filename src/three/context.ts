@@ -35,12 +35,14 @@ export class LocalFrame {
     return [ll.lng, ll.lat];
   }
 
-  projection(args: CustomRenderMethodInput): THREE.Matrix4 {
-    const proj = new THREE.Matrix4().fromArray(args.defaultProjectionData.mainMatrix as unknown as number[]);
-    const local = new THREE.Matrix4()
-      .makeTranslation(this.origin.x, this.origin.y, this.origin.z)
-      .scale(new THREE.Vector3(this.metre, -this.metre, this.metre));
-    return proj.multiply(local);
+  private readonly localM = new THREE.Matrix4().makeTranslation(this.origin.x, this.origin.y, this.origin.z).scale(new THREE.Vector3(this.metre, -this.metre, this.metre));
+
+  /**
+   * Local frame → clip space for this frame. Returns a new matrix per call site that assigns it to a camera
+   * (`camera.projectionMatrix = …`): pass `out` to reuse one (no per-frame allocation).
+   */
+  projection(args: CustomRenderMethodInput, out = new THREE.Matrix4()): THREE.Matrix4 {
+    return out.fromArray(args.defaultProjectionData.mainMatrix as unknown as number[]).multiply(this.localM);
   }
 }
 

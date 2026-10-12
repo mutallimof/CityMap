@@ -12,6 +12,8 @@ export interface QualityKnobs {
   buildings: boolean;
   /** Seagulls. */
   gulls: boolean;
+  /** Share of the toy scenery's 3D trees kept (themes with style.trees3d). */
+  trees: number;
 }
 
 export type Step = { kind: 'ratio'; value: number } | { kind: 'effects'; knobs: Partial<QualityKnobs>; label: string };
@@ -21,8 +23,9 @@ export function qualityLadder(currentRatio: number): Step[] {
   const p = CONFIG.perf;
   return [
     ...p.pixelRatioSteps.filter((r) => r < currentRatio).map((value) => ({ kind: 'ratio' as const, value })),
-    { kind: 'effects', knobs: { particles: 0.45, gulls: false }, label: 'fewer particles, no gulls' },
+    { kind: 'effects', knobs: { particles: 0.45, gulls: false, trees: 0.5 }, label: 'fewer particles and trees, no gulls' },
     { kind: 'effects', knobs: { windows: false }, label: 'no lit-window pass' },
+    { kind: 'effects', knobs: { trees: 0 }, label: 'no 3D trees' },
     { kind: 'effects', knobs: { buildings: false, particles: 0.25 }, label: 'flat buildings' },
   ];
 }

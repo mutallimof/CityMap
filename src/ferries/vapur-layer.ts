@@ -275,7 +275,7 @@ export class VapurLayer implements CustomLayerInterface {
     this.hemi.intensity = l.hemiIntensity;
     this.night = l.night;
     const nl = look().nightLights;
-    this.windowMat.color.set(look().colors.vapur.windows).lerp(new THREE.Color(nl.windowGlow), Math.min(1, l.night * 1.2));
+    this.windowMat.color.set(look().colors.vapur.windows).lerp(this.cGlow.set(nl.windowGlow), Math.min(1, l.night * 1.2));
     this.reflectMat.opacity = nl.reflectionOpacity * l.night ** 2;
   }
 
@@ -320,11 +320,15 @@ export class VapurLayer implements CustomLayerInterface {
     const smooth = simT !== null && this.lastSimT !== null && Math.abs(simT - this.lastSimT) < 300;
     this.lastSimT = simT;
     const fxOn = smooth && !this.reduceMotion;
-    const gullTargets: GullTarget[] = [];
+    // Reused every frame (no per-frame allocation of the collections).
+    const gullTargets = this.gullTargets;
+    gullTargets.length = 0;
     this.visible = poses;
     const { m, q, e, p, s, c } = this.o;
-    const ids = new Set<string>();
-    const trails: Trail[] = [];
+    const ids = this.ids;
+    ids.clear();
+    const trails = this.trailList;
+    trails.length = 0;
     let n = 0;
     for (const v of poses) {
       if (n >= MAX_VESSELS) break;
@@ -428,13 +432,17 @@ export class VapurLayer implements CustomLayerInterface {
     const w = CONFIG.wake;
     this.wake.update(trails, { hullLength: L, beam: B, spread: w.spread, maxWidthBeams: w.maxWidthBeams, color: c.set(look().wake.color), opacity: look().wake.opacity }, tReal);
 
-    this.camera.projectionMatrix = sharedFrame.projection(args);
+    sharedFrame.projection(args, this.camera.projectionMatrix);
     this.renderer.resetState();
     this.renderer.render(this.scene, this.camera);
     this.map.triggerRepaint();
   }
 
   private zAxis = new THREE.Vector3(0, 0, 1);
+  private ids = new Set<string>();
+  private trailList: Trail[] = [];
+  private gullTargets: GullTarget[] = [];
+  private cGlow = new THREE.Color();
   private tmpV = new THREE.Vector3();
   private cRed = new THREE.Color(look().nightLights.port);
   private cGreen = new THREE.Color(look().nightLights.starboard);

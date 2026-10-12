@@ -47,6 +47,7 @@ export class Gulls {
   private p = new THREE.Vector3();
   private s = new THREE.Vector3();
   private z = new THREE.Vector3(0, 0, 1);
+  private byId = new Map<string, GullTarget>();
   /** Where the golden fact gulls are now (local metres, z = altitude), empty when hidden. */
   readonly factPositions: { i: number; x: number; y: number; z: number }[] = [];
 
@@ -81,12 +82,14 @@ export class Gulls {
       this.mesh.count = 0;
       return;
     }
-    const byId = new Map(targets.map((t) => [t.id, t]));
-    const followed = targets.slice(0, cfg.vessels);
+    const byId = this.byId;
+    byId.clear();
+    for (const t of targets) byId.set(t.id, t);
+    const followN = Math.min(cfg.vessels, targets.length);
     let n = 0;
     this.gulls.forEach((g, i) => {
       // Keep following the same vessel while it's a candidate; otherwise pick by index.
-      if (!g.vesselId || !byId.has(g.vesselId)) g.vesselId = followed[i % followed.length].id;
+      if (!g.vesselId || !byId.has(g.vesselId)) g.vesselId = targets[i % followN].id;
       const t = byId.get(g.vesselId)!;
       // Orbit centre a little behind the stern.
       const ox = t.x - t.fx * CONFIG.ferries.lengthM * exag * 0.6;

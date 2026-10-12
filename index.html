@@ -17,6 +17,15 @@
     <link rel="apple-touch-startup-image" href="/icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" />
     <link rel="apple-touch-startup-image" href="/icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
     <title>İstanbul Living City</title>
+    <script>
+      // The look to paint the loading screen in, before any script loads: ?theme=, saved choice, else the
+      // default (keep in sync with DEFAULT_THEME in src/themes/registry.ts).
+      try {
+        document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme:v1') || 'toy';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'toy';
+      }
+    </script>
   </head>
   <body>
     <div id="map"></div>

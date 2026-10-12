@@ -250,7 +250,7 @@ export class WeatherLayer implements CustomLayerInterface {
       u.uAlpha.value = look().weather.fogAlpha * (1 - v.night * 0.25);
       this.fogMesh.position.set(cx, cy, 0);
       this.fogMesh.scale.set(R * 6, R * 6, 1);
-      this.camera.projectionMatrix = sharedFrame.projection(args);
+      sharedFrame.projection(args, this.camera.projectionMatrix);
       this.renderer.render(this.worldScene, this.camera);
     }
 

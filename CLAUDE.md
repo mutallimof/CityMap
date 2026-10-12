@@ -17,7 +17,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 - **Every visual constant lives in `src/config.ts`** (shared tunables + the Classic look) **or in its theme's file in
   `src/themes/`** (one file per look). Record decisions in this file.
 
-## Current state (2026-10-12, city sound from real recordings)
+## Current state (2026-10-12, switchable looks: Toy (default), Classic, Storybook, Night)
 - **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
   (winter 2026-27 PDF, valid to 27 Jun 2027; simulated fallback per line, labelled) — `src/sim`, pure.
   Lines (PDF page): Kadıköy – Karaköy – Eminönü (4), Üsküdar – Karaköy – Eminönü (5), Kadıköy – Beşiktaş (+ Fri/Sat
@@ -57,7 +57,9 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   changes })` (deep-merged over Classic; arrays replace) + one line in `THEMES` (`registry.ts`). The registry test
   checks every theme has Classic's shape. Day/night from the sun, live weather and seasons apply to every theme
   (they blend the theme's own palettes).
-- Choice: `?theme=<id>` (test switch, not saved) › saved on the device (`localStorage theme:v1`) › `DEFAULT_THEME`.
+- Choice: `?theme=<id>` (test switch, not saved) › saved on the device (`localStorage theme:v1`) › `DEFAULT_THEME`
+  = **toy** (decided 2026-10-12: the friendliest, clearest look and the brief's main theme; Classic stays
+  selectable). index.html's tiny loader script repeats that default to paint the loading screen per look.
   Switcher: palette button in the top bar → preview cards (`src/ui/ThemePanel.tsx`, original mini-map SVGs).
 - **Live switch**, no reload: a soft veil in the new land colour (`src/themes/dom.ts`, instant with reduce-motion),
   then every module re-reads the look: `retheme()` on CityLook, VapurLayer (+ gulls), WeatherLayer, PlaceLayers,
@@ -112,7 +114,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 ### Fonts (all SIL OFL 1.1, self-hosted from @fontsource packages; credits page `public/fonts-credits.html`)
 | Font | Used for | Copyright |
 |---|---|---|
-| Nunito | interface text (all styles) | The Nunito Project Authors |
+| Nunito | interface text (all styles); Cyrillic names in themed map labels | The Nunito Project Authors |
 | Fredoka 500/600 | Toy headings, chips; Toy map labels ("Toy Rounded") | The Fredoka Project Authors |
 | Patrick Hand | Storybook map labels ("Storybook Hand") | Patrick Wagesreiter |
 | Fraunces 600 | Storybook headings, district names ("Storybook Serif") | The Fraunces Project Authors |
@@ -348,8 +350,20 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   search/API). The horn is a cruise ship, not a vapur. Gulls are herring/western gulls (Istanbul's are yellow-legged).
 - Actions warn about Node 20 deprecation for `actions/checkout@v4` / `setup-node@v4`.
 
+## Performance notes (2026-10-12, headless Chromium in the sandbox — JS time per frame, not GPU)
+- Busiest moment (Mon 19:00, z11.6) and `?stress=40` (z12.4), Classic and Toy: ferries 1.9–2.8 ms, water 0.2–0.4 ms,
+  toy scenery 0.4–0.5 ms per frame; Toy over parks at z15.4: ~2000 trees, scenery 0.7 ms; a tree refresh (moveend,
+  debounced) 8–13 ms. GPU cost on a real iPhone 13 is **not verified** (no device here).
+- Adaptive ladder: resolution → fewer particles + half the trees + no gulls → no lit windows → no 3D trees → flat
+  buildings. Tree crowns are 80-triangle icosahedra, ≤ 2600 instances.
+- No per-frame allocation of colours, projection matrices, the ferry layer's id set / trail list / gull targets or
+  the gulls' lookup; the sim still builds pose objects per frame (`fleetAt`), small.
+- Bundle: app chunk ≈ 312 kB (112 kB gz); MapLibre, three.js and React in their own long-cached chunks; theme fonts
+  (CSS + woff2) and the scenery layer load only when a look needs them.
+
 ## Roadmap (next sessions, in order)
 1. ~~Real ferry timetables~~ — done (winter 2026-27). Next timetable ~27 Jun 2027: `scripts/timetables/README.md`.
 2. ~~"Plan my evening / trip"~~ — done (no alerts: no notifications by design).
-3. **Cleanup pass** — dead code, config consolidation, bundle splitting, test gaps, docs.
-4. **Cartoon-style redesign** — a playful illustrated look across map, ferries, icons and UI.
+3. ~~Cartoon-style redesign~~ — done (2026-10-12): theme registry + Toy / Storybook / Night, Classic kept.
+4. **Cleanup pass** — dead code, config consolidation, test gaps, docs; judge the looks on a real iPhone (GPU,
+   battery), tune tree counts / roof caps there.

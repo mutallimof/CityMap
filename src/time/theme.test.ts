@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CONFIG } from '../config';
+import { look } from '../themes';
 import { mixHex, themeAt } from './theme';
 
 describe('theme', () => {
@@ -8,10 +8,10 @@ describe('theme', () => {
   });
 
   it('is day at noon, night at midnight, golden at the horizon', () => {
-    expect(themeAt(50).palette.land).toBe(CONFIG.colors.day.land.toLowerCase());
+    expect(themeAt(50).palette.land).toBe(look().colors.day.land.toLowerCase());
     expect(themeAt(50).night).toBe(0);
     expect(themeAt(-20).night).toBe(1);
-    expect(themeAt(-20).palette.land).toBe(CONFIG.colors.night.land.toLowerCase());
+    expect(themeAt(-20).palette.land).toBe(look().colors.night.land.toLowerCase());
     expect(themeAt(0).golden).toBe(1);
     expect(themeAt(0).night).toBe(0);
   });

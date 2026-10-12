@@ -11,7 +11,8 @@ import type { ThemeSpec } from './types';
 
 export const THEMES: ThemeSpec[] = [classic, toy, storybook, night];
 
-export const DEFAULT_THEME = 'classic';
+/** The look first-time visitors get (keep index.html's loader script in sync). */
+export const DEFAULT_THEME = 'toy';
 const KEY = 'theme:v1';
 
 export const themeById = (id: string | null | undefined): ThemeSpec | undefined => THEMES.find((t) => t.id === id);

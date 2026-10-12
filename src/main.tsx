@@ -341,6 +341,8 @@ async function boot() {
           if (k.gulls !== undefined) ferries.gullsEnabled = k.gulls;
           if (k.windows !== undefined) city.knobs.windows = k.windows;
           if (k.buildings !== undefined) city.knobs.buildings = k.buildings;
+          if (k.trees !== undefined) treeShare = k.trees;
+          if (scenery) scenery.treeShare = treeShare;
           daylight.update();
         }),
       (intro ? CONFIG.camera.intro.durationMs : 0) + 1500,
@@ -358,6 +360,7 @@ async function boot() {
 
   // Toy scenery (3D trees, hero landmarks, bridges): loaded only when a theme asks for it.
   let scenery: import('./scenery/layer').SceneryLayer | null = null;
+  let treeShare = 1;
   const ensureScenery = async () => {
     const st = look().style;
     placeLayers.setHeroes(st.landmarks3d ? heroData.landmarks : []);
@@ -366,6 +369,7 @@ async function boot() {
     if (!st.trees3d && !st.landmarks3d) return;
     const { SceneryLayer } = await import('./scenery/layer');
     scenery = new SceneryLayer(heroData.landmarks as unknown as import('./scenery/layer').Hero[], landmarks, () => water.field);
+    scenery.treeShare = treeShare;
     map.addLayer(scenery, 'ferries');
     daylight.extras.push(scenery);
     daylight.retheme();
