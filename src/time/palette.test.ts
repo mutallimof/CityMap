@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { look } from '../themes';
-import { mixHex, themeAt } from './theme';
+import { mixHex, themeAt } from './palette';
 
-describe('theme', () => {
+describe('palette', () => {
   it('mixes hex colours', () => {
     expect(mixHex('#000000', '#ffffff', 0.5)).toBe('#808080');
   });

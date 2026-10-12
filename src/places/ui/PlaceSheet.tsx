@@ -1,3 +1,7 @@
+/**
+ * Place sheet: name, kind, hours / website / phone (Nominatim lookup on open), Story, upcoming events,
+ * favourite and "Add to plan".
+ */
 import { useEffect, useState } from 'react';
 import { formatHHMM } from '../../sim/time';
 import { useTicker } from '../../ui/hooks';

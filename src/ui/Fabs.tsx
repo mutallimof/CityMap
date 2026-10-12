@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CONFIG } from '../config';
 import { distanceM } from '../places/store';
-import { weatherIcon } from '../places/weather';
+import { weatherIcon } from '../weather/icon';
 import { searchData } from '../search/SearchPanel';
 import { shareImage, snapshot } from '../share/snapshot';
 import { formatHHMM, toIstanbul } from '../sim/time';

@@ -1,3 +1,6 @@
+/**
+ * Guides UI: the card row in the feed and the guide sheet (stops in order, notes, the way between them).
+ */
 import { useEffect } from 'react';
 import { CONFIG } from '../config';
 import { distanceM } from '../places/store';

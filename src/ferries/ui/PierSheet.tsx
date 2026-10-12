@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { nextDepartures } from '../sim/state';
-import { toIstanbul } from '../sim/time';
-import { useTicker } from './hooks';
-import { formatWait, useT } from './i18n';
-import { services } from './services';
-import { useUi } from './store';
+import { nextDepartures } from '../../sim/state';
+import { toIstanbul } from '../../sim/time';
+import { useTicker } from '../../ui/hooks';
+import { formatWait, useT } from '../../ui/i18n';
+import { services } from '../../ui/services';
+import { useUi } from '../../ui/store';
 import { TimetableBadge, TimetableCredit } from './timetable';
 
 /**

@@ -1,7 +1,7 @@
-import { useTicker } from './hooks';
-import { formatCountdown, useT } from './i18n';
-import { services } from './services';
-import { ui, useUi } from './store';
+import { useTicker } from '../../ui/hooks';
+import { formatCountdown, useT } from '../../ui/i18n';
+import { services } from '../../ui/services';
+import { ui, useUi } from '../../ui/store';
 import { isReal, TimetableBadge, TimetableCredit } from './timetable';
 
 /** Content for a selected vessel: its trip from → to, next stop + ETA countdown, progress, Follow. */

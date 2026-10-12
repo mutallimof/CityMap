@@ -1,3 +1,7 @@
+/**
+ * Search: instant local results as you type (our data + loaded tile POIs / streets), OpenStreetMap
+ * (Nominatim) only on submit.
+ */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Marker, type Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, MultiLineString, Point } from 'geojson';

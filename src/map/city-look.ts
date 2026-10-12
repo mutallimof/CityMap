@@ -1,6 +1,6 @@
 import { look } from '../themes';
 import { CONFIG } from '../config';
-import { darken, desaturate, mixHex } from '../time/theme';
+import { darken, desaturate, mixHex } from '../time/palette';
 import type { Season } from '../weather/conditions';
 
 type Day = (typeof CONFIG.city)['day'];

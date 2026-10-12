@@ -113,7 +113,7 @@ const storyColor = (night: boolean) => (night ? look().labels.storyNight : look(
  * allPinsZoom) its pins overshoot a little and settle within half a zoom level (pure function of zoom, so it
  * plays as you zoom in and never runs on its own).
  */
-function featuredSize(): ExpressionSpecification {
+export function featuredSize(): ExpressionSpecification {
   const base = (z: number) => (z <= 11 ? 0.72 : z <= 14 ? 0.72 + ((z - 11) / 3) * 0.18 : z <= 16 ? 0.9 + ((z - 14) / 2) * 0.1 : 1);
   if (look().style.pins !== 'bubble') return ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1];
   const p = CONFIG.places;

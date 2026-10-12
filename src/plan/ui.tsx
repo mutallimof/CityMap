@@ -1,3 +1,7 @@
+/**
+ * Planner UI: top-bar button, "Add to plan" buttons, the plan sheet (kind, days, stops, connections,
+ * warnings, start / end points) and the share dialog. Logic lives in model.ts / timeline.ts.
+ */
 import { useEffect, useMemo, useState } from 'react';
 import './plan.css';
 import { events as eventStore } from '../events/events';
@@ -6,7 +10,7 @@ import { useTicker } from '../ui/hooks';
 import { useT } from '../ui/i18n';
 import { services } from '../ui/services';
 import { ui, useUi } from '../ui/store';
-import { TimetableBadge } from '../ui/timetable';
+import { TimetableBadge } from '../ferries/ui/timetable';
 import { fmtMin, isoDay, moveStop, planDays, removeStop, setDuration, setStart, type Plan, type PlanKind } from './model';
 import { fitPlan, showPlanOnMap, timelineOf } from './runtime';
 import { DayEnds, EndsEditor } from './points';

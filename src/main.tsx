@@ -1,3 +1,7 @@
+/**
+ * Boot: creates the map, loads the static data, wires every layer (water, city, ferries, places, weather,
+ * scenery…), the daylight / weather / perf controllers and the React HUD; reads the test switches and deep links.
+ */
 import { look, onTheme } from './themes';
 import { applyPaper, applyThemeDom, softFade } from './themes/dom';
 import { basePaint, setStyleProps } from './map/style';

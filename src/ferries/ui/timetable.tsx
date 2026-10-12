@@ -1,6 +1,6 @@
-import { toIstanbul } from '../sim/time';
-import { useT } from './i18n';
-import { services } from './services';
+import { toIstanbul } from '../../sim/time';
+import { useT } from '../../ui/i18n';
+import { services } from '../../ui/services';
 
 /** Whether a line runs on its real timetable today (else the simulated schedule). */
 export function isReal(lineId: string): boolean {

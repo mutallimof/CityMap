@@ -1,3 +1,7 @@
+/**
+ * Pure schedule building: planned trips → timed legs (`buildTrip`) → vessels (`assignVessels`); simulated
+ * trips for lines without a valid timetable. Times are seconds since the service day's midnight.
+ */
 import { CONFIG } from '../config';
 import { kmhToMs, legProfile } from './motion';
 import { originDepartures, type PeakWindows } from './timetable';

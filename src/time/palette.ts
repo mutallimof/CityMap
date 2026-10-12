@@ -1,3 +1,7 @@
+/**
+ * The day → golden hour → night palette blend from the sun's elevation (`themeAt`), plus colour helpers.
+ * The colours come from the active look (`src/themes`); this module only decides how much of each.
+ */
 import { look } from '../themes';
 import { CONFIG, type Palette } from '../config';
 

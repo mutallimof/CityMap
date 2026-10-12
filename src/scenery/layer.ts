@@ -8,7 +8,7 @@ import { sharedFrame, sharedRenderer } from '../three/context';
 import { sceneryMaterial } from '../three/materials';
 import { interpolateStops } from '../ferries/headings';
 import type { CityPalette } from '../map/city-look';
-import { mixHex } from '../time/theme';
+import { mixHex } from '../time/palette';
 import { isWater, type CoastField } from '../water/distance-field';
 import { bridgeTower, buildModel, MODEL_BOOST, MODEL_SIZE, slab, type ModelKind } from './models';
 import { scatterTrees, type TreeSpot } from './scatter';

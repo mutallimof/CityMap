@@ -1,3 +1,6 @@
+/**
+ * Interface strings in Turkish and English, OSM kind labels and wait / countdown formatting.
+ */
 import { useUi, type Lang } from './store';
 
 const STRINGS = {

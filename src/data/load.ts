@@ -1,3 +1,6 @@
+/**
+ * Fetchers for the processed data in `data/` (bundled as hashed asset URLs) and the shapes of their properties.
+ */
 import type { FeatureCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon } from 'geojson';
 import type { RouteProps } from '../sim/network';
 import type { LineSpec } from '../sim/types';

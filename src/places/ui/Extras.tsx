@@ -8,7 +8,7 @@ import { formatWait, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { distanceM } from '../store';
-import { weatherIcon } from '../weather';
+import { weatherIcon } from '../../weather/icon';
 import { PlaceIcon } from './PlaceIcon';
 import { flyTo, nearestPier, openPier, openPlace, places } from './context';
 

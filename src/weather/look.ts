@@ -1,6 +1,6 @@
 import { look } from '../themes';
 import type { Palette } from '../config';
-import { darken, desaturate, mixHex } from '../time/theme';
+import { darken, desaturate, mixHex } from '../time/palette';
 import type { Conditions } from './conditions';
 
 /**

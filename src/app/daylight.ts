@@ -3,7 +3,7 @@ import type { Map as MlMap } from 'maplibre-gl';
 import { CONFIG, type Palette } from '../config';
 import { LAYER } from '../map/style';
 import { sunPosition } from '../time/sun';
-import { mixHex, themeAt, type Theme } from '../time/theme';
+import { mixHex, themeAt, type Theme } from '../time/palette';
 import type { WaterLayer } from '../water/water-layer';
 import { OUTER_WATER } from '../map/city-setup';
 import type { VapurLayer } from '../ferries/vapur-layer';

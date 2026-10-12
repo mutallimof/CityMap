@@ -5,11 +5,11 @@ import { Legend } from './Legend';
 import { ThemePanel, useTheme } from './ThemePanel';
 import { SearchPanel } from '../search/SearchPanel';
 import { Hint } from './Hint';
-import { PierHeader, PierSheet } from './PierSheet';
+import { PierHeader, PierSheet } from '../ferries/ui/PierSheet';
 import { Sheet } from './Sheet';
 import { TimePanel } from './TimePanel';
 import { TopBar } from './TopBar';
-import { VesselHeader, VesselSheet } from './VesselSheet';
+import { VesselHeader, VesselSheet } from '../ferries/ui/VesselSheet';
 import { ui, useUi, type Selection } from './store';
 
 export interface AppSlots {

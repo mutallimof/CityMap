@@ -1,3 +1,6 @@
+/**
+ * HUD state: language, selection, sheet, chips / filters, panels — a tiny observable store with a React hook.
+ */
 import { useSyncExternalStore } from 'react';
 import { NO_EVENT_FILTERS, type EventFilters } from '../events/events';
 

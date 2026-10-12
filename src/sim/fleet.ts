@@ -1,3 +1,7 @@
+/**
+ * Pure vessel poses at a time: sailing along the route leg, docking turns, berth slots side by side and
+ * slides along the quay past moored neighbours. Visual-only effects never change where a vessel is.
+ */
 import { daySlots, type DockInfo } from './berths';
 import { poseOnLeg, type LinePath, type LngLat, type Pose, type StopBerth } from './path';
 import { findSegment, vesselStateAt } from './state';
