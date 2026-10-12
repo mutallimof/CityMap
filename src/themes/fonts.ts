@@ -28,7 +28,13 @@ const CYRILLIC = [
   { url: cyrillicExt, 'unicode-range': ['U+0460-052F', 'U+1C80-1C8A', 'U+20B4', 'U+2DE0-2DFF', 'U+A640-A69F', 'U+FE2E-FE2F'] },
 ];
 
-const pair = (latin: string, ext: string) => [{ url: latin, 'unicode-range': LATIN }, { url: ext, 'unicode-range': LATIN_EXT }, ...CYRILLIC];
+// Everything else (⚓, Arabic presentation forms, Greek…): the glyph server has no stack under our font names, so
+// asking it only cost a 404 per 256-character range before MapLibre drew the character locally. A last face
+// covering the rest sends those characters straight to local drawing: the Latin file (already loaded) lacks
+// them, so the browser draws them in its own fallback font — the same pixels as after the 404, no request.
+const REST = ['U+0-10FFFF'];
+
+const pair = (latin: string, ext: string) => [{ url: latin, 'unicode-range': LATIN }, { url: ext, 'unicode-range': LATIN_EXT }, ...CYRILLIC, { url: latin, 'unicode-range': REST }];
 
 export const MAP_FONT_FACES: FontFacesSpecification = {
   'Toy Rounded': pair(fredokaLatin, fredokaExt),

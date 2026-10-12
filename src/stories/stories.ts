@@ -1,6 +1,8 @@
+import { CONFIG } from '../config';
+
 /**
  * Stories (history) for OSM features with a Wikidata link, pre-built monthly by
- * scripts/stories/build-stories.ts into data/stories.json. Loaded lazily after the map is up —
+ * scripts/stories/build-stories.ts into data/stories.json. Loaded lazily when first needed (storiesNeeded) —
  * nothing is fetched from Wikipedia on the visitor's phone (photos come from Wikimedia's CDN).
  */
 export interface Story {
@@ -26,6 +28,14 @@ export function setStories(list: Record<string, Story>): void {
 }
 
 export const storyFor = (osm: string | null | undefined): Story | undefined => (osm ? stories.get(osm) : undefined);
+
+/**
+ * Whether the stories file is needed now (it loads once, lazily): story markers are about to appear
+ * (within 0.4 zoom of CONFIG.places.storiesFrom), a place sheet is open (Story section) or the skyline test runs.
+ */
+export function storiesNeeded(s: { zoom: number; placeOpen: boolean; skyline: boolean }): boolean {
+  return s.zoom >= CONFIG.places.storiesFrom - 0.4 || s.placeOpen || s.skyline;
+}
 
 export function onStories(fn: () => void): () => void {
   listeners.add(fn);

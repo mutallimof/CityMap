@@ -53,7 +53,8 @@ import './places/ui/places.css';
 import { PlacesStore } from './places/store';
 import { SelectedPlaceMarker } from './places/pins';
 import { PlaceLayers } from './places/place-layers';
-import { setStories, storyFor, type Story } from './stories/stories';
+import { browserIdle } from './places/pin-images';
+import { setStories, storiesNeeded, storyFor, type Story } from './stories/stories';
 import storiesUrl from '../data/stories.json?url';
 import heroData from '../data/hero-landmarks.json';
 import { syncHeroLabels } from './scenery/labels';
@@ -321,23 +322,38 @@ async function boot() {
   );
 
   hideLoader();
-  // Events (scraped daily) and stories (history) load after the map is up — never blocking.
+  // Events (scraped daily) load right after the map is up — never blocking; "event today" pins need them.
   void fetch(eventsUrl)
     .then((r) => (r.ok ? r.json() : null))
     .then((j: { events: CityEvent[] } | null) => j && events.set(j.events))
     .catch(() => undefined);
-  void fetch(storiesUrl)
-    .then((r) => (r.ok ? r.json() : null))
-    .then((j: { stories: Record<string, Story> } | null) => {
-      if (!j) return;
-      setStories(j.stories);
-      skyline?.setStories(Object.values(j.stories));
-      placeLayers.setStories(Object.values(j.stories));
-      refreshPins();
-    })
-    .catch(() => undefined);
+  // Stories (history, ~600 kB) load when first needed: story markers about to appear (zoom), a place sheet
+  // (its Story section), the skyline test — or when the browser is idle a few seconds after the map is up.
+  let storiesLoading = false;
+  const loadStories = () => {
+    if (storiesLoading) return;
+    storiesLoading = true;
+    void fetch(storiesUrl)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: { stories: Record<string, Story> } | null) => {
+        if (!j) return;
+        setStories(j.stories);
+        skyline?.setStories(Object.values(j.stories));
+        placeLayers.setStories(Object.values(j.stories));
+        refreshPins();
+      })
+      .catch(() => undefined);
+  };
+  const wantStories = () => {
+    if (!storiesLoading && storiesNeeded({ zoom: map.getZoom(), placeOpen: ui.get().selection?.kind === 'place', skyline: !!skyline })) loadStories();
+  };
+  map.on('zoom', wantStories);
+  ui.subscribe(wantStories);
+  wantStories();
+  const afterUp = (intro ? CONFIG.camera.intro.durationMs : 0) + CONFIG.places.idleAfterMs;
+  setTimeout(() => browserIdle(loadStories), afterUp);
   // Pin images not on screen yet: drawn a few at a time when the browser is idle.
-  setTimeout(() => placeLayers.prewarmImages(), (intro ? CONFIG.camera.intro.durationMs : 0) + CONFIG.places.idleAfterMs);
+  setTimeout(() => placeLayers.prewarmImages(), afterUp);
   if (params.get('adaptive') !== '0')
     setTimeout(
       () =>
