@@ -12,9 +12,9 @@ import type Point from '@mapbox/point-geometry';
  *   b   base height (building:min_height)
  * The original tile id is kept as the feature id (landmark matching). Pure.
  */
-export const LAYER = 'b';
+const LAYER = 'b';
 /** Roof caps: each building's outer ring inset by `roofInsetM` (same v / h / b), for themes with capped roofs. */
-export const ROOF_LAYER = 'r';
+const ROOF_LAYER = 'r';
 
 export interface SplitOptions {
   floorM: number;
@@ -82,7 +82,7 @@ export function insetRing(ring: { x: number; y: number }[], d: number): { x: num
 }
 
 /** Tile units per metre at the centre of tile row `ty` (z14, extent). */
-export function unitsPerMetre(ty: number, extent: number, z = 14): number {
+function unitsPerMetre(ty: number, extent: number, z = 14): number {
   const n = 2 ** z;
   const lat = Math.atan(Math.sinh(Math.PI * (1 - (2 * (ty + 0.5)) / n)));
   return extent / ((40_075_016.7 * Math.cos(lat)) / n);

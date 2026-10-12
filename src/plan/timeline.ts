@@ -10,7 +10,7 @@
 import { CONFIG } from '../config';
 import type { LineMode } from '../sim/schedule';
 import type { DaySchedule, Departure } from '../sim/types';
-import { endOf, endsOf, isoDay, planDays, sortedStops, startOf, stopMs, type Plan, type PlanPoint, type PlanStop } from './model';
+import { endOf, endsOf, planDays, sortedStops, startOf, stopMs, type Plan, type PlanPoint, type PlanStop } from './model';
 
 type LngLat = [number, number];
 
@@ -85,13 +85,13 @@ const serviceDay = (ms: number) => Math.floor((ms + OFFSET_MS) / DAY_MS);
 const dayStart = (d: number) => d * DAY_MS - OFFSET_MS;
 
 /** Straight-line distance (m). */
-export function distanceM(a: LngLat, b: LngLat): number {
+function distanceM(a: LngLat, b: LngLat): number {
   const kx = 111_320 * Math.cos(((a[1] + b[1]) / 2) * (Math.PI / 180));
   return Math.hypot((a[0] - b[0]) * kx, (a[1] - b[1]) * 110_574);
 }
 
 /** Approximate walk: straight line × CONFIG.plan.walk.factor at CONFIG.plan.walk.kmh. */
-export function walk(a: LngLat, b: LngLat): { km: number; minutes: number } {
+function walk(a: LngLat, b: LngLat): { km: number; minutes: number } {
   const km = (distanceM(a, b) * CONFIG.plan.walk.factor) / 1000;
   return { km, minutes: Math.max(1, Math.round((km / CONFIG.plan.walk.kmh) * 60)) };
 }
@@ -198,7 +198,7 @@ export function connect(deps: PlanDeps, a: LngLat, b: LngLat, readyMs: number, l
  * How to get from a to b by `byMs` (the start point → the day's first stop): walk if close, else the
  * ferry you can leave for latest and still arrive in time; if none does, the one that gets there soonest.
  */
-export function connectBy(deps: PlanDeps, a: LngLat, b: LngLat, byMs: number, lineStops: (lineId: string) => string[]): Connection {
+function connectBy(deps: PlanDeps, a: LngLat, b: LngLat, byMs: number, lineStops: (lineId: string) => string[]): Connection {
   const w = walk(a, b);
   if (w.km <= CONFIG.plan.walk.maxKm) return { mode: 'walk', minutes: w.minutes, km: w.km };
   const near = piersNear(deps, a);
@@ -217,7 +217,7 @@ export function connectBy(deps: PlanDeps, a: LngLat, b: LngLat, byMs: number, li
 }
 
 /** When to set off for a connection that must arrive by `byMs` (epoch ms), or null without transport info. */
-export function leaveFor(c: Connection, byMs: number): number | null {
+function leaveFor(c: Connection, byMs: number): number | null {
   if (c.mode === 'walk') return byMs - c.minutes * 60_000;
   if (c.mode === 'ferry') return c.dep - c.walkToMin * 60_000;
   return null;
@@ -304,4 +304,3 @@ export function buildTimeline(plan: Plan, deps: PlanDeps, lineStops: (lineId: st
 
 /** Istanbul "HH:MM" of an epoch ms. */
 export const hhmm = (ms: number) => new Date(ms + OFFSET_MS).toISOString().slice(11, 16);
-export { isoDay };

@@ -7,7 +7,7 @@ import { services } from './services';
 import { ui, type Selection, type UiState } from './store';
 
 /** Nearest vessel to a screen point within the tap radius (≥ 44 px hit area). */
-export function vesselAt(point: { x: number; y: number }): string | null {
+function vesselAt(point: { x: number; y: number }): string | null {
   const { map, ferries } = services();
   let best: string | null = null;
   let bestD: number = CONFIG.selection.hitRadiusPx;
@@ -123,7 +123,7 @@ export function bindMapInteractions(
   requestAnimationFrame(follow);
 }
 
-export function select(sel: Selection): void {
+function select(sel: Selection): void {
   const s = ui.get();
   const same = s.selection && sel && s.selection.kind === sel.kind && s.selection.id === sel.id;
   if (same) return;

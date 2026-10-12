@@ -42,7 +42,7 @@ function parseDays(s: string): boolean[] | null {
   return out;
 }
 
-export function parseOpeningHours(src: string): Rule[] | null {
+function parseOpeningHours(src: string): Rule[] | null {
   const text = src.trim();
   if (text === '24/7') return [{ days: Array(7).fill(true), ranges: [[0, 1440]], off: false }];
   const rules: Rule[] = [];

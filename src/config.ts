@@ -71,7 +71,6 @@ export const CONFIG = {
       mast: '#3A3D42',
     },
     accentGold: '#E0A100',
-    sunsetCoral: '#F08A5D',
     pier: '#FFFFFF',
     pierStroke: '#1F5E6E',
     labelText: '#5A4B3A',
@@ -473,8 +472,6 @@ export const CONFIG = {
     hemiGroundNight: '#0A1820',
     hemiNight: 0.95,
     sunNight: 0.25,
-    /** Re-apply the map palette when it changes by more than this (0–1 blend steps). */
-    paletteStep: 0.02,
   },
 
   /** Lighting for 3D objects (day values; day/night blends from here). */
@@ -532,10 +529,6 @@ export const CONFIG = {
      */
     rankZooms: [10.6, 11.4] as [number, number],
     allPinsZoom: 12.4,
-    /** Pins closer than this (CSS px) to a higher-priority pin shrink to dots. */
-    declutterPx: 40,
-    /** Names under pins from this zoom. */
-    labelZoom: 15.2,
     /** Fly-to zoom when opening a place / post. */
     flyZoom: 15.6,
     /** "Near this pier" radius (m) and walking speed (m/min). */
@@ -627,8 +620,6 @@ export const CONFIG = {
     fogCellM: 900,
     fogDriftMs: 9,
     fogAlpha: 0.9,
-    /** Ferry fading in fog: distance (m) from the view centre where vessels are fully hidden. */
-    fogHideM: 2600,
     /** Lightning flashes during storms: mean seconds between flashes. */
     lightningEveryS: 9,
   },

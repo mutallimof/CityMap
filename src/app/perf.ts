@@ -31,7 +31,7 @@ export function qualityLadder(currentRatio: number): Step[] {
 }
 
 /** Rough first guess from the device so weak phones don't start at full tilt. */
-export function lowEndDevice(): boolean {
+function lowEndDevice(): boolean {
   const n = navigator as Navigator & { deviceMemory?: number };
   return (n.hardwareConcurrency ?? 8) <= 4 || (n.deviceMemory ?? 8) <= 3;
 }

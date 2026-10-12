@@ -150,7 +150,7 @@ export function buildTrip({ line, legs }: LineInput, trip: PlannedTrip, p: Sched
  * their first departure and retire docked `retireAfterS` after their last arrival — never teleporting.
  * Ids carry the service day, so yesterday's late vessels never collide with today's.
  */
-export function assignVessels(lineId: string, trips: BuiltTrip[], maxLayover: number, p: ScheduleParams = DEFAULT_PARAMS, day = 0): Vessel[] {
+function assignVessels(lineId: string, trips: BuiltTrip[], maxLayover: number, p: ScheduleParams = DEFAULT_PARAMS, day = 0): Vessel[] {
   const vessels: (Vessel & { at: number; lastT: number; lastLeg: LegRef | null })[] = [];
   for (const b of [...trips].sort((x, y) => x.ref.t0 - y.ref.t0 || (x.ref.id < y.ref.id ? -1 : 1))) {
     const d = b.ref.t0;
@@ -177,7 +177,7 @@ export function assignVessels(lineId: string, trips: BuiltTrip[], maxLayover: nu
 }
 
 /** Simulated trips: outbound along the pattern on the headway timetable, back after one dwell at the terminus. */
-export function simulatedTrips(input: LineInput, day: number, p: ScheduleParams = DEFAULT_PARAMS): BuiltTrip[] {
+function simulatedTrips(input: LineInput, day: number, p: ScheduleParams = DEFAULT_PARAMS): BuiltTrip[] {
   const { line } = input;
   const idx = line.pattern.map((s) => line.stops.indexOf(s));
   if (idx.length < 2 || idx.some((i) => i < 0)) throw new Error(`${line.id}: bad pattern`);

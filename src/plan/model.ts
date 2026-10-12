@@ -95,7 +95,7 @@ export function sortedStops(p: Plan): PlanStop[] {
 }
 
 /** Default first start of a plan day (evening 18:00, otherwise 10:00). */
-export const firstStart = (kind: PlanKind) => (kind === 'evening' ? CONFIG.plan.eveningStartMin : CONFIG.plan.dayStartMin);
+const firstStart = (kind: PlanKind) => (kind === 'evening' ? CONFIG.plan.eveningStartMin : CONFIG.plan.dayStartMin);
 
 const roundUp = (min: number, step: number) => Math.ceil(min / step) * step;
 
@@ -116,7 +116,7 @@ export function nextSlot(p: Plan, dur: number): { day: string; start: number } {
 }
 
 /** Default length of a visit by place category (minutes). */
-export function placeDuration(category: string | undefined): number {
+function placeDuration(category: string | undefined): number {
   const d = CONFIG.plan.placeMinutes as Record<string, number>;
   return d[category ?? ''] ?? d.default;
 }

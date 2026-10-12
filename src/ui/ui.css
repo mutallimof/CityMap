@@ -158,22 +158,6 @@
 :root[data-night='1'] .ttbadge { color: #f3c95a; }
 :root[data-night='1'] .ttbadge--live { color: #8fe0b8; }
 .credit { display: block; margin-top: 8px; font-size: 11px; }
-.chip--lang {
-  margin-left: auto;
-  padding: 0 4px;
-  gap: 0;
-}
-.chip--lang span {
-  padding: 5px 9px;
-  border-radius: 99px;
-  font-size: 12px;
-  opacity: 0.55;
-}
-.chip--lang span.on {
-  opacity: 1;
-  background: var(--chip-on);
-  color: var(--chip-on-ink);
-}
 
 .chips {
   display: flex;

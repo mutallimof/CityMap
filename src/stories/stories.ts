@@ -26,7 +26,6 @@ export function setStories(list: Record<string, Story>): void {
 }
 
 export const storyFor = (osm: string | null | undefined): Story | undefined => (osm ? stories.get(osm) : undefined);
-export const allStories = (): Story[] => [...stories.values()];
 
 export function onStories(fn: () => void): () => void {
   listeners.add(fn);

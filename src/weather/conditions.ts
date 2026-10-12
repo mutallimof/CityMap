@@ -4,8 +4,8 @@
  */
 
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
-export const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
-export const DEMO_WEATHER = ['clear', 'cloudy', 'rain', 'storm', 'fog', 'snow', 'wind'] as const;
+const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
+const DEMO_WEATHER = ['clear', 'cloudy', 'rain', 'storm', 'fog', 'snow', 'wind'] as const;
 export type DemoWeather = (typeof DEMO_WEATHER)[number];
 
 /** All intensities 0–1. */

@@ -24,7 +24,7 @@ function eventLookup() {
   return eventById;
 }
 
-export function planDeps(): PlanDeps {
+function planDeps(): PlanDeps {
   const s = services();
   return {
     place: (id) => places().byId.get(id),
@@ -36,7 +36,7 @@ export function planDeps(): PlanDeps {
   };
 }
 
-export const lineStops = (id: string) => services().lineById.get(id)?.stops ?? [];
+const lineStops = (id: string) => services().lineById.get(id)?.stops ?? [];
 
 export function timelineOf(p: Plan): DayTimeline[] {
   return buildTimeline(p, planDeps(), lineStops);
@@ -83,7 +83,7 @@ function connectionFeatures(c: Connection, a: [number, number], b: [number, numb
   return out;
 }
 
-export function planGeoJSON(days: DayTimeline[]): GeoJSON.FeatureCollection {
+function planGeoJSON(days: DayTimeline[]): GeoJSON.FeatureCollection {
   const features: GeoJSON.Feature[] = [];
   const ends = new Map<string, { ll: [number, number]; role: string }>();
   for (const d of days) {

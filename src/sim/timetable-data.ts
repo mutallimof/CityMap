@@ -6,8 +6,6 @@
 
 /** Sunday covers Sundays and public holidays (the source: "resmi tatil günlerinde pazar tarifesi uygulanır"). */
 export type DayType = 'weekday' | 'saturday' | 'sunday';
-export const DAY_TYPES: readonly DayType[] = ['weekday', 'saturday', 'sunday'];
-
 export interface CallSpec {
   /** Pier id (data/piers.geojson). */
   stop: string;

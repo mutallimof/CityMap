@@ -11,7 +11,7 @@ export type Shape = 'circle' | 'square' | 'hex' | 'leaf' | 'star';
 
 export const ICON_KINDS: IconKind[] = ['cafe', 'restaurant', 'bar', 'bakery', 'museum', 'gallery', 'theatre', 'cinema', 'shop', 'park', 'viewpoint', 'landmark'];
 
-export const SHAPE: Record<IconKind, Shape> = {
+const SHAPE: Record<IconKind, Shape> = {
   cafe: 'circle',
   restaurant: 'circle',
   bar: 'circle',
@@ -26,7 +26,7 @@ export const SHAPE: Record<IconKind, Shape> = {
   landmark: 'star',
 };
 
-export const color = (k: IconKind): string => look().icons.colors[k];
+const color = (k: IconKind): string => look().icons.colors[k];
 
 /** OpenMapTiles poi class/subclass → icon kind (only places useful to visitors and locals). */
 export const POI_KINDS: Record<string, IconKind> = {
@@ -145,7 +145,7 @@ function shapePath(g: G, shape: Shape, cx: number, cy: number, r: number): void 
 }
 
 /** White glyph centred at (cx, cy), roughly `s` px tall; `bg` is used for cut-outs. */
-export function drawGlyph(g: G, k: IconKind, cx: number, cy: number, s: number, bg: string): void {
+function drawGlyph(g: G, k: IconKind, cx: number, cy: number, s: number, bg: string): void {
   const lw = s * 0.12;
   g.save();
   g.translate(cx, cy);

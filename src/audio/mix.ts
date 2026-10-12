@@ -46,7 +46,7 @@ const smooth = (a: number, b: number, x: number) => {
 };
 
 /** 0 zoomed out (city view) → 1 at street level. */
-export function closeness(zoom: number): number {
+function closeness(zoom: number): number {
   const s = CONFIG.sound;
   return smooth(s.fromZoom, s.fullZoom, zoom);
 }

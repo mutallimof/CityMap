@@ -9,7 +9,7 @@ import heroData from '../../../data/hero-landmarks.json';
  * (layer "b"). Work happens in a small pool of Web Workers; the HTTP cache shares the tile
  * download with the main city source.
  */
-export const BUILDINGS_PROTOCOL = 'buildings';
+const BUILDINGS_PROTOCOL = 'buildings';
 
 /** Tile URL template for the active look: `r=<inset m>` asks the worker for roof caps, `x=1` drops the OSM
  *  buildings under hero landmark models (themes with style.landmarks3d draw their own). */

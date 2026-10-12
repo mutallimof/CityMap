@@ -40,7 +40,7 @@ export interface VesselPose {
 const smooth = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 
 /** Route distance (m) over which a blocked vessel slides along the quay and swings out / in. */
-export const slideM = (hullM: number) => hullM * 2.6 + 80;
+const slideM = (hullM: number) => hullM * 2.6 + 80;
 
 /** A lng/lat moved by (east, north) metres (local flat approximation; fine for a few hundred metres). */
 function offsetLngLat([lng, lat]: LngLat, east: number, north: number): LngLat {

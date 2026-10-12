@@ -3,7 +3,7 @@ import { CONFIG } from '../config';
 import { look } from '../themes';
 
 const SRC = 'hero-labels';
-export const HERO_LABELS = 'hero-labels';
+const HERO_LABELS = 'hero-labels';
 
 /**
  * Names under the hero landmark models (themes with style.landmarks3d), in the same collision space as

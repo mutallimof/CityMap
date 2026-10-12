@@ -14,8 +14,6 @@ export interface PlaceFilterState {
   ev: EventFilters;
 }
 
-export const ALL_CATEGORIES: Category[] = ['food', 'culture', 'shopping', 'park'];
-
 export const filtersActive = (f: PlaceFilterState) => f.categories.length > 0 || f.openNow || anyEventFilter(f.ev);
 
 export function placeVisible(store: PlacesStore, id: string, f: PlaceFilterState, nowMs: number): boolean {

@@ -32,7 +32,7 @@ export interface BerthGeometry {
 const SIBLING_M = 350;
 
 /** Unit vector away from the nearest sibling berth and the distance to it (m), or undefined. */
-export function berthSpread(b: BerthGeometry, all: BerthGeometry[]): StopBerth['spread'] {
+function berthSpread(b: BerthGeometry, all: BerthGeometry[]): StopBerth['spread'] {
   if (!b.lngLat) return undefined;
   const kx = 111_320 * Math.cos((b.lngLat[1] * Math.PI) / 180);
   let best: [number, number, number] | undefined;

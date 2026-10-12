@@ -10,7 +10,7 @@ export interface TreeSpot {
   r: number;
 }
 
-export function hash2(x: number, y: number, s = 0): number {
+function hash2(x: number, y: number, s = 0): number {
   let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263) ^ Math.imul(s | 0, 2147483647);
   h = Math.imul(h ^ (h >>> 13), 1274126177);
   return ((h ^ (h >>> 16)) >>> 0) / 4294967296;

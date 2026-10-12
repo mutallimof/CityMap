@@ -20,7 +20,7 @@ import type { Place, PlaceCategory } from './types';
  * malls / bazaars, parks, viewpoints, landmarks); they appear by zoom and OpenMapTiles rank, with
  * names only for the most important.
  */
-export const LAYERS = { poi: 'poi', stories: 'stories', landmarks: 'landmark-icons', featured: 'featured' } as const;
+const LAYERS = { poi: 'poi', stories: 'stories', landmarks: 'landmark-icons', featured: 'featured' } as const;
 
 /**
  * Importance of a featured pin when zoomed out: 0 = well known (Wikidata / high importance) or a venue
@@ -35,7 +35,7 @@ const STORY_SOURCE = 'stories';
 const HEAT = 'place-heat';
 const FEATURED_SOURCE = 'featured';
 
-export const CATEGORY_OF: Record<IconKind, PlaceCategory> = {
+const CATEGORY_OF: Record<IconKind, PlaceCategory> = {
   cafe: 'food',
   restaurant: 'food',
   bar: 'food',
@@ -76,7 +76,7 @@ export function categoryOfClass(cls: string, subclass = cls): PlaceCategory | nu
 }
 
 /** OSM "node/123" → tile feature id (osm_id × 10 + 1/2/3). */
-export function tileIdFromOsm(osm: string): number | null {
+function tileIdFromOsm(osm: string): number | null {
   const m = /^(node|way|relation)\/(\d+)$/.exec(osm);
   return m ? Number(m[2]) * 10 + ['node', 'way', 'relation'].indexOf(m[1]) + 1 : null;
 }
@@ -113,7 +113,7 @@ const storyColor = (night: boolean) => (night ? look().labels.storyNight : look(
  * allPinsZoom) its pins overshoot a little and settle within half a zoom level (pure function of zoom, so it
  * plays as you zoom in and never runs on its own).
  */
-export function featuredSize(): ExpressionSpecification {
+function featuredSize(): ExpressionSpecification {
   const base = (z: number) => (z <= 11 ? 0.72 : z <= 14 ? 0.72 + ((z - 11) / 3) * 0.18 : z <= 16 ? 0.9 + ((z - 14) / 2) * 0.1 : 1);
   if (look().style.pins !== 'bubble') return ['interpolate', ['linear'], ['zoom'], 11, 0.72, 14, 0.9, 16, 1];
   const p = CONFIG.places;

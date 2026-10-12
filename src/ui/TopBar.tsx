@@ -1,4 +1,3 @@
-import { CONFIG } from '../config';
 import { formatHHMM, toIstanbul } from '../sim/time';
 import { useTicker } from './hooks';
 import { useT } from './i18n';
@@ -57,4 +56,3 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
   );
 }
 
-export const SPEEDS = CONFIG.sim.speeds;

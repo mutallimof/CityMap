@@ -20,7 +20,7 @@ export function sharedRenderer(map: MlMap, gl: WebGLRenderingContext | WebGL2Ren
  * in this frame; `projection()` folds the frame → mercator → clip transform into one float64
  * matrix on the CPU, so the GPU never sees large coordinates (no jitter at high zoom).
  */
-export class LocalFrame {
+class LocalFrame {
   readonly origin = MercatorCoordinate.fromLngLat(CONFIG.camera.center, 0);
   readonly metre = this.origin.meterInMercatorCoordinateUnits();
 

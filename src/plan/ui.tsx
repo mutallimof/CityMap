@@ -14,7 +14,7 @@ import { encodePlan, hasEnds, planLink } from './share';
 import { addEventToPlan, addPlaceToPlan, copyShared, deletePlan, newPlan, planById, planStore, savePlan, setActive, usePlans } from './store';
 import { arrivalOf, hhmm, type Connection, type DayTimeline, type Warning } from './timeline';
 
-export function openPlans(): void {
+function openPlans(): void {
   ui.set({ selection: { kind: 'plan', id: 'list' }, follow: false, hint: false, sheetSnap: 'half' });
 }
 

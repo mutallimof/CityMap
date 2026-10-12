@@ -66,7 +66,7 @@ export function deletePlan(id: string): void {
 export const setActive = (id: string) => planStore.set({ active: id });
 
 /** The active plan, making an evening plan for `today` if there is none. */
-export function activePlan(nowMs: number): Plan {
+function activePlan(nowMs: number): Plan {
   const s = planStore.get();
   return s.plans.find((p) => p.id === s.active) ?? newPlan('evening', isoDay(nowMs));
 }

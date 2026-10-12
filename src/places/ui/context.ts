@@ -55,7 +55,7 @@ interface NomPlace {
 }
 
 /** Build a place for an OSM object from Nominatim (used by shared links and search results). */
-export async function resolveOsmPlace(osm: string): Promise<Place | null> {
+async function resolveOsmPlace(osm: string): Promise<Place | null> {
   const lid = lookupId(osm);
   if (!lid) return null;
   const r = await nominatim<NomPlace[]>('lookup', { osm_ids: lid, namedetails: '1' });

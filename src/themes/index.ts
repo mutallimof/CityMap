@@ -1,3 +1,2 @@
-export { look, onTheme, setTheme, THEMES, themeById, initialThemeId, DEFAULT_THEME } from './registry';
-export { defineTheme, merge } from './define';
-export type { ThemeSpec, ThemeStyle } from './types';
+export { look, onTheme, setTheme, THEMES } from './registry';
+export type { ThemeSpec } from './types';

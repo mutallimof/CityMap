@@ -15,7 +15,7 @@ const BUILDING_LAYER = 'b';
 const ROOF_LAYER = 'r';
 export const LANDMARK_SOURCE = 'landmarks';
 
-export const CITY_LAYER = {
+const CITY_LAYER = {
   landuse: 'city-landuse',
   landcover: 'city-landcover',
   blossom: 'city-blossom',
@@ -34,7 +34,7 @@ export const CITY_LAYER = {
   streetLabels: 'city-street-labels',
 } as const;
 
-export const IMG = {
+const IMG = {
   blossom: 'city-blossom',
   tulips: 'city-tulips',
   /** Night facades: dark, sparse, medium, livelier — chosen per building. */
@@ -386,7 +386,7 @@ function buildingOpacity(k: number): ExpressionSpecification {
 }
 
 /** Paint that depends on the palette, as [layer, property, value] triples (for setPaintProperty). */
-export function cityPaint(p: CityPalette, ids: CityIds): [string, string, unknown][] {
+function cityPaint(p: CityPalette, ids: CityIds): [string, string, unknown][] {
   const out: [string, string, unknown][] = [];
   const add = (layer: string, paint: Record<string, unknown>) => Object.entries(paint).forEach(([k, v]) => out.push([layer, k, v]));
   add(CITY_LAYER.landuse, { 'fill-color': landusePaint(p)['fill-color'], 'fill-opacity': landusePaint(p)['fill-opacity'] });
@@ -512,7 +512,7 @@ function canvas(w: number, h: number) {
 }
 
 /** Transparent tile scattered with soft coloured dots (blossom, leaves, tulips). Wraps seamlessly. */
-export function dotPattern(colors: readonly string[], size: number, count: number, r: number, seed: number): ImageData {
+function dotPattern(colors: readonly string[], size: number, count: number, r: number, seed: number): ImageData {
   const [, g] = canvas(size, size);
   const rand = rng(seed);
   for (let i = 0; i < count; i++) {
@@ -531,7 +531,7 @@ export function dotPattern(colors: readonly string[], size: number, count: numbe
 }
 
 /** Transparent tile with clumps of coloured dots — tree crowns (autumn leaves, blossom, snow). Wraps. */
-export function crownPattern(colors: readonly string[], seed: number): ImageData {
+function crownPattern(colors: readonly string[], seed: number): ImageData {
   const c = look().city.crowns;
   const size = c.tile;
   const [, g] = canvas(size, size);
@@ -565,7 +565,7 @@ export function crownPattern(colors: readonly string[], seed: number): ImageData
  * spans 1–3 windows), warm tones of varying strength. `share` 0 = a dark building. Tiles are large
  * (64 px) and irregular so no grid reads at a glance.
  */
-export function windowPattern(seed: number, share: number): ImageData {
+function windowPattern(seed: number, share: number): ImageData {
   const n = look().city.lights;
   const size = 64;
   const [, g] = canvas(size, size);

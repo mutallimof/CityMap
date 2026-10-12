@@ -22,7 +22,6 @@ const STRINGS = {
   departing: { tr: 'kalkıyor', en: 'departing' },
   to: { tr: '→', en: '→' },
   nearby: { tr: 'Yakında', en: 'Nearby' },
-  comingSoon: { tr: 'Yakında', en: 'Coming soon' },
   time: { tr: 'Zaman', en: 'Time' },
   speed: { tr: 'Hız', en: 'Speed' },
   sunrise: { tr: 'Gün doğumu', en: 'Sunrise' },
@@ -36,7 +35,6 @@ const STRINGS = {
   docked: { tr: 'İskelede', en: 'Docked' },
   underway: { tr: 'Seferde', en: 'Underway' },
   progress: { tr: 'Yolculuk', en: 'Trip' },
-  inService: { tr: 'seferde', en: 'in service' },
   feedTitle: { tr: 'Şehirde şimdi', en: 'The city now' },
   feedNote: { tr: 'Gerçek mekânlar · OpenStreetMap', en: 'Real places · OpenStreetMap' },
   park: { tr: 'Parklar', en: 'Parks' },
@@ -65,7 +63,6 @@ const STRINGS = {
   ev_film: { tr: 'Film', en: 'Film' },
   ev_kids: { tr: 'Çocuk', en: 'Kids' },
   ev_other: { tr: 'Etkinlik', en: 'Event' },
-  noEventsMatch: { tr: 'Bu filtrede etkinlik yok', en: 'No events match' },
   story: { tr: 'Hikâyesi', en: 'Story' },
   storyBuilt: { tr: 'Yapım', en: 'Built' },
   storyArchitect: { tr: 'Mimar', en: 'Architect' },
@@ -129,7 +126,6 @@ const STRINGS = {
   clearChip: { tr: 'Temizle', en: 'Clear' },
   filterInView: { tr: 'Burada {n} yer', en: '{n} places here' },
   filterNoneHere: { tr: 'Burada yok · toplam {n}', en: 'None here · {n} in all' },
-  showAll: { tr: 'Hepsini göster', en: 'Show all' },
   saved: { tr: 'Kaydedilenler', en: 'Saved' },
   save: { tr: 'Kaydet', en: 'Save' },
   savedOne: { tr: 'Kaydedildi', en: 'Saved' },
@@ -259,7 +255,7 @@ const STRINGS = {
 
 export type StringKey = keyof typeof STRINGS;
 
-export function t(lang: Lang, key: StringKey): string {
+function t(lang: Lang, key: StringKey): string {
   return STRINGS[key][lang];
 }
 
