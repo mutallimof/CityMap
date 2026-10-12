@@ -27,7 +27,8 @@ body {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0 4px;
-  padding: 0 4px;
+  /* ≥ 12 px from the screen edges, so wrapped rows never touch or clip at the right (iPhone, 360–390 px). */
+  padding: 0 calc(12px + env(safe-area-inset-right)) 0 calc(12px + env(safe-area-inset-left));
   font-size: 0; /* hides the " | " / " · " separators between the links */
 }
 .maplibregl-ctrl-attrib-inner a {

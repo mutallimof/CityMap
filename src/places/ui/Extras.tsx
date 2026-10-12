@@ -8,7 +8,8 @@ import { formatWait, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { distanceM } from '../store';
-import { weatherIcon } from '../../weather/icon';
+import { FOG, weatherIcon } from '../../weather/icon';
+import { FogIcon } from '../../weather/FogIcon';
 import { PlaceIcon } from './PlaceIcon';
 import { flyTo, nearestPier, openPier, openPlace, places } from './context';
 
@@ -25,10 +26,11 @@ export function WeatherChip() {
   if (weather.source === 'offline' && !weather.demo.season) return null;
   const c = weather.target;
   const night = daylight.theme.night > 0.5;
+  const icon = weatherIcon(c.code, night);
   const title = `${t('weather')} · ${t(('season_' + season) as 'season_spring')}${weather.source === 'live' ? ` · ${Math.round(c.windMs * 3.6)} km/h` : ''}`;
   return (
     <span className="chip chip--weather" title={title}>
-      {weather.source !== 'offline' && <span aria-hidden>{weatherIcon(c.code, night)}</span>}
+      {weather.source !== 'offline' && <span aria-hidden>{icon === FOG ? <FogIcon /> : icon}</span>}
       {weather.source === 'live' && c.tempC != null && <b>{Math.round(c.tempC)}°</b>}
       <span aria-hidden>{SEASON_ICON[season]}</span>
       {weather.source === 'demo' || weather.demo.season ? <small className="chip__demo">{t('demo')}</small> : null}

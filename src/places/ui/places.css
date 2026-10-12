@@ -115,6 +115,7 @@
 .chip--weather { gap: 4px; padding: 0 10px; min-height: 42px; }
 @media (max-width: 420px) { .chip--weather { padding: 0 8px; } }
 .chip--weather b { font-size: 15px; }
+.fog-icon { display: block; }
 .chip__demo { font-size: 9px; font-weight: 900; letter-spacing: 0.06em; opacity: 0.7; }
 
 /* place facts (website / phone / cuisine) */
