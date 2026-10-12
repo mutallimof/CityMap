@@ -157,7 +157,7 @@ export const night = defineTheme({
       '--ink': '#E6ECFF',
       '--muted': '#9AA6D8',
       '--accent': '#FF5FA8',
-      '--accent-ink': '#FFFFFF',
+      '--accent-ink': '#0A0E26',
       '--coral': '#FF6A7A',
       '--chip': 'rgba(20, 26, 60, 0.86)',
       '--scrim': 'rgba(8, 12, 32, 0.55)',
@@ -165,21 +165,23 @@ export const night = defineTheme({
       '--chip-on-ink': '#0A0E26',
       '--shadow': '0 0 0 1px rgba(95, 200, 255, 0.12), 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(95, 120, 255, 0.18)',
       '--plan': '#5FB4FF',
+      '--plan-ink': '#0A0E26',
       '--plan-end': '#E6ECFF',
       '--link': '#7FD8FF',
       '--warn': '#FF8FA0',
       '--guide': '#FFB45A',
+      '--guide-ink': '#0A0E26',
+      '--attrib-bg': 'rgba(20, 26, 60, 0.78)',
+      '--attrib-ink': '#C8D4FF',
+      '--ok': '#7FE0AE',
+      '--bad': '#FF9AA4',
+      '--gold-ink': '#FFD27A',
     },
     nightVars: {},
     // Always the dark HUD (the look is night all day); a soft neon edge on active chips.
     css: `
 :root[data-theme='night'] .chip--on { box-shadow: 0 0 0 1px rgba(95, 200, 255, 0.5), 0 0 14px rgba(95, 200, 255, 0.45); }
-:root[data-theme='night'] .ttbadge { color: #ffd27a; }
-:root[data-theme='night'] .ttbadge--live { color: #7fe0ae; }
-:root[data-theme='night'] .openbadge--open { color: #7fe0ae; }
-:root[data-theme='night'] .openbadge--closed { color: #ff9aa4; }
-:root[data-theme='night'] .maplibregl-ctrl-attrib { background: rgba(20, 26, 60, 0.7) !important; color: #c8d4ff; }
-:root[data-theme='night'] .maplibregl-ctrl-attrib a { color: #c8d4ff; }
+:root[data-theme='night'] .sunset__spots .pill { background: rgba(255, 255, 255, 0.08); }
 `,
   },
 });

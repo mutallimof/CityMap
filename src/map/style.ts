@@ -37,7 +37,7 @@ export function buildStyle(p: Palette = look().colors.day): StyleSpecification {
     // Theme label fonts (self-hosted OFL files, downloaded only when a label uses them).
     'font-faces': MAP_FONT_FACES,
     sources: {
-      [SOURCE.land]: { type: 'geojson', data: EMPTY(), attribution: '© OpenStreetMap contributors' },
+      [SOURCE.land]: { type: 'geojson', data: EMPTY(), attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>' },
       [SOURCE.shore]: { type: 'geojson', data: EMPTY() },
       [SOURCE.piers]: { type: 'geojson', data: EMPTY() },
       [SOURCE.routes]: { type: 'geojson', data: EMPTY() },

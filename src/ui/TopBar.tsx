@@ -24,7 +24,7 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
         <span className="clock__txt">
           <b>
             {formatHHMM(toIstanbul(now).seconds)}
-            {!live && <span className="chip__dot" title="not live" />}
+            {!live && <span className="chip__dot" title={t('notLive')} />}
           </b>
         </span>
         {clock.speed !== 1 && <span className="chip__speed">{clock.speed}×</span>}

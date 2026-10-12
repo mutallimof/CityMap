@@ -7,7 +7,7 @@
   --panel-solid: #fbf7ef;
   --panel-border: rgba(90, 75, 58, 0.12);
   --ink: #2c2620;
-  --muted: #8a7d6d;
+  --muted: #675d51;
   --accent: #e0a100;
   --accent-ink: #3a2a00;
   --coral: #f08a5d;
@@ -22,10 +22,18 @@
   /* Themeable accents (src/themes: ui.vars / nightVars override these). */
   --font-display: var(--font, 'Nunito', system-ui, sans-serif);
   --plan: #2e6fd8;
+  --plan-ink: #ffffff;
   --plan-end: #1f2a44;
-  --link: #2e6fd8;
-  --warn: #c0392b;
+  --link: #265cb3;
+  --warn: #ad3327;
   --guide: #e0a100;
+  --guide-ink: #3a2a00;
+  /* Status text colours (≥ 4.5:1 on the panel and on their own tint; src/themes/contrast.test.ts). */
+  --ok: #17613f;
+  --bad: #a8222f;
+  --gold-ink: #7a5600;
+  --attrib-bg: rgba(255, 255, 255, 0.72);
+  --attrib-ink: #2c2620;
 }
 :root[data-night='1'] {
   --panel: rgba(24, 31, 42, 0.88);
@@ -40,6 +48,9 @@
   --shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
   --link: #8fb8ff;
   --warn: #ff8a7a;
+  --ok: #7fe0ae;
+  --bad: #ff9aa4;
+  --gold-ink: #f3c95a;
 }
 
 #ui {
@@ -79,7 +90,7 @@
   pointer-events: none;
   z-index: -1;
 }
-.topbar__spacer { flex: 1; }
+.topbar__spacer { flex: 1; margin-left: calc(-1 * var(--topbar-gap)); } /* an empty flex item would add a second gap */
 .iconbtn {
   flex: 0 0 auto;
   width: 40px;
@@ -98,10 +109,12 @@
 .clock__txt { display: grid; line-height: 1.05; justify-items: start; }
 .clock__txt b { display: inline-flex; align-items: center; gap: 5px; }
 .topbar {
+  --topbar-gap: 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--topbar-gap);
   padding: 0 12px;
+  min-width: 0; /* a grid item: without this its min-content width can push the buttons past the screen edge */
 }
 .topbar > * { pointer-events: auto; }
 .chip {
@@ -150,20 +163,20 @@
   letter-spacing: 0.02em;
   padding: 1px 6px;
   border-radius: 99px;
-  color: #8a6200;
+  color: var(--gold-ink);
   background: rgba(224, 161, 0, 0.14);
   vertical-align: middle;
 }
-.ttbadge--live { color: #1d6b4f; background: rgba(46, 160, 110, 0.14); }
-:root[data-night='1'] .ttbadge { color: #f3c95a; }
-:root[data-night='1'] .ttbadge--live { color: #8fe0b8; }
+.ttbadge--live { color: var(--ok); background: rgba(46, 160, 110, 0.14); }
 .credit { display: block; margin-top: 8px; font-size: 11px; }
+.credit a { color: var(--link); }
 
 .chips {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 2px 12px 8px;
+  padding: 6px 12px 8px; /* top 4 px extra = room for the chips' 44 px hit area (scrollers clip it) */
+  margin-top: -4px;
   scrollbar-width: none;
   pointer-events: auto;
   -webkit-overflow-scrolling: touch;
@@ -587,9 +600,11 @@
 .iconbtn--on { background: var(--chip-on); color: var(--chip-on-ink); }
 /* Phones: five things in the top bar (clock, weather, search, sound, TR/EN) must fit 360–400 px. */
 @media (max-width: 420px) {
-  .topbar { gap: 6px; padding: 0 10px; }
+  .topbar { --topbar-gap: 6px; padding: 0 6px; }
   .topbar .iconbtn { width: 36px; height: 36px; }
-  .chip--clock { padding: 0 10px 0 9px; }
+  /* 9 px between the 36 px buttons: their 44 px hit areas never overlap (1 px spare for rounding) */
+  .topbar .iconbtn + .iconbtn { margin-left: 3px; }
+  .chip--clock { padding: 0 8px 0 8px; gap: 4px; }
   .chip--weather { min-width: 0; flex-shrink: 1; overflow: hidden; }
   .chip--weather .chip__demo { display: none; }
 }
@@ -656,3 +671,19 @@
   background: var(--chip);
 }
 .chip--filter.chip--on { box-shadow: var(--shadow), inset 0 0 0 2px rgba(255, 255, 255, 0.18); }
+
+/* ---- Tap targets: controls keep their look but get a hit area of at least 44 × 44 px ----
+   (an invisible ::after grown from the control's own box; neighbours sit ≥ 8 px apart, so areas touch, never overlap) */
+:where(.iconbtn, .chip:not(.chip--weather), .pill, .fab, .sheet__close, .search__close, .legend__close, .timepanel__close, .seg button) { position: relative; }
+:is(.iconbtn, .chip:not(.chip--weather), .pill, .fab, .sheet__close, .search__close, .legend__close, .timepanel__close, .seg button)::after {
+  content: '';
+  position: absolute;
+  inset: min(0px, calc((100% - 44px) / 2));
+}
+/* Text links in credits and contact rows own a full 44 px line (inline links inside prose are left alone). */
+:is(.story__more, .story__credit, .story__photo figcaption, .place__credit, .credit) a { display: inline-flex; align-items: center; min-height: 44px; }
+.facts a { display: block; line-height: 44px; overflow: hidden; text-overflow: ellipsis; } /* keeps the row's ellipsis */
+.linkbtn { display: inline-flex; align-items: center; min-height: 44px; }
+/* Segmented buttons (speed, All / Saved) touch each other: the hit area stretches vertically only; each is ≥ 44 wide. */
+.seg button { min-width: 44px; }
+.seg button::after { inset: min(0px, calc((100% - 44px) / 2)) 0; }

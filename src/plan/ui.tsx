@@ -274,6 +274,17 @@ function PlanView({ id }: { id: string }) {
   const [sharing, setSharing] = useState(false);
   // Start / end points are private: off by default every time the dialog opens.
   const [shareEnds, setShareEnds] = useState(false);
+  // Escape closes the share dialog first (before the global handler closes the sheet).
+  useEffect(() => {
+    if (!sharing) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      setSharing(false);
+    };
+    document.addEventListener('keydown', onKey, true);
+    return () => document.removeEventListener('keydown', onKey, true);
+  }, [sharing]);
   const p = planById(id);
   const readOnly = id === 'shared';
   const days: DayTimeline[] = useMemo(() => (p ? timelineOf(p) : []), [p, eventStore.all.length]); // eslint-disable-line react-hooks/exhaustive-deps

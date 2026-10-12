@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Chips } from './Chips';
 import { Fabs } from './Fabs';
 import { Legend } from './Legend';
@@ -10,6 +10,8 @@ import { Sheet } from './Sheet';
 import { TimePanel } from './TimePanel';
 import { TopBar } from './TopBar';
 import { VesselHeader, VesselSheet } from '../ferries/ui/VesselSheet';
+import { escapeAction } from './escape';
+import { useT } from './i18n';
 import { ui, useUi, type Selection } from './store';
 
 export interface AppSlots {
@@ -37,6 +39,17 @@ function content(sel: Selection, slots: AppSlots): { header: ReactNode; body: Re
 
 export function App(slots: AppSlots) {
   useTheme(); // re-render lists / icons on a theme switch
+  const t = useT();
+  // Escape closes the top-most open sheet / panel (a dialog that handles Escape itself calls preventDefault first).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      const a = escapeAction(ui.get());
+      if (a) ui.set(a);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const sel = useUi((s) => s.selection);
   const snap = useUi((s) => s.sheetSnap);
   const c = content(sel, slots);
@@ -62,7 +75,7 @@ export function App(slots: AppSlots) {
             {c?.header}
             <Fabs />
             {sel && (
-              <button className="sheet__close" onClick={() => ui.set({ selection: null, follow: false, sheetSnap: 'peek' })} aria-label="Close">
+              <button className="sheet__close" onClick={() => ui.set({ selection: null, follow: false, sheetSnap: 'peek' })} aria-label={t('close')}>
                 ×
               </button>
             )}

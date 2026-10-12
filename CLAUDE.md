@@ -327,6 +327,22 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   `.maplibregl-control-container` class (the lift silently did nothing before 2026-10-12: the bar sat under the sheet).
 - **Deep links** (`src/ui/deeplink.ts`, pure, tested): a malformed `%` escape is ignored, never thrown; `hashchange`
   opens a link pasted into an open tab. A boot error removes the loader and shows above it.
+- **Accessibility (2026-10-12):**
+  - **Contrast** — every UI token pair is ≥ 4.5:1 (WCAG AA) in each look, day and night: `src/themes/contrast.ts` (pure,
+    knows the cascade: ui.css `:root` + night block < the look's `vars` < its `nightVars`) and
+    `contrast.test.ts` (ink / muted / link / warn / ok / bad / gold-ink on the panel and on a tinted panel, accent-ink on
+    accent, chip-on-ink, plan-ink, guide-ink, attribution pills over a black and a white map). New tokens: `--ok`,
+    `--bad`, `--gold-ink`, `--plan-ink`, `--guide-ink`, `--attrib-bg`, `--attrib-ink` (defaults in ui.css). Rule: a new
+    text colour = a token in the test, never a hard-coded hex in CSS. Toy / Night buttons use dark ink on the bright
+    coral / pink accent (white failed), Storybook's terracotta and Toy's blue got a notch darker.
+  - **Tap targets** — controls keep their size; an invisible `::after` (end of ui.css, `inset: min(0px, calc((100% - 44px) / 2))`)
+    gives iconbtn / chip / pill / fab / close buttons / segmented buttons a ≥ 44 × 44 hit area. Neighbours are ≥ 8 px apart
+    (top-bar icons: 36 px + 9 px), segmented buttons abut and stretch vertically only. Scrollers clip a pseudo-element, so
+    `.chips`, `.sunset__spots` and `.place` carry the padding for it. Text links in credits / contact rows are 44 px lines;
+    every attribution credit is a link in its own 44 px row, drawn as a small pill (`--attrib-*`). Trap: don't put the
+    hit area on an element with `all: unset` (position resets).
+  - **Escape** closes the top-most thing (`src/ui/escape.ts`: search, map style, legend, time, sheet, expanded feed); a dialog
+    that handles Escape itself (plan share) calls preventDefault first. aria labels use the language setting.
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
   `osmSearch` (`src/search/osm.ts`): `null` = unreachable ("Couldn’t reach search"), `[]` = nothing found ("No results").
 - **Sound** (`src/audio`; constants `CONFIG.sound`): real recordings only (list + licences under "Sound sources").
@@ -350,6 +366,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
+- Not done on purpose (accessibility, next steps): viewport zoom is still locked (index.html), no focus trap in
+  sheets / dialogs and no focus return, map pins are not keyboard-reachable (list view / feed is the keyboard path).
 - `docs/plan.md` and the removed `docs/design-pass/*.jpg` screenshots are untracked / deleted now but still in the
   public git history (rewriting history would break tags and clones; not done).
 - Fixed 2026-10-12: pin images that change size (the bar icon's night glow, a theme switch) threw in

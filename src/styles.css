@@ -15,11 +15,39 @@ body {
   touch-action: none;
 }
 
-/* ---- Attribution: keep OSM credit readable but quiet ---- */
+/* ---- Attribution: every credit is a link with its own 44 px-tall row, drawn as a small pill ---- */
 .maplibregl-ctrl-attrib {
   font-family: inherit;
+  background: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.maplibregl-ctrl-attrib-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0 4px;
+  padding: 0 4px;
+  font-size: 0; /* hides the " | " / " · " separators between the links */
+}
+.maplibregl-ctrl-attrib-inner a {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
   font-size: 10px;
-  background: rgba(255, 255, 255, 0.6) !important;
+  color: var(--attrib-ink, #2c2620);
+  text-decoration: none;
+}
+.maplibregl-ctrl-attrib-inner a::before {
+  content: '';
+  position: absolute;
+  inset: 9px 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: var(--attrib-bg, rgba(255, 255, 255, 0.72));
 }
 
 /* ---- Debug ---- */

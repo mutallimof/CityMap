@@ -171,7 +171,6 @@ export function SearchPanel() {
             setOnline(null);
             setFailed(false);
           }}
-          onKeyDown={(e) => e.key === 'Escape' && close()}
         />
         <button type="button" className="search__close" onClick={close} aria-label={t('close')}>
           ×

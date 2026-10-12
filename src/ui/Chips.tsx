@@ -49,7 +49,7 @@ export function Chips({ withCategories }: { withCategories: boolean }) {
   const toggleCat = (c: Category) => ui.set((st) => ({ categories: toggleCategory(st.categories, c) }));
   const badge = (on: boolean, n: () => number) => (on ? <span className="chip__count">{n()}</span> : null);
   return (
-    <nav className="chips" aria-label="Layers">
+    <nav className="chips" aria-label={t('layers')}>
       <button className={`chip ${s.ferries ? 'chip--on' : ''}`} aria-pressed={s.ferries} onClick={() => ui.set({ ferries: !s.ferries })}>
         <span aria-hidden>⛴</span> {t('ferries')}
       </button>

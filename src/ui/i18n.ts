@@ -18,6 +18,8 @@ const STRINGS = {
   follow: { tr: 'Takip et', en: 'Follow' },
   following: { tr: 'Takipte', en: 'Following' },
   close: { tr: 'Kapat', en: 'Close' },
+  layers: { tr: 'Katmanlar', en: 'Layers' },
+  notLive: { tr: 'Canlı değil', en: 'not live' },
   nextDepartures: { tr: 'Sonraki kalkışlar', en: 'Next departures' },
   noDepartures: { tr: 'Bugün başka sefer yok', en: 'No more departures today' },
   noService: { tr: 'Bu iskeleye şu an hat yok', en: 'No line serves this pier yet' },

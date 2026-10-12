@@ -17,7 +17,7 @@
 .feed { display: grid; gap: 12px; padding-top: 4px; }
 .feed__actions { display: grid; gap: 10px; justify-items: start; }
 .feed__empty { text-align: center; padding: 18px 0; }
-.seg--sm button { min-width: 0; padding: 0 12px; min-height: 32px; font-size: 13px; }
+.seg--sm button { min-width: 44px; padding: 0 12px; min-height: 32px; font-size: 13px; }
 .nearest { display: grid; gap: 4px; }
 .nearest .pill { min-height: 38px; }
 
@@ -48,7 +48,7 @@
   font-size: 20px;
   box-shadow: 0 0 16px rgba(240, 138, 93, 0.5);
 }
-.sunset__spots { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.sunset__spots { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 6px 0; margin: -6px 0; } /* padding = room for the pills' 44 px hit areas (scrollers clip them) */
 .sunset__spots::-webkit-scrollbar { display: none; }
 .sunset__spots .pill { white-space: nowrap; min-height: 32px; font-size: 12.5px; background: rgba(255, 255, 255, 0.45); }
 :root[data-night='1'] .sunset__spots .pill { background: rgba(255, 255, 255, 0.08); }
@@ -66,16 +66,14 @@
 }
 
 /* place sheet */
-.place { display: grid; gap: 12px; padding-top: 2px; }
+.place { display: grid; gap: 12px; padding-top: 4px; } /* room for the first row's 44 px hit areas (the sheet body clips them) */
 .place__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pill--fav { background: #ff4f72; color: #fff; border-color: transparent; }
+.pill--fav { background: #d02a52; color: #fff; border-color: transparent; }
 .toast { font-size: 12.5px; font-weight: 700; color: var(--muted); }
 .place__hours { display: grid; gap: 4px; }
 .openbadge { justify-self: start; padding: 5px 11px; border-radius: 99px; font-weight: 800; font-size: 13px; }
-.openbadge--open { background: rgba(52, 194, 122, 0.18); color: #1d7f4f; }
-.openbadge--closed { background: rgba(226, 56, 74, 0.13); color: #b32637; }
-:root[data-night='1'] .openbadge--open { color: #7fe0ae; }
-:root[data-night='1'] .openbadge--closed { color: #ff9aa4; }
+.openbadge--open { background: rgba(52, 194, 122, 0.18); color: var(--ok); }
+.openbadge--closed { background: rgba(226, 56, 74, 0.13); color: var(--bad); }
 .place__credit { font-size: 11px; margin: 4px 0 0; }
 .pierhint {
   display: flex;
@@ -115,12 +113,13 @@
 .nearby__name { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .chip--weather { gap: 4px; padding: 0 10px; min-height: 42px; }
+@media (max-width: 420px) { .chip--weather { padding: 0 8px; } }
 .chip--weather b { font-size: 15px; }
 .chip__demo { font-size: 9px; font-weight: 900; letter-spacing: 0.06em; opacity: 0.7; }
 
 /* place facts (website / phone / cuisine) */
 .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
-.facts dt { color: var(--muted); font-weight: 700; }
+.facts dt { color: var(--muted); font-weight: 700; align-self: center; }
 .facts dd { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .facts a, .place__credit a { color: inherit; font-weight: 700; }
 a.pill { text-decoration: none; color: inherit; display: inline-flex; align-items: center; }
@@ -171,15 +170,14 @@ a.pill { text-decoration: none; color: inherit; display: inline-flex; align-item
 .guide__stops { list-style: none; margin: 0; padding: 0; display: grid; }
 .guide__stops li { display: grid; }
 .guide__stops button { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border: 0; background: none; text-align: left; font-size: 14px; }
-.guide__n { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--guide); color: #fff; font-weight: 900; font-size: 13px; box-shadow: 0 0 0 2px #fff; }
+.guide__n { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--guide); color: var(--guide-ink); font-weight: 900; font-size: 13px; box-shadow: 0 0 0 2px #fff; }
 .guide__txt { display: grid; gap: 2px; }
 .guide__txt small { font-size: 12.5px; line-height: 1.35; }
 .guide__leg { margin: 0 0 0 12px; padding: 2px 0 4px 26px; border-left: 2px dashed rgba(127, 127, 127, 0.4); font-size: 12.5px; font-weight: 700; }
 
 /* story (history) */
 .story { display: grid; gap: 10px; }
-.story .section { margin: 4px 0 0; color: #a87a12; }
-:root[data-night='1'] .story .section { color: #f0c86a; }
+.story .section { margin: 4px 0 0; color: var(--gold-ink); }
 .story__photo { margin: 0; display: grid; gap: 4px; }
 .story__photo img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 14px; background: rgba(127, 127, 127, 0.15); }
 .story__photo figcaption { font-size: 11px; color: var(--muted); line-height: 1.35; }
