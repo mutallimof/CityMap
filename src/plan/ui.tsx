@@ -7,11 +7,11 @@ import './plan.css';
 import { events as eventStore } from '../events/events';
 import { flyTo, places, share } from '../places/ui/context';
 import { useTicker } from '../ui/hooks';
-import { useT } from '../ui/i18n';
+import { stopsText, useT } from '../ui/i18n';
 import { services } from '../ui/services';
 import { ui, useUi } from '../ui/store';
 import { TimetableBadge } from '../ferries/ui/timetable';
-import { fmtMin, isoDay, moveStop, planDays, removeStop, setDuration, setStart, type Plan, type PlanKind } from './model';
+import { fmtMin, hasPlace, isoDay, moveStop, planDays, removeStop, setDuration, setStart, type Plan, type PlanKind } from './model';
 import { fitPlan, showPlanOnMap, timelineOf } from './runtime';
 import { DayEnds, EndsEditor } from './points';
 import { encodePlan, hasEnds, planLink } from './share';
@@ -53,9 +53,12 @@ function useAdded(): [string, (msg: string) => void] {
   ];
 }
 
-/** "Add to plan" on a place sheet. */
+/** "Add to plan" on a place sheet; "✓ In plan" when the active plan already has the place. */
 export function AddPlaceToPlan({ id }: { id: string }) {
   const t = useT();
+  const { plans, active } = usePlans((s) => s);
+  const current = plans.find((x) => x.id === active);
+  const inPlan = !!current && hasPlace(current, id);
   const [toast, show] = useAdded();
   const p = places().byId.get(id);
   if (!p) return null;
@@ -65,9 +68,15 @@ export function AddPlaceToPlan({ id }: { id: string }) {
   };
   return (
     <>
-      <button className="pill" onClick={add}>
-        ＋ {t('addToPlan')}
-      </button>
+      {inPlan ? (
+        <button className="pill" onClick={() => openPlan(active ?? 'list')}>
+          ✓ {t('inPlan')}
+        </button>
+      ) : (
+        <button className="pill" onClick={add}>
+          ＋ {t('addToPlan')}
+        </button>
+      )}
       {toast && (
         <button className="toast toast--link" onClick={() => openPlan(planStore.get().active ?? 'list')}>
           {toast} · {t('openPlan')} ›
@@ -120,7 +129,7 @@ export function PlanHeader({ id }: { id: string }) {
       <span className="swatch swatch--plan">🗓</span>
       <div>
         <h2>{p ? planTitle(p, t, lang) : id === 'list' ? t('myPlans') : t('plan')}</h2>
-        <small className="muted">{id === 'shared' ? t('sharedPlan') : p ? `${p.stops.length} ${t('stops')}` : t('plan')}</small>
+        <small className="muted">{id === 'shared' ? t('sharedPlan') : p ? stopsText(p.stops.length, lang) : t('plan')}</small>
       </div>
     </div>
   );
@@ -139,8 +148,8 @@ function PlanList() {
   const [kind, setKind] = useState<PlanKind>('evening');
   const [from, setFrom] = useState(today);
   const [to, setTo] = useState(today);
-  return (
-    <div className="plans">
+  const create = (
+    <>
       <h3 className="section">{t('newPlan')}</h3>
       <div className="plans__kinds" role="radiogroup">
         {(['evening', 'day', 'days'] as const).map((k) => (
@@ -164,6 +173,10 @@ function PlanList() {
           {t('create')}
         </button>
       </div>
+    </>
+  );
+  const mine = (
+    <>
       <h3 className="section">{t('myPlans')}</h3>
       {!plans.length && <p className="muted">{t('noPlans')}</p>}
       <ul className="plans__list">
@@ -172,13 +185,21 @@ function PlanList() {
             <button onClick={() => openPlan(p.id)}>
               <b>{planTitle(p, t, lang)}</b>
               <small className="muted">
-                {p.stops.length} {t('stops')}
+                {stopsText(p.stops.length, lang)}
                 {p.id === active ? ` · ${t('activePlan')}` : ''}
               </small>
             </button>
           </li>
         ))}
       </ul>
+    </>
+  );
+  // "My plans" first once there is one; "New plan" below it.
+  return (
+    <div className="plans">
+      {plans.length > 0 && mine}
+      {create}
+      {!plans.length && mine}
     </div>
   );
 }

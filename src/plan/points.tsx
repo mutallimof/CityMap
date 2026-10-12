@@ -8,7 +8,8 @@ import { CONFIG } from '../config';
 import { nominatim } from '../osm/nominatim';
 import { PlaceIcon } from '../places/ui/PlaceIcon';
 import type { IconKind } from '../places/icons';
-import { localSearch, osmSearch } from '../search/SearchPanel';
+import { localSearch } from '../search/SearchPanel';
+import { osmSearch } from '../search/osm';
 import type { SearchResult } from '../search/local';
 import { useT } from '../ui/i18n';
 import { setMapPick } from '../ui/map-interactions';
@@ -65,7 +66,9 @@ function PointPicker({ onPick, onCancel }: { onPick: (p: PlanPoint) => void; onC
   const submit = async () => {
     if (q.trim().length < 3 || busy) return;
     setBusy(true);
-    setOnline(await osmSearch(q));
+    const res = await osmSearch(q);
+    setOnline(res);
+    setMsg(res === null ? t('searchFailed') : '');
     setBusy(false);
   };
   const list = online ?? local;
@@ -129,7 +132,7 @@ function PointPicker({ onPick, onCancel }: { onPick: (p: PlanPoint) => void; onC
           </li>
         ))}
       </ul>
-      {online && !online.length && <p className="muted">{t('noMatches')}</p>}
+      {online && !online.length && <p className="muted">{t('noResults')}</p>}
       {q.trim().length >= 3 && !online && (
         <button className="pill" onClick={() => void submit()} disabled={busy}>
           {busy ? t('searching') : `🌍 ${t('searchOsm')} “${q.trim()}”`}

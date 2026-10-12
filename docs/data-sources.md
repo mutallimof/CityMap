@@ -10,11 +10,11 @@ a few keyless services directly.
 | OpenStreetMap [land polygons](https://osmdata.openstreetmap.de/data/land-polygons.html) | Coastline / land shape the water is drawn against; ferry routes are computed on it | ODbL | Attribution bar: "© OpenStreetMap contributors" | By hand (rarely) |
 | OpenStreetMap via [Nominatim](https://nominatim.org) | Pier, district and curated place coordinates (build time); place details when a place opens (hours, website, phone); search; names for tapped plan points | ODbL | "Search: Nominatim · © OpenStreetMap contributors" in search; "© OpenStreetMap" on place sheets; "Real places · OpenStreetMap" in the feed | Build: by hand. Live: on demand only (≤ 1 request/s, never as you type) |
 | OpenStreetMap via [Overpass API](https://overpass-api.de) | Auto-picked featured places; candidates for historic stories | ODbL | As above (OSM credit in the attribution bar) | Monthly (GitHub Actions) |
-| [Open-Meteo](https://open-meteo.com) | Live weather (rain, snow, fog, cloud, wind) that drives the map's weather and the funnel smoke | Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | **Not shown yet** — a credit line is owed (see note below) | Every 15 min in the browser |
+| [Open-Meteo](https://open-meteo.com) | Live weather (rain, snow, fog, cloud, wind) that drives the map's weather and the funnel smoke | Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Attribution bar: "Weather data by Open-Meteo.com", linked | Every 15 min in the browser |
 | [Wikidata](https://www.wikidata.org) | Which places have a story, their Wikipedia / Commons links | CC0 | — (not required); stories link to Wikipedia | Monthly (GitHub Actions) |
 | [Wikipedia](https://www.wikipedia.org) | Short summaries in the Story section of historic places | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | "Text: Wikipedia, CC BY-SA 4.0" + "Read more on Wikipedia" link on every story | Monthly (GitHub Actions) |
 | [Wikimedia Commons](https://commons.wikimedia.org) photos | One photo per story (loaded from Wikimedia's servers) | Per file (CC BY / CC BY-SA / PD / CC0) | Author, licence (linked) and "Wikimedia Commons" under each photo | Monthly (GitHub Actions) |
-| [Şehir Hatları](https://www.sehirhatlari.istanbul) timetable PDF (İBB Şehir Hatları A.Ş.) | Ferry departures and arrivals for the seven lines (winter 2026-27, valid to 27 Jun 2027) | Published timetable; we use the times (facts) only | Every line is labelled "Live timetable" or "Simulated schedule"; pier boards show "Times: Şehir Hatları winter timetable 2026-27" with a link | By hand, about twice a year (next: around 27 Jun 2027) |
+| [Şehir Hatları](https://www.sehirhatlari.istanbul) timetable PDF (İBB Şehir Hatları A.Ş.) | Ferry departures and arrivals for the seven lines (winter 2026-27, valid to 27 Jun 2027) | Published timetable; we use the times (facts) only | Every line is labelled "Official timetable" or "Simulated schedule"; pier boards show "Times: Şehir Hatları winter timetable 2026-27" with a link | By hand, about twice a year (next: around 27 Jun 2027) |
 | Turkish public holidays (Diyanet calendar, Law 2429) | Holidays run the Sunday timetable | Public facts | — | With each timetable |
 | Event pages of İstanbul cultural venues | Upcoming events: title, date / time, venue, category, price when listed | Facts only — no descriptions or images are copied | Every event links back to the venue's own event page / official ticket link | Daily (GitHub Actions) |
 | [Wikimedia Commons](https://commons.wikimedia.org) sound recordings | City sound: harbour, water, street, rain, wind, gulls, pier, horns, bell | CC0 / public domain / CC BY 3.0 / CC BY 4.0 (per file; never BY-SA or NC) | While sound is on, the attribution bar shows "Sounds: Wikimedia Commons (CC0 / PD / CC BY)" → [audio credits](https://mutallimof.github.io/CityMap/audio/credits.html) | By hand |
@@ -31,6 +31,6 @@ links back to the venue, and never uses ticket resellers.
 **Refreshed data is validated before it ships:** the refresh job refuses empty or sharply shrunk data
 and keeps the last good copy; ferry routes and timetables are validated on every build.
 
-**Note — Open-Meteo credit:** Open-Meteo's free API asks for attribution ("Weather data by
-Open-Meteo.com"). The app does not show it yet; adding it to the weather chip or the attribution bar
-is an open task.
+**Open-Meteo credit:** Open-Meteo's free API asks for attribution. The map's attribution bar shows
+"Weather data by Open-Meteo.com" (linked to https://open-meteo.com/) in every look, except while a
+`?weather=` demo preset replaces the live data.

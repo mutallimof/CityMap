@@ -15,7 +15,7 @@ create them): project history = this file + git.
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
 - **No open-source licence** — the user keeps all rights.
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
-  No demo/fake posts. Each line is labelled "Live timetable" or "Simulated schedule"; OSM attribution always visible.
+  No demo/fake posts. Each line is labelled "Official timetable" or "Simulated schedule"; OSM attribution always visible.
 - No API keys, no backend: static data + keyless services (OpenFreeMap, Open-Meteo, Nominatim).
 - Priorities: beauty and smooth ferry motion → 60 fps on a mid-range phone → correctness (ferries never cross land;
   positions are a pure function of clock time). Respect reduce-motion everywhere.
@@ -41,7 +41,7 @@ create them): project history = this file + git.
   Today · This weekend · Workshops · Free.
 - **UI:** React over the map; filters = plain on/off chips (categories, Open now, event chips; several at once; an
   active chip is filled with a count; "Clear" while any is on); search; guides; map style picker (themes);
-  pier boards with printed times + source credit; per-line "Live timetable" / "Simulated schedule" label;
+  pier boards with printed times + source credit; per-line "Official timetable" / "Simulated schedule" label;
   snapshot share; PWA; TR/EN; city sound from real recordings (off by default, see Sound); golden gulls tell facts; `?skyline=1` night test mode.
 - **Plan** (`src/plan`): Evening / Day / Several days; "Add to plan" on place sheets and event rows; timeline sheet
   grouped by day (reorder, times, durations, remove); between stops only real connections (approx. walk / the
@@ -320,7 +320,15 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     plan, `d` [[day index, {s, e}]] per day; point = [name, lng, lat], 0 = none, 1 = same as start. Still version
     `1.`: links without `e`/`d` (all older links) open and start at the first stop (test keeps a real old link).
     Decoding validates everything and never throws; missing places/events show "no longer available".
+- **Attribution bar** (MapLibre's own, bottom right, lifted 140 px above the sheet's peek): OSM, OpenFreeMap /
+  OpenMapTiles, "Weather data by Open-Meteo.com" (`src/weather/credit.ts`, off for `?weather=` demos) and, while sound
+  is on, the sounds credit. Extra credits ride on an empty source + invisible layer (`src/map/credit.ts`). Trap:
+  maplibre-gl.css is imported after styles.css, so overrides of `.maplibregl-ctrl-*` need the extra
+  `.maplibregl-control-container` class (the lift silently did nothing before 2026-10-12: the bar sat under the sheet).
+- **Deep links** (`src/ui/deeplink.ts`, pure, tested): a malformed `%` escape is ignored, never thrown; `hashchange`
+  opens a link pasted into an open tab. A boot error removes the loader and shows above it.
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
+  `osmSearch` (`src/search/osm.ts`): `null` = unreachable ("Couldn’t reach search"), `[]` = nothing found ("No results").
 - **Sound** (`src/audio`; constants `CONFIG.sound`): real recordings only (list + licences under "Sound sources").
   - `mix.ts` (pure, tested) = levels from sun (`theme.night`), zoom (closeness z11 → z15.5), water share around the
     view centre (coast field, radius 260 m at z16, doubling per zoom out) and the scene's weather. Beds: **harbour**
@@ -342,7 +350,6 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
-- Open-Meteo weather is not credited in the UI yet (its terms ask for "Weather data by Open-Meteo.com") — roadmap 6.
 - `docs/plan.md` and the removed `docs/design-pass/*.jpg` screenshots are untracked / deleted now but still in the
   public git history (rewriting history would break tags and clones; not done).
 - Fixed 2026-10-12: pin images that change size (the bar icon's night glow, a theme switch) threw in
@@ -396,5 +403,4 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 4. ~~Cleanup pass~~ — done (2026-10-12): dead code / config / strings / CSS removed, ferry UI and city patterns
    regrouped, header comments, new tests, README + data-sources, plan.md untracked. Screenshots unchanged.
 5. **Real iPhone pass** — judge the looks on a device (GPU, battery), tune tree counts / roof caps there.
-6. **Open-Meteo credit** — its free API asks for attribution ("Weather data by Open-Meteo.com"); not shown yet
-   (weather chip or attribution bar).
+6. ~~Open-Meteo credit~~ — done (2026-10-12): attribution bar, see Key decisions.

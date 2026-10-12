@@ -5,7 +5,7 @@ import { useUi, type Lang } from './store';
 
 const STRINGS = {
   simulated: { tr: 'Simüle sefer', en: 'Simulated schedule' },
-  liveTimetable: { tr: 'Resmî tarife', en: 'Live timetable' },
+  liveTimetable: { tr: 'Resmî tarife', en: 'Official timetable' },
   timetableCredit: { tr: 'Saatler', en: 'Times' },
   oldPier: { tr: 'Eski iskele', en: 'old pier' },
   newPier: { tr: 'Yeni iskele', en: 'new pier' },
@@ -104,12 +104,16 @@ const STRINGS = {
   guides: { tr: 'Rehberler', en: 'Guides' },
   guide: { tr: 'Rehber', en: 'Guide' },
   stops: { tr: 'durak', en: 'stops' },
+  stop: { tr: 'durak', en: 'stop' },
+  inPlan: { tr: 'Planda', en: 'In plan' },
   hoursShort: { tr: 'sa', en: 'h' },
   guideNote: { tr: 'Yürüyüş çizgileri kuş uçuşudur; vapur saatleri hattın tarifesinden (yoksa simüle).', en: 'Walking lines are as the crow flies; ferry times come from each line’s timetable (simulated where there is none).' },
   snapshot: { tr: 'Anı fotoğrafı', en: 'Snapshot' },
   snapshotSaved: { tr: 'Görsel indirildi', en: 'Image saved' },
   searchPlaceholder: { tr: 'Mekân, sokak, semt…', en: 'Places, streets, neighbourhoods…' },
   searchOsm: { tr: 'OpenStreetMap’te ara', en: 'Search OpenStreetMap for' },
+  searchFailed: { tr: 'Arama servisine ulaşılamadı', en: 'Couldn’t reach search' },
+  noResults: { tr: 'Sonuç bulunamadı', en: 'No results' },
   searching: { tr: 'Aranıyor…', en: 'Searching…' },
   searchCredit: { tr: 'Arama: Nominatim · © OpenStreetMap katkıcıları', en: 'Search: Nominatim · © OpenStreetMap contributors' },
   pier: { tr: 'İskele', en: 'Pier' },
@@ -276,6 +280,9 @@ export function useT(): (key: StringKey) => string {
 }
 
 /** "4 dk" / "4 min", "now" under 30 s, "1 h 05" over an hour. */
+/** "1 stop" / "3 stops" (Turkish has no plural after a number). */
+export const stopsText = (n: number, lang: Lang): string => `${n} ${STRINGS[n === 1 ? 'stop' : 'stops'][lang]}`;
+
 export function formatWait(seconds: number, lang: Lang): string {
   if (seconds < 30) return t(lang, 'now');
   const m = Math.round(seconds / 60);

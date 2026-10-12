@@ -12,6 +12,7 @@ import { Skyline } from './map/skyline';
 import { browserDeps, CitySound } from './audio/engine';
 import { distM, hearRadiusM } from './audio/mix';
 import { showSoundCredit } from './audio/credit';
+import { showWeatherCredit } from './weather/credit';
 import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
@@ -72,11 +73,8 @@ import { addPlanLayers, planPaint } from './plan/runtime';
 import { bindPlanSelection, openPlan, PlanBody, PlanHeader } from './plan/ui';
 import { decodePlan } from './plan/share';
 import { planStore } from './plan/store';
+import { parseDeepLink, type DeepLink } from './ui/deeplink';
 
-function parseDeepLink(): { kind: 'place' | 'pier' | 'guide' | 'plan'; id: string } | null {
-  const m = /^#(place|pier|guide|plan)=(.+)$/.exec(location.hash);
-  return m ? { kind: m[1] as 'place' | 'pier' | 'guide' | 'plan', id: decodeURIComponent(m[2]) } : null;
-}
 import { stressInputs } from './sim/stress';
 
 function applyCssTokens() {
@@ -97,7 +95,7 @@ async function boot() {
   // ?view=lng,lat,zoom sets the starting camera: no intro flight.
   const withIntro = !reduced && params.get('intro') !== '0' && !parseView(location.search);
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
-  const deep = parseDeepLink();
+  const deep = parseDeepLink(location.hash);
   const intro = withIntro && !deep;
   const [{ map, piers, land, city, districts, landmarks }, lines, routes, placeData, timetables, holidays] = await Promise.all([
     createMap(container, intro),
@@ -152,6 +150,7 @@ async function boot() {
   weatherLayer.reduceMotion = reduced;
   map.addLayer(weatherLayer);
   weather.start();
+  showWeatherCredit(map, !weather.demo.weather); // live Open-Meteo data → its credit in the attribution bar
   const daylight = new DaylightController({ map, water, ferries, clock, city, weather, weatherLayer });
   daylight.start();
 
@@ -352,15 +351,23 @@ async function boot() {
       (intro ? CONFIG.camera.intro.durationMs : 0) + 1500,
     );
   if (intro) void playIntro(map);
-  if (deep?.kind === 'place') openPlace(deep.id);
-  if (deep?.kind === 'pier') openPier(deep.id);
-  if (deep?.kind === 'guide') openGuide(deep.id);
-  if (deep?.kind === 'plan') {
-    // A shared plan: read-only until copied; a broken / old link shows a message, never crashes.
-    const shared = decodePlan(deep.id);
-    planStore.set({ shared, sharedBroken: !shared });
-    openPlan('shared');
-  }
+  const openDeep = (d: DeepLink) => {
+    if (d.kind === 'place') openPlace(d.id);
+    if (d.kind === 'pier') openPier(d.id);
+    if (d.kind === 'guide') openGuide(d.id);
+    if (d.kind === 'plan') {
+      // A shared plan: read-only until copied; a broken / old link shows a message, never crashes.
+      const shared = decodePlan(d.id);
+      planStore.set({ shared, sharedBroken: !shared });
+      openPlan('shared');
+    }
+  };
+  if (deep) openDeep(deep);
+  // A link pasted into an already open tab opens its place / pier / guide / plan.
+  window.addEventListener('hashchange', () => {
+    const d = parseDeepLink(location.hash);
+    if (d) openDeep(d);
+  });
 
   // Toy scenery (3D trees, hero landmarks, bridges): loaded only when a theme asks for it.
   let scenery: import('./scenery/layer').SceneryLayer | null = null;
@@ -416,5 +423,6 @@ async function boot() {
 
 boot().catch((err) => {
   console.error(err);
+  document.getElementById('loader')?.remove(); // the message must not hide behind the loading screen
   document.body.insertAdjacentHTML('beforeend', `<pre class="boot-error">${String(err)}</pre>`);
 });

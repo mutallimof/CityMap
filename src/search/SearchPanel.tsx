@@ -5,10 +5,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Marker, type Map as MlMap } from 'maplibre-gl';
 import type { FeatureCollection, MultiLineString, Point } from 'geojson';
-import { CONFIG } from '../config';
 import type { DistrictProps, LandmarkProps } from '../data/load';
 import { CITY_SOURCE } from '../map/city';
-import { nominatim } from '../osm/nominatim';
 import { kindOfPlace, type IconKind } from '../places/icons';
 import { PlaceIcon } from '../places/ui/PlaceIcon';
 import { categoryOfClass, iconKindOfPoi, placeFromFeature } from '../places/place-layers';
@@ -17,6 +15,7 @@ import { kindLabel, useT } from '../ui/i18n';
 import { services } from '../ui/services';
 import { ui, useUi } from '../ui/store';
 import { rankResults, score, type SearchResult } from './local';
+import { osmSearch, PLACE_CATEGORIES, type OsmResult } from './osm';
 
 export interface SearchData {
   districts: FeatureCollection<Point, DistrictProps>;
@@ -53,20 +52,6 @@ function tileItems(map: MlMap, q: string): { items: SearchResult[]; feats: Map<s
   return { items, feats };
 }
 
-interface NomResult {
-  osm_type: 'node' | 'way' | 'relation';
-  osm_id: number;
-  lat: string;
-  lon: string;
-  name: string;
-  display_name: string;
-  category: string;
-  type: string;
-  boundingbox: [string, string, string, string];
-}
-
-const PLACE_CATEGORIES = new Set(['amenity', 'shop', 'tourism', 'leisure', 'historic', 'craft']);
-
 /** Local results as you type: places, piers, districts, landmarks, loaded map POIs / streets. */
 export function localSearch(q: string, lang: 'tr' | 'en', t: ReturnType<typeof useT>): { items: SearchResult[]; feats: Map<string, Feat> } {
   const { map, pierById } = services();
@@ -84,33 +69,6 @@ export function localSearch(q: string, lang: 'tr' | 'en', t: ReturnType<typeof u
   return { items: rankResults([...items, ...tiles.items], q, 10), feats: tiles.feats };
 }
 
-export type OsmResult = SearchResult & { _cat?: string; _type?: string };
-
-/** The whole of OpenStreetMap (Nominatim, bounded to our area) — only on submit. */
-export async function osmSearch(q: string): Promise<OsmResult[]> {
-  const [w, s, e, n] = CONFIG.bounds;
-  const res = await nominatim<NomResult[]>('search', { q, viewbox: `${w},${n},${e},${s}`, bounded: '1', limit: '10', addressdetails: '0' });
-  // Long streets come back as several OSM ways — keep one per name.
-  const seen = new Set<string>();
-  const unique = (res ?? []).filter((r) => {
-    const k = r.category === 'highway' ? `hw|${r.name}` : `${r.osm_type}/${r.osm_id}`;
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-  return unique.map((r) => ({
-    kind: 'osm' as const,
-    id: `osm:${r.osm_type}/${r.osm_id}`,
-    name: r.name || r.display_name.split(',')[0],
-    sub: r.display_name.split(',').slice(1, 3).join(',').trim(),
-    icon: PLACE_CATEGORIES.has(r.category) ? `k:${kindOfPlace(r.type, categoryOfClass(r.type) ?? '')}` : r.category === 'highway' ? '🛣' : r.category === 'place' || r.category === 'boundary' ? '🏘' : '📍',
-    lngLat: [Number(r.lon), Number(r.lat)] as [number, number],
-    bbox: [Number(r.boundingbox[2]), Number(r.boundingbox[0]), Number(r.boundingbox[3]), Number(r.boundingbox[1])] as [number, number, number, number],
-    _cat: r.category,
-    _type: r.type,
-  }));
-}
-
 /**
  * Search: places, piers, districts, landmarks and loaded map POIs / streets as you type; the whole
  * of OpenStreetMap (Nominatim, bounded to our area) when you press Enter / tap "Search OSM".
@@ -122,6 +80,7 @@ export function SearchPanel() {
   const [q, setQ] = useState('');
   const [online, setOnline] = useState<SearchResult[] | null>(null);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const feats = useRef(new Map<string, Feat>());
 
@@ -130,6 +89,7 @@ export function SearchPanel() {
     else {
       setQ('');
       setOnline(null);
+      setFailed(false);
     }
   }, [open]);
 
@@ -149,6 +109,7 @@ export function SearchPanel() {
     setBusy(true);
     const res = await osmSearch(q);
     setBusy(false);
+    setFailed(res === null);
     setOnline(res);
   };
 
@@ -208,6 +169,7 @@ export function SearchPanel() {
           onChange={(e) => {
             setQ(e.target.value);
             setOnline(null);
+            setFailed(false);
           }}
           onKeyDown={(e) => e.key === 'Escape' && close()}
         />
@@ -229,7 +191,12 @@ export function SearchPanel() {
             </li>
           ))}
         </ul>
-        {online && online.length === 0 && <p className="muted feed__empty">{t('noMatches')}</p>}
+        {failed && (
+          <p className="muted feed__empty" role="alert">
+            {t('searchFailed')}
+          </p>
+        )}
+        {online && online.length === 0 && <p className="muted feed__empty">{t('noResults')}</p>}
         {norm2(q).length >= 3 && !online && (
           <button className="pill search__osm" onClick={() => void searchOsm()} disabled={busy}>
             {busy ? t('searching') : `🌍 ${t('searchOsm')} “${q.trim()}”`}

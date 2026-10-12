@@ -17,7 +17,7 @@ colourful OpenStreetMap city that follows the real sun and weather, and what's o
 ## Features
 
 - **Ferries that move like the real ones.** Seven Şehir Hatları lines on 27 real piers, driven by the
-  operator's published timetable (each line is labelled *Live timetable* or *Simulated schedule*). Every
+  operator's published timetable (each line is labelled *Official timetable* or *Simulated schedule*). Every
   position is a pure function of clock time; vessels dock side by side, slide along the quay, and never
   cross land. Tap a vapur to follow it, tap a pier for its departure board.
 - **A city that lives in real time.** OpenStreetMap vector tiles in our own palettes, 3D buildings with

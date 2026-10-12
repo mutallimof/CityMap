@@ -6,7 +6,7 @@ import { realTripSource, timetableStatus } from '../sim/real';
 import { buildDaySchedule } from '../sim/schedule';
 import { cachedDays } from '../sim/state';
 import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
-import { addEvent, addPlace, createPlan, endsOf, fmtMin, moveStop, nextSlot, removeStop, resetDayEnds, setEnds, setStart, sortedStops, type Plan } from './model';
+import { addEvent, addPlace, createPlan, hasPlace, endsOf, fmtMin, moveStop, nextSlot, removeStop, resetDayEnds, setEnds, setStart, sortedStops, type Plan } from './model';
 import { decodePlan, encodePlan } from './share';
 import { buildTimeline, connect, hhmm, type PlanDeps } from './timeline';
 
@@ -55,6 +55,18 @@ describe('plan model', () => {
       ['concert', '21:00', 120],
     ]);
     expect(nextSlot(p, 60)).toEqual({ day: '2026-10-12', start: 23 * 60 + 15 });
+  });
+
+  it('does not add the same place twice', () => {
+    let p = createPlan('evening', '2026-10-12');
+    p = addPlace(p, 'moda', 'Moda', 'food');
+    expect(hasPlace(p, 'moda')).toBe(true);
+    expect(hasPlace(p, 'galata')).toBe(false);
+    const again = addPlace(p, 'moda', 'Moda', 'food');
+    expect(again).toBe(p);
+    expect(again.stops).toHaveLength(1);
+    // an event with the same ref is a different kind of stop
+    expect(hasPlace(addEvent(p, { id: 'galata', title: 'X', start: EVENTS.concert.start }), 'galata')).toBe(false);
   });
 
   it('reorders places (swap times; jump over a fixed-time event); events never move', () => {

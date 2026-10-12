@@ -121,7 +121,12 @@ function placeDuration(category: string | undefined): number {
   return d[category ?? ''] ?? d.default;
 }
 
+/** Whether a place is already a stop of the plan. */
+export const hasPlace = (p: Plan, ref: string): boolean => p.stops.some((s) => s.kind === 'place' && s.ref === ref);
+
+/** Adds a place at the next free slot; a place already in the plan is not added twice (plan returned as is). */
 export function addPlace(p: Plan, ref: string, label: string, category?: string, ll?: [number, number]): Plan {
+  if (hasPlace(p, ref)) return p;
   const dur = placeDuration(category);
   const slot = nextSlot(p, dur);
   return { ...p, stops: [...p.stops, { id: newId('s'), kind: 'place', ref, label, dur, ...slot, ...(ll ? { ll } : {}) }] };

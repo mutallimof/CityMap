@@ -41,6 +41,7 @@ body {
 
 .boot-error {
   position: fixed;
+  z-index: 100; /* above the loader (50) */
   inset: auto 8px 8px 8px;
   color: #fff;
   background: #a33;
@@ -106,7 +107,8 @@ body {
 }
 
 /* Keep the OSM credit visible above the feed sheet's peek (plan §4.10). */
-.maplibregl-ctrl-bottom-right {
+.maplibregl-control-container .maplibregl-ctrl-bottom-right {
+  /* (the extra class beats maplibre-gl.css, which is loaded after this file) */
   bottom: calc(140px + env(safe-area-inset-bottom));
 }
 

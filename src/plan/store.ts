@@ -72,7 +72,9 @@ function activePlan(nowMs: number): Plan {
 }
 
 export function addPlaceToPlan(nowMs: number, ref: string, label: string, category?: string, ll?: [number, number]): Plan {
-  let p = addPlace(activePlan(nowMs), ref, label, category, ll);
+  const before = activePlan(nowMs);
+  let p = addPlace(before, ref, label, category, ll);
+  if (p === before) return p; // already in the plan
   // The next free slot doesn't know the way there: if the walk / ferry gets in later, start on arrival.
   const added = p.stops[p.stops.length - 1];
   const late = timelineOf(p)

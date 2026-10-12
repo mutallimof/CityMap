@@ -8,7 +8,7 @@ export function isReal(lineId: string): boolean {
   return getDay(toIstanbul(clock.now()).day).modes[lineId] === 'real';
 }
 
-/** "Live timetable" / "Simulated schedule" label for a line. */
+/** "Official timetable" / "Simulated schedule" label for a line. */
 export function TimetableBadge({ real }: { real: boolean }) {
   const t = useT();
   return <span className={`ttbadge ${real ? 'ttbadge--live' : ''}`}>{t(real ? 'liveTimetable' : 'simulated')}</span>;
