@@ -336,6 +336,8 @@ async function boot() {
       refreshPins();
     })
     .catch(() => undefined);
+  // Pin images not on screen yet: drawn a few at a time when the browser is idle.
+  setTimeout(() => placeLayers.prewarmImages(), (intro ? CONFIG.camera.intro.durationMs : 0) + CONFIG.places.idleAfterMs);
   if (params.get('adaptive') !== '0')
     setTimeout(
       () =>

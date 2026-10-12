@@ -28,11 +28,12 @@ function rng(seed: number) {
   return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32);
 }
 
+/** A CPU-backed canvas: every pattern is read back with getImageData (a GPU canvas stalls on read-back). */
 function canvas(w: number, h: number) {
   const cv = document.createElement('canvas');
   cv.width = w;
   cv.height = h;
-  return [cv, cv.getContext('2d')!] as const;
+  return [cv, cv.getContext('2d', { willReadFrequently: true })!] as const;
 }
 
 /** Transparent tile scattered with soft coloured dots (blossom, leaves, tulips). Wraps seamlessly. */

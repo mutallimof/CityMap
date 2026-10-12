@@ -315,6 +315,17 @@ export interface IconOpts {
 }
 
 /**
+ * A 2D canvas for pin drawing. `willReadFrequently` keeps it on the CPU: every pin is read back with
+ * getImageData (MapLibre images) or toDataURL (lists), and reading a GPU canvas back stalls the main thread.
+ */
+function canvas2d(width: number, height: number): [HTMLCanvasElement, G] {
+  const cv = document.createElement('canvas');
+  cv.width = width;
+  cv.height = height;
+  return [cv, cv.getContext('2d', { willReadFrequently: true })!];
+}
+
+/**
  * Bubble style (themes with style.pins = 'bubble'): a round, slightly glossy bubble in the category colour
  * with a thick white rim and the category glyph; pins get a short rounded tail and a soft ground shadow;
  * an event today adds a warm halo. Original drawing.
@@ -326,10 +337,7 @@ function bubbleCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
   const w = Math.ceil(2 * (r + pad));
   const tail = o.pin ? Math.round(r * 0.62) : 0;
   const h = w + tail;
-  const cv = document.createElement('canvas');
-  cv.width = w * dpr;
-  cv.height = h * dpr;
-  const g = cv.getContext('2d')!;
+  const [cv, g] = canvas2d(w * dpr, h * dpr);
   g.scale(dpr, dpr);
   const cx = w / 2;
   const cy = w / 2;
@@ -396,10 +404,7 @@ export function iconCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
   const pad = Math.ceil((o.glow ? r * 0.75 : 3) + 2);
   const w = Math.ceil(2 * (r * 1.15 + pad));
   const h = w + (o.pin ? Math.round(r * 0.55) : 0);
-  const cv = document.createElement('canvas');
-  cv.width = w * dpr;
-  cv.height = h * dpr;
-  const g = cv.getContext('2d')!;
+  const [cv, g] = canvas2d(w * dpr, h * dpr);
   g.scale(dpr, dpr);
   const cx = w / 2;
   const cy = w / 2;
@@ -438,7 +443,26 @@ export function iconCanvas(k: IconKind, o: IconOpts): HTMLCanvasElement {
 
 export function iconImage(k: IconKind, o: IconOpts): ImageData {
   const cv = iconCanvas(k, o);
-  return cv.getContext('2d')!.getImageData(0, 0, cv.width, cv.height);
+  return cv.getContext('2d', { willReadFrequently: true })!.getImageData(0, 0, cv.width, cv.height);
+}
+
+/** Adds the small green "open now" dot at the shape's top-right (image drawn at dpr 2, shape `size` CSS px). */
+export function withOpenDot(img: ImageData, size: number): ImageData {
+  const [cv, g] = canvas2d(img.width, img.height);
+  g.putImageData(img, 0, 0);
+  const dpr = 2;
+  const r = (size / 2) * dpr;
+  const cx = img.width / 2 + r * 0.72;
+  const cy = img.width / 2 - r * 0.72;
+  g.beginPath();
+  g.arc(cx, cy, 5.5 * dpr, 0, Math.PI * 2);
+  g.fillStyle = '#FFFFFF';
+  g.fill();
+  g.beginPath();
+  g.arc(cx, cy, 3.8 * dpr, 0, Math.PI * 2);
+  g.fillStyle = '#22B573';
+  g.fill();
+  return g.getImageData(0, 0, cv.width, cv.height);
 }
 
 const urlCache = new Map<string, string>();
@@ -463,9 +487,7 @@ function hexA(hex: string, a: number): string {
 /** Subtle "has a story" marker: cream disc, thin gold ring, small open book. */
 export function storyIcon(size: number, dpr = 2): ImageData {
   const w = Math.ceil(size + 6);
-  const cv = document.createElement('canvas');
-  cv.width = cv.height = w * dpr;
-  const g = cv.getContext('2d')!;
+  const [cv, g] = canvas2d(w * dpr, w * dpr);
   g.scale(dpr, dpr);
   const c = w / 2;
   const r = size / 2;

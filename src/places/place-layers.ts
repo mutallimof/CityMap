@@ -7,7 +7,8 @@ import { CITY_SOURCE, LANDMARK_SOURCE } from '../map/city';
 import type { LandmarkProps } from '../data/load';
 import { osmFromTileId } from '../osm/nominatim';
 import type { Category } from '../ui/store';
-import { ICON_KINDS, iconImage, kindOfPlace, POI_KINDS, storyIcon, type IconKind } from './icons';
+import { ICON_KINDS, iconImage, kindOfPlace, POI_KINDS, storyIcon, withOpenDot, type IconKind } from './icons';
+import { allPinIds, browserIdle, LazyImages, pinRecipe, recipeKey } from './pin-images';
 import type { Story } from '../stories/stories';
 import { events, NO_EVENT_FILTERS, type EventFilters } from '../events/events';
 import type { PlacesStore } from './store';
@@ -146,7 +147,9 @@ export class PlaceLayers {
     const featuredOsm = new Set(store.places.map((p) => p.osm));
     // Tile POIs that are featured places or our landmarks are drawn by those layers instead.
     this.skip = [...featuredOsm, ...landmarks.features.map((f) => f.properties.osm ?? '')].map(tileIdFromOsm).filter((x): x is number => x !== null);
-    this.addImages();
+    // Pin images are drawn when a layer first asks for one (src/places/pin-images.ts). MapLibre 6 awaits this
+    // resolver before answering a tile's image request ('styleimagemissing' fires only after it: one layout late).
+    map.setMissingStyleImageResolver((id) => void this.images.need(id));
     const ic = CONFIG.icons;
     const p = CONFIG.places;
     const before = map.getLayer('weather') ? 'weather' : undefined;
@@ -270,34 +273,35 @@ export class PlaceLayers {
     return this.state.lang === 'en' ? ['coalesce', ['get', 'nameEn'], ['get', 'name']] : ['get', 'name'];
   }
 
-  private addImages(): void {
-    const ic = CONFIG.icons;
+  private images = new LazyImages<ImageData>({
+    recipe: (id) => {
+      const ic = CONFIG.icons;
+      const t = look();
+      const ctx = { theme: t.id, pinGlow: t.style.pinGlow, eventGlow: t.icons.eventGlow, night: this.state.night, golden: this.state.golden, sizes: { ...ic } };
+      const r = pinRecipe(id, ctx);
+      if (!r) return null;
+      return {
+        key: recipeKey(r, t.id),
+        build: () => {
+          if (r.type === 'story') return storyIcon(r.size);
+          const img = iconImage(r.kind, r);
+          return r.dot ? withOpenDot(img, r.dot) : img;
+        },
+      };
+    },
     // Same-size images update in place; a size change (a glow margin at night, another pin style) re-adds.
-    const put = (id: string, img: ImageData) => {
+    put: (id, img) => {
       const old = this.map.hasImage(id) ? this.map.getImage(id) : null;
       if (old && old.data.width === img.width && old.data.height === img.height) return this.map.updateImage(id, img);
       if (old) this.map.removeImage(id);
       this.map.addImage(id, img, { pixelRatio: 2 });
-    };
-    for (const k of ICON_KINDS) {
-      const glowPoi = (k === 'bar' && this.state.night) || (k === 'viewpoint' && this.state.golden);
-      put(`poi-${k}`, iconImage(k, { size: ic.poiSize, glow: glowPoi ? 1 : 0 }));
-      // Bubbles stay clean: only an event today (or a bar at night / a viewpoint at sunset) glows.
-      const hot = glowPoi ? 1 : look().style.pinGlow;
-      put(`feat-${k}`, iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }));
-      // Compact pins for city zoom: no glow margin, so collision boxes are the pin itself and many more
-      // fit; venues with an event today keep a (smaller) warm glow.
-      const mini = ic.featuredSize * ic.miniScale;
-      put(`featm-${k}`, iconImage(k, { size: mini, pin: true }));
-      put(`featm-${k}-o`, withOpenDot(iconImage(k, { size: mini, pin: true }), mini));
-      put(`featm-${k}-ev`, iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: look().icons.eventGlow }));
-      put(`featm-${k}-ev-o`, withOpenDot(iconImage(k, { size: mini, pin: true, glow: 1.2, glowColor: look().icons.eventGlow }), mini));
-      put(`feat-${k}-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: hot }), ic.featuredSize));
-      // A venue with an event today glows warm gold.
-      put(`feat-${k}-ev`, iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: look().icons.eventGlow }));
-      put(`feat-${k}-ev-o`, withOpenDot(iconImage(k, { size: ic.featuredSize, pin: true, glow: 1.4, glowColor: look().icons.eventGlow }), ic.featuredSize));
-    }
-    put('landmark-big', iconImage('landmark', { size: ic.landmarkSize, glow: this.state.night ? 0.9 : 0.5 }));
+    },
+    idle: browserIdle,
+  });
+
+  /** Draws the pin images not needed yet a few at a time while the browser is idle (call once the map is up). */
+  prewarmImages(): void {
+    this.images.prewarm(allPinIds());
   }
 
   private poiFilter(categories: Category[]): FilterSpecification {
@@ -358,7 +362,7 @@ export class PlaceLayers {
     if (night !== this.state.night || golden !== this.state.golden) {
       this.state.night = night;
       this.state.golden = golden;
-      this.addImages();
+      this.images.refresh();
       for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks]) map.setPaintProperty(l, 'text-halo-color', haloColor(night));
       map.setPaintProperty(LAYERS.poi, 'text-color', textColor(night));
       map.setPaintProperty(LAYERS.featured, 'text-color', textColor(night));
@@ -381,11 +385,7 @@ export class PlaceLayers {
     const map = this.map;
     const night = this.state.night;
     map.setLayoutProperty(LAYERS.featured, 'icon-size', featuredSize());
-    this.addImages();
-    if (map.hasImage('story')) {
-      map.removeImage('story');
-      map.addImage('story', storyIcon(CONFIG.icons.storySize), { pixelRatio: 2 });
-    }
+    this.images.refresh(); // every pin the map has, in the new look
     const font = [...look().labels.placeFont];
     for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks]) {
       map.setLayoutProperty(l, 'text-font', font);
@@ -466,7 +466,6 @@ export class PlaceLayers {
       (map.getSource(STORY_SOURCE) as GeoJSONSource).setData(data);
       return;
     }
-    if (!map.hasImage('story')) map.addImage('story', storyIcon(CONFIG.icons.storySize), { pixelRatio: 2 });
     map.addSource(STORY_SOURCE, { type: 'geojson', data });
     map.addLayer(
       {
@@ -516,26 +515,4 @@ export class PlaceLayers {
     const q = this.map.project((f.geometry as Point).coordinates as [number, number]);
     return Math.hypot(q.x - p.x, q.y - p.y - 12);
   }
-}
-
-/** Adds the small green "open now" dot at the shape's top-right. */
-function withOpenDot(img: ImageData, size: number): ImageData {
-  const cv = document.createElement('canvas');
-  cv.width = img.width;
-  cv.height = img.height;
-  const g = cv.getContext('2d')!;
-  g.putImageData(img, 0, 0);
-  const dpr = 2;
-  const r = (size / 2) * dpr;
-  const cx = img.width / 2 + r * 0.72;
-  const cy = img.width / 2 - r * 0.72;
-  g.beginPath();
-  g.arc(cx, cy, 5.5 * dpr, 0, Math.PI * 2);
-  g.fillStyle = '#FFFFFF';
-  g.fill();
-  g.beginPath();
-  g.arc(cx, cy, 3.8 * dpr, 0, Math.PI * 2);
-  g.fillStyle = '#22B573';
-  g.fill();
-  return g.getImageData(0, 0, cv.width, cv.height);
 }

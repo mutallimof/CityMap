@@ -546,6 +546,9 @@ export const CONFIG = {
     /** Story markers (historic places with a Wikipedia story) and their names from these zooms. */
     storiesFrom: 13.6,
     storyNamesFrom: 15.4,
+    /** Deferred work (pin images not on screen yet, stories not needed yet) starts at the first idle moment this
+     * long after the map is up (ms). */
+    idleAfterMs: 6000,
   },
 
   /** Planner (src/plan). Times in minutes since midnight. */
