@@ -30,7 +30,7 @@ import { WeatherLayer } from './weather/weather-layer';
 import { prefersReducedMotion } from './app/motion';
 import { startAdaptiveQuality } from './app/perf';
 import { initPwa } from './app/pwa';
-import { hideLoader, playIntro } from './map/intro';
+import { hideLoader, parseView, playIntro } from './map/intro';
 import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import { setServices } from './ui/services';
@@ -81,7 +81,8 @@ async function boot() {
   const container = document.getElementById('map')!;
   const reduced = prefersReducedMotion();
   const params = new URLSearchParams(location.search);
-  const withIntro = !reduced && params.get('intro') !== '0';
+  // ?view=lng,lat,zoom sets the starting camera: no intro flight.
+  const withIntro = !reduced && params.get('intro') !== '0' && !parseView(location.search);
   // Deep links (#place=… / #pier=…) skip the intro and open straight on the target.
   const deep = parseDeepLink();
   const intro = withIntro && !deep;

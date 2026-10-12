@@ -5,6 +5,8 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 · ideas `docs/ideas.md`. **No changelog file** (don't create one): project history = this file + git.
 
 ## Ground rules (from the user)
+- Tags: `v0.1.0` = the look before the theme redesign (tag pushes are refused by the session git proxy: tags are
+  made by a one-off workflow on a `probe/tag-…` branch).
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
 - **No open-source licence** — the user keeps all rights.
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
@@ -68,8 +70,11 @@ also uploaded identically (CC0) by Kübradereli1 as "GALATA TOWER MORNING/NOON/E
 ```bash
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
-                   #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
-npm test           # vitest (238 tests)
+                   #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 ?view=lng,lat,zoom[,pitch,bearing] (initial camera, no intro)
+                   #   ?debug=0 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
+node scripts/dev/shot.mjs out.png "adaptive=0&intro=0&debug=0&view=29,41.02,14" [waitMs]   # headless screenshot (real WebGL
+                   #   via SwiftShader, needs the dev server; ~5 fps; never move the camera — jumps crash headless Chromium)
+npm test           # vitest
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
@@ -221,6 +226,10 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
+- Planner "freeze" (a stop near Kadıköy + one across the water): not reproduced. `src/plan/perf.test.ts` builds such
+  plans (weekday, Sat night, holiday, simulated dates; start points, several days, share round trip) under a timing
+  guard — each ≤ ~20 ms; in the app a #plan= link with a Karaköy → Kadıköy → Karaköy ferry evening adds no long tasks.
+  Note: a Moda café is > 1.6 km (walk × 1.3) from Kadıköy pier, so its legs say "No transport info" by design.
 - Timetables: the PDF prints departures per pier, not which pier a Karaköy/Eminönü departure sails to on the
   Kadıköy/Üsküdar – Karaköy – Eminönü lines; we read rows as rounds (out K→Kr→E, back E→K direct), which fits the
   row layout, the footnotes and the sailing times. One Kadıköy berth for both the old (Eski) and new (Yeni) pier
