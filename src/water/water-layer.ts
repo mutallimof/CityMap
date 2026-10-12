@@ -31,6 +31,15 @@ const FS = /* glsl */ `
   uniform float uViewR;   // rough view radius (m)
   uniform float uRain;    // 0–1 rain-drop rings
   uniform float uChop;    // 0–1 wind-driven roughness
+  // Cartoon water (themes): wave marks, colour bands, coastal foam + contour ripples.
+  uniform float uMarks;
+  uniform vec3 uMarkColor;
+  uniform float uMarkPx;
+  uniform float uMarkDensity;
+  uniform float uBands;
+  uniform float uFoam;
+  uniform vec3 uFoamColor;
+  uniform float uFieldM;   // distance mapped to d = 1 (m)
   varying vec2 vUv;
   varying vec2 vPos;
 
@@ -44,8 +53,11 @@ const FS = /* glsl */ `
   void main() {
     float d = texture2D(uDist, vUv).r;            // 0 at the coast → 1 far out
     float t = uTime * uMotion;
-    // Lighter near shores, darker mid-strait.
-    vec3 col = mix(uShallow, uDeep, smoothstep(0.0, 0.85, d));
+    // Lighter near shores, darker mid-strait (cartoon: a few soft-edged bands instead of a gradient).
+    float dg = smoothstep(0.0, 0.85, d);
+    float fd = fwidth(d) + 1e-5;
+    float stepped = (floor(dg * 3.0) + smoothstep(1.0 - 0.06, 1.0, fract(dg * 3.0))) / 3.0;
+    vec3 col = mix(uShallow, uDeep, mix(dg, stepped, uBands));
     // Slow ripples: two drifting noise octaves modulate brightness.
     vec2 p = vPos * 0.0035;
     float tc = t * (1.0 + uChop * 2.5);
@@ -90,6 +102,40 @@ const FS = /* glsl */ `
       }
       col += vec3(0.75, 0.85, 0.9) * rings * 0.26 * (1.0 - uNight * 0.5);
       col *= 1.0 - uRain * 0.12;
+    }
+    // Cartoon coast: a white foam line on the shore and two thin contour ripples further out, all in
+    // screen pixels (fwidth) so they read the same at every zoom; they breathe slowly.
+    if (uFoam > 0.001) {
+      float pxd = mpp / uFieldM;                        // field units per pixel (smooth, from metres per pixel)
+      float wob = (noise(vPos * 0.004 + vec2(t * 0.02, 0.0)) - 0.5) * 2.0;
+      float foam = 1.0 - smoothstep(pxd * 2.5, pxd * 4.0, d - pxd * wob * 0.8);
+      float breathe = 0.5 + 0.5 * sin(t * 0.6);
+      float r1 = pxd * (9.0 + breathe * 2.0 + wob * 1.5);
+      float r2 = pxd * (17.0 + breathe * 3.0 + wob * 2.0);
+      float ring = (1.0 - smoothstep(0.0, pxd * 1.1, abs(d - r1))) * 0.55 + (1.0 - smoothstep(0.0, pxd * 1.0, abs(d - r2))) * 0.3;
+      float on = step(pxd * 0.5, d);                    // only on the water side
+      col = mix(col, uFoamColor * (1.0 - uNight * 0.55), clamp(foam * 0.95 + ring * on, 0.0, 1.0) * uFoam);
+    }
+    // Wave marks: little curved strokes scattered in world-fixed cells sized in screen pixels (octaves
+    // blended like the glints, so they neither grow nor pop when zooming); each drifts and fades in turn.
+    if (uMarks > 0.001) {
+      float marks = 0.0;
+      for (int k = 0; k < 2; k++) {
+        float cell = exp2(l0 + float(k)) * uMarkPx * 3.2;
+        vec2 q = vPos / cell;
+        vec2 id = floor(q);
+        float h = hash(id + 3.7);
+        vec2 f = fract(q) - 0.5;
+        vec2 off = (vec2(hash(id + 1.3), hash(id + 9.1)) - 0.5) * 0.4;
+        float life = fract(t * 0.07 + h * 5.0);
+        vec2 p2 = (f - off - vec2(life * 0.18 - 0.09, 0.0)) * 3.2;   // drift sideways while alive
+        float wave = p2.y - 0.13 * sin(p2.x * 6.2832 * 1.1 + 1.6);
+        float stroke = 1.0 - smoothstep(0.05, 0.11, abs(wave));
+        stroke *= 1.0 - smoothstep(0.34, 0.5, abs(p2.x));
+        float fade = smoothstep(0.0, 0.2, life) * (1.0 - smoothstep(0.75, 1.0, life));
+        marks += stroke * fade * step(h, uMarkDensity) * (k == 0 ? 1.0 - fr : fr);
+      }
+      col = mix(col, uMarkColor * (1.0 - uNight * 0.6), clamp(marks, 0.0, 1.0) * uMarks * smoothstep(0.015, 0.06, d));
     }
     // Night: warm city lights reflected along the shore, gently flickering.
     // Thin and patchy: lit quays and windows, not a continuous band.
@@ -167,6 +213,14 @@ export class WaterLayer implements CustomLayerInterface {
         uViewR: { value: 5000 },
         uRain: { value: 0 },
         uChop: { value: 0 },
+        uMarks: { value: 0 },
+        uMarkColor: { value: new THREE.Color('#ffffff') },
+        uMarkPx: { value: 14 },
+        uMarkDensity: { value: 0 },
+        uBands: { value: 0 },
+        uFoam: { value: 0 },
+        uFoamColor: { value: new THREE.Color('#ffffff') },
+        uFieldM: { value: w.fieldMaxM },
       },
       depthTest: false,
       depthWrite: false,
@@ -203,6 +257,14 @@ export class WaterLayer implements CustomLayerInterface {
     m.uSunDir.value.set(Math.sin(a), Math.cos(a));
     m.uRain.value = u.rain ?? 0;
     m.uCityLight.value.set(look().water.cityLight);
+    const sw = look().style.water;
+    m.uMarks.value = sw.marks;
+    m.uMarkColor.value.set(sw.markColor);
+    m.uMarkPx.value = sw.markPx;
+    m.uMarkDensity.value = sw.markDensity;
+    m.uBands.value = sw.bands;
+    m.uFoam.value = sw.foam;
+    m.uFoamColor.value.set(sw.foamColor);
     m.uChop.value = u.chop ?? 0;
   }
 

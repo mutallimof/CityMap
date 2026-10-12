@@ -1,5 +1,6 @@
 import { look } from '../themes';
-import type { ExpressionSpecification, FilterSpecification, LayerSpecification, Map as MlMap } from 'maplibre-gl';
+import type { ExpressionSpecification, FilterSpecification, LayerSpecification, Map as MlMap, VectorTileSource } from 'maplibre-gl';
+import { buildingTilesUrl } from './buildings/protocol';
 import type { CityPalette } from './city-look';
 
 /**
@@ -11,6 +12,7 @@ export const CITY_SOURCE = 'city';
 /** Same tiles, building layer re-packed into single buildings (src/map/buildings). */
 export const BUILDING_SOURCE = 'city-buildings';
 const BUILDING_LAYER = 'b';
+const ROOF_LAYER = 'r';
 export const LANDMARK_SOURCE = 'landmarks';
 
 export const CITY_LAYER = {
@@ -26,6 +28,7 @@ export const CITY_LAYER = {
   bridgeLamps: 'city-bridge-lamps',
   buildings: 'city-buildings',
   buildingsLit: 'city-buildings-lit',
+  roofs: 'city-roofs',
   landmarkGlow: 'city-landmark-glow',
   landmarkBuildings: 'city-landmark-buildings',
   streetLabels: 'city-street-labels',
@@ -183,9 +186,9 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       minzoom: c.buildingsFrom[0],
       paint: {
         ...buildingPaint(p, ids),
-        'fill-extrusion-height': ['get', 'h'],
-        'fill-extrusion-base': ['get', 'b'],
-        'fill-extrusion-vertical-gradient': true,
+        'fill-extrusion-height': heightExpr(),
+        'fill-extrusion-base': baseExpr(),
+        'fill-extrusion-vertical-gradient': look().style.buildings.gradient,
         'fill-extrusion-opacity': buildingOpacity(1),
       },
     },
@@ -200,10 +203,27 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       paint: {
         // Many buildings stay dark; the rest get a few warm windows, unevenly scattered.
         'fill-extrusion-pattern': ['step', ['get', 'v'], IMG.windows[0], c.lights.darkShare, IMG.windows[1], c.lights.darkShare + 25, IMG.windows[2], c.lights.darkShare + 42, IMG.windows[3]],
-        'fill-extrusion-height': ['get', 'h'],
-        'fill-extrusion-base': ['get', 'b'],
-        'fill-extrusion-vertical-gradient': true,
+        'fill-extrusion-height': heightExpr(),
+        'fill-extrusion-base': baseExpr(),
+        'fill-extrusion-vertical-gradient': look().style.buildings.gradient,
         'fill-extrusion-opacity': buildingOpacity(0),
+      },
+    },
+    {
+      // Roof caps (themes with capped buildings): an inset slab on top of every building in a roof colour —
+      // the wall's top edge shows as a soft rim around it, and it hides lit-window patterns on rooftops.
+      id: CITY_LAYER.roofs,
+      type: 'fill-extrusion',
+      source: BUILDING_SOURCE,
+      'source-layer': ROOF_LAYER,
+      minzoom: c.buildingsFrom[0],
+      layout: { visibility: look().style.buildings.cap ? 'visible' : 'none' },
+      paint: {
+        'fill-extrusion-color': roofColor(p),
+        'fill-extrusion-base': heightExpr(),
+        'fill-extrusion-height': ['+', heightExpr(), look().style.buildings.capM],
+        'fill-extrusion-vertical-gradient': false,
+        'fill-extrusion-opacity': buildingOpacity(1),
       },
     },
     {
@@ -216,9 +236,9 @@ export function cityLayers(p: CityPalette, ids: CityIds): LayerSpecification[] {
       filter: ['in', ['to-number', ['id'], 0], ['literal', ids.landmarkBuildings.length ? ids.landmarkBuildings : [-1]]],
       paint: {
         'fill-extrusion-color': p.landmark,
-        'fill-extrusion-height': ['get', 'h'],
-        'fill-extrusion-base': ['get', 'b'],
-        'fill-extrusion-vertical-gradient': true,
+        'fill-extrusion-height': heightExpr(),
+        'fill-extrusion-base': baseExpr(),
+        'fill-extrusion-vertical-gradient': look().style.buildings.gradient,
         'fill-extrusion-opacity': 1,
       },
     },
@@ -329,6 +349,24 @@ function roadCasingPaint(p: CityPalette) {
   };
 }
 
+/** Building height for the active look (Classic: the worker's height as is). */
+function heightExpr(): ExpressionSpecification {
+  const b = look().style.buildings;
+  if (b.heightScale === 1 && b.minFloors === 0) return ['get', 'h'];
+  return ['max', b.minFloors * look().city.buildings.floorM, ['*', ['get', 'h'], b.heightScale]];
+}
+function baseExpr(): ExpressionSpecification {
+  const s = look().style.buildings.heightScale;
+  return s === 1 ? ['get', 'b'] : ['*', ['get', 'b'], s];
+}
+
+function roofColor(p: CityPalette): ExpressionSpecification {
+  const r = p.roofs;
+  const pick = ['match', ['%', ['get', 'v'], r.length], ...r.slice(0, -1).flatMap((col, i) => [i, col]), r[r.length - 1]];
+  // Very large roofs (stadiums, halls, malls: footprint side > 80 m) take the wall colour, not a loud patch.
+  return ['case', ['>', ['coalesce', ['get', 'a'], 0], 80], p.buildings[0], pick] as unknown as ExpressionSpecification;
+}
+
 /** Per-building variation `v` (0–99) from the re-packed building layer. */
 const pickBuilding = (n: number): ExpressionSpecification => ['%', ['get', 'v'], n];
 
@@ -360,6 +398,7 @@ export function cityPaint(p: CityPalette, ids: CityIds): [string, string, unknow
   add(CITY_LAYER.rail, { 'line-color': p.rail });
   add(CITY_LAYER.bridgeGlow, { 'line-color': p.bridge });
   add(CITY_LAYER.buildings, buildingPaint(p, ids));
+  add(CITY_LAYER.roofs, { 'fill-extrusion-color': roofColor(p) });
   add(CITY_LAYER.landmarkGlow, { 'circle-color': p.landmark });
   add(CITY_LAYER.landmarkBuildings, { 'fill-extrusion-color': p.landmark });
   add(CITY_LAYER.streetLabels, { 'text-color': p.streetLabel, 'text-halo-color': p.streetHalo });
@@ -394,7 +433,9 @@ export class CityLook {
     const litK = windows ? lit : 0;
     this.visible(CITY_LAYER.buildingsLit, buildings && litK > 0.01);
     this.visible(CITY_LAYER.buildings, buildings && litK < 0.99);
-    this.visible(CITY_LAYER.landmarkBuildings, buildings);
+    this.visible(CITY_LAYER.landmarkBuildings, buildings && !look().style.landmarks3d);
+    this.visible(CITY_LAYER.roofs, buildings && look().style.buildings.cap);
+    this.set(CITY_LAYER.roofs, 'fill-extrusion-opacity', buildingOpacity(1));
     this.set(CITY_LAYER.buildingsLit, 'fill-extrusion-opacity', buildingOpacity(litK));
     this.set(CITY_LAYER.buildings, 'fill-extrusion-opacity', buildingOpacity(1 - litK * 0.999));
     this.visible(CITY_LAYER.roadGlow, night > 0.05);
@@ -409,9 +450,21 @@ export class CityLook {
 
   /** Theme switch: fonts, pattern images (night facades, tulips, crowns) are rebuilt on the next apply(). */
   retheme(): void {
+    const map = this.map;
     this.blossomKey = '';
-    addCityImages(this.map);
-    this.map.setLayoutProperty(CITY_LAYER.streetLabels, 'text-font', [...look().city.font]);
+    addCityImages(map);
+    map.setLayoutProperty(CITY_LAYER.streetLabels, 'text-font', [...look().city.font]);
+    for (const l of [CITY_LAYER.buildings, CITY_LAYER.buildingsLit, CITY_LAYER.landmarkBuildings]) {
+      map.setPaintProperty(l, 'fill-extrusion-vertical-gradient', look().style.buildings.gradient);
+      map.setPaintProperty(l, 'fill-extrusion-height', heightExpr());
+      map.setPaintProperty(l, 'fill-extrusion-base', baseExpr());
+    }
+    map.setPaintProperty(CITY_LAYER.roofs, 'fill-extrusion-base', heightExpr());
+    map.setPaintProperty(CITY_LAYER.roofs, 'fill-extrusion-height', ['+', heightExpr(), look().style.buildings.capM]);
+    // Roof caps come from the building worker: reload the tiles when the look needs them (or no longer does).
+    const src = map.getSource(BUILDING_SOURCE) as VectorTileSource | undefined;
+    const url = buildingTilesUrl();
+    if (src && src.tiles?.[0] !== url) src.setTiles([url]);
   }
 
   private set(layer: string, prop: string, value: unknown): void {

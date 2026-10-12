@@ -163,7 +163,7 @@ export class PlaceLayers {
         type: 'symbol',
         source: LANDMARK_SOURCE,
         minzoom: look().city.landmarkLabelsFrom - 1,
-        filter: ['all', ['==', ['geometry-type'], 'Point'], ['!=', ['get', 'kind'], 'tulips']],
+        filter: this.landmarkFilter(),
         layout: {
           'icon-image': 'landmark-big',
           'icon-padding': 2,
@@ -221,6 +221,20 @@ export class PlaceLayers {
       },
       before,
     );
+  }
+
+  /** Places drawn as hero models in the active look (their pins / stars / story markers step aside). */
+  private heroes = { places: new Set<string>(), osm: new Set<string>(), landmarks: new Set<string>() };
+  private stories: Story[] = [];
+  setHeroes(h: { place: string | null; osm: string; id: string }[]): void {
+    this.heroes = { places: new Set(h.map((x) => x.place).filter((x): x is string => !!x)), osm: new Set(h.map((x) => x.osm)), landmarks: new Set(h.map((x) => x.id)) };
+    this.state.key = '';
+    if (this.map.getLayer(LAYERS.landmarks)) this.map.setFilter(LAYERS.landmarks, this.landmarkFilter());
+    if (this.stories.length) this.setStories(this.stories);
+  }
+
+  private landmarkFilter(): FilterSpecification {
+    return ['all', ['==', ['geometry-type'], 'Point'], ['!=', ['get', 'kind'], 'tulips'], ['!', ['in', ['get', 'id'], ['literal', [...this.heroes.landmarks]]]]];
   }
 
   private nameField(): ExpressionSpecification {
@@ -283,7 +297,8 @@ export class PlaceLayers {
           rank: featuredRank(p, active, events.status(p.id, nowMs) !== null),
           fav: s.favourites.has(p.id),
           open: s.open(p.id, nowMs).state === 'open',
-          vis: placeVisible(s, p.id, f, nowMs),
+          // A hero landmark model (toy themes) stands in for its pin; tapping the model opens the place.
+          vis: placeVisible(s, p.id, f, nowMs) && !this.heroes.places.has(p.id),
           ev: events.status(p.id, nowMs) !== null,
         },
         geometry: { type: 'Point', coordinates: p.lngLat },
@@ -361,12 +376,13 @@ export class PlaceLayers {
    * and below landmarks / featured places; their tile POIs are skipped so nothing doubles up.
    */
   setStories(list: Story[]): void {
+    this.stories = list;
     const map = this.map;
     const featured = new Set(this.store.places.map((p) => p.osm));
     const data: GeoJSON.FeatureCollection = {
       type: 'FeatureCollection',
       features: list
-        .filter((st) => !featured.has(st.osm))
+        .filter((st) => !featured.has(st.osm) && !this.heroes.osm.has(st.osm))
         .map((st) => ({ type: 'Feature', properties: { osm: st.osm, name: st.name.tr || st.name.en, nameEn: st.name.en || st.name.tr, kind: st.kind }, geometry: { type: 'Point', coordinates: st.lngLat } })),
     };
     this.skip = [...new Set([...this.skip, ...list.map((st) => tileIdFromOsm(st.osm)).filter((x): x is number => x !== null)])];

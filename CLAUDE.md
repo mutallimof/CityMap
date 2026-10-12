@@ -63,6 +63,29 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   DaylightController (re-applies palette / water / light), `basePaint` / `guidePaint` / `planPaint` triples,
   `setLabelFonts`; the HUD gets `data-theme` + a generated `<style>` of tokens. React re-renders via `useTheme()`.
 
+### Toy theme (`src/themes/toy.ts`)
+- Saturated pastels, cream land, cream roads with white casings; water: 3 soft colour bands, white coastal foam
+  line + two breathing contour ripples (screen-px wide, from metres-per-pixel — not `fwidth(d)`, the 8-bit coast
+  field is too noisy), drifting little wave marks in world-fixed cells sized in px (octave-blended like the
+  glints, `style.water`). Night = navy/purple with lit windows on walls only.
+- **Roof caps** (`style.buildings.cap`): the building worker also emits layer `r` = each building's outer ring
+  inset by `CONFIG.city.roofInsetM` (mitred offset, centroid-shrink fallback; `a` = √area m) when the tile URL has
+  `?r=`; layer `city-roofs` extrudes it `capM` thick on top in a roof palette (`city.day/night.roofs`, footprints
+  > 80 m take the wall colour). Gives a soft rim and **no lit windows on rooftops** (the cap covers the roof).
+  Heights × `heightScale`, ≥ `minFloors`; gentler shading (`light`, no wall gradient). Switching themes swaps the
+  building tile URL (`buildingTilesUrl()`), so Classic never pays for roofs.
+- **Scenery** (`src/scenery`, lazy-loaded three.js layer `scenery`, only for themes with `trees3d` / `landmarks3d`):
+  lollipop trees on a world-fixed jittered grid inside the real OSM woods / parks / gardens of the loaded tiles
+  (`scatter.ts`, tested; ≤ 3200, from z14.6, crowns from the city palette incl. season / snow / night lift);
+  hero landmarks from primitives (`models.ts`: Galata Tower, Maiden's Tower, Hagia Sophia, Blue Mosque,
+  Süleymaniye, Dolmabahçe) at their OSM footprints (`data/hero-landmarks.json` ← `npm run data:hero-landmarks`
+  from OFM tiles: the building polygon under the OSM POI, oriented box, height); 3D bridges along the OSM bridge
+  lines (suspension towers where the deck meets the shore, from the coast field). Models replace their pins /
+  stars / story markers (names via `hero-labels`); tapping a model opens its place (featured pin, else the OSM
+  building). The worker drops OSM buildings under hero footprints (`?x=1`). Constants: `CONFIG.scenery`.
+- Toy vapur (`style.vapur.model`): rounder hull with bevelled edges, tall cabin, big funnel, cel shading
+  (`style.toon` → `src/three/materials.ts`) and a constant-px outline (smooth-normal shell, back faces).
+
 ## Sound sources (all Wikimedia Commons; licence and author re-checked on each file page by `data:audio`)
 | File(s) | Commons file | Author | Licence |
 |---|---|---|---|
@@ -114,6 +137,7 @@ ids/names/rules (no coordinates).
 | `catalog/holidays.json` | hand-written | Diyanet calendar + Law 2429 | with each timetable |
 | `places.geojson` (67 curated) | `data:fetch-places` → `data:places` | Nominatim | manual |
 | `landmarks.geojson` | `data:landmarks` | OFM tiles | manual |
+| `hero-landmarks.json` | `data:hero-landmarks` (catalog `data/catalog/hero-landmarks.json`) | OFM tiles | manual |
 | `venue-places.geojson` | `data:venues` | OFM tiles + Nominatim fallback | manual |
 | `events.json`, `events-log.json`, `event-venues.geojson`, `venue-geocode.json` | `data:events` | venue sites + Nominatim | **daily 06:17 Istanbul**, Actions |
 | `stories.json` | `data:stories` | Overpass + Wikidata + Wikipedia + Commons | **monthly (3rd)**, Actions |

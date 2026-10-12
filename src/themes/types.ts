@@ -40,29 +40,30 @@ export interface ThemeStyle {
   buildings: {
     /** Draw a lighter roof cap inset from the walls: a soft outline rim and no lit windows on roofs. */
     cap: boolean;
-    /** Cap inset (m) and thickness (m). */
-    capInsetM: number;
+    /** Cap thickness (m); the inset is CONFIG.city.roofInsetM (made in the building worker). */
     capM: number;
-    /** Roof colour: the wall colour mixed towards this by capMix. */
-    capColor: string;
-    capMix: number;
     /** Height multiplier and minimum floors (chunkier, more even blocks). */
     heightScale: number;
     minFloors: number;
     /** Corner rounding (m) of footprints (0 = sharp, classic). */
     roundM: number;
+    /** 3D light strength on buildings (× the classic intensity; lower = gentler shading) and the darker-at-the-foot wall gradient. */
+    light: number;
+    gradient: boolean;
   };
   vapur: {
     /** 'classic' = low-poly vapur; 'toy' = rounder, chunkier toy boat. */
     model: 'classic' | 'toy';
-    /** Toon shading steps (0 = smooth Lambert). */
-    toonSteps: number;
-    /** Dark outline width as a fraction of the beam (0 = none). */
+    /** Outline around the hull and cabins, in screen px (0 = none). */
     outline: number;
     outlineColor: string;
   };
   /** Featured place pins: classic shape pins, or round bubbles with a category icon. */
   pins: 'classic' | 'bubble';
+  /** Cel shading steps for 3D objects (vapurs, trees, landmarks); 0 = smooth Lambert (classic). */
+  toon: number;
+  /** Colours of the hero landmark models and 3D bridges. */
+  models: { stone: string; stoneDark: string; pink: string; dome: string; roof: string; white: string; gold: string; window: string; rock: string; deck: string; cable: string; trunk: string };
   /** Round "lollipop" 3D trees in parks and woods when zoomed in. */
   trees3d: boolean;
   /** Hero landmarks built from primitives (Galata Tower, mosques, bridges…). */

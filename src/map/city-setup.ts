@@ -5,7 +5,7 @@ import { CONFIG } from '../config';
 import type { LandmarkProps } from '../data/load';
 import { LAYER } from './style';
 import { addCityImages, BUILDING_SOURCE, CITY_SOURCE, cityLayers, CityLook, LANDMARK_SOURCE, type CityIds } from './city';
-import { BUILDINGS_PROTOCOL } from './buildings/protocol';
+import { buildingTilesUrl } from './buildings/protocol';
 import { cityLook } from './city-look';
 import { seasonOf } from '../weather/conditions';
 
@@ -23,7 +23,7 @@ export function addCity(map: MlMap, landmarks: FeatureCollection<Point | MultiLi
     tulipParks: landmarks.features.map((f) => f.properties.landcover).filter((x): x is number => typeof x === 'number'),
   };
   map.addSource(CITY_SOURCE, { type: 'vector', url: CONFIG.city.tiles, attribution: ATTRIBUTION });
-  map.addSource(BUILDING_SOURCE, { type: 'vector', tiles: [`${BUILDINGS_PROTOCOL}://{z}/{x}/{y}`], minzoom: 13, maxzoom: 14 });
+  map.addSource(BUILDING_SOURCE, { type: 'vector', tiles: [buildingTilesUrl()], minzoom: 13, maxzoom: 14 });
   map.addSource(LANDMARK_SOURCE, { type: 'geojson', data: landmarks });
   addCityImages(map);
   const palette = cityLook({ night: 0, golden: 0, season: seasonOf(new Date()), wet: 0, snow: 0, cloud: 0 });

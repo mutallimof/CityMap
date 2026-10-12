@@ -123,3 +123,12 @@ export function waterShare(field: CoastField, bounds: readonly [number, number, 
     }
   return water / total;
 }
+
+/** Whether a point is on the water side of our coastline (field > 0); outside the bounds = false. */
+export function isWater(field: CoastField, bounds: readonly [number, number, number, number], lng: number, lat: number): boolean {
+  const [w, s, e, n] = bounds;
+  if (lng < w || lng > e || lat < s || lat > n) return false;
+  const cx = Math.min(field.width - 1, Math.floor(((lng - w) / (e - w)) * field.width));
+  const cy = Math.min(field.height - 1, Math.floor(((lat - s) / (n - s)) * field.height));
+  return field.data[cy * field.width + cx] > 0;
+}

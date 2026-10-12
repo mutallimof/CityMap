@@ -19,6 +19,7 @@
     "data:places": "tsx scripts/build-places.ts",
     "data:piers": "tsx scripts/build-piers.ts",
     "data:landmarks": "NODE_USE_ENV_PROXY=1 tsx scripts/build-landmarks.ts",
+    "data:hero-landmarks": "NODE_USE_ENV_PROXY=1 tsx scripts/build-hero-landmarks.ts",
     "data:stories": "tsx scripts/stories/build-stories.ts",
     "validate:data": "tsx scripts/validate-data.ts",
     "data:venues": "NODE_USE_ENV_PROXY=1 tsx scripts/build-venues.ts",

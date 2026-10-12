@@ -44,3 +44,40 @@ describe('building split', () => {
     expect(f.properties.v).toBeTypeOf('number');
   });
 });
+
+describe('roof caps', () => {
+  it('insets a square evenly, either winding; drops tiny buildings', async () => {
+    const { insetRing } = await import('./split');
+    const cw = [new Point(0, 0), new Point(100, 0), new Point(100, 100), new Point(0, 100), new Point(0, 0)];
+    for (const ring of [cw, [...cw].reverse()]) {
+      const r = insetRing(ring, 5)!;
+      const xs = r.map((p) => p.x);
+      const ys = r.map((p) => p.y);
+      expect([Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)].map((v) => Math.round(v))).toEqual([5, 95, 5, 95]);
+    }
+    expect(insetRing(sq(0, 0, 6), 5)).toBeNull();
+  });
+
+  it('a thin or L-shaped building still gets a cap inside it', async () => {
+    const { insetRing } = await import('./split');
+    const thin = [new Point(0, 0), new Point(200, 0), new Point(200, 8), new Point(0, 8), new Point(0, 0)];
+    const r = insetRing(thin, 5)!;
+    for (const p of r) expect(p.x >= 0 && p.x <= 200 && p.y >= 0 && p.y <= 8).toBe(true);
+    const L = [new Point(0, 0), new Point(100, 0), new Point(100, 40), new Point(40, 40), new Point(40, 100), new Point(0, 100), new Point(0, 0)];
+    const rl = insetRing(L, 4)!;
+    expect(rl.length).toBe(L.length);
+    expect(rl).toContainEqual({ x: 36, y: 36 }); // the reflex corner moves into the solid part
+  });
+
+  it('emits the roof layer only when asked, with the building attributes', () => {
+    const merged = { type: 3 as const, id: 77, extent: 4096, properties: { render_height: 30, render_min_height: 0 }, loadGeometry: () => [sq(0, 0, 300)] };
+    const input = fromVectorTileJs({ layers: { building: { version: 2, name: 'building', extent: 4096, length: 1, feature: () => merged } } });
+    expect(new VectorTile(new PbfReader(splitBuildings(input, 3, 4, o))).layers.r).toBeUndefined();
+    const out = new VectorTile(new PbfReader(splitBuildings(input, 9300, 6100, { ...o, roofInsetM: 1.4 })));
+    const roof = out.layers.r.feature(0);
+    expect(roof.properties.h).toBe(30);
+    expect(roof.id).toBe(77);
+    const ring = roof.loadGeometry()[0];
+    expect(Math.min(...ring.map((p) => p.x))).toBeGreaterThan(0);
+  });
+});

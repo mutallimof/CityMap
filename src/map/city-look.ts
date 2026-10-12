@@ -68,6 +68,7 @@ export function cityLook(i: CityLookInput): CityPalette {
     const snowC = mixHex(w.snowDay, w.snowNight, i.night);
     const cover = i.snow * w.snowCover;
     p = mapPalette(p, (k, c) => {
+      if (k === 'roofs') return mixHex(c, snowC, Math.min(1, cover * 1.15)); // snow settles on the roofs first
       if ((GROUND as readonly string[]).includes(k) || k === 'buildings') return mixHex(c, snowC, k === 'wood' ? cover * look().city.snowOnWood : cover);
       if ((ROADS as readonly string[]).includes(k)) return mixHex(c, snowC, cover * 0.45);
       if (k === 'blossom') return mixHex(c, snowC, cover);
@@ -81,7 +82,7 @@ export function cityLook(i: CityLookInput): CityPalette {
     p = mapPalette(p, (k, c) => {
       if (k === 'road' || k === 'path') return mixHex(c, wetC, i.wet * 0.55);
       if (k === 'roadMajor') return mixHex(c, darken(c, 0.2), i.wet * 0.6);
-      if ((GROUND as readonly string[]).includes(k) || k === 'buildings') return darken(c, i.wet * w.wetDarken);
+      if ((GROUND as readonly string[]).includes(k) || k === 'buildings' || k === 'roofs') return darken(c, i.wet * w.wetDarken);
       return c;
     });
   }

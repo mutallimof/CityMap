@@ -51,8 +51,10 @@ export const classic: ThemeSpec = {
   plan: { stopColor: CONFIG.plan.stopColor, endColor: CONFIG.plan.endColor },
   style: {
     water: { marks: 0, markColor: '#FFFFFF', markPx: 14, markDensity: 0, bands: 0, foam: 0, foamColor: '#FFFFFF' },
-    buildings: { cap: false, capInsetM: 0, capM: 0, capColor: '#FFFFFF', capMix: 0, heightScale: 1, minFloors: 0, roundM: 0 },
-    vapur: { model: 'classic', toonSteps: 0, outline: 0, outlineColor: '#000000' },
+    buildings: { cap: false, capM: 0, heightScale: 1, minFloors: 0, roundM: 0, light: 1, gradient: true },
+    vapur: { model: 'classic', outline: 0, outlineColor: '#000000' },
+    toon: 0,
+    models: { stone: '#EBDDC4', stoneDark: '#C9B89A', pink: '#E9B9A6', dome: '#8C9AAE', roof: '#7E8FA6', white: '#F7F4EC', gold: '#E0A100', window: '#34404C', rock: '#B9AA90', deck: '#D8C9B0', cable: '#5A4B3A', trunk: '#8A6A4A' },
     pins: 'classic',
     trees3d: false,
     landmarks3d: false,

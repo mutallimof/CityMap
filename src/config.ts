@@ -98,6 +98,8 @@ export const CONFIG = {
     buildingOpacity: 0.92,
     /** Buildings without an OSM height get a modest 2–5 floors (varied per building). */
     buildings: { floorM: 3.2, minFloors: 2, maxFloors: 5 },
+    /** Roof caps (themes with style.buildings.cap): outer ring inset (m), made by the building worker. */
+    roofInsetM: 1.4,
     /** Night: share (0–100) of buildings that stay dark; lit-window shares of the other three facade types;
      *  warm window tones; facade colour; street-light glow along main roads. */
     lights: {
@@ -135,6 +137,8 @@ export const CONFIG = {
       path: '#FFFFFF',
       rail: '#CBBDAB',
       buildings: ['#F6EADD', '#F4E2D9', '#F6EBD6', '#F2E6D8', '#F3E0D8', '#E6EADD', '#EAE4EE'],
+      /** Roof caps (themes with style.buildings.cap only). */
+      roofs: ['#F6EADD', '#F4E2D9', '#F6EBD6', '#F2E6D8', '#F3E0D8', '#E6EADD', '#EAE4EE'],
       landmark: '#F3C468',
       bridge: '#F2BF52',
       streetLabel: '#7A6550',
@@ -161,6 +165,7 @@ export const CONFIG = {
       path: '#3A4256',
       rail: '#353B4E',
       buildings: ['#3C4354', '#3E4255', '#3A4253', '#3B4451', '#3F4154', '#3D4353', '#394252'],
+      roofs: ['#3C4354', '#3E4255', '#3A4253', '#3B4451', '#3F4154', '#3D4353', '#394252'],
       landmark: '#F0BE68',
       bridge: '#FFC870',
       streetLabel: '#D8CFBF',
@@ -370,6 +375,37 @@ export const CONFIG = {
     /** Tap radius (CSS px) and how long a fact bubble stays (ms). */
     factHitPx: 34,
     factBubbleMs: 9000,
+  },
+
+  /**
+   * Toy scenery (themes with style.trees3d / landmarks3d, src/scenery): when trees / heroes / bridges show,
+   * size exaggeration by zoom, tree spacing in woods / parks, real-ish bridge dimensions (m).
+   */
+  scenery: {
+    treesFrom: 14.6,
+    treeExaggeration: [
+      [14.6, 2.4],
+      [15.5, 1.7],
+      [17, 1.15],
+    ] as [number, number][],
+    crownM: 3.2,
+    trunkM: 2.6,
+    woodSpacingM: 13,
+    parkSpacingM: 19,
+    heroesFrom: 11.4,
+    heroExaggeration: [
+      [11.4, 3.2],
+      [13, 2.1],
+      [15, 1.3],
+      [16.5, 1],
+    ] as [number, number][],
+    bridgesFrom: 11,
+    suspensionDeckM: 64,
+    suspensionTowerM: 165,
+    suspensionDeckWidthM: 33,
+    lowDeckM: 7,
+    lowDeckWidthM: 40,
+    deckThickM: 4,
   },
 
   /** Night skyline test mode (?skyline=1): bridge light-show cycle length (s) and glow colours. */

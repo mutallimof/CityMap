@@ -6,7 +6,8 @@ import { CONFIG } from '../config';
 import { berthOffset, vesselPose, type DockingParams, type VesselPose } from '../sim/fleet';
 import type { LinePath } from '../sim/path';
 import { HeadingSmoother, interpolateStops } from './headings';
-import { buildVapur } from './model';
+import { buildVapur, outlineGeometry } from './model';
+import { sceneryMaterial } from '../three/materials';
 import { WakeMesh, type Trail } from './wake';
 import { TrailCache } from './trail-cache';
 import { PointSprites } from './points';
@@ -93,6 +94,9 @@ export class VapurLayer implements CustomLayerInterface {
   private root = new THREE.Group();
   private camera = new THREE.Camera();
   private body!: THREE.InstancedMesh;
+  /** Toy outline: a smooth-normal shell pushed out by a constant number of screen pixels, back faces only. */
+  private outline!: THREE.InstancedMesh;
+  private outlineU = { value: 0 };
   private accent!: THREE.InstancedMesh;
   private shadow!: THREE.InstancedMesh;
   private windows!: THREE.InstancedMesh;
@@ -159,8 +163,13 @@ export class VapurLayer implements CustomLayerInterface {
     this.renderer = sharedRenderer(map, gl);
 
     const geo = buildVapur();
-    const bodyMat = new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
-    this.body = new THREE.InstancedMesh(geo.body, bodyMat, MAX_VESSELS);
+    this.body = new THREE.InstancedMesh(geo.body, this.bodyMaterial(), MAX_VESSELS);
+    const outlineMat = new THREE.MeshBasicMaterial({ color: look().style.vapur.outlineColor, side: THREE.BackSide });
+    outlineMat.onBeforeCompile = (sh) => {
+      sh.uniforms.uOutline = this.outlineU;
+      sh.vertexShader = 'uniform float uOutline;\n' + sh.vertexShader.replace('#include <begin_vertex>', 'vec3 transformed = vec3(position) + normal * uOutline;');
+    };
+    this.outline = new THREE.InstancedMesh(outlineGeometry(geo.body), outlineMat, MAX_VESSELS);
     this.accent = new THREE.InstancedMesh(geo.accent, new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true }), MAX_VESSELS);
     const shadowGeo = new THREE.PlaneGeometry(1, 1);
     const shadowMat = new THREE.MeshBasicMaterial({
@@ -189,7 +198,7 @@ export class VapurLayer implements CustomLayerInterface {
     this.ring.visible = false;
     this.ring.frustumCulled = false;
     this.body.setColorAt(0, this.white); // allocates instanceColor (used to dim unselected ships)
-    for (const m of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
+    for (const m of [this.body, this.outline, this.accent, this.shadow, this.windows, this.reflect]) {
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       m.frustumCulled = false;
       m.count = 0;
@@ -201,7 +210,8 @@ export class VapurLayer implements CustomLayerInterface {
     this.reflect.renderOrder = 1;
     this.smoke.points.renderOrder = 3;
     this.lights.points.renderOrder = 4;
-    this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.rings.points, this.splash.points, this.lights.points);
+    this.outline.renderOrder = 1;
+    this.root.add(this.ring, this.shadow, this.reflect, this.wake.mesh, this.outline, this.body, this.accent, this.windows, this.gulls.mesh, this.smoke.points, this.rings.points, this.splash.points, this.lights.points);
     this.scene.add(this.root);
 
     const l = look().light;
@@ -219,12 +229,16 @@ export class VapurLayer implements CustomLayerInterface {
     const geo = buildVapur();
     for (const [mesh, g] of [
       [this.body, geo.body],
+      [this.outline, outlineGeometry(geo.body)],
       [this.accent, geo.accent],
       [this.windows, geo.windows],
     ] as const) {
       mesh.geometry.dispose();
       mesh.geometry = g;
     }
+    (this.body.material as THREE.Material).dispose();
+    this.body.material = this.bodyMaterial();
+    (this.outline.material as THREE.MeshBasicMaterial).color.set(look().style.vapur.outlineColor);
     this.anchors = geo.anchors;
     const t = look();
     const sm = this.shadow.material as THREE.MeshBasicMaterial;
@@ -239,6 +253,10 @@ export class VapurLayer implements CustomLayerInterface {
     this.cSmokeDay.set(t.smoke.color);
     this.cSmokeNight.set(t.smoke.nightColor);
     this.gulls.retheme();
+  }
+
+  private bodyMaterial(): THREE.Material {
+    return sceneryMaterial(look().style.toon, { vertexColors: true, flatShading: look().style.toon === 0 });
   }
 
   /** Light the fleet for the current sun/moon (called by the day/night controller). */
@@ -280,6 +298,12 @@ export class VapurLayer implements CustomLayerInterface {
     const B = f.beamM * exag;
 
     const poses = this.opts.poses();
+    const ol = look().style.vapur.outline;
+    this.outline.visible = ol > 0;
+    if (ol > 0) {
+      const mpp = (40_075_016.7 * Math.cos((this.map.getCenter().lat * Math.PI) / 180)) / (512 * 2 ** this.map.getZoom());
+      this.outlineU.value = (ol * mpp) / exag;
+    }
     // Ground direction from the view centre towards the viewer (for night reflections).
     const viewBack = (this.map.getBearing() + 180) % 360;
     const [vbx, vby] = unitFromBearing(viewBack);
@@ -337,6 +361,7 @@ export class VapurLayer implements CustomLayerInterface {
       s.setScalar(exag * grow);
       m.compose(p, q, s);
       this.body.setMatrixAt(n, m);
+      this.outline.setMatrixAt(n, m);
       this.body.setColorAt(n, this.selectedId && this.selectedId !== id ? this.dim : this.white);
       this.drawn.set(id, { x: px, y: py, pose: v });
       if (id === this.selectedId) {
@@ -381,7 +406,7 @@ export class VapurLayer implements CustomLayerInterface {
     for (const id of this.lastPhase.keys()) if (!ids.has(id)) (this.lastPhase.delete(id), this.bumpAt.delete(id), this.departAt.delete(id));
     this.headings.retain(ids);
     this.trails.retain(ids);
-    for (const mesh of [this.body, this.accent, this.shadow, this.windows, this.reflect]) {
+    for (const mesh of [this.body, this.outline, this.accent, this.shadow, this.windows, this.reflect]) {
       mesh.count = n;
       mesh.instanceMatrix.needsUpdate = true;
     }
@@ -435,9 +460,8 @@ export class VapurLayer implements CustomLayerInterface {
    */
   private pushMoments(id: string, px: number, py: number, fx: number, fy: number, exag: number, tReal: number, beam: number): void {
     const mo = CONFIG.moments;
-    const k = CONFIG.ferries.lengthM / 70;
-    const fz = 14.6 * k * exag;
-    const funnelBack = CONFIG.ferries.lengthM * 0.06 * exag;
+    const fz = this.anchors.funnelTop.z * exag;
+    const funnelBack = -this.anchors.funnelTop.y * exag;
     const dep = tReal - (this.departAt.get(id) ?? -1e9);
     if (dep < mo.hornS + mo.hornGapS) {
       for (let r = 0; r < 2; r++) {
@@ -499,9 +523,8 @@ export class VapurLayer implements CustomLayerInterface {
    */
   private pushSmoke(v: VesselPose, px: number, py: number, fx: number, fy: number, exag: number, grow: number, tReal: number): void {
     const sm = CONFIG.smoke;
-    const k = CONFIG.ferries.lengthM / 70;
-    const funnelBack = CONFIG.ferries.lengthM * 0.06 * exag;
-    const fz = 14.6 * k * exag;
+    const funnelBack = -this.anchors.funnelTop.y * exag;
+    const fz = this.anchors.funnelTop.z * exag;
     const [wx, wy] = unitFromBearing(this.wind.toward);
     const speed = v.state.speed; // m/s real; the visual trail scales with exaggeration
     const seed = hash01(v.state.vesselId) * sm.lifeS;

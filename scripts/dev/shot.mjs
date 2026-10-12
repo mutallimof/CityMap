@@ -3,7 +3,7 @@
  *   node scripts/dev/shot.mjs <out.png> "<query/hash>" [waitMs=9000] [width=430] [height=860]
  * e.g. node scripts/dev/shot.mjs /tmp/a.png "adaptive=0&intro=0&t=19:00&view=29.0,41.02,14&theme=toy"
  * Env: ACT='<js>' runs after the wait (then ACT_WAIT ms, default 2500) before the shot — dev globals like `ui`,
- * `map` exist; EVAL='<js expr>' prints its JSON value after the shot. Uses the globally installed Playwright and
+ * `map` exist; CLICK='x,y' taps the page there first; EVAL='<js expr>' prints its JSON value after the shot. Uses the globally installed Playwright and
  * the pre-installed Chromium (PLAYWRIGHT_BROWSERS_PATH); tiles go through HTTPS_PROXY when set.
  * Always pass adaptive=0&intro=0 (headless runs at a few fps; the intro / adaptive ladder would interfere)
  * and set the camera with ?view= (camera jumps crash the headless browser).
@@ -44,6 +44,11 @@ await page.addInitScript(() => {
 const sep = qs.startsWith('?') || qs.startsWith('#') ? '' : '?';
 await page.goto(`${process.env.BASE_URL ?? 'http://localhost:5173/'}${sep}${qs}`, { waitUntil: 'load', timeout: 60000 });
 await page.waitForTimeout(+waitMs);
+if (process.env.CLICK) {
+  const [cx, cy] = process.env.CLICK.split(',').map(Number);
+  await page.mouse.click(cx, cy);
+  await page.waitForTimeout(+(process.env.ACT_WAIT ?? 2500));
+}
 if (process.env.ACT) {
   await page.evaluate(process.env.ACT);
   await page.waitForTimeout(+(process.env.ACT_WAIT ?? 2500));

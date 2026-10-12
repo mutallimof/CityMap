@@ -50,6 +50,8 @@ import { SelectedPlaceMarker } from './places/pins';
 import { PlaceLayers } from './places/place-layers';
 import { setStories, storyFor, type Story } from './stories/stories';
 import storiesUrl from '../data/stories.json?url';
+import heroData from '../data/hero-landmarks.json';
+import { syncHeroLabels } from './scenery/labels';
 import eventsUrl from '../data/events.json?url';
 import { events, type CityEvent } from './events/events';
 import { EventPulses } from './events/pulses';
@@ -180,6 +182,17 @@ async function boot() {
   setTapInterceptor((pt) => gullFacts.tap(pt));
   const placeLayers = new PlaceLayers(map, store, landmarks);
   bindMapInteractions(undefined, (e) => {
+    // Hero landmark models (toy themes) open their place: the featured pin, else the OSM building.
+    const hero = scenery?.at(e.point);
+    if (hero) {
+      if (hero.place && store.byId.has(hero.place)) {
+        openPlace(hero.place);
+        return { kind: 'place', id: hero.place };
+      }
+      const p = store.add({ id: `osm:${hero.osm}`, name: hero.name, nameEn: hero.nameEn, category: 'culture', kind: 'attraction', osm: hero.osm, district: null, hours: null, cuisine: null, lngLat: hero.lngLat, source: 'osm' });
+      openPlace(p.id);
+      return { kind: 'place', id: p.id };
+    }
     const hit = placeLayers.at(e.point);
     if (!hit) return undefined;
     if ('featured' in hit) {
@@ -270,6 +283,7 @@ async function boot() {
       labelState = ls;
       setLabelLang(map, s.lang);
       setLabelNight(map, night > 0.5);
+      syncHeroLabels(map, heroData.landmarks, s.lang, night > 0.5);
     }
     picked.show(selectedId ? store.byId.get(selectedId) ?? null : null);
   };
@@ -334,6 +348,22 @@ async function boot() {
     openPlan('shared');
   }
 
+  // Toy scenery (3D trees, hero landmarks, bridges): loaded only when a theme asks for it.
+  let scenery: import('./scenery/layer').SceneryLayer | null = null;
+  const ensureScenery = async () => {
+    const st = look().style;
+    placeLayers.setHeroes(st.landmarks3d ? heroData.landmarks : []);
+    syncHeroLabels(map, heroData.landmarks, ui.get().lang, daylight.theme.night > 0.5);
+    if (scenery) return scenery.build();
+    if (!st.trees3d && !st.landmarks3d) return;
+    const { SceneryLayer } = await import('./scenery/layer');
+    scenery = new SceneryLayer(heroData.landmarks as unknown as import('./scenery/layer').Hero[], landmarks, () => water.field);
+    map.addLayer(scenery, 'ferries');
+    daylight.extras.push(scenery);
+    daylight.retheme();
+  };
+  void ensureScenery();
+
   // Live theme switch: a soft veil, then every layer re-reads look() (src/themes).
   onTheme((t) =>
     softFade(
@@ -349,6 +379,7 @@ async function boot() {
         weatherLayer.retheme();
         placeLayers.retheme();
         labelState = '';
+        await ensureScenery();
         daylight.retheme();
         refreshPins();
         await new Promise<void>((r) => setTimeout(r, 600)); // let the map repaint under the veil

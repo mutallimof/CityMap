@@ -1,6 +1,6 @@
 import { look } from '../themes';
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeGeometries, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { CONFIG } from '../config';
 
 /**
@@ -58,6 +58,14 @@ function slab(shape: THREE.Shape, z0: number, z1: number, color: string, dy = 0,
   return paint(g, color);
 }
 
+/** Like slab, with rounded (bevelled) edges — the soft toy look. The bevel stays inside z0..z1. */
+function soft(shape: THREE.Shape, z0: number, z1: number, color: string, dy = 0, bevel = 0.6): THREE.BufferGeometry {
+  const b = Math.min(bevel, (z1 - z0) / 2.2);
+  const g = new THREE.ExtrudeGeometry(shape, { depth: Math.max(0.01, z1 - z0 - 2 * b), bevelEnabled: true, bevelThickness: b, bevelSize: b * 0.9, bevelOffset: -b * 0.9, bevelSegments: 3, curveSegments: 8 });
+  g.translate(0, dy, z0 + b);
+  return paint(g, color);
+}
+
 function paint(g: THREE.BufferGeometry, color: string): THREE.BufferGeometry {
   const geom = g.index ? g.toNonIndexed() : g;
   const c = new THREE.Color(color);
@@ -78,7 +86,61 @@ function cylinder(rTop: number, rBottom: number, z0: number, z1: number, color: 
   return paint(g, color);
 }
 
+/**
+ * Toy vapur (themes with style.vapur.model = 'toy'): same size and anchors as the classic one, but a
+ * rounder, chunkier build — fuller bow, bevelled edges, one tall cabin with a coloured roof, a big
+ * funnel. Original design.
+ */
+function buildToyVapur(): VapurGeometry {
+  const { lengthM: L, beamM: B } = CONFIG.ferries;
+  const c = look().colors.vapur;
+  const k = L / 70;
+  const W = B * 1.12;
+  const parts = [
+    soft(hullShape(L, W), -1.2 * k, 1.4 * k, c.hullBottom, 0, 0.5 * k),
+    soft(hullShape(L, W), 1.2 * k, 3.6 * k, c.hull, 0, 0.7 * k),
+    slab(hullShape(L * 0.97, W * 0.92), 3.5 * k, 3.75 * k, c.deck, 0, 8),
+    soft(roundedRect(L * 0.62, W * 0.8, 3.2 * k), 3.7 * k, 7.6 * k, c.house, -L * 0.03, 0.8 * k),
+    soft(roundedRect(L * 0.66, W * 0.86, 3.4 * k), 7.5 * k, 8.4 * k, c.roof, -L * 0.03, 0.4 * k),
+    soft(roundedRect(L * 0.34, W * 0.6, 2.4 * k), 8.3 * k, 11 * k, c.house, -L * 0.06, 0.6 * k),
+    soft(roundedRect(L * 0.37, W * 0.64, 2.6 * k), 10.9 * k, 11.6 * k, c.roof, -L * 0.06, 0.3 * k),
+    cylinder(2.3 * k, 2.6 * k, 11.5 * k, 15.6 * k, c.funnel, -L * 0.07, 14, 0.9),
+    cylinder(2.35 * k, 2.3 * k, 15.6 * k, 17.2 * k, c.funnelTop, -L * 0.07, 14, 0.9),
+    cylinder(0.3 * k, 0.4 * k, 11.5 * k, 16.5 * k, c.mast, L * 0.12, 6),
+  ];
+  const body = mergeGeometries(parts);
+  // Round porthole-ish window band all around the cabin.
+  const windows = mergeGeometries([
+    slab(roundedRect(L * 0.625, W * 0.805, 3.2 * k), 5.0 * k, 6.4 * k, '#ffffff', -L * 0.03),
+    slab(roundedRect(L * 0.345, W * 0.605, 2.4 * k), 9.2 * k, 10.2 * k, '#ffffff', -L * 0.06),
+  ]);
+  const accent = soft(hullShape(L * 1.006, W * 1.025), 2.2 * k, 3.1 * k, '#ffffff', 0, 0.3 * k);
+  return {
+    body,
+    accent,
+    windows,
+    anchors: {
+      port: new THREE.Vector3(-W * 0.44, L * 0.1, 11.2 * k),
+      starboard: new THREE.Vector3(W * 0.44, L * 0.1, 11.2 * k),
+      bow: new THREE.Vector3(0, L / 2, 2 * k),
+      stern: new THREE.Vector3(0, -L / 2, 2 * k),
+      funnelTop: new THREE.Vector3(0, -L * 0.07, 17.2 * k),
+      mastTop: new THREE.Vector3(0, L * 0.12, 16.5 * k),
+    },
+  };
+}
+
+/** Smooth-normal copy of a geometry (positions only) for the outline shell. */
+export function outlineGeometry(g: THREE.BufferGeometry): THREE.BufferGeometry {
+  const pos = new THREE.BufferGeometry();
+  pos.setAttribute('position', g.getAttribute('position').clone());
+  const merged = mergeVertices(pos, 1e-3);
+  merged.computeVertexNormals();
+  return merged;
+}
+
 export function buildVapur(): VapurGeometry {
+  if (look().style.vapur.model === 'toy') return buildToyVapur();
   const { lengthM: L, beamM: B } = CONFIG.ferries;
   const c = look().colors.vapur;
   const k = L / 70; // proportions designed for a 70 m vessel

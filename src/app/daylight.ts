@@ -9,6 +9,7 @@ import { OUTER_WATER } from '../map/city-setup';
 import type { VapurLayer } from '../ferries/vapur-layer';
 import type { ClockController } from './clock';
 import type { CityLook } from '../map/city';
+import type { CityPalette } from '../map/city-look';
 import { cityLook } from '../map/city-look';
 import type { WeatherController } from '../weather/controller';
 import type { WeatherLayer } from '../weather/weather-layer';
@@ -39,6 +40,8 @@ export class DaylightController {
   season: Season;
   private last = performance.now();
   private listeners = new Set<() => void>();
+  /** Extra 3D layers lit like the ferries and coloured from the city palette (toy scenery). */
+  extras: { setLighting(l: { sunAzimuth: number; sunElevation: number; sunColor: string; sunIntensity: number; sky: string; ground: string; hemiIntensity: number }): void; setPalette(p: CityPalette, season: Season, snow: number, night: number): void }[] = [];
 
   constructor(private t: DaylightTargets) {
     this.conditions = t.weather.current;
@@ -83,7 +86,9 @@ export class DaylightController {
     const golden = theme.golden * (1 - c.cloud * 0.6);
     const palette = weatherPalette(theme.palette, c, theme.night);
     this.applyMap(palette);
-    this.t.city.apply(cityLook({ night: theme.night, golden, season, wet: c.rain, snow: c.snow, cloud: c.cloud }), theme.night, season === 'spring');
+    const cityP = cityLook({ night: theme.night, golden, season, wet: c.rain, snow: c.snow, cloud: c.cloud });
+    this.t.city.apply(cityP, theme.night, season === 'spring');
+    for (const x of this.extras) x.setPalette(cityP, season, c.snow, Math.round(theme.night * 20) / 20);
     const d = look().daylight;
     const lf = lightFactor(c);
     const sunColor = mixHex(d.sunDay, d.sunGolden, golden);
@@ -100,7 +105,7 @@ export class DaylightController {
     });
     const l = look().light;
     const sunAz = theme.night > 0.6 ? (sun.azimuth + 180) % 360 : sun.azimuth;
-    this.t.ferries.setLighting({
+    const lighting = {
       sunAzimuth: sunAz,
       sunElevation: sun.elevation,
       sunColor: mixHex(sunColor, d.moon, theme.night),
@@ -109,7 +114,9 @@ export class DaylightController {
       ground: mixHex(l.ground, d.hemiGroundNight, theme.night),
       hemiIntensity: l.hemiIntensity + (d.hemiNight - l.hemiIntensity) * theme.night,
       night: theme.night,
-    });
+    };
+    this.t.ferries.setLighting(lighting);
+    for (const x of this.extras) x.setLighting(lighting);
     // Wind steers the funnel smoke and rocks the boats; fog dims their lights.
     const f = this.t.ferries;
     f.wind = { toward: (c.windFrom + 180) % 360, ms: Math.max(0.5, Math.min(12, c.windMs)) };
@@ -118,7 +125,7 @@ export class DaylightController {
     this.t.weatherLayer.set({ rain: c.rain, snow: c.snow, fog: c.fog, thunder: c.thunder, windToward: (c.windFrom + 180) % 360, windMs: c.windMs, night: theme.night });
     // 3D buildings: light from the sun (or moon), softer under cloud.
     // Night: a pale, nearly neutral light so facades keep their value (a blue moon tint muddies them).
-    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), look().city.lights.moonLight, theme.night), (0.4 - theme.night * 0.18) * (0.75 + 0.25 * lf));
+    this.applyLight(sunAz, sun.elevation, mixHex(mixHex(sunColor, '#FFFFFF', 0.4), look().city.lights.moonLight, theme.night), (0.4 - theme.night * 0.18) * (0.75 + 0.25 * lf) * look().style.buildings.light);
     const root0 = document.documentElement;
     root0.dataset.season = season;
     root0.dataset.weather = c.rain > 0.3 ? 'rain' : c.snow > 0.3 ? 'snow' : c.fog > 0.3 ? 'fog' : 'clear';
