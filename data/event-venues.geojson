@@ -115,6 +115,32 @@
     "cuisine": null,
     "phone": null,
     "major": false,
+    "id": "ev-haldun-alahas-sehir-tiyatrolari-ve-umraniye-sahn",
+    "name": "Haldun Alahaş Şehir Tiyatroları ve Ümraniye Sahnesi",
+    "kind": "community_centre",
+    "osm": "way/1065911137",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.10487,
+     41.025595
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
     "id": "galata-rum-okulu",
     "name": "Galata Rum Okulu",
     "kind": "gallery",

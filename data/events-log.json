@@ -1,65 +1,70 @@
 {
- "generated": "2026-10-11T15:08:59.206Z",
+ "generated": "2026-10-12T11:01:45.255Z",
  "venues": {
   "arter": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 26
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 25
   },
   "akbank-sanat": {
    "status": "ok",
    "lastRun": "2026-10-11T15:08:59.206Z",
    "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 5,
+   "count": 3,
    "unplaced": 4,
    "message": "not on the map: Frankhan Selectist · Minoa Pera · Çevrimiçi Platform – Zoom"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 28,
-   "unplaced": 6
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 45,
+   "unplaced": 6,
+   "message": "not on the map: Üsküdar Kerem Yılmazer Sahnesi. · İnal Aydınoğlu K.M Şener Şen Sahnesi"
   },
   "istanbul-modern": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 3
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 4,
+   "message": "2 list page(s), 4 detail link(s), 0 without a date"
   },
   "salt": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
    "count": 6,
-   "unplaced": 8
+   "unplaced": 8,
+   "message": "2 list page(s), 20 detail link(s), 3 without a date"
   },
   "pera": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 6
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 6,
+   "message": "1 list page(s), 4 detail link(s), 0 without a date"
   },
   "ibb-kultur": {
-   "status": "failed",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "count": 0,
-   "message": "fetch failed (Connect Timeout Error (attempted address: kultursanat.istanbul:443, timeout: 10000ms))"
-  },
-  "borusan": {
    "status": "empty",
-   "lastRun": "2026-10-11T14:26:27.437Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
+   "lastRun": "2026-10-12T11:01:45.255Z",
    "count": 0,
    "unplaced": 12,
+   "message": "2 list page(s), 12 detail link(s), 0 without a date"
+  },
+  "borusan": {
+   "status": "ok",
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 1,
    "message": "2 list page(s), 14 detail link(s), 0 without a date"
   },
   "iksv": {
-   "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
+   "status": "empty",
+   "lastRun": "2026-10-12T11:01:45.255Z",
    "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 0
+   "count": 0,
+   "message": "4 list page(s), 0 detail link(s), 0 without a date"
   },
   "salon-iksv": {
    "status": "ok",
@@ -69,21 +74,22 @@
   },
   "crr": {
    "status": "failed",
-   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastRun": "2026-10-12T11:01:45.255Z",
    "count": 0,
-   "message": "fetch failed (Connect Timeout Error (attempted address: www.crrkonsersalonu.org:443, timeout: 10000ms))"
+   "message": "fetch failed (Client network socket disconnected before secure TLS connection was established)"
   },
   "zorlu-psm": {
    "status": "failed",
-   "lastRun": "2026-10-11T14:09:36.552Z",
+   "lastRun": "2026-10-12T11:01:45.255Z",
    "count": 0,
    "message": "fetch failed (Connect Timeout Error (attempted address: www.zorlupsm.com:443, timeout: 10000ms))"
   },
   "akm": {
    "status": "ok",
-   "lastRun": "2026-10-11T14:09:36.552Z",
-   "lastOk": "2026-10-11T14:09:36.552Z",
-   "count": 7
+   "lastRun": "2026-10-12T11:01:45.255Z",
+   "lastOk": "2026-10-12T11:01:45.255Z",
+   "count": 7,
+   "message": "2 list page(s), 7 detail link(s), 0 without a date"
   },
   "moda-sahnesi": {
    "status": "skipped",
@@ -115,13 +121,13 @@
    "status": "ok",
    "lastRun": "2026-10-11T15:08:59.206Z",
    "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 79
+   "count": 77
   },
   "kumbaraci50": {
    "status": "ok",
    "lastRun": "2026-10-11T15:08:59.206Z",
    "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 8
+   "count": 7
   },
   "borusan-contemporary": {
    "status": "ok",
@@ -139,7 +145,7 @@
    "status": "ok",
    "lastRun": "2026-10-11T15:08:59.206Z",
    "lastOk": "2026-10-11T15:08:59.206Z",
-   "count": 1
+   "count": 0
   },
   "uniq": {
    "status": "ok",
@@ -155,13 +161,6 @@
   }
  },
  "places": [
-  "salon-iksv: placed from short street (Sadi Konuralp Caddesi, Şişhane, Bedrettin, Bedrettin Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34440, Türkiye), address verified on the official page",
-  "moda-sahnesi: placed from short street (Halil Ethem Sokağı, Osmanağa Mahallesi, Kadıköy, İstanbul, Marmara Bölgesi, 34714, Türkiye), address verified on the official page",
-  "kumbaraci50: placed from house number (50, Kumbaracı Yokuşu, Şahkulu, Tomtom Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34421, Türkiye), address verified on the official page",
-  "galata-rum-okulu: placed from short street (Kemeraltı Caddesi, Karaköy, Kemankeş Karamustafa Paşa, Kemankeş Karamustafa Paşa Mahallesi, Beyoğlu, İstanbul, Marmara Bölgesi, 34425, Türkiye), address verified on the official page",
-  "\"Barış Manço Kültür Merkezi\" → Barış Manço Kültür Merkezi (way/694272066, amenity/conference_centre)",
-  "\"Apartman Sahne\" → Apartman Sahne (node/5601212240, amenity/theatre)",
-  "\"Bostancı Gösteri Merkezi\" → Bostancı Gösteri Merkezi (way/499316052, amenity/arts_centre)",
-  "\"Caddebostan Kültür Merkezi\" → Caddebostan Kültür Merkezi (way/164108939, amenity/arts_centre)"
+  "\"Ümraniye Sahnesi\" → Haldun Alahaş Şehir Tiyatroları ve Ümraniye Sahnesi (way/1065911137, amenity/community_centre)"
  ]
 }
