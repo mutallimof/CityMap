@@ -1,12 +1,17 @@
 # Istanbul Living City
 
 Animated, mobile-first map of Istanbul: vapurs on the water, a colourful OSM city, places, events, history.
-Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · original plan `docs/plan.md` (keep as is)
-· ideas `docs/ideas.md`. **No changelog file** (don't create one): project history = this file + git.
+Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · public docs: `README.md` (portfolio
+page; screenshots in `docs/screenshots/`, regenerate with `scripts/dev/shot.mjs`), `docs/data-sources.md` (every source,
+licence, in-app credit, refresh) · ideas `docs/ideas.md` (stays an ideas list). The business plan `docs/plan.md` is
+**not tracked** (gitignored 2026-10-12; read it with `git show v0.2.0:docs/plan.md`; never re-add it, never put
+strategy / monetisation / scraper details in public docs). **No changelog / decisions / operations files** (don't
+create them): project history = this file + git.
 
 ## Ground rules (from the user)
-- Tags: `v0.1.0` = the look before the theme redesign (tag pushes are refused by the session git proxy: tags are
-  made by a one-off workflow on a `probe/tag-…` branch).
+- Tags: `v0.1.0` = the look before the theme redesign; `v0.2.0` = the redesign, before the cleanup pass (tag pushes
+  are refused by the session git proxy: tags are made by a one-off workflow on a `probe/tag-…` branch; leftover
+  probe branches: `probe/tag-v0.2.0` — the session can't delete remote branches, the user may).
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
 - **No open-source licence** — the user keeps all rights.
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
@@ -149,7 +154,7 @@ also uploaded identically (CC0) by Kübradereli1 as "GALATA TOWER MORNING/NOON/E
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
                    #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 ?view=lng,lat,zoom[,pitch,bearing] (initial camera, no intro)
-                   #   ?debug=0 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
+                   #   ?debug=0 ?motion=reduced|full ?theme=<id> · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
 node scripts/dev/shot.mjs out.png "adaptive=0&intro=0&debug=0&view=29,41.02,14" [waitMs]   # headless screenshot (real WebGL
                    #   via SwiftShader, needs the dev server; ~5 fps; never move the camera — jumps crash headless Chromium)
 npm test           # vitest
@@ -158,7 +163,13 @@ npm run build      # validate:routes + validate:timetables + typecheck + vite bu
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
 python3 scripts/timetables/parse-tarife.py data/raw/tarife.pdf && npm run data:timetables   # new timetable PDF
 npm run data:audio      # sounds.json → public/audio (needs ffmpeg + Commons: run in Actions, not the sandbox)
+node scripts/build-icons.cjs   # public/icons/icon.svg → PWA icons + iOS splash PNGs (Playwright)
 ```
+- **Screenshot regression check** (used for the cleanup pass): fixed scene `motion=reduced&t=12:00&date=2026-10-12&
+  weather=clear&season=autumn&theme=<id>&view=28.985,41.02,14.2,45,0` (+ night street zoom `t=21:30 …
+  view=28.9765,41.0255,15.8,50,20`), each look, vs a dev server of the previous tag in a `git worktree` on another port.
+  The worktree needs a real (hard-linked: `cp -al`) `node_modules`, not a symlink — Vite refuses `/@fs` files outside
+  its root, fonts 403 and the HUD shifts. Same code ⇒ pixel-identical apart from moving vessels.
 
 ## Data pipelines
 Processed outputs are committed in `data/`; `data/raw/` (downloads) is gitignored; `data/catalog/` = hand-written
@@ -206,11 +217,25 @@ ids/names/rules (no coordinates).
   from text under `<h1>`). `disabled: "<reason>"` keeps a venue in the config without fetching.
 
 ## Code map
-`src/sim` pure schedule/state, real timetables (`real.ts`) + tests · `src/ferries` vapur layer, model, wake, gulls, smoke · `src/water` shader +
-coast distance field · `src/map` style, city (OFM) layers + look, buildings protocol/workers, skyline ·
-`src/places` stores, filters, layers, icons, sheets · `src/events`, `src/stories`, `src/fun` (gull facts),
-`src/audio` (city sound: `mix.ts` pure levels, `engine.ts` Web Audio), `src/weather`, `src/time` (sun/palette), `src/ui` (React HUD, store, i18n),
-`src/app` (daylight, perf ladder, PWA), `src/themes` (looks: registry, Classic, others), `scripts/` (data builders + scrapers, Turf only here; `scripts/timetables` PDF parser).
+Grouped by feature; tests sit next to what they test (`*.test.ts`); non-obvious modules start with a header comment.
+- `src/sim` pure schedule / state: `schedule.ts` (trips → legs → vessels), `real.ts` (real timetables), `fleet.ts`
+  (poses, docking, slides), `berths.ts` (abreast slots), `network.ts`, `path.ts`, `motion.ts`, `time.ts` + tests.
+- `src/ferries` vapur layer, model, wake, gulls, smoke, lights; `ferries/ui/` pier board (`PierSheet`), vessel sheet
+  (`VesselSheet`), timetable badge / credit (`timetable.tsx`).
+- `src/water` shader + coast distance field · `src/map` style, city (OFM) layers (`city.ts`) + their generated pattern
+  textures (`city-patterns.ts`: crowns, tulips, night windows) + colours (`city-look.ts`), buildings protocol / workers,
+  labels, intro camera, skyline · `src/scenery` toy trees / hero landmarks / bridges · `src/three` shared renderer,
+  `LocalFrame`, toon materials.
+- `src/places` stores, filters, layers, icons, opening hours; `places/ui/` sheets, feed, extras · `src/events`,
+  `src/stories`, `src/guides`, `src/search`, `src/share` (snapshot), `src/fun` (gull facts), `src/osm` (Nominatim).
+- `src/plan` planner (pure `model.ts` / `timeline.ts` / `share.ts`, `store.ts`, `runtime.ts`, `ui.tsx`, `points.tsx`).
+- `src/audio` city sound (`mix.ts` pure levels, `engine.ts` Web Audio) · `src/weather` conditions, palette under
+  weather (`look.ts`), icon, rain / snow layer · `src/time` sun position + day/golden/night palette blend (`palette.ts`).
+- `src/themes` looks (registry, Classic, Toy, Storybook, Night, live switch, fonts) · `src/ui` React HUD (App, top bar,
+  chips, sheets, store, i18n) · `src/app` daylight, perf ladder, clock, PWA · `src/data/load.ts` data fetchers ·
+  `src/debug` dev panel · `src/config.ts` shared tunables + the Classic look · `src/main.tsx` boot.
+- `scripts/` data builders, validators, scrapers (Turf only here); `scripts/timetables` PDF parser; `scripts/dev`
+  headless screenshots.
 Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest 5.
 
 ## Key decisions & traps (keep in mind)
@@ -317,6 +342,9 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
+- Open-Meteo weather is not credited in the UI yet (its terms ask for "Weather data by Open-Meteo.com") — roadmap 6.
+- `docs/plan.md` and the removed `docs/design-pass/*.jpg` screenshots are untracked / deleted now but still in the
+  public git history (rewriting history would break tags and clones; not done).
 - Fixed 2026-10-12: pin images that change size (the bar icon's night glow, a theme switch) threw in
   `updateImage` and aborted the night / theme refresh (latent since v0.1.0); `put()` now re-adds on a size change.
 - Planner "freeze" (a stop near Kadıköy + one across the water): not reproduced. `src/plan/perf.test.ts` builds such
@@ -365,5 +393,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 1. ~~Real ferry timetables~~ — done (winter 2026-27). Next timetable ~27 Jun 2027: `scripts/timetables/README.md`.
 2. ~~"Plan my evening / trip"~~ — done (no alerts: no notifications by design).
 3. ~~Cartoon-style redesign~~ — done (2026-10-12): theme registry + Toy / Storybook / Night, Classic kept.
-4. **Cleanup pass** — dead code, config consolidation, test gaps, docs; judge the looks on a real iPhone (GPU,
-   battery), tune tree counts / roof caps there.
+4. ~~Cleanup pass~~ — done (2026-10-12): dead code / config / strings / CSS removed, ferry UI and city patterns
+   regrouped, header comments, new tests, README + data-sources, plan.md untracked. Screenshots unchanged.
+5. **Real iPhone pass** — judge the looks on a device (GPU, battery), tune tree counts / roof caps there.
+6. **Open-Meteo credit** — its free API asks for attribution ("Weather data by Open-Meteo.com"); not shown yet
+   (weather chip or attribution bar).
