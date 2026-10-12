@@ -1,14 +1,16 @@
 /**
- * Plan timeline: stops in time order grouped by day, and between two consecutive stops only what's
- * real — an approximate walk when close enough, otherwise the actual ferry from the timetable
- * (labelled when the line is on its simulated schedule), otherwise "no transport info". Plus warnings:
- * closed at the planned time (known hours only), overlapping stops, arriving late, the last ferry back,
- * and dates outside the timetable. Pure: everything comes in through `PlanDeps`.
+ * Plan timeline: stops in time order grouped by day, and between two consecutive stops — and from the
+ * day's start point to the first stop, and from the last stop to its end point — only what's real: an
+ * approximate walk when close enough, otherwise the actual ferry from the timetable (labelled when the
+ * line is on its simulated schedule), otherwise "no transport info". Plus warnings: closed at the
+ * planned time (known hours only), overlapping stops, arriving late, and dates outside the timetable.
+ * No "last ferry" warning: we only know Şehir Hatları, and private operators often run later.
+ * Pure: everything comes in through `PlanDeps`.
  */
 import { CONFIG } from '../config';
 import type { LineMode } from '../sim/schedule';
 import type { DaySchedule, Departure } from '../sim/types';
-import { endOf, isoDay, planDays, sortedStops, startOf, stopMs, type Plan, type PlanStop } from './model';
+import { endOf, endsOf, isoDay, planDays, sortedStops, startOf, stopMs, type Plan, type PlanPoint, type PlanStop } from './model';
 
 type LngLat = [number, number];
 
@@ -64,21 +66,15 @@ export type Connection =
   | ({ mode: 'ferry' } & FerryLeg)
   | { mode: 'none' };
 
-export interface LastFerry {
-  toPier: string;
-  /** Epoch ms of the last departure that still gets there. */
-  dep: number;
-  real: boolean;
-  /** The plan's last stop ends too late for it. */
-  missed: boolean;
-}
-
 export interface DayTimeline {
   day: string;
   stops: ResolvedStop[];
   /** connections[i] = from stops[i] to stops[i + 1]. */
   connections: Connection[];
-  lastFerry: LastFerry | null;
+  /** From the day's start point to its first stop (`leave` = epoch ms to set off; null without transport info). */
+  start: { point: PlanPoint; conn: Connection; leave: number | null } | null;
+  /** From the day's last stop to its end point. */
+  end: { point: PlanPoint; conn: Connection } | null;
   /** The real timetable doesn't cover this day: ferries use the simulated schedule. */
   simulatedFerries: boolean;
 }
@@ -198,29 +194,40 @@ export function connect(deps: PlanDeps, a: LngLat, b: LngLat, readyMs: number, l
   };
 }
 
+/**
+ * How to get from a to b by `byMs` (the start point → the day's first stop): walk if close, else the
+ * ferry you can leave for latest and still arrive in time; if none does, the one that gets there soonest.
+ */
+export function connectBy(deps: PlanDeps, a: LngLat, b: LngLat, byMs: number, lineStops: (lineId: string) => string[]): Connection {
+  const w = walk(a, b);
+  if (w.km <= CONFIG.plan.walk.maxKm) return { mode: 'walk', minutes: w.minutes, km: w.km };
+  const near = piersNear(deps, a);
+  const far = piersNear(deps, b);
+  if (!near.length || !far.length) return { mode: 'none' };
+  const toWalk = new Map(near.map((p) => [p.id, p.minutes]));
+  const fromWalk = new Map(far.map((p) => [p.id, p.minutes]));
+  let best: (Ride & { leave: number }) | null = null;
+  for (const r of rides(deps, new Set(toWalk.keys()), new Set(fromWalk.keys()), byMs - CONFIG.plan.walk.searchHours * 3_600_000, byMs, lineStops)) {
+    if (r.arrMs + fromWalk.get(r.toPier)! * 60_000 > byMs) continue;
+    const leave = r.depMs - toWalk.get(r.dep.stopId)! * 60_000;
+    if (!best || leave > best.leave || (leave === best.leave && r.arrMs < best.arrMs)) best = { ...r, leave };
+  }
+  if (!best) return connect(deps, a, b, byMs - CONFIG.plan.startEarlyMin * 60_000, lineStops);
+  return { mode: 'ferry', lineId: best.dep.lineId, tripId: best.dep.tripId, real: best.real, fromPier: best.dep.stopId, toPier: best.toPier, dep: best.depMs, arr: best.arrMs, walkToMin: toWalk.get(best.dep.stopId)!, walkFromMin: fromWalk.get(best.toPier)!, via: best.via };
+}
+
+/** When to set off for a connection that must arrive by `byMs` (epoch ms), or null without transport info. */
+export function leaveFor(c: Connection, byMs: number): number | null {
+  if (c.mode === 'walk') return byMs - c.minutes * 60_000;
+  if (c.mode === 'ferry') return c.dep - c.walkToMin * 60_000;
+  return null;
+}
+
 /** When a connection gets you to b (epoch ms), or null when there's no transport info. */
 export function arrivalOf(c: Connection, readyMs: number): number | null {
   if (c.mode === 'walk') return readyMs + c.minutes * 60_000;
   if (c.mode === 'ferry') return c.arr + c.walkFromMin * 60_000;
   return null;
-}
-
-/**
- * The last ferry from near the day's last stop back towards its first stop (when they're too far apart
- * to walk): the latest published departure on that service day (incl. after midnight) that gets there.
- */
-export function lastFerryBack(deps: PlanDeps, last: ResolvedStop, first: ResolvedStop, lineStops: (lineId: string) => string[]): LastFerry | null {
-  if (!last.lngLat || !first.lngLat || walk(last.lngLat, first.lngLat).km <= CONFIG.plan.walk.maxKm) return null;
-  const near = piersNear(deps, last.lngLat);
-  const home = piersNear(deps, first.lngLat);
-  if (!near.length || !home.length) return null;
-  const toWalk = new Map(near.map((p) => [p.id, p.minutes]));
-  const d = serviceDay(last.start - 4 * 3_600_000); // the evening's service day (after-midnight stops belong to it)
-  const list = rides(deps, new Set(toWalk.keys()), new Set(home.map((p) => p.id)), dayStart(d) + 4 * 3_600_000, dayStart(d + 1) + 6 * 3_600_000, lineStops);
-  if (!list.length) return null;
-  const lastRide = list.reduce((a, b) => (b.depMs > a.depMs ? b : a));
-  const missed = last.end + toWalk.get(lastRide.dep.stopId)! * 60_000 > lastRide.depMs;
-  return { toPier: lastRide.toPier, dep: lastRide.depMs, real: lastRide.real, missed };
 }
 
 function resolve(deps: PlanDeps, s: PlanStop, n: number): ResolvedStop {
@@ -277,9 +284,21 @@ export function buildTimeline(plan: Plan, deps: PlanDeps, lineStops: (lineId: st
       const at = arrivalOf(c, a.end);
       if (at !== null && at > b.start + CONFIG.plan.lateToleranceMin * 60_000 && b.start >= a.end) b.warnings.push({ kind: 'late', arrive: at });
     }
+    // The day's start and end points (only around real stops).
+    const ends = endsOf(plan, day);
+    let start: DayTimeline['start'] = null;
+    let end: DayTimeline['end'] = null;
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    if (ends.start && first) {
+      const conn = first.lngLat ? connectBy(deps, ends.start.ll, first.lngLat, first.start, lineStops) : ({ mode: 'none' } as const);
+      start = { point: ends.start, conn, leave: leaveFor(conn, first.start) };
+      const at = conn.mode === 'ferry' ? arrivalOf(conn, first.start) : null; // a walk is timed to arrive on time
+      if (at !== null && at > first.start + CONFIG.plan.lateToleranceMin * 60_000) first.warnings.push({ kind: 'late', arrive: at });
+    }
+    if (ends.end && last) end = { point: ends.end, conn: last.lngLat ? connect(deps, last.lngLat, ends.end.ll, last.end, lineStops) : { mode: 'none' } };
     const sd = serviceDay(stopMs(day, 12 * 60));
-    const lastFerry = stops.length >= 2 ? lastFerryBack(deps, stops[stops.length - 1], stops[0], lineStops) : null;
-    return { day, stops, connections, lastFerry, simulatedFerries: !deps.timetableValid(sd) };
+    return { day, stops, connections, start, end, simulatedFerries: !deps.timetableValid(sd) };
   });
 }
 

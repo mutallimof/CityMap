@@ -1,9 +1,10 @@
 /**
  * The planner wired to the app's real data: places (featured + tapped POIs), events, piers and the
  * ferry schedules (real timetables where valid, simulated otherwise — same as the map), plus the
- * plan drawn on the map: numbered stops, walks as dotted lines, ferry legs along their real lanes.
+ * plan drawn on the map: numbered stops, start / end points, walks as dotted lines, ferry legs along
+ * their real lanes.
  */
-import type { GeoJSONSource, Map as MlMap } from 'maplibre-gl';
+import type { FilterSpecification, GeoJSONSource, Map as MlMap } from 'maplibre-gl';
 import { CONFIG } from '../config';
 import { events } from '../events/events';
 import { openAt } from '../places/store';
@@ -11,7 +12,7 @@ import { places } from '../places/ui/context';
 import { timetableStatus } from '../sim/real';
 import { services } from '../ui/services';
 import type { Plan } from './model';
-import { buildTimeline, type DayTimeline, type PlanDeps } from './timeline';
+import { buildTimeline, type Connection, type DayTimeline, type PlanDeps } from './timeline';
 
 let eventById: Map<string, { title: string; start: string; place: string }> | null = null;
 let eventsVersion = -1;
@@ -65,38 +66,63 @@ function rideCoords(lineId: string, via: string[]): [number, number][] {
 const SRC = 'plan';
 const EMPTY: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 
-export function planGeoJSON(days: DayTimeline[]): GeoJSON.FeatureCollection {
+/** Walk legs, and a ferry ride along its real lanes, for one connection from a to b. */
+function connectionFeatures(c: Connection, a: [number, number], b: [number, number]): GeoJSON.Feature[] {
   const s = services();
   const pier = (id: string) => s.pierById.get(id)?.lngLat;
+  const walkLine = (p: [number, number], q: [number, number]): GeoJSON.Feature => ({ type: 'Feature', properties: { mode: 'walk' }, geometry: { type: 'LineString', coordinates: [p, q] } });
+  if (c.mode === 'walk') return [walkLine(a, b)];
+  if (c.mode !== 'ferry') return [];
+  const out: GeoJSON.Feature[] = [];
+  const pa = pier(c.fromPier);
+  const pb = pier(c.toPier);
+  if (pa) out.push(walkLine(a, pa));
+  if (pb) out.push(walkLine(pb, b));
+  const coords = rideCoords(c.lineId, c.via);
+  if (coords.length > 1) out.push({ type: 'Feature', properties: { mode: 'ferry', color: s.lineById.get(c.lineId)?.color ?? CONFIG.guides.stopColor }, geometry: { type: 'LineString', coordinates: coords } });
+  return out;
+}
+
+export function planGeoJSON(days: DayTimeline[]): GeoJSON.FeatureCollection {
   const features: GeoJSON.Feature[] = [];
+  const ends = new Map<string, { ll: [number, number]; role: string }>();
   for (const d of days) {
     d.connections.forEach((c, i) => {
       const a = d.stops[i].lngLat;
       const b = d.stops[i + 1].lngLat;
-      if (!a || !b) return;
-      if (c.mode === 'walk') features.push({ type: 'Feature', properties: { mode: 'walk' }, geometry: { type: 'LineString', coordinates: [a, b] } });
-      if (c.mode === 'ferry') {
-        const pa = pier(c.fromPier);
-        const pb = pier(c.toPier);
-        if (pa) features.push({ type: 'Feature', properties: { mode: 'walk' }, geometry: { type: 'LineString', coordinates: [a, pa] } });
-        if (pb) features.push({ type: 'Feature', properties: { mode: 'walk' }, geometry: { type: 'LineString', coordinates: [pb, b] } });
-        const coords = rideCoords(c.lineId, c.via);
-        if (coords.length > 1) features.push({ type: 'Feature', properties: { mode: 'ferry', color: s.lineById.get(c.lineId)?.color ?? CONFIG.guides.stopColor }, geometry: { type: 'LineString', coordinates: coords } });
-      }
+      if (a && b) features.push(...connectionFeatures(c, a, b));
     });
+    const first = d.stops[0]?.lngLat;
+    const last = d.stops[d.stops.length - 1]?.lngLat;
+    if (d.start && first) features.push(...connectionFeatures(d.start.conn, d.start.point.ll, first));
+    if (d.end && last) features.push(...connectionFeatures(d.end.conn, last, d.end.point.ll));
+    for (const [pt, role] of [
+      [d.start?.point, 'start'],
+      [d.end?.point, 'end'],
+    ] as const) {
+      if (!pt) continue;
+      const k = pt.ll.join(',');
+      const had = ends.get(k);
+      ends.set(k, { ll: pt.ll, role: had && had.role !== role ? 'both' : role });
+    }
     for (const st of d.stops) if (st.lngLat) features.push({ type: 'Feature', properties: { n: String(st.n) }, geometry: { type: 'Point', coordinates: st.lngLat } });
   }
+  // Start / end points: their own marker, not numbered.
+  for (const e of ends.values()) features.push({ type: 'Feature', properties: { end: e.role }, geometry: { type: 'Point', coordinates: e.ll } });
   return { type: 'FeatureCollection', features };
 }
 
-/** Plan layers (same look as guides: ferry legs in the line colour, dotted walks, numbered stops). */
+/** Plan layers (same look as guides: ferry legs in the line colour, dotted walks, numbered stops; start / end as rings). */
 export function addPlanLayers(map: MlMap): void {
   map.addSource(SRC, { type: 'geojson', data: EMPTY });
   const before = map.getLayer('weather') ? 'weather' : undefined;
   map.addLayer({ id: 'plan-ferry', type: 'line', source: SRC, filter: ['==', ['get', 'mode'], 'ferry'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 3.5, 16, 8], 'line-opacity': 0.95 } }, before);
   map.addLayer({ id: 'plan-walk', type: 'line', source: SRC, filter: ['==', ['get', 'mode'], 'walk'], layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': CONFIG.guides.walkColor, 'line-width': ['interpolate', ['linear'], ['zoom'], 10, 2.5, 16, 5], 'line-dasharray': ['literal', [0.2, 1.8]] } }, before);
-  map.addLayer({ id: 'plan-stops', type: 'circle', source: SRC, filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-radius': 12, 'circle-color': CONFIG.plan.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 } }, before);
-  map.addLayer({ id: 'plan-num', type: 'symbol', source: SRC, filter: ['==', ['geometry-type'], 'Point'], layout: { 'text-field': ['get', 'n'], 'text-font': [...CONFIG.city.fontBold], 'text-size': 12.5, 'text-allow-overlap': true, 'text-ignore-placement': true }, paint: { 'text-color': '#FFFFFF' } }, before);
+  const isEnd: FilterSpecification = ['has', 'end'];
+  map.addLayer({ id: 'plan-ends', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 10, 'circle-color': '#FFFFFF', 'circle-stroke-color': CONFIG.plan.endColor, 'circle-stroke-width': 4 } }, before);
+  map.addLayer({ id: 'plan-ends-dot', type: 'circle', source: SRC, filter: isEnd, paint: { 'circle-radius': 3.5, 'circle-color': CONFIG.plan.endColor } }, before);
+  map.addLayer({ id: 'plan-stops', type: 'circle', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], paint: { 'circle-radius': 12, 'circle-color': CONFIG.plan.stopColor, 'circle-stroke-color': '#FFFFFF', 'circle-stroke-width': 2.5 } }, before);
+  map.addLayer({ id: 'plan-num', type: 'symbol', source: SRC, filter: ['all', ['==', ['geometry-type'], 'Point'], ['has', 'n']], layout: { 'text-field': ['get', 'n'], 'text-font': [...CONFIG.city.fontBold], 'text-size': 12.5, 'text-allow-overlap': true, 'text-ignore-placement': true }, paint: { 'text-color': '#FFFFFF' } }, before);
 }
 
 export function showPlanOnMap(days: DayTimeline[] | null): void {
@@ -105,7 +131,7 @@ export function showPlanOnMap(days: DayTimeline[] | null): void {
 
 /** Fit the map to a plan's stops (above the sheet). */
 export function fitPlan(days: DayTimeline[]): void {
-  const pts = days.flatMap((d) => d.stops.map((s) => s.lngLat).filter((x): x is [number, number] => !!x));
+  const pts = days.flatMap((d) => [...d.stops.map((s) => s.lngLat), d.start?.point.ll, d.end?.point.ll].filter((x): x is [number, number] => !!x));
   if (!pts.length) return;
   const xs = pts.map((p) => p[0]);
   const ys = pts.map((p) => p[1]);

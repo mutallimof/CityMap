@@ -27,6 +27,12 @@ export function setTapInterceptor(fn: (point: { x: number; y: number }) => boole
   interceptor = fn;
 }
 
+let mapPick: ((lngLat: [number, number]) => void) | null = null;
+/** While set, the next map tap picks a point (plan start / end) instead of selecting anything. */
+export function setMapPick(fn: ((lngLat: [number, number]) => void) | null): void {
+  mapPick = fn;
+}
+
 /**
  * Map ⇄ UI wiring: taps select vessels / piers (empty map closes the sheet), the selected line's
  * route is highlighted, Follow keeps the camera on the vessel until the user drags, and layer
@@ -40,6 +46,11 @@ export function bindMapInteractions(
   const { map, ferries } = services();
 
   map.on('click', (e) => {
+    if (mapPick) {
+      const pick = mapPick;
+      mapPick = null;
+      return pick([e.lngLat.lng, e.lngLat.lat]);
+    }
     if (interceptor?.(e.point)) return;
     const extra = extraTap?.(e);
     if (extra !== undefined) return select(extra);

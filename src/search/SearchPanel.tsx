@@ -63,6 +63,50 @@ interface NomResult {
 
 const PLACE_CATEGORIES = new Set(['amenity', 'shop', 'tourism', 'leisure', 'historic', 'craft']);
 
+/** Local results as you type: places, piers, districts, landmarks, loaded map POIs / streets. */
+export function localSearch(q: string, lang: 'tr' | 'en', t: ReturnType<typeof useT>): { items: SearchResult[]; feats: Map<string, Feat> } {
+  const { map, pierById } = services();
+  const items: SearchResult[] = [];
+  for (const p of places().byId.values())
+    items.push({ kind: 'place', id: p.id, name: lang === 'en' && p.nameEn ? p.nameEn : p.name, sub: kindLabel(p.kind, lang), icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
+  for (const [id, p] of pierById) items.push({ kind: 'pier', id, name: lang === 'en' ? p.nameEn : p.name, sub: t('pier'), icon: '⚓', lngLat: p.lngLat });
+  for (const f of data?.districts.features ?? [])
+    items.push({ kind: 'district', id: f.properties.id, name: lang === 'en' ? f.properties.nameEn : f.properties.name, sub: t('district'), icon: '🏘', lngLat: f.geometry.coordinates as [number, number] });
+  for (const f of data?.landmarks.features ?? [])
+    if (f.geometry.type === 'Point' && f.properties.name)
+      items.push({ kind: 'landmark', id: f.properties.id, name: (lang === 'en' ? f.properties.nameEn : f.properties.name) ?? '', sub: t('landmark'), icon: f.properties.kind === 'bridge' ? '🌉' : 'k:landmark', lngLat: f.geometry.coordinates as [number, number] });
+  const tiles = tileItems(map, q);
+  for (const r of tiles.items) r.sub = r.kind === 'street' ? t('street') : kindLabel(placeFromFeature(tiles.feats.get(r.id)!)?.kind ?? '', lang);
+  return { items: rankResults([...items, ...tiles.items], q, 10), feats: tiles.feats };
+}
+
+export type OsmResult = SearchResult & { _cat?: string; _type?: string };
+
+/** The whole of OpenStreetMap (Nominatim, bounded to our area) — only on submit. */
+export async function osmSearch(q: string): Promise<OsmResult[]> {
+  const [w, s, e, n] = CONFIG.bounds;
+  const res = await nominatim<NomResult[]>('search', { q, viewbox: `${w},${n},${e},${s}`, bounded: '1', limit: '10', addressdetails: '0' });
+  // Long streets come back as several OSM ways — keep one per name.
+  const seen = new Set<string>();
+  const unique = (res ?? []).filter((r) => {
+    const k = r.category === 'highway' ? `hw|${r.name}` : `${r.osm_type}/${r.osm_id}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return unique.map((r) => ({
+    kind: 'osm' as const,
+    id: `osm:${r.osm_type}/${r.osm_id}`,
+    name: r.name || r.display_name.split(',')[0],
+    sub: r.display_name.split(',').slice(1, 3).join(',').trim(),
+    icon: PLACE_CATEGORIES.has(r.category) ? `k:${kindOfPlace(r.type, categoryOfClass(r.type) ?? '')}` : r.category === 'highway' ? '🛣' : r.category === 'place' || r.category === 'boundary' ? '🏘' : '📍',
+    lngLat: [Number(r.lon), Number(r.lat)] as [number, number],
+    bbox: [Number(r.boundingbox[2]), Number(r.boundingbox[0]), Number(r.boundingbox[3]), Number(r.boundingbox[1])] as [number, number, number, number],
+    _cat: r.category,
+    _type: r.type,
+  }));
+}
+
 /**
  * Search: places, piers, districts, landmarks and loaded map POIs / streets as you type; the whole
  * of OpenStreetMap (Nominatim, bounded to our area) when you press Enter / tap "Search OSM".
@@ -87,20 +131,9 @@ export function SearchPanel() {
 
   const local = useMemo(() => {
     if (!open || norm2(q).length < 2) return [];
-    const { map, pierById } = services();
-    const items: SearchResult[] = [];
-    for (const p of places().byId.values())
-      items.push({ kind: 'place', id: p.id, name: lang === 'en' && p.nameEn ? p.nameEn : p.name, sub: kindLabel(p.kind, lang), icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
-    for (const [id, p] of pierById) items.push({ kind: 'pier', id, name: lang === 'en' ? p.nameEn : p.name, sub: t('pier'), icon: '⚓', lngLat: p.lngLat });
-    for (const f of data?.districts.features ?? [])
-      items.push({ kind: 'district', id: f.properties.id, name: lang === 'en' ? f.properties.nameEn : f.properties.name, sub: t('district'), icon: '🏘', lngLat: f.geometry.coordinates as [number, number] });
-    for (const f of data?.landmarks.features ?? [])
-      if (f.geometry.type === 'Point' && f.properties.name)
-        items.push({ kind: 'landmark', id: f.properties.id, name: (lang === 'en' ? f.properties.nameEn : f.properties.name) ?? '', sub: t('landmark'), icon: f.properties.kind === 'bridge' ? '🌉' : 'k:landmark', lngLat: f.geometry.coordinates as [number, number] });
-    const tiles = tileItems(map, q);
-    feats.current = tiles.feats;
-    for (const r of tiles.items) r.sub = r.kind === 'street' ? t('street') : kindLabel(placeFromFeature(tiles.feats.get(r.id)!)?.kind ?? '', lang);
-    return rankResults([...items, ...tiles.items], q, 10);
+    const r = localSearch(q, lang, t);
+    feats.current = r.feats;
+    return r.items;
   }, [q, open, lang, t]);
 
   if (!open) return null;
@@ -110,33 +143,12 @@ export function SearchPanel() {
   const searchOsm = async () => {
     if (norm2(q).length < 3 || busy) return;
     setBusy(true);
-    const [w, s, e, n] = CONFIG.bounds;
-    const res = await nominatim<NomResult[]>('search', { q, viewbox: `${w},${n},${e},${s}`, bounded: '1', limit: '10', addressdetails: '0' });
+    const res = await osmSearch(q);
     setBusy(false);
-    // Long streets come back as several OSM ways — keep one per name.
-    const seen = new Set<string>();
-    const unique = (res ?? []).filter((r) => {
-      const k = r.category === 'highway' ? `hw|${r.name}` : `${r.osm_type}/${r.osm_id}`;
-      if (seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-    setOnline(
-      unique.map((r) => ({
-        kind: 'osm' as const,
-        id: `osm:${r.osm_type}/${r.osm_id}`,
-        name: r.name || r.display_name.split(',')[0],
-        sub: r.display_name.split(',').slice(1, 3).join(',').trim(),
-        icon: PLACE_CATEGORIES.has(r.category) ? `k:${kindOfPlace(r.type, categoryOfClass(r.type) ?? '')}` : r.category === 'highway' ? '🛣' : r.category === 'place' || r.category === 'boundary' ? '🏘' : '📍',
-        lngLat: [Number(r.lon), Number(r.lat)] as [number, number],
-        bbox: [Number(r.boundingbox[2]), Number(r.boundingbox[0]), Number(r.boundingbox[3]), Number(r.boundingbox[1])] as [number, number, number, number],
-        _cat: r.category,
-        _type: r.type,
-      })),
-    );
+    setOnline(res);
   };
 
-  const pick = (r: SearchResult & { _cat?: string; _type?: string }) => {
+  const pick = (r: OsmResult) => {
     close();
     if (r.kind === 'place') return openPlace(r.id);
     if (r.kind === 'pier') return openPier(r.id);

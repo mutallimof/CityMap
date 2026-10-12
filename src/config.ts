@@ -503,6 +503,10 @@ export const CONFIG = {
     maxDays: 7,
     /** Arriving up to this late isn't flagged. */
     lateToleranceMin: 2,
+    /** No ferry from the start point arrives in time for the first stop: take the soonest one leaving after this long before it. */
+    startEarlyMin: 120,
+    /** Start / end points on the map (not numbered like stops). */
+    endColor: '#1F2A44',
     /** Default visit length by place category. */
     placeMinutes: { food: 90, culture: 90, shopping: 60, park: 60, view: 30, default: 60 },
     /**

@@ -25,6 +25,21 @@ export interface PlanStop {
   ll?: [number, number];
 }
 
+/** A start or end point (hotel, home…): what the visitor picked — search result, map tap or their location. */
+export interface PlanPoint {
+  name: string;
+  ll: [number, number];
+}
+
+/**
+ * Where the days start and end. `start`: a point, or null/absent = none. `end`: a point, 'start' =
+ * same as the start (the default when absent), or null = none.
+ */
+export interface PlanEnds {
+  start?: PlanPoint | null;
+  end?: PlanPoint | 'start' | null;
+}
+
 export interface Plan {
   id: string;
   kind: PlanKind;
@@ -33,6 +48,10 @@ export interface Plan {
   to: string;
   stops: PlanStop[];
   created: number;
+  /** Start / end of every day (optional). */
+  ends?: PlanEnds;
+  /** Per-day changes: a field set here (incl. null = none that day) overrides `ends` for that day. */
+  dayEnds?: Record<string, PlanEnds>;
 }
 
 const DAY_MS = 86_400_000;
@@ -155,6 +174,27 @@ export function moveStop(p: Plan, id: string, dir: -1 | 1): Plan {
   }
   const start = dir < 0 ? n.start - s.dur - CONFIG.plan.gapMin : n.start + n.dur + CONFIG.plan.gapMin;
   return setStart(p, id, roundUp(Math.max(0, start), 5));
+}
+
+/** A day's start and end point: the day's own change, else the plan's; end "same as start" follows that day's start. */
+export function endsOf(p: Pick<Plan, 'ends' | 'dayEnds'>, day: string): { start: PlanPoint | null; end: PlanPoint | null; custom: boolean } {
+  const o = p.dayEnds?.[day];
+  const start = o && o.start !== undefined ? o.start : (p.ends?.start ?? null);
+  const end = o && o.end !== undefined ? o.end : p.ends?.end === undefined ? 'start' : p.ends.end;
+  return { start, end: end === 'start' ? start : end, custom: !!o && (o.start !== undefined || o.end !== undefined) };
+}
+
+/** Change the plan's start / end (every day), or only one day's when `day` is given. */
+export function setEnds(p: Plan, patch: PlanEnds, day?: string): Plan {
+  if (!day) return { ...p, ends: { ...p.ends, ...patch } };
+  return { ...p, dayEnds: { ...p.dayEnds, [day]: { ...p.dayEnds?.[day], ...patch } } };
+}
+
+/** Back to the plan's start / end for that day. */
+export function resetDayEnds(p: Plan, day: string): Plan {
+  if (!p.dayEnds?.[day]) return p;
+  const { [day]: _, ...rest } = p.dayEnds;
+  return { ...p, dayEnds: Object.keys(rest).length ? rest : undefined };
 }
 
 /** "18:30", or "00:30 (+1)" after midnight. */

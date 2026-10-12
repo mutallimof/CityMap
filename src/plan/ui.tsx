@@ -9,9 +9,10 @@ import { ui, useUi } from '../ui/store';
 import { TimetableBadge } from '../ui/timetable';
 import { fmtMin, isoDay, moveStop, planDays, removeStop, setDuration, setStart, type Plan, type PlanKind } from './model';
 import { fitPlan, showPlanOnMap, timelineOf } from './runtime';
-import { encodePlan, planLink } from './share';
+import { DayEnds, EndsEditor } from './points';
+import { encodePlan, hasEnds, planLink } from './share';
 import { addEventToPlan, addPlaceToPlan, copyShared, deletePlan, newPlan, planById, planStore, savePlan, setActive, usePlans } from './store';
-import { hhmm, type Connection, type DayTimeline, type Warning } from './timeline';
+import { arrivalOf, hhmm, type Connection, type DayTimeline, type Warning } from './timeline';
 
 export function openPlans(): void {
   ui.set({ selection: { kind: 'plan', id: 'list' }, follow: false, hint: false, sheetSnap: 'half' });
@@ -218,6 +219,23 @@ function ConnectionRow({ c }: { c: Connection }) {
   );
 }
 
+/** The day's start / end point in the timeline (its own ring marker, like on the map). */
+function EndRow({ kind, name, at }: { kind: 'start' | 'end'; name: string; at: number | null }) {
+  const t = useT();
+  return (
+    <div className="planstop planstop--end">
+      <span className={`ptrow__mark ptrow__mark--${kind}`} aria-hidden />
+      <div className="planstop__main">
+        <b>{name}</b>
+        <small className="muted">
+          {kind === 'start' ? t('startPoint') : t('endPoint')}
+          {at !== null && ` · ${kind === 'start' ? t('leaveAt') : '≈'} ${hhmm(at)}`}
+        </small>
+      </div>
+    </div>
+  );
+}
+
 const DURATIONS = [30, 45, 60, 90, 120, 150, 180, 240];
 
 function PlanView({ id }: { id: string }) {
@@ -228,6 +246,9 @@ function PlanView({ id }: { id: string }) {
   const [, force] = useState(0);
   useEffect(() => eventStore.onChange(() => force((n) => n + 1)), []);
   const [msg, setMsg] = useState('');
+  const [sharing, setSharing] = useState(false);
+  // Start / end points are private: off by default every time the dialog opens.
+  const [shareEnds, setShareEnds] = useState(false);
   const p = planById(id);
   const readOnly = id === 'shared';
   const days: DayTimeline[] = useMemo(() => (p ? timelineOf(p) : []), [p, eventStore.all.length]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -245,8 +266,9 @@ function PlanView({ id }: { id: string }) {
     );
   const edit = (next: Plan) => savePlan(next);
   const onShare = async () => {
-    const payload = encodePlan(p);
+    const payload = encodePlan(p, { ends: shareEnds });
     if (!payload) return setMsg(t('tooLongToShare'));
+    setSharing(false);
     const r = await share(planTitle(p, t, lang), planLink(payload));
     if (r === 'copied') setMsg(t('linkCopied'));
     setTimeout(() => setMsg(''), 2400);
@@ -273,7 +295,13 @@ function PlanView({ id }: { id: string }) {
           </button>
         ) : (
           <>
-            <button className="pill" onClick={onShare}>
+            <button
+              className="pill"
+              onClick={() => {
+                setShareEnds(false);
+                setSharing(!sharing);
+              }}
+            >
               ↗ {t('sharePlan')}
             </button>
             <button className="pill" onClick={openPlans}>
@@ -292,10 +320,43 @@ function PlanView({ id }: { id: string }) {
         )}
         {msg && <span className="toast">{msg}</span>}
       </div>
+      {sharing && !readOnly && (
+        <div className="plshare" role="dialog" aria-label={t('sharePlan')}>
+          <label className="plshare__toggle">
+            <input type="checkbox" checked={shareEnds} disabled={!hasEnds(p)} onChange={(e) => setShareEnds(e.target.checked)} />
+            <span>
+              {t('includeEnds')}
+              <small className="muted">{t('includeEndsHint')}</small>
+            </span>
+          </label>
+          <div className="place__actions">
+            <button className="pill pill--accent" onClick={onShare}>
+              ↗ {t('shareLink')}
+            </button>
+            <button className="pill" onClick={() => setSharing(false)}>
+              {t('cancel')}
+            </button>
+          </div>
+        </div>
+      )}
+      {(!readOnly || hasEnds(p)) && (
+        <section className="planday">
+          <h3 className="section">{t('startEnd')}</h3>
+          {!readOnly && <small className="muted">{t('startEndHint')}</small>}
+          <EndsEditor plan={p} readOnly={readOnly} />
+        </section>
+      )}
       {!p.stops.length && <p className="muted">{t('emptyPlan')}</p>}
       {days.map((d) => (
         <section key={d.day} className="planday">
           {(allDays.length > 1 || d.day !== p.from) && <h3 className="section">{fmtDay(d.day, lang)}</h3>}
+          {allDays.length > 1 && <DayEnds plan={p} day={d.day} readOnly={readOnly} />}
+          {d.start && (
+            <>
+              <EndRow kind="start" name={d.start.point.name} at={d.start.leave} />
+              <ConnectionRow c={d.start.conn} />
+            </>
+          )}
           {d.simulatedFerries && d.stops.length > 1 && <div className="planw planw--info">ⓘ {t('simFerries')}</div>}
           <ol className="planstops">
             {d.stops.map((s, i) => (
@@ -355,11 +416,11 @@ function PlanView({ id }: { id: string }) {
               </li>
             ))}
           </ol>
-          {d.lastFerry && (
-            <div className={`planw ${d.lastFerry.missed ? '' : 'planw--info'}`}>
-              {d.lastFerry.missed ? `⚠ ${t('lastFerryMissed')} ` : '⛴ '}
-              {t('lastFerryBack')} {services().pierById.get(d.lastFerry.toPier)?.[lang === 'tr' ? 'name' : 'nameEn']}: <b>{hhmm(d.lastFerry.dep)}</b> {!d.lastFerry.real && <TimetableBadge real={false} />}
-            </div>
+          {d.end && (
+            <>
+              <ConnectionRow c={d.end.conn} />
+              <EndRow kind="end" name={d.end.point.name} at={arrivalOf(d.end.conn, d.stops[d.stops.length - 1].end)} />
+            </>
           )}
         </section>
       ))}

@@ -46,3 +46,55 @@
 :root[data-night='1'] .planw { color: #ff8a7a; }
 :root[data-night='1'] .linkbtn,
 :root[data-night='1'] .toast--link { color: #8fb8ff; }
+
+/* Start / end points (ring marker, like on the map — not numbered). */
+.ptends { display: grid; gap: 2px; margin-top: 4px; }
+.ptrow { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 0; }
+.ptrow__main { display: grid; min-width: 0; overflow-wrap: anywhere; }
+.ptrow__ctl { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; font-size: 13px; }
+.ptrow__mark {
+  width: 14px;
+  height: 14px;
+  margin: 0 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1f2a44 0 3px, #fff 3.5px);
+  box-shadow: 0 0 0 3.5px #1f2a44;
+}
+.planstop--end { grid-template-columns: auto 1fr; padding: 6px 0; }
+.ptday { display: flex; gap: 4px 10px; flex-wrap: wrap; align-items: baseline; margin-bottom: 4px; }
+.ptday__ctl { display: inline-flex; gap: 10px; font-size: 13px; }
+.ptday .ptends { flex-basis: 100%; }
+.ptpick { display: grid; gap: 6px; padding: 6px 0 10px; }
+.ptpick__bar input {
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: rgba(127, 127, 127, 0.1);
+  border: 1px solid rgba(127, 127, 127, 0.28);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.ptpick__ways { display: flex; gap: 6px; flex-wrap: wrap; }
+.ptpick__banner {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: var(--panel-solid);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 32px);
+}
+.plshare { display: grid; gap: 8px; padding: 10px 12px; margin: 4px 0 10px; border-radius: 12px; background: rgba(127, 127, 127, 0.1); }
+.plshare__toggle { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.plshare__toggle span { display: grid; }
+.plshare__toggle input { margin-top: 3px; width: 18px; height: 18px; }
+:root[data-night='1'] .ptrow__mark { background: radial-gradient(circle, #1f2a44 0 3px, #e8eefc 3.5px); box-shadow: 0 0 0 3.5px #8fb8ff; }

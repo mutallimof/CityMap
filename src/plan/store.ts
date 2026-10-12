@@ -94,7 +94,7 @@ export function addEventToPlan(nowMs: number, ev: { id: string; title: string; s
 export function copyShared(): Plan | null {
   const sh = planStore.get().shared;
   if (!sh) return null;
-  const p = { ...createPlan(sh.kind, sh.from, sh.to), stops: sh.stops.map((s) => ({ ...s })) };
+  const p = { ...createPlan(sh.kind, sh.from, sh.to), stops: sh.stops.map((s) => ({ ...s })), ...(sh.ends ? { ends: sh.ends } : {}), ...(sh.dayEnds ? { dayEnds: sh.dayEnds } : {}) };
   planStore.set((s) => ({ plans: [p, ...s.plans], active: p.id }));
   return p;
 }

@@ -108,7 +108,7 @@ async function boot() {
   // Real timetables where valid for the date and sailable on our routes; the simulated schedule otherwise.
   const legsOf = (id: string) => inputs.find((i) => i.line.id === id)?.legs ?? [];
   const real = stress > 0 ? undefined : realTripSource(timetables, holidays, legsOf, (m) => console.warn(`timetable: ${m} → simulated`));
-  const getDay = cachedDays((day) => buildDaySchedule(inputs, day, undefined, real));
+  const getDay = cachedDays((day) => buildDaySchedule(inputs, day, undefined, real), 8);
   const expiry = expiryWarning(timetables, toIstanbul(Date.now()).day);
   if (expiry) console.warn(expiry);
   const colors = new Map(lines.map((l) => [l.id, l.color]));

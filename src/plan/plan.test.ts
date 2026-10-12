@@ -6,7 +6,7 @@ import { realTripSource, timetableStatus } from '../sim/real';
 import { buildDaySchedule } from '../sim/schedule';
 import { cachedDays } from '../sim/state';
 import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
-import { addEvent, addPlace, createPlan, fmtMin, moveStop, nextSlot, removeStop, setStart, sortedStops, type Plan } from './model';
+import { addEvent, addPlace, createPlan, endsOf, fmtMin, moveStop, nextSlot, removeStop, resetDayEnds, setEnds, setStart, sortedStops, type Plan } from './model';
 import { decodePlan, encodePlan } from './share';
 import { buildTimeline, connect, hhmm, type PlanDeps } from './timeline';
 
@@ -150,30 +150,72 @@ describe('connections between stops', () => {
   });
 });
 
-describe('last ferry back', () => {
-  const evening = (lateStart: number, dur: number): Plan => {
-    let p = createPlan('evening', '2026-10-12');
-    p = addPlace(p, 'moda', 'Moda', 'food');
-    p = addPlace(p, 'bes', 'Bar', 'food');
-    const late = sortedStops(p)[1];
-    p = setStart(p, late.id, lateStart);
-    return { ...p, stops: p.stops.map((s) => (s.id === late.id ? { ...s, dur } : s)) };
+describe('start and end points', () => {
+  const hotelKarakoy = { name: 'Hotel', ll: near('karakoy', -0.002, 0.0015) };
+  const homeKadikoy = { name: 'Home', ll: near('kadikoy', 0.004, 0.002) };
+  const evening = (ends: Plan['ends']): Plan => {
+    let p: Plan = { ...createPlan('evening', '2026-10-12'), ends };
+    p = addPlace(p, 'moda', 'Moda', 'food'); // 18:00–19:30 near Kadıköy
+    return p;
   };
-  it('warns when the plan ends after the last real departure back (Beşiktaş → Kadıköy 23:45)', () => {
-    const [day] = buildTimeline(evening(22 * 60 + 30, 90), deps, lineStops);
-    expect(day.lastFerry).toMatchObject({ toPier: 'kadikoy', missed: true, real: true });
-    expect(hhmm(day.lastFerry!.dep)).toBe('23:45');
+
+  it('none set: the day starts at its first stop', () => {
+    const [day] = buildTimeline(evening(undefined), deps, lineStops);
+    expect([day.start, day.end]).toEqual([null, null]);
   });
-  it("doesn't warn when the plan ends in time", () => {
-    const [day] = buildTimeline(evening(21 * 60, 60), deps, lineStops);
-    expect(day.lastFerry).toMatchObject({ missed: false });
+
+  it('walks when close (leave = first stop − walk), end defaults to same as start', () => {
+    const [day] = buildTimeline(evening({ start: homeKadikoy }), deps, lineStops);
+    expect(day.start?.conn.mode).toBe('walk');
+    const minutes = day.start!.conn.mode === 'walk' ? day.start!.conn.minutes : 0;
+    expect(day.start!.leave).toBe(day.stops[0].start - minutes * 60_000);
+    expect(day.end).toMatchObject({ point: homeKadikoy, conn: { mode: 'walk' } });
   });
-  it('on a Friday night the night timetable is the last ferry', () => {
-    let p = createPlan('evening', '2026-10-16');
+
+  it('takes the latest real ferry that arrives in time, and a real ferry back after the last stop', () => {
+    const [day] = buildTimeline(evening({ start: hotelKarakoy }), deps, lineStops);
+    const c = day.start!.conn;
+    expect(c.mode).toBe('ferry');
+    if (c.mode !== 'ferry') return;
+    expect(['karakoy', 'eminonu']).toContain(c.fromPier); // both within walking distance of the hotel
+    expect([c.toPier, c.real]).toEqual(['kadikoy', true]);
+    expect(c.arr + c.walkFromMin * 60_000).toBeLessThanOrEqual(day.stops[0].start);
+    expect(day.start!.leave).toBe(c.dep - c.walkToMin * 60_000);
+    // No later ferry would still be in time.
+    const later = connect(deps, hotelKarakoy.ll, PLACES.moda.lngLat, day.start!.leave! + 60_000, lineStops);
+    expect(later.mode !== 'ferry' || later.arr + later.walkFromMin * 60_000 > day.stops[0].start).toBe(true);
+    expect(day.stops[0].warnings.some((w) => w.kind === 'late')).toBe(false);
+    const back = day.end!.conn;
+    expect(back.mode === 'ferry' && [back.fromPier, back.toPier, back.dep >= day.stops[0].end]).toEqual(['kadikoy', 'karakoy', true]);
+  });
+
+  it('no transport info when nothing real connects; an end of its own, or none', () => {
+    const inland = { name: 'Far away', ll: [pier('kadikoy')[0] + 0.12, pier('kadikoy')[1] + 0.05] as [number, number] };
+    const [day] = buildTimeline(evening({ start: inland, end: hotelKarakoy }), deps, lineStops);
+    expect(day.start).toMatchObject({ conn: { mode: 'none' }, leave: null });
+    expect(day.end).toMatchObject({ point: hotelKarakoy, conn: { mode: 'ferry' } });
+    const [noEnd] = buildTimeline(evening({ start: homeKadikoy, end: null }), deps, lineStops);
+    expect(noEnd.end).toBeNull();
+  });
+
+  it('several days: every day starts and ends there unless changed for a day', () => {
+    let p: Plan = { ...createPlan('days', '2026-10-12', '2026-10-13'), ends: { start: hotelKarakoy } };
     p = addPlace(p, 'moda', 'Moda', 'food');
     p = addPlace(p, 'bes', 'Bar', 'food');
-    const [day] = buildTimeline(p, deps, lineStops);
-    expect(hhmm(day.lastFerry!.dep)).toBe('05:30');
+    p = setStart(p, sortedStops(p)[1].id, 11 * 60, '2026-10-13');
+    const bes = { name: 'Friend', ll: near('besiktas', 0.002, 0.001) };
+    p = setEnds(p, { start: bes }, '2026-10-13');
+    expect(endsOf(p, '2026-10-12')).toEqual({ start: hotelKarakoy, end: hotelKarakoy, custom: false });
+    expect(endsOf(p, '2026-10-13')).toEqual({ start: bes, end: bes, custom: true }); // end follows that day's start
+    const [d1, d2] = buildTimeline(p, deps, lineStops);
+    expect([d1.start?.point, d2.start?.point, d2.end?.point]).toEqual([hotelKarakoy, bes, bes]);
+    expect(d2.start?.conn.mode).toBe('walk');
+    const q = setEnds(p, { end: null }, '2026-10-13');
+    expect(endsOf(q, '2026-10-13').end).toBeNull();
+    expect(endsOf(q, '2026-10-12').end).toEqual(hotelKarakoy);
+    const r = resetDayEnds(q, '2026-10-13');
+    expect(r.dayEnds).toBeUndefined();
+    expect(endsOf(r, '2026-10-13')).toEqual({ start: hotelKarakoy, end: hotelKarakoy, custom: false });
   });
 });
 
@@ -210,8 +252,36 @@ describe('share links', () => {
     expect(encodePlan(addPlace(p, 'one-more', 'x'))).toBeNull();
   });
 
+  it('leaves start / end points out unless asked; with them they round-trip (plan and per day)', () => {
+    let p = createPlan('days', '2026-10-12', '2026-10-13');
+    p = addPlace(p, 'moda', 'Moda', 'food');
+    p = setEnds(p, { start: { name: 'Hotel Pera', ll: [28.97512, 41.03123] } });
+    p = setEnds(p, { start: { name: 'Friend', ll: [29.0051, 41.0441] }, end: null }, '2026-10-13');
+    const plain = decodePlan(encodePlan(p)!)!;
+    expect([plain.ends, plain.dayEnds]).toEqual([undefined, undefined]);
+    expect(buildTimeline(plain, deps, lineStops)[0].start).toBeNull(); // a shared plan without them starts at its first stop
+    const link = encodePlan(p, { ends: true })!;
+    expect(link.length).toBeLessThan(400);
+    const q = decodePlan(link)!;
+    expect(q.ends).toEqual(p.ends);
+    expect(q.dayEnds).toEqual(p.dayEnds);
+    expect(decodePlan(encodePlan(setEnds(p, { end: 'start' }), { ends: true })!)!.ends?.end).toBe('start');
+  });
+
+  it('links made before start / end points existed still open', () => {
+    const old = '1.eyJrIjoibSIsImYiOiIyMDI2LTEwLTEyIiwibiI6MiwicyI6W1swLCJtb2RhIiwwLDYwMCw5MCwiTW9kYSJdLFswLCJub2RlLzEyMyIsMCw3MDUsOTAsIkEgUE9JIiwyOS4wMjUxMiw0MC45ODc2NV0sWzEsImNvbmNlcnQiLDAsMTI2MCwxMjAsIkNvbmNlcnQiXV19';
+    const p = decodePlan(old)!;
+    expect([p.kind, p.from, p.to, p.ends, p.dayEnds]).toEqual(['days', '2026-10-12', '2026-10-13', undefined, undefined]);
+    expect(p.stops.map((s) => [s.kind, s.ref, s.start, s.ll ?? null])).toEqual([
+      ['place', 'moda', 600, null],
+      ['place', 'node/123', 705, [29.02512, 40.98765]],
+      ['event', 'concert', 1260, null],
+    ]);
+    expect(buildTimeline(p, deps, lineStops)[0]).toMatchObject({ start: null, end: null });
+  });
+
   it('old or broken links give null, never throw', () => {
-    for (const bad of ['', 'garbage', '1.', '1.!!!', '2.eyJrIjoiZSJ9', `1.${btoa('{"k":"x","f":"2026-10-12","n":1,"s":[]}')}`, `1.${btoa('{"k":"e","f":"2026-13-45","n":1,"s":[]}')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[[0,"x",5,60,60]]}')}`, `1.${btoa('not json')}`]) {
+    for (const bad of ['', 'garbage', '1.', '1.!!!', '2.eyJrIjoiZSJ9', `1.${btoa('{"k":"x","f":"2026-10-12","n":1,"s":[]}')}`, `1.${btoa('{"k":"e","f":"2026-13-45","n":1,"s":[]}')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[[0,"x",5,60,60]]}')}`, `1.${btoa('not json')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[],"e":{"s":["x",2,3]}}')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[],"e":{"s":1}}')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[],"d":[[3,{}]]}')}`, `1.${btoa('{"k":"e","f":"2026-10-12","n":1,"s":[],"e":[]}')}`]) {
       expect(decodePlan(bad)).toBeNull();
     }
   });

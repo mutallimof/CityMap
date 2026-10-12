@@ -14,7 +14,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   positions are a pure function of clock time). Respect reduce-motion everywhere.
 - **Every visual constant lives in `src/config.ts`.** Record decisions in this file.
 
-## Current state (2026-10-11, real timetables + Bosphorus commuter lines)
+## Current state (2026-10-12, planner start/end points, ferries moor abreast)
 - **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
   (winter 2026-27 PDF, valid to 27 Jun 2027; simulated fallback per line, labelled) — `src/sim`, pure.
   Lines (PDF page): Kadıköy – Karaköy – Eminönü (4), Üsküdar – Karaköy – Eminönü (5), Kadıköy – Beşiktaş (+ Fri/Sat
@@ -23,6 +23,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   Piers added for the commuter lines (all OSM): Büyükdere (way/592032187, pier building), İstinye (node/6502486594),
   Beykoz (way/739105702), Paşabahçe (way/525436007), Çubuklu (way/525436006 passenger pier, not the car ferry).
   Procedural 3D vapurs (three.js custom layer): wake, bob, docking, smoke, horn rings, splash, gulls, Follow glide.
+  Several vessels at one berth moor side by side (up to 4 at Kadıköy on a weekday).
 - **City:** OpenFreeMap vector tiles in our palette; day→golden→night from the real sun; live weather + seasons;
   re-packed 3D buildings with night windows; forests green all year with seasonal tree crowns.
 - **Places:** ~380 featured pins (67 curated + 286 auto-picked + 23 event venues) + tile POIs by zoom;
@@ -35,16 +36,18 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   snapshot share; PWA; TR/EN; sound toggle (off by default); golden gulls tell facts; `?skyline=1` night test mode.
 - **Plan** (`src/plan`): Evening / Day / Several days; "Add to plan" on place sheets and event rows; timeline sheet
   grouped by day (reorder, times, durations, remove); between stops only real connections (approx. walk / the
-  actual ferry / "No transport info"); warnings (closed, closes during visit, hours unknown, overlap, arrives late,
-  last ferry back, gone); stops numbered on the map, ferry legs on their real lanes; saved on the device; share
-  link `#plan=` (read-only view + "Copy to my plans").
+  actual ferry / "No transport info"); optional start / end point (hotel, home: search, map tap or my location;
+  end defaults to "same as start"; per-day change on several-day plans) connected the same way; warnings (closed,
+  closes during visit, hours unknown, overlap, arrives late, gone — no "last ferry" warning); stops numbered on the
+  map, start / end as rings, ferry legs on their real lanes; saved on the device; share link `#plan=` (read-only
+  view + "Copy to my plans"; start / end only with the share dialog's toggle, off by default).
 
 ## Commands
 ```bash
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
                    #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
-npm test           # vitest (209 tests)
+npm test           # vitest (218 tests)
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
@@ -117,8 +120,16 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   vessel). This is a reading of the layout, not printed explicitly — see Known issues. Footnotes mapped by text.
 - **Routes** are generated (A* on 20 m water grid, string pulling, clearance-safe smoothing) then committed and
   validated (5 m sampling vs shoreline). Berths = shore point + 30 m seaward; approach points run along the shore;
-  shared berths moor abreast. Each berth is approached from the side the raw A* water path arrives from (not the
+  each berth is used by the lines listed in `lines.json` (Eminönü and Beşiktaş have two OSM berths). Each berth is approached from the side the raw A* water path arrives from (not the
   other pier's straight-line side — that made hairpins in İstinye bay).
+- **Berth slots** (`src/sim/berths.ts`, pure, per berth): each dock stay takes the lowest abreast slot free when it
+  arrives (0 = quay, 1, 2, … hull to hull outside, 1.25 beams between centres, seaward only) and keeps it until it
+  leaves; occupancy padded 120 s both sides; the previous service day's late stays are carried in with the slots
+  that day gives them alone (no change at midnight). A docking turn whose window meets another stay at the berth is
+  "tight": not swung on the spot but sailed over the first / last 160 m of the leg (direction fixed by the course
+  at 160 m, so U-turns never flip). Slot offsets ease in over `berthBlendM` (≤ half a short leg). Overflow never
+  moves to a pier's other OSM berth: its approach isn't routed/validated against the coast. Test: no docked hulls
+  overlap at any pier over a weekday and a Sunday (real size; same berth also at ×3.9); 1 s smoothness with berths.
 - **Lanes** (`scripts/lib/lanes.ts`, `CONFIG.routes.lanes`): every leg is two directed lanes, shifted to the right of
   travel by 28 + 26 × lane index m (lines sharing > 400 m of water get different indices: 0/1/2), eased in 110→420 m
   from each berth (berths unchanged, docked vessels may overlap), clamped ≥ 60 m from land and to half the local
@@ -150,13 +161,20 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     schedules the map uses (real timetable, holidays, Fri/Sat nights, simulated fallback → labelled); picks the
     earliest arrival at the next stop, then the earliest departure. Nothing real → "No transport info". No buses,
     metro, trams, suggestions, notifications or accounts.
-  - Last ferry back: when a day's last stop is too far to walk to its first stop, the latest departure that
-    gets back on that service day (incl. after midnight); warned when the plan ends after it.
+  - **Start / end points** (`PlanPoint` = name + position; `plan.ends`, per-day `plan.dayEnds[day]`, a field set
+    there — incl. null = none — overrides; end absent = "same as start", following that day's start): start → first
+    stop = walk timed to arrive on time, else the ferry you can leave for latest that still arrives (none → the
+    soonest after 2 h before, + "arrives late"); last stop → end = same rule as between stops. Only on days with
+    stops. Picked by search (`localSearch` / `osmSearch` from `src/search`), map tap (`setMapPick`, one reverse
+    Nominatim lookup for a name) or device location (once, on tap; must be in our box). `src/plan/points.tsx`.
+  - **No "last ferry" warning** (removed): we only have Şehir Hatları; Turyol, Dentur etc. often run later.
   - Closed checks only with OSM hours (exact closing minute); POIs tapped on the map keep their OSM position.
   - Share link `#plan=1.<base64url JSON>`: kind, first day, days, per stop [type, ref, day, start, duration, name,
     (lng, lat for POIs)]; ≤ 2000 characters and ≤ 20 stops (names shortened → dropped first); a 3-stop evening is
-    ≈ 290 characters. Decoding validates everything and never throws; missing places/events show "no longer
-    available" with the saved name.
+    ≈ 290 characters. Start / end only when the share dialog's toggle is on (off each time): `e` {s, e} for the
+    plan, `d` [[day index, {s, e}]] per day; point = [name, lng, lat], 0 = none, 1 = same as start. Still version
+    `1.`: links without `e`/`d` (all older links) open and start at the first stop (test keeps a real old link).
+    Decoding validates everything and never throws; missing places/events show "no longer available".
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
 - **Sound:** synthesised Web Audio, off by default, `audioSession = ambient` (iOS silent switch), reduce-motion = waves only.
 - **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run
@@ -168,9 +186,9 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   row layout, the footnotes and the sailing times. One Kadıköy berth for both the old (Eski) and new (Yeni) pier
   (night trips keep the PDF's note). Arife half-days run the normal timetable (PDF says nothing). Some Bosphorus piers
   are unserved (Boğaz Hattı commuter line, Kısa Boğaz Turu not included; Kandilli, Küçüksu, Tarabya, Yeniköy).
-- Ferries of different lines pass through each other near shared piers (not fixed). Worst at Üsküdar since the
-  commuter lines (≈15 min/day of two vessels < 40 m apart, was ≈1; Anadolu Kavağı – Üsküdar lays over 09:10–11:35
-  in the outer slot), Beşiktaş ≈5, Kadıköy ≈85 (unchanged).
+- Docked ferries no longer overlap (berth slots), but under way near a busy pier a vessel leaving the quay slot
+  still sails through one moored outside it (no shuffling / no waiting for the outer one), and lines still pass
+  through each other near shared piers. At city zoom (×3.9 hulls) Eminönü's two berths (127 m apart) overlap visually.
 - Bebek → Arnavutköy is printed as 5 min; over our 1.64 km route that fits to ≈33 km/h (limit 34).
 - Eminönü / Beşiktaş berths of Rumeli Kavağı – Eminönü: the Boğaz berths (PDF doesn't say).
 - No events from CRR, Zorlu PSM, İBB Kültür (connect timeouts from GitHub runners, likely geo-blocking).
