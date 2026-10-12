@@ -269,9 +269,12 @@ export class PlaceLayers {
 
   private addImages(): void {
     const ic = CONFIG.icons;
+    // Same-size images update in place; a size change (a glow margin at night, another pin style) re-adds.
     const put = (id: string, img: ImageData) => {
-      if (this.map.hasImage(id)) this.map.updateImage(id, img);
-      else this.map.addImage(id, img, { pixelRatio: 2 });
+      const old = this.map.hasImage(id) ? this.map.getImage(id) : null;
+      if (old && old.data.width === img.width && old.data.height === img.height) return this.map.updateImage(id, img);
+      if (old) this.map.removeImage(id);
+      this.map.addImage(id, img, { pixelRatio: 2 });
     };
     for (const k of ICON_KINDS) {
       const glowPoi = (k === 'bar' && this.state.night) || (k === 'viewpoint' && this.state.golden);
@@ -376,7 +379,10 @@ export class PlaceLayers {
     const night = this.state.night;
     map.setLayoutProperty(LAYERS.featured, 'icon-size', featuredSize());
     this.addImages();
-    if (map.hasImage('story')) map.updateImage('story', storyIcon(CONFIG.icons.storySize));
+    if (map.hasImage('story')) {
+      map.removeImage('story');
+      map.addImage('story', storyIcon(CONFIG.icons.storySize), { pixelRatio: 2 });
+    }
     const font = [...look().labels.placeFont];
     for (const l of [LAYERS.poi, LAYERS.featured, LAYERS.landmarks]) {
       map.setLayoutProperty(l, 'text-font', font);

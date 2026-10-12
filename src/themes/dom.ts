@@ -64,3 +64,54 @@ export function softFade(color: string, apply: () => Promise<void> | void, reduc
     }
   })();
 }
+
+let paperUrl = '';
+/** A small tileable paper texture: fine grain + a few fibres, light grey on white (multiplied over the map). */
+function paperTexture(): string {
+  if (paperUrl) return paperUrl;
+  const n = 192;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = n;
+  const g = cv.getContext('2d')!;
+  const img = g.createImageData(n, n);
+  let s = 1234567;
+  const rand = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  for (let i = 0; i < n * n; i++) {
+    const v = 255 - Math.floor(rand() * rand() * 46);
+    img.data[i * 4] = v;
+    img.data[i * 4 + 1] = v - 2;
+    img.data[i * 4 + 2] = v - 8;
+    img.data[i * 4 + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  g.strokeStyle = 'rgba(150, 120, 80, 0.08)';
+  g.lineWidth = 0.7;
+  for (let i = 0; i < 70; i++) {
+    const x = rand() * n;
+    const y = rand() * n;
+    const a = rand() * Math.PI;
+    const l = 6 + rand() * 18;
+    g.beginPath();
+    g.moveTo(x, y);
+    g.quadraticCurveTo(x + Math.cos(a) * l * 0.5 + rand() * 3, y + Math.sin(a) * l * 0.5, x + Math.cos(a) * l, y + Math.sin(a) * l);
+    g.stroke();
+  }
+  paperUrl = cv.toDataURL('image/png');
+  return paperUrl;
+}
+
+/** Paper grain + soft vignette over the map (not the HUD) for painterly themes; strength 0 removes it. */
+export function applyPaper(container: HTMLElement, strength: number): void {
+  let el = container.querySelector<HTMLDivElement>(':scope > .paper');
+  if (strength <= 0) {
+    el?.remove();
+    return;
+  }
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'paper';
+    container.appendChild(el);
+  }
+  el.style.backgroundImage = `radial-gradient(130% 100% at 50% 45%, transparent 55%, rgba(110, 70, 30, 0.22) 100%), url(${paperTexture()})`;
+  el.style.opacity = String(strength);
+}

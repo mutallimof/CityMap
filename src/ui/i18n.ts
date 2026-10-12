@@ -85,6 +85,7 @@ const STRINGS = {
   legend: { tr: 'Lejant', en: 'Legend' },
   themes: { tr: 'Harita stili', en: 'Map style' },
   themeActive: { tr: 'Seçili', en: 'Selected' },
+  fontCredits: { tr: 'Yazı tipleri (OFL)', en: 'Fonts (OFL)' },
   themeNote: { tr: 'Bu cihazda saklanır. Veriler her stilde aynı.', en: 'Saved on this device. Same real data in every style.' },
   lg_cafe: { tr: 'Kafeler', en: 'Cafés' },
   lg_restaurant: { tr: 'Restoranlar', en: 'Restaurants' },

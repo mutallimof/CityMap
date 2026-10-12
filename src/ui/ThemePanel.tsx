@@ -60,7 +60,12 @@ export function ThemePanel() {
           </button>
         ))}
       </div>
-      <small className="muted">{t('themeNote')}</small>
+      <small className="muted">
+        {t('themeNote')}{' '}
+        <a href={`${import.meta.env.BASE_URL}fonts-credits.html`} target="_blank" rel="noopener">
+          {t('fontCredits')}
+        </a>
+      </small>
     </div>
   );
 }

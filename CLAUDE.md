@@ -95,6 +95,24 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
 - Toy vapur (`style.vapur.model`): rounder hull with bevelled edges, tall cabin, big funnel, cel shading
   (`style.toon` → `src/three/materials.ts`) and a constant-px outline (smooth-normal shell, back faces).
 
+### Storybook theme (`src/themes/storybook.ts`)
+- Golden land, teal water (bands, dark-teal ink coastline + contour lines, sparse ink wave marks, **watercolour
+  pooling** `style.water.pool`: darker wobbly edge + pigment granulation), sage parks, terracotta roofs (caps),
+  slightly lower blocks, warm night with lit streets; **paper grain + vignette** over the map only
+  (`applyPaper`, generated texture, `mix-blend-mode: multiply`, `style.paper`); classic vapur with a thin ink
+  outline; Fraunces headings / district names, Patrick Hand place / street / pier names.
+
+### Fonts (all SIL OFL 1.1, self-hosted from @fontsource packages; credits page `public/fonts-credits.html`)
+| Font | Used for | Copyright |
+|---|---|---|
+| Nunito | interface text (all styles) | The Nunito Project Authors |
+| Fredoka 500/600 | Toy headings, chips; Toy map labels ("Toy Rounded") | The Fredoka Project Authors |
+| Patrick Hand | Storybook map labels ("Storybook Hand") | Patrick Wagesreiter |
+| Fraunces 600 | Storybook headings, district names ("Storybook Serif") | The Fraunces Project Authors |
+- Map label fonts use MapLibre 6's style **`font-faces`** (`src/themes/fonts.ts`: woff2 files bundled with `?url`,
+  Latin + Latin Extended + combining marks, drawn locally with TinySDF). Nothing downloads until a label uses it.
+  Classic labels keep OpenFreeMap's Noto glyphs. Rule for new fonts: OFL only, self-hosted, add here + credits page.
+
 ## Sound sources (all Wikimedia Commons; licence and author re-checked on each file page by `data:audio`)
 | File(s) | Commons file | Author | Licence |
 |---|---|---|---|
@@ -279,6 +297,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
+- Fixed 2026-10-12: pin images that change size (the bar icon's night glow, a theme switch) threw in
+  `updateImage` and aborted the night / theme refresh (latent since v0.1.0); `put()` now re-adds on a size change.
 - Planner "freeze" (a stop near Kadıköy + one across the water): not reproduced. `src/plan/perf.test.ts` builds such
   plans (weekday, Sat night, holiday, simulated dates; start points, several days, share round trip) under a timing
   guard — each ≤ ~20 ms; in the app a #plan= link with a Karaköy → Kadıköy → Karaköy ferry evening adds no long tasks.

@@ -40,6 +40,7 @@ const FS = /* glsl */ `
   uniform float uFoam;
   uniform vec3 uFoamColor;
   uniform float uFieldM;   // distance mapped to d = 1 (m)
+  uniform float uPool;
   varying vec2 vUv;
   varying vec2 vPos;
 
@@ -102,6 +103,14 @@ const FS = /* glsl */ `
       }
       col += vec3(0.75, 0.85, 0.9) * rings * 0.26 * (1.0 - uNight * 0.5);
       col *= 1.0 - uRain * 0.12;
+    }
+    // Watercolour pooling: pigment gathers along the coast (darker, a little wobbly), in screen px.
+    if (uPool > 0.001) {
+      float pxp = mpp / uFieldM;
+      float wob2 = noise(vPos * 0.003 + 7.0) * 6.0;
+      col *= 1.0 - uPool * 0.28 * (1.0 - smoothstep(0.0, pxp * (10.0 + wob2), d));
+      // Granulation: faint pigment speckle over open water.
+      col *= 1.0 - uPool * 0.06 * noise(vPos * 0.05) * noise(vPos * 0.013 + 3.0);
     }
     // Cartoon coast: a white foam line on the shore and two thin contour ripples further out, all in
     // screen pixels (fwidth) so they read the same at every zoom; they breathe slowly.
@@ -221,6 +230,7 @@ export class WaterLayer implements CustomLayerInterface {
         uFoam: { value: 0 },
         uFoamColor: { value: new THREE.Color('#ffffff') },
         uFieldM: { value: w.fieldMaxM },
+        uPool: { value: 0 },
       },
       depthTest: false,
       depthWrite: false,
@@ -264,6 +274,7 @@ export class WaterLayer implements CustomLayerInterface {
     m.uMarkDensity.value = sw.markDensity;
     m.uBands.value = sw.bands;
     m.uFoam.value = sw.foam;
+    m.uPool.value = sw.pool;
     m.uFoamColor.value.set(sw.foamColor);
     m.uChop.value = u.chop ?? 0;
   }

@@ -1,5 +1,5 @@
 import { look, onTheme } from './themes';
-import { applyThemeDom, softFade } from './themes/dom';
+import { applyPaper, applyThemeDom, softFade } from './themes/dom';
 import { basePaint, setStyleProps } from './map/style';
 import { setLabelFonts } from './map/labels';
 import { guidePaint } from './guides/layer';
@@ -363,6 +363,7 @@ async function boot() {
     daylight.retheme();
   };
   void ensureScenery();
+  applyPaper(map.getContainer(), look().style.paper);
 
   // Live theme switch: a soft veil, then every layer re-reads look() (src/themes).
   onTheme((t) =>
@@ -370,6 +371,7 @@ async function boot() {
       t.card.land,
       async () => {
         await applyThemeDom(t);
+        applyPaper(map.getContainer(), t.style.paper);
         applyCssTokens();
         clearIconUrls();
         setStyleProps(map, [...basePaint(), ...guidePaint(), ...planPaint()]);

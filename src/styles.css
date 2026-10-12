@@ -119,3 +119,13 @@ body {
 .theme-veil--on {
   opacity: 0.92;
 }
+
+/* ---- Paper grain (painterly themes, src/themes/dom.ts) ---- */
+.paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background-size: cover, 192px 192px;
+  z-index: 1;
+}

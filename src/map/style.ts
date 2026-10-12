@@ -1,4 +1,5 @@
 import { look } from '../themes';
+import { MAP_FONT_FACES } from '../themes/fonts';
 import type { StyleSpecification, ExpressionSpecification } from 'maplibre-gl';
 import { CONFIG, type Palette } from '../config';
 
@@ -33,6 +34,8 @@ export function buildStyle(p: Palette = look().colors.day): StyleSpecification {
   return {
     version: 8,
     glyphs: CONFIG.city.glyphs,
+    // Theme label fonts (self-hosted OFL files, downloaded only when a label uses them).
+    'font-faces': MAP_FONT_FACES,
     sources: {
       [SOURCE.land]: { type: 'geojson', data: EMPTY(), attribution: '© OpenStreetMap contributors' },
       [SOURCE.shore]: { type: 'geojson', data: EMPTY() },

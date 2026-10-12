@@ -25,8 +25,8 @@ export const toy = defineTheme({
     labelHaloNight: '#1C1B3A',
   },
   city: {
-    font: ['Noto Sans Bold'],
-    fontBold: ['Noto Sans Bold'],
+    font: ['Toy Rounded'],
+    fontBold: ['Toy Rounded'],
     residentialOpacity: 0.7,
     buildingOpacity: 1,
     buildingsFrom: [14.4, 15.0],
@@ -122,6 +122,8 @@ export const toy = defineTheme({
     storyColor: '#C9901A',
   },
   labels: {
+    placeFont: ['Toy Rounded'],
+    storyFont: ['Toy Rounded'],
     pier: '#E8553A',
     pierNight: '#FFB49E',
     poi: '#3B2F5C',
@@ -136,7 +138,7 @@ export const toy = defineTheme({
   guides: { walkColor: '#FF5E7E', stopColor: '#FFB020' },
   plan: { stopColor: '#5B6CFF', endColor: '#3B2F5C' },
   style: {
-    water: { marks: 1, markColor: '#FFFFFF', markPx: 17, markDensity: 0.36, bands: 0.85, foam: 1, foamColor: '#FFFFFF' },
+    water: { marks: 1, markColor: '#FFFFFF', markPx: 17, markDensity: 0.36, bands: 0.85, foam: 1, pool: 0, foamColor: '#FFFFFF' },
     buildings: { cap: true, capM: 0.9, heightScale: 1.15, minFloors: 2, roundM: 0, light: 0.6, gradient: false },
     vapur: { model: 'toy', outline: 1.5, outlineColor: '#3B2F5C' },
     toon: 3,

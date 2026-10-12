@@ -50,7 +50,7 @@ export const classic: ThemeSpec = {
   guides: copy(CONFIG.guides),
   plan: { stopColor: CONFIG.plan.stopColor, endColor: CONFIG.plan.endColor },
   style: {
-    water: { marks: 0, markColor: '#FFFFFF', markPx: 14, markDensity: 0, bands: 0, foam: 0, foamColor: '#FFFFFF' },
+    water: { marks: 0, markColor: '#FFFFFF', markPx: 14, markDensity: 0, bands: 0, foam: 0, pool: 0, foamColor: '#FFFFFF' },
     buildings: { cap: false, capM: 0, heightScale: 1, minFloors: 0, roundM: 0, light: 1, gradient: true },
     vapur: { model: 'classic', outline: 0, outlineColor: '#000000' },
     toon: 0,

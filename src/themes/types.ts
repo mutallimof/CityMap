@@ -35,6 +35,8 @@ export interface ThemeStyle {
     bands: number;
     /** Light foam line hugging the coast (0–1). */
     foam: number;
+    /** Watercolour pooling: water darkens towards the coast like paint gathering at an edge (0–1). */
+    pool: number;
     foamColor: string;
   };
   buildings: {
