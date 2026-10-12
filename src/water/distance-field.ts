@@ -100,3 +100,26 @@ export function coastField(
   }
   return { data, width, height };
 }
+
+/**
+ * Share of water (0..1) in a disc of `radiusM` around a point, from the coast field (land = 0):
+ * a 7×7 grid of samples inside the disc. Outside the field's bounds counts as land.
+ */
+export function waterShare(field: CoastField, bounds: readonly [number, number, number, number], lng: number, lat: number, radiusM: number): number {
+  const [w, s, e, n] = bounds;
+  const kx = Math.cos((lat * Math.PI) / 180);
+  let water = 0;
+  let total = 0;
+  for (let i = -3; i <= 3; i++)
+    for (let j = -3; j <= 3; j++) {
+      if (i * i + j * j > 9) continue;
+      total++;
+      const x = lng + (i / 3) * (radiusM / (111_320 * kx));
+      const y = lat + (j / 3) * (radiusM / 110_540);
+      if (x < w || x > e || y < s || y > n) continue;
+      const cx = Math.min(field.width - 1, Math.floor(((x - w) / (e - w)) * field.width));
+      const cy = Math.min(field.height - 1, Math.floor(((y - s) / (n - s)) * field.height)); // row 0 = south
+      if (field.data[cy * field.width + cx] > 0) water++;
+    }
+  return water / total;
+}

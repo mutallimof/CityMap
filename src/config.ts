@@ -375,18 +375,52 @@ export const CONFIG = {
   /** Night skyline test mode (?skyline=1): bridge light-show cycle length (s) and glow colours. */
   skyline: { showS: 14, litColor: '#FFD49A', towerColor: '#FFC46B' },
 
-  /** Harbour sounds (Web Audio, synthesised): levels 0..1, zoom range, horn reach. */
+  /**
+   * City sound (real recordings, `public/audio`, see CLAUDE.md for sources/licences). Levels 0..1.
+   * The mix itself is `src/audio/mix.ts` (pure); the engine follows it.
+   */
   sound: {
-    master: 0.8,
-    waves: 0.22,
-    gull: 0.09,
-    horn: 0.32,
-    hornS: 2.1,
+    master: 0.85,
+    /** Per-bed trim so the recordings sit together. */
+    beds: { harbour: 0.9, water: 0.8, hum: 0.55, street: 0.7, rain: 0.85, wind: 0.7 },
+    /** Seconds for bed levels to settle (time constant): day ↔ night, zoom, weather. */
+    fadeS: 1.6,
+    /** Each bed plays random stretches of its recording (s), crossfaded over `bedXfadeS`, two voices panned apart. */
+    bedSegS: [22, 48] as [number, number],
+    bedXfadeS: 5,
+    bedPan: 0.55,
+    /** Drop a decoded bed after it has been silent this long (s) — memory on phones. */
+    unloadAfterS: 150,
+    /** Mix sample rate (Hz): half the memory of 48 kHz, enough for phone speakers. */
+    sampleRate: 32000,
     /** Things at the view centre are quiet below fromZoom and full from fullZoom. */
     fromZoom: 11,
     fullZoom: 15.5,
-    /** A departure is heard within this many metres of the view centre at z13 (halves per zoom level). */
+    /** Radius (m) of "here" at z16 for the water share (doubles per zoom level out). */
+    hereM: 260,
+    /** Wind bed fades in from this speed (m/s) to full at windFullMs. */
+    windFromMs: 6,
+    windFullMs: 15,
+    /** How much snow quietens the city (0..1). */
+    snowQuiet: 0.6,
+    /** Low-pass (Hz): open air → fully muffled (fog, snow). */
+    openHz: 16000,
+    mutedHz: 900,
+    /** Mean one-shot rates (per minute) at full strength; times and volumes vary at random. */
+    gullsPerMin: 3.2,
+    bellsPerMin: 0.25,
+    foghornsPerMin: 0.8,
+    piersPerMin: 0.5,
+    oneShotMinGapS: 4,
+    gull: 0.55,
+    bell: 0.3,
+    foghorn: 0.35,
+    pier: 0.35,
+    horn: 0.6,
+    /** A real departure is heard within this many metres of the view centre at z13 (halves per zoom level). */
     hearM: 6000,
+    /** Never more than one horn in this many seconds. */
+    hornGapS: 20,
   },
 
   /** Day/night: sun elevation (degrees) breakpoints and per-phase light. */

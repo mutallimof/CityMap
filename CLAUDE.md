@@ -14,7 +14,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   positions are a pure function of clock time). Respect reduce-motion everywhere.
 - **Every visual constant lives in `src/config.ts`.** Record decisions in this file.
 
-## Current state (2026-10-12, planner start/end points, ferries moor abreast)
+## Current state (2026-10-12, city sound from real recordings)
 - **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
   (winter 2026-27 PDF, valid to 27 Jun 2027; simulated fallback per line, labelled) — `src/sim`, pure.
   Lines (PDF page): Kadıköy – Karaköy – Eminönü (4), Üsküdar – Karaköy – Eminönü (5), Kadıköy – Beşiktaş (+ Fri/Sat
@@ -33,7 +33,7 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   Today · This weekend · Workshops · Free.
 - **UI:** React over the map; filters = All + combinable category toggles + Open now + event chips; search; guides;
   pier boards with printed times + source credit; per-line "Live timetable" / "Simulated schedule" label;
-  snapshot share; PWA; TR/EN; sound toggle (off by default); golden gulls tell facts; `?skyline=1` night test mode.
+  snapshot share; PWA; TR/EN; city sound from real recordings (off by default, see Sound); golden gulls tell facts; `?skyline=1` night test mode.
 - **Plan** (`src/plan`): Evening / Day / Several days; "Add to plan" on place sheets and event rows; timeline sheet
   grouped by day (reorder, times, durations, remove); between stops only real connections (approx. walk / the
   actual ferry / "No transport info"); optional start / end point (hotel, home: search, map tap or my location;
@@ -42,16 +42,39 @@ Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · o
   map, start / end as rings, ferry legs on their real lanes; saved on the device; share link `#plan=` (read-only
   view + "Copy to my plans"; start / end only with the share dialog's toggle, off by default).
 
+## Sound sources (all Wikimedia Commons; licence and author re-checked on each file page by `data:audio`)
+| File(s) | Commons file | Author | Licence |
+|---|---|---|---|
+| `hum` | Galata Kulesi Sabah Ses.wav, Galata Kulesi Öğlen Ses.wav, Galata Kulesi Akşam Ses.wav (Istanbul, from Galata Tower) | Asibala | CC0 |
+| `harbour` | Sunday in the city street noise1.ogg (seaside town: traffic, gulls, people) | cori (pdsounds.org) | Public domain |
+| `water` | Algemene sfeer van het havengebied Rotterdam - SoundCloud - GvNL-Steim Workshop.ogg | GvNL-Steim Workshop (Geluid van Nederland) | **CC BY 3.0** |
+| `street` | Karlova 0001.ogg (Prague street) + Restaurant ambience.ogg | Juan de Vojníkov; stephan (pdsounds.org) | Public domain |
+| `rain` | Light Rain Distant Thunder July 5th 2016.wav | kvgarlic (freesound.org) | CC0 |
+| `wind` | Killiney Hill Storm Floris 20250804 1537.ogg | Karlunun | CC0 |
+| `gull-1`, `gull-2` / `gull-3` | Gull 1.ogg / Gull 2.ogg | avphillips (pdsounds.org) | Public domain |
+| `gull-4` | XC707075 - European Herring Gull - Larus argentatus.mp3 | Sonothèque ADVL (xeno-canto) | CC0 |
+| `gull-5` | Western Gull Golden Gate National Recreation Area.ogg | U.S. National Park Service | Public domain |
+| `pier` | Squeaks and twangs of Barking Riverside Pier.ogg | JoBrodie | CC0 |
+| `horn` | Cruise ship Albatros ship horn.ogg | Tvabutzku1234 | CC0 |
+| `foghorn` | Fog signal Bremerhaven.ogg | Tvabutzku1234 | CC0 |
+| `bell` | WWS ShipSodekshipsbell.ogg | Work With Sounds / National Maritime Museum in Gdańsk | **CC BY 4.0** |
+
+Pages: `https://commons.wikimedia.org/wiki/File:<name>`. CC BY files are credited in the attribution bar while
+sound is on (→ `public/audio/credits.html`, generated with links). Rule for new sounds: CC0 / PD preferred, CC BY only
+with that credit; never BY-SA/NC. Cut points in `data/catalog/sounds.json`; beds ≥ 60 s. Note: the Galata clips were
+also uploaded identically (CC0) by Kübradereli1 as "GALATA TOWER MORNING/NOON/EVENING audio.wav".
+
 ## Commands
 ```bash
 npm install
 npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stress=40 ?weather=rain|snow|fog&season=spring
                    #   ?adaptive=0 (screenshots) ?intro=0 ?skyline=1 · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
-npm test           # vitest (218 tests)
+npm test           # vitest (238 tests)
 npm run typecheck
 npm run build      # validate:routes + validate:timetables + typecheck + vite build → dist/
 npm run validate:data   # gate for refreshed data incl. timetables (also runs in the refresh job)
 python3 scripts/timetables/parse-tarife.py data/raw/tarife.pdf && npm run data:timetables   # new timetable PDF
+npm run data:audio      # sounds.json → public/audio (needs ffmpeg + Commons: run in Actions, not the sandbox)
 ```
 
 ## Data pipelines
@@ -71,6 +94,7 @@ ids/names/rules (no coordinates).
 | `events.json`, `events-log.json`, `event-venues.geojson`, `venue-geocode.json` | `data:events` | venue sites + Nominatim | **daily 06:17 Istanbul**, Actions |
 | `stories.json` | `data:stories` | Overpass + Wikidata + Wikipedia + Commons | **monthly (3rd)**, Actions |
 | `places-auto.geojson` | `data:featured` | Overpass | **monthly (3rd)**, Actions |
+| `public/audio/*.webm/.m4a`, `credits.html` | `data:audio` (`scripts/audio/build-audio.py`) | Wikimedia Commons, list in `data/catalog/sounds.json` | manual, in Actions |
 
 - `.github/workflows/data-refresh.yml`: cron + `workflow_dispatch` (`what` = events|stories|places|both,
   `venues` = ids to force-refetch). Steps: scrapers (`continue-on-error`) → `validate:data` (fails ⇒ nothing
@@ -101,7 +125,7 @@ ids/names/rules (no coordinates).
 `src/sim` pure schedule/state, real timetables (`real.ts`) + tests · `src/ferries` vapur layer, model, wake, gulls, smoke · `src/water` shader +
 coast distance field · `src/map` style, city (OFM) layers + look, buildings protocol/workers, skyline ·
 `src/places` stores, filters, layers, icons, sheets · `src/events`, `src/stories`, `src/fun` (gull facts),
-`src/audio` (synthesised sound), `src/weather`, `src/time` (sun/palette), `src/ui` (React HUD, store, i18n),
+`src/audio` (city sound: `mix.ts` pure levels, `engine.ts` Web Audio), `src/weather`, `src/time` (sun/palette), `src/ui` (React HUD, store, i18n),
 `src/app` (daylight, perf ladder, PWA), `scripts/` (data builders + scrapers, Turf only here; `scripts/timetables` PDF parser).
 Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest 5.
 
@@ -176,7 +200,23 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     `1.`: links without `e`/`d` (all older links) open and start at the first stop (test keeps a real old link).
     Decoding validates everything and never throws; missing places/events show "no longer available".
 - **Nominatim:** ≤ 1 req/s, search only on submit (no autocomplete), bounded to our box, attribution shown.
-- **Sound:** synthesised Web Audio, off by default, `audioSession = ambient` (iOS silent switch), reduce-motion = waves only.
+- **Sound** (`src/audio`; constants `CONFIG.sound`): real recordings only (list + licences under "Sound sources").
+  - `mix.ts` (pure, tested) = levels from sun (`theme.night`), zoom (closeness z11 → z15.5), water share around the
+    view centre (coast field, radius 260 m at z16, doubling per zoom out) and the scene's weather. Beds: **harbour**
+    (day shore), **water** (lapping; the night shore), **hum** (zoomed out + inland/night background; Istanbul from
+    Galata Tower), **street** (inland close in, mostly day), **rain**, **wind** (6 → 15 m/s). Rain/snow/wind push the
+    city beds back; fog and snow close a low-pass (16 kHz → 900 Hz). One-shots as Poisson streams (≥ 4 s apart,
+    random clip, pitch ±8%, pan, volume 40–100%): gulls (day, by the water), ship's bell, pier creaks (close in on the
+    shore), fog signal (fog only). **Horns** only for real (timetabled) departures within `hearM·2^(13−z)` of the
+    centre, ≤ 1 per 20 s (`HornGate`).
+  - `engine.ts`: beds play random 22–48 s stretches of a ≥ 65 s file, 5 s crossfades, two voices panned ±0.55 →
+    no audible loop. Context at 32 kHz; beds load when first needed and are dropped after 150 s silent. Nothing is
+    created or fetched until the switch is on (test). Opus `.webm` where `canPlayType` says "probably", else / on
+    decode failure AAC `.m4a` (iOS). `audioSession = ambient` (silent switch); context suspended while the tab is
+    hidden or sound is off. Reduce-motion = beds only (no one-shots, no horns). Debug global `sound` (`sound.mix`).
+  - Credit: while sound is on the attribution bar shows "Sounds: Wikimedia Commons …" → `audio/credits.html`.
+  - Budget: Opus 1.48 MB, AAC 1.76 MB for everything (one format per visitor; usually only 3–4 beds load). Build
+    fails over 2 MB per format. **No call to prayer** (none in the files; Galata clips checked on a spectrogram).
 - **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
@@ -197,6 +237,9 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - Overpass is often overloaded (504/500): the monthly places/stories jobs may keep last month's data for some areas.
 - `stories.json` is ~630 KB (lazy-loaded); the main JS chunk is > 500 KB (build warning).
 - Snapshots don't include DOM labels/pins. Sound and `?skyline=1` not yet judged on a real iPhone.
+- Sound: only the hum bed and Galata are Istanbul recordings; harbour/street/rain/wind/gulls/horn are from elsewhere
+  (no open-licence Bosphorus / vapur recordings on Commons; Freesound needs a login and its robots.txt blocks
+  search/API). The horn is a cruise ship, not a vapur. Gulls are herring/western gulls (Istanbul's are yellow-legged).
 - Actions warn about Node 20 deprecation for `actions/checkout@v4` / `setup-node@v4`.
 
 ## Roadmap (next sessions, in order)

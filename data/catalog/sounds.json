@@ -1,0 +1,39 @@
+{
+  "_doc": "City sound: real recordings from Wikimedia Commons. Licence + author are re-checked on each file page by scripts/audio/build-audio.py (allowed: CC0, public domain, CC BY; CC BY needs a visible credit). Times in seconds of the original file.",
+  "sources": {
+    "galata-morning": { "file": "Galata Kulesi Sabah Ses.wav", "author": "Asibala", "licence": "CC0", "what": "Istanbul from Galata Tower, morning" },
+    "galata-noon": { "file": "Galata Kulesi Öğlen Ses.wav", "author": "Asibala", "licence": "CC0", "what": "Istanbul from Galata Tower, noon" },
+    "galata-evening": { "file": "Galata Kulesi Akşam Ses.wav", "author": "Asibala", "licence": "CC0", "what": "Istanbul from Galata Tower, evening" },
+    "seaside-street": { "file": "Sunday in the city street noise1.ogg", "author": "cori (pdsounds.org)", "licence": "Public domain", "what": "seaside town street: traffic, gulls, people" },
+    "rotterdam-harbour": { "file": "Algemene sfeer van het havengebied Rotterdam - SoundCloud - GvNL-Steim Workshop.ogg", "author": "GvNL-Steim Workshop (Geluid van Nederland)", "licence": "CC BY 3.0", "what": "harbour: soft lapping water, distant activity" },
+    "karlova": { "file": "Karlova 0001.ogg", "author": "Juan de Vojníkov", "licence": "Public domain", "what": "pedestrian street (Karlova, Prague)" },
+    "restaurant": { "file": "Restaurant ambience.ogg", "author": "stephan (pdsounds.org)", "licence": "Public domain", "what": "restaurant walla" },
+    "rain": { "file": "Light Rain Distant Thunder July 5th 2016.wav", "author": "kvgarlic (freesound.org)", "licence": "CC0", "what": "light rain, distant thunder" },
+    "storm": { "file": "Killiney Hill Storm Floris 20250804 1537.ogg", "author": "Karlunun", "licence": "CC0", "what": "storm wind gusts, no rain" },
+    "barking-pier": { "file": "Squeaks and twangs of Barking Riverside Pier.ogg", "author": "JoBrodie", "licence": "CC0", "what": "floating pier creaking against its gangway" },
+    "gull-1": { "file": "Gull 1.ogg", "author": "avphillips (pdsounds.org)", "licence": "Public domain", "what": "herring gull" },
+    "gull-2": { "file": "Gull 2.ogg", "author": "avphillips (pdsounds.org)", "licence": "Public domain", "what": "herring gull" },
+    "gull-xc": { "file": "XC707075 - European Herring Gull - Larus argentatus.mp3", "author": "Sonothèque ADVL (xeno-canto XC707075)", "licence": "CC0", "what": "European herring gull flight calls" },
+    "gull-nps": { "file": "Western Gull Golden Gate National Recreation Area.ogg", "author": "U.S. National Park Service", "licence": "Public domain", "what": "western gull" },
+    "ship-horn": { "file": "Cruise ship Albatros ship horn.ogg", "author": "Tvabutzku1234", "licence": "CC0", "what": "ship's horn" },
+    "fog-signal": { "file": "Fog signal Bremerhaven.ogg", "author": "Tvabutzku1234", "licence": "CC0", "what": "harbour fog signal" },
+    "ship-bell": { "file": "WWS ShipSodekshipsbell.ogg", "author": "Work With Sounds / National Maritime Museum in Gdańsk", "licence": "CC BY 4.0", "what": "ship's bell (S/S Sołdek)" }
+  },
+  "outputs": [
+    { "id": "harbour", "lufs": -25, "parts": [["seaside-street", 108, 144], ["seaside-street", 226, 260]] },
+    { "id": "water", "lufs": -26, "parts": [["rotterdam-harbour", 10, 76]] },
+    { "id": "hum", "lufs": -27, "parts": [["galata-morning", 0.2, 21.8], ["galata-noon", 0.2, 17.1], ["galata-evening", 0.2, 33.3]] },
+    { "id": "street", "lufs": -25, "parts": [["karlova", 2, 42], ["restaurant", 6, 34]] },
+    { "id": "rain", "lufs": -25, "parts": [["rain", 10, 76]] },
+    { "id": "wind", "lufs": -25, "parts": [["storm", 0.5, 68]] },
+    { "id": "gull-1", "lufs": -20, "parts": [["gull-1", 0, 3.4]] },
+    { "id": "gull-2", "lufs": -20, "parts": [["gull-1", 6.3, 14]] },
+    { "id": "gull-3", "lufs": -20, "parts": [["gull-2", 0, 5.7]] },
+    { "id": "gull-4", "lufs": -21, "parts": [["gull-xc", 1.5, 11]] },
+    { "id": "gull-5", "lufs": -21, "parts": [["gull-nps", 0, 4.6]] },
+    { "id": "pier", "lufs": -24, "parts": [["barking-pier", 8, 32]] },
+    { "id": "horn", "lufs": -18, "parts": [["ship-horn", 1, 10.8]], "fadeOut": 1.4 },
+    { "id": "foghorn", "lufs": -20, "parts": [["fog-signal", 20.2, 25.6]], "fadeOut": 0.8 },
+    { "id": "bell", "lufs": -22, "parts": [["ship-bell", 0.6, 8.6]], "fadeOut": 0.6 }
+  ]
+}

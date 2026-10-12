@@ -23,6 +23,12 @@ export interface VapurLayerOptions {
 }
 
 /** Stable 0..1 hash of a vessel id (per-ship bob phase). */
+/** The leg a vessel is sailing at its pose time belongs to a printed (timetabled) trip. */
+function departsOnRealTrip(v: VesselPose): boolean {
+  const seg = v.vessel.segments.find((s) => s.t0 <= v.t && v.t < s.t1);
+  return seg?.kind === 'leg' && seg.trip.real;
+}
+
 function hash01(id: string): number {
   let h = 2166136261;
   for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
@@ -113,12 +119,7 @@ export class VapurLayer implements CustomLayerInterface {
   /** 0–1 wind-driven sea state: more rocking. Set by the day/night + weather controller. */
   sea = 0;
   /** Called when a vessel leaves a pier in real time (not on time jumps) — the sound layer's horn. */
-  onDeparture?: (lngLat: [number, number]) => void;
-
-  /** Seagulls flying in view right now (for the sound layer). */
-  gullCount(): number {
-    return this.gulls.mesh.count;
-  }
+  onDeparture?: (lngLat: [number, number], real: boolean) => void;
 
   /** Golden fact gulls on screen right now: map position + height above the water (m). */
   factGulls(): { i: number; lngLat: [number, number]; altM: number }[] {
@@ -284,7 +285,7 @@ export class VapurLayer implements CustomLayerInterface {
       if (prev === 'underway' && v.state.phase === 'docked' && fxOn) this.bumpAt.set(id, tReal);
       if (prev === 'docked' && v.state.phase === 'underway' && fxOn) {
         this.departAt.set(id, tReal);
-        this.onDeparture?.(v.lngLat);
+        this.onDeparture?.(v.lngLat, departsOnRealTrip(v));
       }
       this.lastPhase.set(id, v.state.phase);
       const bt = tReal - (this.bumpAt.get(id) ?? -1e9);

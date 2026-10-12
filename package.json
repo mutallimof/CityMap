@@ -24,6 +24,7 @@
     "data:venues": "NODE_USE_ENV_PROXY=1 tsx scripts/build-venues.ts",
     "data:events": "NODE_USE_ENV_PROXY=1 tsx scripts/events/scrape.ts",
     "data:featured": "tsx scripts/build-featured.ts",
+    "data:audio": "python3 scripts/audio/build-audio.py",
     "data:timetables": "tsx scripts/timetables/build-timetables.ts",
     "validate:timetables": "tsx scripts/timetables/validate.ts"
   },

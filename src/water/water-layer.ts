@@ -3,7 +3,7 @@ import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { CONFIG } from '../config';
 import { sharedFrame, sharedRenderer } from '../three/context';
-import { coastField } from './distance-field';
+import { coastField, type CoastField } from './distance-field';
 
 const VS = /* glsl */ `
   varying vec2 vUv;
@@ -131,6 +131,8 @@ export class WaterLayer implements CustomLayerInterface {
   private start = performance.now();
   /** Animation speed multiplier (0 freezes ripples — reduce-motion). */
   motion = 1;
+  /** Distance-to-coast field (land = 0), once the layer is added; also read by the sound mix. */
+  field: CoastField | null = null;
 
   constructor(private land: FeatureCollection<Polygon | MultiPolygon>) {}
 
@@ -139,6 +141,7 @@ export class WaterLayer implements CustomLayerInterface {
     this.renderer = sharedRenderer(map, gl);
     const w = CONFIG.water;
     const field = coastField(this.land, CONFIG.bounds, w.fieldWidth, w.fieldMaxM);
+    this.field = field;
     const tex = new THREE.DataTexture(field.data, field.width, field.height, THREE.RedFormat, THREE.UnsignedByteType);
     tex.magFilter = THREE.LinearFilter;
     tex.minFilter = THREE.LinearFilter;

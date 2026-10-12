@@ -1,5 +1,7 @@
 import { Skyline } from './map/skyline';
-import { HarbourSound } from './audio/sound';
+import { browserDeps, CitySound } from './audio/engine';
+import { distM, hearRadiusM } from './audio/mix';
+import { showSoundCredit } from './audio/credit';
 import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
@@ -20,6 +22,7 @@ import { fleetAt } from './sim/fleet';
 import { ClockController } from './app/clock';
 import { VapurLayer } from './ferries/vapur-layer';
 import { WaterLayer } from './water/water-layer';
+import { waterShare } from './water/distance-field';
 import { LAYER, SOURCE } from './map/style';
 import { DaylightController } from './app/daylight';
 import { WeatherController } from './weather/controller';
@@ -138,12 +141,29 @@ async function boot() {
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });
   setPlaces(store, reduced);
-  // Harbour sounds: off until the visitor taps the speaker (browsers need a gesture anyway).
-  const sound = new HarbourSound(map, reduced, () => ferries.gullCount());
-  ferries.onDeparture = (ll) => sound.departure(ll);
+  // City sound (real recordings): off until the visitor taps the speaker; nothing is fetched before that.
+  const centre = (): [number, number] => map.getCenter().toArray() as [number, number];
+  const sound = new CitySound(
+    {
+      mixInput: () => {
+        const c = weather.current;
+        const [lng, lat] = centre();
+        const zoom = map.getZoom();
+        const share = water.field ? waterShare(water.field, CONFIG.bounds, lng, lat, hearRadiusM(zoom)) : 0;
+        return { night: daylight.theme.night, zoom, water: share, rain: c.rain, snow: c.snow, fog: c.fog, thunder: c.thunder, windMs: c.windMs };
+      },
+      zoom: () => map.getZoom(),
+      distanceTo: (ll) => distM(ll, centre()),
+      reduced,
+    },
+    browserDeps(`${import.meta.env.BASE_URL}audio/`),
+  );
+  ferries.onDeparture = (ll, real) => sound.departure(ll, real);
   ui.subscribe(() => {
     const on = ui.get().sound;
-    if (on !== sound.enabled) sound.setEnabled(on);
+    if (on === sound.enabled) return;
+    sound.setEnabled(on);
+    showSoundCredit(map, on);
   });
   // Night skyline (test, ?skyline=1): bridge light shows, glowing Maiden's Tower, lit minarets.
   const skyline = params.get('skyline') === '1' ? new Skyline(map, landmarks, reduced, () => daylight.theme.night) : null;
@@ -308,7 +328,7 @@ async function boot() {
 
   mountDebugPanel(map, { clock, vesselCount: () => ferries.visible.length });
   // Exposed for console tinkering during development only.
-  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, placeLayers, gullFacts });
+  if (import.meta.env.DEV) Object.assign(window, { map, clock, network, getDay, ferries, water, daylight, store, weather, weatherLayer, city, ui, placeLayers, gullFacts, sound });
 }
 
 boot().catch((err) => {
