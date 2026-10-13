@@ -13,6 +13,7 @@ import { browserDeps, CitySound } from './audio/engine';
 import { distM, hearRadiusM } from './audio/mix';
 import { showSoundCredit } from './audio/credit';
 import { showWeatherCredit } from './weather/credit';
+import { showFerryCredit } from './ferries/credit';
 import { GullFacts } from './fun/gull-facts';
 import { FilterHint } from './places/ui/FilterHint';
 import '@fontsource/nunito/600.css';
@@ -156,6 +157,7 @@ async function boot() {
   map.addLayer(weatherLayer);
   weather.start();
   showWeatherCredit(map, !weather.demo.weather); // live Open-Meteo data → its credit in the attribution bar
+  showFerryCredit(map); // the timetables' operators (public/ferry-credits.html)
   const daylight = new DaylightController({ map, water, ferries, clock, city, weather, weatherLayer });
   daylight.start();
 

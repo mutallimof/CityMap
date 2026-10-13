@@ -1,19 +1,17 @@
 {
- "generated": "2026-10-13T02:36:41.517Z",
+ "generated": "2026-10-13T03:08:58.865Z",
  "operators": {
   "turyol": {
-   "at": "2026-10-13T02:36:41.517Z",
-   "status": "partial",
+   "at": "2026-10-13T03:08:58.865Z",
+   "status": "ok",
    "lines": {
-    "turyol-eminonu-kadikoy": "failed: asked eminönü → kadıköy yeni, the page shows \"Eminönü İskele Kalkış / Kadıköy\"",
-    "turyol-eminonu-uskudar": "ok: 97 trips",
-    "turyol-karakoy-kadikoy": "failed: asked karaköy → kadıköy yeni, the page shows \"Karaköy İskele Kalkış / Kadıköy\"",
-    "turyol-karakoy-kadikoy-metro": "failed: asked karaköy → kadıköy metro, the page shows \"Karaköy İskele Kalkış / Kadıköy\"",
-    "turyol-karakoy-uskudar": "ok: 96 trips"
+    "turyol-kadikoy-karakoy-eminonu": "ok: 152 trips",
+    "turyol-uskudar-karakoy-eminonu": "ok: 150 trips",
+    "turyol-karakoy-kadikoy-metro": "ok: 8 trips"
    }
   },
   "dentur": {
-   "at": "2026-10-13T02:36:41.517Z",
+   "at": "2026-10-13T03:08:58.865Z",
    "status": "ok",
    "lines": {
     "dentur-uskudar-kabatas": "ok: 220 trips"
