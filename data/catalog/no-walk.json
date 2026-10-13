@@ -1,0 +1,11 @@
+{
+  "_comment": "Places the planner must not connect by walking or by a pier-to-pier ferry: islets with no public pier of ours (they need their own boat). Matched by place id, OSM element or name (for map POIs the visitor taps). No coordinates here. Island places WITH a Şehir Hatları pier (Adalar: Büyükada, Heybeliada, Burgazada, Kınalıada) are NOT listed: the ferry connection to their pier is real.",
+  "places": [
+    {
+      "id": "kiz-kulesi",
+      "osm": "relation/4429796",
+      "names": ["Kız Kulesi", "Maiden's Tower", "Maiden’s Tower", "Leander's Tower"],
+      "reason": "Islet off Salacak; reached by the tower's own boat, not by our ferries or on foot."
+    }
+  ]
+}

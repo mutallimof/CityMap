@@ -10,12 +10,13 @@
 import { CONFIG } from '../config';
 import type { LineMode } from '../sim/schedule';
 import type { DaySchedule, Departure } from '../sim/types';
+import { isIslet } from './islets';
 import { endOf, endsOf, planDays, sortedStops, startOf, stopMs, type Plan, type PlanPoint, type PlanStop } from './model';
 
 type LngLat = [number, number];
 
 export interface PlanDeps {
-  place(id: string): { name: string; nameEn?: string | null; lngLat: LngLat; hours?: string | null } | undefined;
+  place(id: string): { id?: string; name: string; nameEn?: string | null; lngLat: LngLat; hours?: string | null; osm?: string | null } | undefined;
   event(id: string): { title: string; start: string; place: string } | undefined;
   /** Open / closed / unknown at an instant from OSM opening hours. */
   openAt(hours: string | null | undefined, ms: number): { state: 'open' | 'closed' | 'unknown' };
@@ -40,6 +41,8 @@ export interface ResolvedStop {
   name: string;
   nameEn: string;
   lngLat: LngLat | null;
+  /** An islet (own boat only): no walk / ferry connection to or from it, "No transport info". */
+  islet?: boolean;
   /** Epoch ms. */
   start: number;
   end: number;
@@ -238,11 +241,12 @@ function resolve(deps: PlanDeps, s: PlanStop, n: number): ResolvedStop {
     if (!e) return { ...base, name: s.label ?? s.ref, nameEn: s.label ?? s.ref, lngLat: null, warnings: [{ kind: 'gone' }] };
     // Events keep their real start even if the stored plan says otherwise (data refreshed).
     const start = Date.parse(e.start);
-    return { ...base, start, end: start + s.dur * 60_000, name: e.title, nameEn: e.title, lngLat: p?.lngLat ?? null };
+    return { ...base, start, end: start + s.dur * 60_000, name: e.title, nameEn: e.title, lngLat: p?.lngLat ?? null, ...(p && isIslet({ id: e.place, ...p }) ? { islet: true } : {}) };
   }
   const p = deps.place(s.ref) ?? (s.ll ? { name: s.label ?? s.ref, nameEn: s.label ?? s.ref, lngLat: s.ll, hours: null } : undefined);
   if (!p) return { ...base, name: s.label ?? s.ref, nameEn: s.label ?? s.ref, lngLat: null, warnings: [{ kind: 'gone' }] };
   const r: ResolvedStop = { ...base, name: p.name, nameEn: p.nameEn ?? p.name, lngLat: p.lngLat };
+  if (isIslet({ id: s.ref, ...p })) r.islet = true;
   if (!p.hours) r.warnings.push({ kind: 'hoursUnknown' });
   else {
     const atStart = deps.openAt(p.hours, r.start).state;
@@ -275,7 +279,7 @@ export function buildTimeline(plan: Plan, deps: PlanDeps, lineStops: (lineId: st
       const a = stops[i];
       const b = stops[i + 1];
       if (b.start < a.end) b.warnings.push({ kind: 'overlap', with: a.name });
-      if (!a.lngLat || !b.lngLat) {
+      if (!a.lngLat || !b.lngLat || a.islet || b.islet) {
         connections.push({ mode: 'none' });
         continue;
       }
@@ -291,12 +295,12 @@ export function buildTimeline(plan: Plan, deps: PlanDeps, lineStops: (lineId: st
     const first = stops[0];
     const last = stops[stops.length - 1];
     if (ends.start && first) {
-      const conn = first.lngLat ? connectBy(deps, ends.start.ll, first.lngLat, first.start, lineStops) : ({ mode: 'none' } as const);
+      const conn = first.lngLat && !first.islet ? connectBy(deps, ends.start.ll, first.lngLat, first.start, lineStops) : ({ mode: 'none' } as const);
       start = { point: ends.start, conn, leave: leaveFor(conn, first.start) };
       const at = conn.mode === 'ferry' ? arrivalOf(conn, first.start) : null; // a walk is timed to arrive on time
       if (at !== null && at > first.start + CONFIG.plan.lateToleranceMin * 60_000) first.warnings.push({ kind: 'late', arrive: at });
     }
-    if (ends.end && last) end = { point: ends.end, conn: last.lngLat ? connect(deps, last.lngLat, ends.end.ll, last.end, lineStops) : { mode: 'none' } };
+    if (ends.end && last) end = { point: ends.end, conn: last.lngLat && !last.islet ? connect(deps, last.lngLat, ends.end.ll, last.end, lineStops) : { mode: 'none' } };
     const sd = serviceDay(stopMs(day, 12 * 60));
     return { day, stops, connections, start, end, simulatedFerries: !deps.timetableValid(sd) };
   });
