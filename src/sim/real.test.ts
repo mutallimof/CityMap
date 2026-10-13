@@ -12,7 +12,8 @@ import { ROUND } from './fixtures';
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
 const tt = json<TimetableFile>('data/timetables.json');
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
-const net = buildNetwork(json<{ lines: never[] }>('data/lines.json').lines, json('data/routes.geojson'), 41.05);
+// Şehir Hatları lines only: these tests pin that network's behaviour; the private operators' lines are tested in src/sim/operators.test.ts.
+const net = buildNetwork(json<{ lines: { operator?: string }[] }>('data/lines.json').lines.filter((l) => !l.operator) as never, json('data/routes.geojson'), 41.05);
 const legsOf = (id: string) => net.inputs.find((i) => i.line.id === id)!.legs;
 const dayOf = (iso: string) => Date.parse(`${iso}T00:00:00Z`) / 86_400_000;
 const MON = dayOf('2026-10-12');

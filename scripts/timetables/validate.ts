@@ -87,7 +87,7 @@ export function validateTimetables(now = Date.now()): { problems: string[]; warn
     }
     summary.push(`${id}: ${lt.trips.length} trips (${lt.pdf.join(' + ')})`);
   }
-  for (const l of lines) if (!tt.lines?.[l.id]) summary.push(`${l.id}: no timetable — simulated`);
+  for (const l of lines) if (!l.operator && !tt.lines?.[l.id]) summary.push(`${l.id}: no timetable — simulated`);
 
   // Committed trips must be exactly what the rules make of the parsed tables.
   if (existsSync('data/timetables-source.json')) {

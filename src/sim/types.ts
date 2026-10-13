@@ -22,6 +22,8 @@ export interface LineSpec {
   service: ServiceSpec;
   /** Open questions for a human (data/catalog/lines.json). */
   toCheck?: string[];
+  /** Private operator id (data/catalog/operators.json: 'turyol', 'dentur'); absent = Şehir Hatları. */
+  operator?: string;
 }
 
 /** One sailing leg between two stops of a line (undirected geometry from → to). */
@@ -107,6 +109,11 @@ export interface Departure {
   /** Footnote marker and Kadıköy pier, as printed. */
   mark?: string;
   pier?: 'old' | 'new';
+  /**
+   * A private operator's sailing printed to several destinations (scripts/operators merge): the piers it
+   * calls at before `toStopId`. Their order is not printed (pier board †).
+   */
+  via?: string[];
 }
 
 export type VesselPhase = 'docked' | 'underway';

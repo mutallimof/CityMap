@@ -1,0 +1,186 @@
+{
+  "_comment": "Private ferry operators read by scripts/operators/scrape.ts (internal, never shown as a list in the UI). Facts only: departure times per pier pair and day type. Pier ids are in data/catalog/piers.json (positions from OSM only). horizonDays: neither site prints a validity period, so a read counts for this many days (the validator warns 30 days before, i.e. after two missed weekly reads); minIntervalDays: at most one read per operator in this many days unless FORCE=1. Turyol 'kalkis' = the site's own TarifeKalkisId value (main line type _ line type _ main pier _ pier), 'varis' = TarifeVarisId; a pair is read only when the site's GetVarislar2 list offers it, and its result title must name the pair ('title', prefixes; the site prints a Kadıköy destination as just 'Kadıköy', the pier id in the request tells Yeni from Metro). Lines or piers left out on purpose and why: CLAUDE.md (Private operators).",
+  "horizonDays": 45,
+  "minIntervalDays": 6,
+  "operators": [
+    {
+      "id": "turyol",
+      "name": "Turyol",
+      "site": "https://www.turyol.com",
+      "file": "data/timetables-turyol.json",
+      "source": "Turyol timetable (turyol.com)",
+      "publisher": "S.S. Turizm ve Yolcu Deniz Taşıyıcılar Kooperatifi (Turyol)",
+      "url": "https://www.turyol.com/Home/Tarifeler"
+    },
+    {
+      "id": "dentur",
+      "name": "Dentur Avrasya",
+      "site": "https://www.denturavrasya.com",
+      "file": "data/timetables-dentur.json",
+      "source": "Dentur Avrasya timetable (denturavrasya.com)",
+      "publisher": "Dentur Avrasya",
+      "url": "https://www.denturavrasya.com/tr-TR/hatlarimiz"
+    }
+  ],
+  "lines": [
+    {
+      "id": "turyol-kadikoy-karakoy-eminonu",
+      "operator": "turyol",
+      "holidays": "none",
+      "turyol": [
+        {
+          "from": "karakoy-turyol",
+          "to": "kadikoy-yeni-turyol",
+          "kalkis": "1_101_2_102",
+          "varis": "105",
+          "title": [
+            "karaköy",
+            "kadıköy"
+          ]
+        },
+        {
+          "from": "kadikoy-yeni-turyol",
+          "to": "karakoy-turyol",
+          "kalkis": "1_101_5_105",
+          "varis": "102",
+          "title": [
+            "kadıköy yeni",
+            "karaköy"
+          ]
+        },
+        {
+          "from": "eminonu-turyol",
+          "to": "kadikoy-yeni-turyol",
+          "kalkis": "1_101_1_101",
+          "varis": "105",
+          "title": [
+            "eminönü",
+            "kadıköy"
+          ]
+        },
+        {
+          "from": "kadikoy-yeni-turyol",
+          "to": "eminonu-turyol",
+          "kalkis": "1_101_5_105",
+          "varis": "101",
+          "title": [
+            "kadıköy yeni",
+            "eminönü"
+          ]
+        }
+      ],
+      "merge": [
+        {
+          "from": "kadikoy-yeni-turyol",
+          "to": [
+            "karakoy-turyol",
+            "eminonu-turyol"
+          ],
+          "why": "the OSM route relation 'Kadıköy (Çayırbaşı) - Karaköy (Turyol) - Eminönü'"
+        }
+      ]
+    },
+    {
+      "id": "turyol-uskudar-karakoy-eminonu",
+      "operator": "turyol",
+      "holidays": "none",
+      "turyol": [
+        {
+          "from": "karakoy-turyol",
+          "to": "uskudar-turyol",
+          "kalkis": "1_101_2_102",
+          "varis": "103",
+          "title": [
+            "karaköy",
+            "üsküdar"
+          ]
+        },
+        {
+          "from": "uskudar-turyol",
+          "to": "karakoy-turyol",
+          "kalkis": "1_101_3_103",
+          "varis": "102",
+          "title": [
+            "üsküdar",
+            "karaköy"
+          ]
+        },
+        {
+          "from": "eminonu-turyol",
+          "to": "uskudar-turyol",
+          "kalkis": "1_101_1_101",
+          "varis": "103",
+          "title": [
+            "eminönü",
+            "üsküdar"
+          ]
+        },
+        {
+          "from": "uskudar-turyol",
+          "to": "eminonu-turyol",
+          "kalkis": "1_101_3_103",
+          "varis": "101",
+          "title": [
+            "üsküdar",
+            "eminönü"
+          ]
+        }
+      ],
+      "merge": [
+        {
+          "from": "uskudar-turyol",
+          "to": [
+            "karakoy-turyol",
+            "eminonu-turyol"
+          ],
+          "why": "nearest pier first (Karaköy) — nothing printed or mapped says which comes first"
+        }
+      ]
+    },
+    {
+      "id": "turyol-karakoy-kadikoy-metro",
+      "operator": "turyol",
+      "holidays": "none",
+      "turyol": [
+        {
+          "from": "karakoy-turyol",
+          "to": "kadikoy-metro-turyol",
+          "kalkis": "1_101_2_102",
+          "varis": "104",
+          "title": [
+            "karaköy",
+            "kadıköy"
+          ]
+        },
+        {
+          "from": "kadikoy-metro-turyol",
+          "to": "karakoy-turyol",
+          "kalkis": "1_101_4_104",
+          "varis": "102",
+          "title": [
+            "kadıköy metro",
+            "karaköy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dentur-uskudar-kabatas",
+      "operator": "dentur",
+      "holidays": "none",
+      "dentur": {
+        "page": "https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas",
+        "columns": {
+          "ÜSKÜDAR": {
+            "from": "uskudar-dentur",
+            "to": "kabatas-dentur"
+          },
+          "KABATAŞ": {
+            "from": "kabatas-dentur",
+            "to": "uskudar-dentur"
+          }
+        }
+      }
+    }
+  ]
+}

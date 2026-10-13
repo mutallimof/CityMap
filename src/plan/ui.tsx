@@ -235,7 +235,7 @@ function ConnectionRow({ c }: { c: Connection }) {
     <div className="plancon plancon--ferry">
       <div>
         <span className="swatch swatch--sm" style={{ background: line?.color }} /> ⛴ <b>{hhmm(c.dep)}</b> {name(c.fromPier)} → {name(c.toPier)} · {Math.round((c.arr - c.dep) / 60_000)} {t('min')}{' '}
-        {!c.real && <TimetableBadge real={false} />}
+        {!c.real && <TimetableBadge real={false} lineId={c.lineId} />}
       </div>
       <small className="muted">
         {line?.name[lang]} · {t('walkToPier')} {c.walkToMin} {t('min')} · {t('walkFromPier')} {c.walkFromMin} {t('min')}

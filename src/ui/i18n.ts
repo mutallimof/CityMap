@@ -10,6 +10,8 @@ const STRINGS = {
   oldPier: { tr: 'Eski iskele', en: 'old pier' },
   newPier: { tr: 'Yeni iskele', en: 'new pier' },
   dirInferred: { tr: 'Yön, hat güzergâhından çıkarılmıştır', en: 'Direction inferred from the line route' },
+  readOn: { tr: 'okundu', en: 'read' },
+  continuousService: { tr: 'arası sürekli sefer (tarifede saat yok)', en: 'continuous service (no times printed)' },
   tapHint: { tr: 'Bir vapura — ya da altın bir martıya — dokun', en: 'Tap a vapur — or a golden gull' },
   now: { tr: 'Şimdi', en: 'Now' },
   next: { tr: 'Sonraki', en: 'Next' },

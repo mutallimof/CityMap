@@ -4,6 +4,8 @@
  *   data/stories.json — OSM ref, name, position in our area, Wikipedia text + link, licensed photo
  *   data/timetables.json — real ferry timetables (scripts/timetables/validate.ts); warns in the run
  *                         summary when the timetable ends within 30 days
+ *   data/timetables-<operator>.json — private operators' timetables (scripts/operators/validate.ts); warns
+ *                         when a line's last good read is getting old
  * Also refuses a refresh that suddenly loses most of the data compared with the committed file
  * (a site redesign or an outage must not wipe the map). Exit code 1 on any problem.
  *
@@ -12,6 +14,7 @@
 import { execSync } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { CONFIG } from '../src/config';
+import { validateOperatorTimetables } from './operators/validate';
 import { validateTimetables } from './timetables/validate';
 
 export const CATEGORIES = ['concert', 'theatre', 'dance', 'exhibition', 'workshop', 'talk', 'festival', 'film', 'kids', 'other'] as const;
@@ -140,7 +143,10 @@ if (process.argv[1]?.endsWith('validate-data.ts')) {
   const tt = validateTimetables();
   for (const p of tt.problems) bad(`timetables: ${p}`);
   console.log(`timetables: ${tt.summary.at(-1)}`);
-  for (const w of tt.warnings) {
+  const ops = validateOperatorTimetables();
+  for (const p of ops.problems) bad(`operator timetables: ${p}`);
+  for (const l of ops.summary) console.log(`operator timetables: ${l}`);
+  for (const w of [...tt.warnings, ...ops.warnings]) {
     console.log(`::warning::${w}`);
     if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `⚠️ ${w}\n`);
   }

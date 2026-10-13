@@ -300,6 +300,142 @@
         "Çubuklu: the passenger pier way/525436006 'Çubuklu İskelesi', not the Çubuklu–İstinye car-ferry terminal next to it.",
         "Büyükdere is on the other line; Kandilli and Küçüksu are not called at by this line in the PDF."
       ]
+    },
+    {
+      "id": "turyol-kadikoy-karakoy-eminonu",
+      "name": {
+        "tr": "Kadıköy – Karaköy – Eminönü",
+        "en": "Kadıköy – Karaköy – Eminönü"
+      },
+      "color": "#D9A27E",
+      "stops": [
+        "kadikoy-yeni-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "pattern": [
+        "kadikoy-yeni-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "berths": [
+        "kadikoy-yeni-turyol-main",
+        "karakoy-turyol-main",
+        "eminonu-turyol-main"
+      ],
+      "service": {
+        "first": "06:55",
+        "last": "21:50",
+        "headwayPeak": 20,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Turyol prints departures per pier pair; Kadıköy Yeni → Karaköy and → Eminönü share every time, so they are drawn as one boat calling at Karaköy first (OSM route relation order) — the order is not printed.",
+        "Which OSM pier is 'Kadıköy Yeni': way/226127060 ('Turyol Eminönü ve Karaköy İskelesi') by its destinations; the Metro pier is the end of the OSM route 'Kadıköy (Metro Durağı) - Karaköy (Turyol)'."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "turyol-uskudar-karakoy-eminonu",
+      "name": {
+        "tr": "Üsküdar – Karaköy – Eminönü",
+        "en": "Üsküdar – Karaköy – Eminönü"
+      },
+      "color": "#9AA8D8",
+      "stops": [
+        "uskudar-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "pattern": [
+        "uskudar-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "berths": [
+        "uskudar-turyol-main",
+        "karakoy-turyol-main",
+        "eminonu-turyol-main"
+      ],
+      "service": {
+        "first": "06:55",
+        "last": "21:05",
+        "headwayPeak": 20,
+        "headwayOff": 25,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Üsküdar → Karaköy and → Eminönü share every time: one boat, Karaköy first (nearest) — the order is not printed or mapped."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "turyol-karakoy-kadikoy-metro",
+      "name": {
+        "tr": "Karaköy – Kadıköy (Metro)",
+        "en": "Karaköy – Kadıköy (Metro)"
+      },
+      "color": "#E3C76B",
+      "stops": [
+        "karakoy-turyol",
+        "kadikoy-metro-turyol"
+      ],
+      "pattern": [
+        "karakoy-turyol",
+        "kadikoy-metro-turyol"
+      ],
+      "berths": [
+        "karakoy-turyol-main",
+        "kadikoy-metro-turyol-main"
+      ],
+      "service": {
+        "first": "17:05",
+        "last": "18:20",
+        "headwayPeak": 20,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Weekday evening sailings only (as printed)."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "dentur-uskudar-kabatas",
+      "name": {
+        "tr": "Üsküdar – Kabataş",
+        "en": "Üsküdar – Kabataş"
+      },
+      "color": "#7FC4A4",
+      "stops": [
+        "uskudar-dentur",
+        "kabatas-dentur"
+      ],
+      "pattern": [
+        "uskudar-dentur",
+        "kabatas-dentur"
+      ],
+      "berths": [
+        "uskudar-dentur-main",
+        "kabatas-dentur-main"
+      ],
+      "service": {
+        "first": "06:45",
+        "last": "00:00",
+        "headwayPeak": 10,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Kabataş: OSM node/12985066037 (operator Dentur Avrasya, end of the OSM route 'Üsküdar - Kabataş (Dentur Avrasya)') is tagged 'FIXME: precise location'.",
+        "Weekday 16:00–18:30 from Üsküdar and 08:10–09:10 from Kabataş: printed as 'continuous service' without times — no boats are drawn for it beyond the printed times."
+      ],
+      "operator": "dentur"
     }
   ]
 }

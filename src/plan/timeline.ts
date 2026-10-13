@@ -20,7 +20,8 @@ export interface PlanDeps {
   event(id: string): { title: string; start: string; place: string } | undefined;
   /** Open / closed / unknown at an instant from OSM opening hours. */
   openAt(hours: string | null | undefined, ms: number): { state: 'open' | 'closed' | 'unknown' };
-  piers: { id: string; name: string; nameEn: string; lngLat: LngLat }[];
+  /** `operator`: a private operator's own pier (closest piers are counted per operator, see piersNear). */
+  piers: { id: string; name: string; nameEn: string; lngLat: LngLat; operator?: string }[];
   /** Schedule of a service day (days since 1970-01-01, Istanbul). */
   getDay(day: number): DaySchedule & { modes: Record<string, LineMode> };
   /** Whether the real timetable covers a service day. */
@@ -148,14 +149,23 @@ function massOf(deps: PlanDeps, p: LngLat): number | null | undefined {
 /** A walk between two landmasses (see massOf) doesn't cross water. */
 const sameMass = (a: number | null | undefined, b: number | null | undefined) => a === undefined || (a !== null && a === b);
 
-/** Piers within walking distance of p, on its landmass. */
+/**
+ * Piers within walking distance of p, on its landmass: the closest `piersPerSide` of each operator's piers
+ * (a private operator's pier next to a Şehir Hatları one never pushes that one out).
+ */
 function piersNear(deps: PlanDeps, p: LngLat, mass: number | null | undefined): { id: string; minutes: number }[] {
-  return deps.piers
+  const near = deps.piers
     .filter((x) => sameMass(mass, deps.landOf?.(x.lngLat, CONFIG.plan.walk.pierSnapM)))
-    .map((x) => ({ id: x.id, ...walk(p, x.lngLat) }))
+    .map((x) => ({ id: x.id, op: x.operator ?? '', ...walk(p, x.lngLat) }))
     .filter((x) => x.km <= CONFIG.plan.walk.maxPierKm)
-    .sort((a, b) => a.km - b.km)
-    .slice(0, CONFIG.plan.walk.piersPerSide)
+    .sort((a, b) => a.km - b.km);
+  const taken = new Map<string, number>();
+  return near
+    .filter((x) => {
+      const n = taken.get(x.op) ?? 0;
+      taken.set(x.op, n + 1);
+      return n < CONFIG.plan.walk.piersPerSide;
+    })
     .map(({ id, minutes }) => ({ id, minutes }));
 }
 

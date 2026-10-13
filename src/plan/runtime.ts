@@ -30,9 +30,10 @@ function planDeps(): PlanDeps {
     place: (id) => places().byId.get(id),
     event: (id) => eventLookup().get(id),
     openAt: (h, ms) => openAt(h, ms),
-    piers: s.piers.features.map((f) => ({ id: f.properties.id, name: f.properties.name, nameEn: f.properties.nameEn, lngLat: f.geometry.coordinates as [number, number] })),
+    piers: s.piers.features.map((f) => ({ id: f.properties.id, name: f.properties.name, nameEn: f.properties.nameEn, lngLat: f.geometry.coordinates as [number, number], ...(f.properties.operator ? { operator: f.properties.operator } : {}) })),
     getDay: s.getDay,
-    timetableValid: (d) => timetableStatus(s.timetables, d) === 'valid',
+    // The Şehir Hatları file decides the day's note; each ferry leg also carries its own real / simulated label.
+    timetableValid: (d) => timetableStatus(s.timetables.find((f) => !f.operator) ?? null, d) === 'valid',
     landOf: (p, snapM) => s.land.landOf(p, snapM),
   };
 }

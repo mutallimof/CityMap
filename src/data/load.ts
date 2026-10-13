@@ -11,6 +11,8 @@ import districtsUrl from '../../data/districts.geojson?url';
 import routesUrl from '../../data/routes.geojson?url';
 import linesUrl from '../../data/lines.json?url';
 import timetablesUrl from '../../data/timetables.json?url';
+import turyolUrl from '../../data/timetables-turyol.json?url';
+import denturUrl from '../../data/timetables-dentur.json?url';
 import holidaysUrl from '../../data/catalog/holidays.json?url';
 import placesUrl from '../../data/places.geojson?url';
 import venuePlacesUrl from '../../data/venue-places.geojson?url';
@@ -26,6 +28,8 @@ export interface BerthProps {
   lngLat: [number, number];
   alongBearing: number;
   seawardBearing: number;
+  /** Private operators' berths: how their boats keep clear of the nearest Şehir Hatları berth (build-piers.ts). */
+  spread?: [number, number, number, number, number, number, number];
 }
 
 export interface PierProps {
@@ -33,6 +37,8 @@ export interface PierProps {
   name: string;
   nameEn: string;
   osm: string;
+  /** A private operator's own pier (data/catalog/operators.json id); absent = Şehir Hatları / public. */
+  operator?: string;
   berths: BerthProps[];
 }
 
@@ -60,7 +66,12 @@ const orNull = <T>(p: Promise<T>) =>
     console.warn(e);
     return null;
   });
-export const loadTimetables = () => orNull(getJson<TimetableFile>(timetablesUrl));
+/**
+ * Şehir Hatları (PDF, scripts/timetables) + the private operators' published timetables (scripts/operators).
+ * A file that fails to load is left out: its lines run on the simulated schedule.
+ */
+export const loadTimetables = async (): Promise<TimetableFile[]> =>
+  (await Promise.all([timetablesUrl, turyolUrl, denturUrl].map((u) => orNull(getJson<TimetableFile>(u))))).filter((f): f is TimetableFile => !!f);
 export const loadHolidays = () => orNull(getJson<HolidayFile>(holidaysUrl));
 /** Featured places + event venues (OSM via scripts/build-venues.ts; geocoded by the event scraper). */
 export async function loadPlaces(): Promise<FeatureCollection<Point, PlaceProps>> {

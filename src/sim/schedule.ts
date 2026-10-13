@@ -62,6 +62,8 @@ export interface PlannedTrip {
   id: string;
   calls: PlannedCall[];
   real: boolean;
+  /** The source prints the destinations, not the order of calls (private operators' merged sailings). */
+  orderInferred?: boolean;
 }
 
 /**
@@ -111,7 +113,17 @@ export function buildTrip({ line, legs }: LineInput, trip: PlannedTrip, p: Sched
     const leg = findLeg(legs, a.stop, b.stop);
     if (!leg) throw new Error(`${trip.id}: ${line.id} has no leg ${line.stops[a.stop]} → ${line.stops[b.stop]}`);
     if (a.board !== false && (!trip.real || a.dep !== undefined)) {
-      departures.push({ lineId: line.id, tripId: trip.id, stopId: line.stops[a.stop], t, toStopId, real: trip.real, ...(a.mark ? { mark: a.mark } : {}), ...(a.pier ? { pier: a.pier } : {}) });
+      departures.push({
+        lineId: line.id,
+        tripId: trip.id,
+        stopId: line.stops[a.stop],
+        t,
+        toStopId,
+        real: trip.real,
+        ...(a.mark ? { mark: a.mark } : {}),
+        ...(a.pier ? { pier: a.pier } : {}),
+        ...(trip.orderInferred ? { via: calls.slice(i + 1, -1).map((c) => line.stops[c.stop]) } : {}),
+      });
     }
     const natural = legProfile(leg.length, lineCruise, p.ramp).duration;
     const next = b.dep ?? b.atPier;

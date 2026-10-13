@@ -8,6 +8,9 @@
  * Beşiktaş departure sails to is our reading of the line route (rules.ts), not printed. Those
  * departures get a "direction inferred" note on the pier board. Simulated departures carry no
  * printed claim at all (the "Simulated schedule" label covers them). Pure.
+ *
+ * Private operators (scripts/operators) print each departure with its destination. Only their merged
+ * sailings (one boat printed to two destinations, `via`) have an inferred part: the order of the calls.
  */
 import type { Departure } from './types';
 
@@ -25,7 +28,7 @@ export const PRINTED_DIRECTION_TRIPS = [
   'uzun-bogaz-',
 ];
 
-/** True for a printed (real) departure whose destination we inferred from the line route. */
-export function directionInferred(d: Pick<Departure, 'tripId' | 'real'>): boolean {
-  return d.real && INFERRED_DIRECTION_TRIPS.some((p) => d.tripId.startsWith(p));
+/** True for a printed (real) departure whose destination (or order of calls) we inferred from the line route. */
+export function directionInferred(d: Pick<Departure, 'tripId' | 'real' | 'via'>): boolean {
+  return d.real && (INFERRED_DIRECTION_TRIPS.some((p) => d.tripId.startsWith(p)) || !!d.via?.length);
 }

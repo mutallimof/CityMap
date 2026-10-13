@@ -13,7 +13,8 @@ import { buildTimeline, type PlanDeps } from './timeline';
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
 const tt = json<TimetableFile>('data/timetables.json');
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
-const lines = json<{ lines: { id: string; stops: string[] }[] }>('data/lines.json').lines;
+// Şehir Hatları lines only: these tests pin that network's behaviour; the private operators' lines are tested in src/sim/operators.test.ts.
+const lines = json<{ lines: { id: string; stops: string[]; operator?: string }[] }>('data/lines.json').lines.filter((l) => !l.operator);
 const net = buildNetwork(lines as never, json('data/routes.geojson'), 41.05);
 const real = realTripSource(tt, holidays, (id) => net.inputs.find((i) => i.line.id === id)!.legs);
 const getDay = cachedDays((d) => buildDaySchedule(net.inputs, d, undefined, real), 8);

@@ -13,6 +13,7 @@
     "data:coastline": "NODE_OPTIONS=--max-old-space-size=6000 tsx scripts/build-coastline.ts",
     "data:fetch-osm": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-osm.ts",
     "data:fetch-nominatim": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-nominatim.ts",
+    "data:fetch-lookup": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-osm-lookup.ts",
     "data:routes": "NODE_OPTIONS=--max-old-space-size=4096 tsx scripts/build-routes.ts",
     "validate:routes": "tsx scripts/validate-routes.ts",
     "data:fetch-places": "NODE_USE_ENV_PROXY=1 tsx scripts/fetch-places.ts",
@@ -27,7 +28,8 @@
     "data:featured": "tsx scripts/build-featured.ts",
     "data:audio": "python3 scripts/audio/build-audio.py",
     "data:timetables": "tsx scripts/timetables/build-timetables.ts",
-    "validate:timetables": "tsx scripts/timetables/validate.ts"
+    "validate:timetables": "tsx scripts/timetables/validate.ts && tsx scripts/operators/validate.ts",
+    "data:operators": "NODE_USE_ENV_PROXY=1 tsx scripts/operators/scrape.ts"
   },
   "dependencies": {
     "@fontsource/fraunces": "^5.3.0",

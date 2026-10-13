@@ -2,7 +2,7 @@ import { useTicker } from '../../ui/hooks';
 import { formatCountdown, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { ui, useUi } from '../../ui/store';
-import { isReal, TimetableBadge, TimetableCredit } from './timetable';
+import { isReal, operatorName, TimetableBadge, TimetableCredit } from './timetable';
 
 /** Content for a selected vessel: its trip from → to, next stop + ETA countdown, progress, Follow. */
 export function VesselSheet({ id }: { id: string }) {
@@ -65,7 +65,7 @@ export function VesselSheet({ id }: { id: string }) {
       <button className={`pill ${follow ? 'pill--accent' : ''}`} onClick={() => ui.set({ follow: !follow })}>
         {follow ? `◉ ${t('following')}` : `◎ ${t('follow')}`}
       </button>
-      {real && <TimetableCredit />}
+      {real && <TimetableCredit lineIds={[line.id]} />}
     </div>
   );
 }
@@ -84,7 +84,7 @@ export function VesselHeader({ id }: { id: string }) {
       <div>
         <h2>{line.name[lang]}</h2>
         <small className="muted">
-          Vapur{n ? ` · #${n}` : ''} · <TimetableBadge real={real} />
+          {operatorName(line.id)} · Vapur{n ? ` · #${n}` : ''} · <TimetableBadge real={real} lineId={line.id} />
         </small>
       </div>
     </div>

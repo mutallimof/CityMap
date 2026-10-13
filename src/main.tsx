@@ -110,7 +110,8 @@ async function boot() {
 
   (map.getSource(SOURCE.routes) as GeoJSONSource).setData(routes);
   const [, s, , n] = CONFIG.bounds;
-  const berths = piers.features.flatMap((f) => f.properties.berths);
+  // Private operators' berths are marked: network.ts keeps them clear of the Şehir Hatları berths, which never change.
+  const berths = piers.features.flatMap((f) => f.properties.berths.map((b) => (f.properties.operator ? { ...b, operator: f.properties.operator } : b)));
   const network = buildNetwork(lines, routes, (s + n) / 2, berths);
   const docking = { turnSeconds: CONFIG.ferries.dockTurnSeconds, berthBlendM: CONFIG.ferries.berthBlendM, slotPadS: CONFIG.ferries.slotPadS, tightTurnM: CONFIG.ferries.tightTurnM };
   // The same with the drawn hull length of the moment (blocked vessels slide along the quay by it).
@@ -128,8 +129,10 @@ async function boot() {
   const legsOf = (id: string) => inputs.find((i) => i.line.id === id)?.legs ?? [];
   const real = stress > 0 ? undefined : realTripSource(timetables, holidays, legsOf, (m) => console.warn(`timetable: ${m} → simulated`));
   const getDay = cachedDays((day) => buildDaySchedule(inputs, day, undefined, real), 8);
-  const expiry = expiryWarning(timetables, toIstanbul(Date.now()).day);
-  if (expiry) console.warn(expiry);
+  for (const tt of timetables) {
+    const expiry = expiryWarning(tt, toIstanbul(Date.now()).day);
+    if (expiry) console.warn(expiry);
+  }
   const colors = new Map(lines.map((l) => [l.id, l.color]));
 
   const ferries = new VapurLayer({

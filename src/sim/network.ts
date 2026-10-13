@@ -26,6 +26,10 @@ export interface BerthGeometry {
   seawardBearing: number;
   /** Berth point (OSM), when known: lets close sibling berths of one pier spread apart for long drawn hulls. */
   lngLat?: LngLat;
+  /** Berth of a private operator's own pier (piers.geojson `operator`): never a Şehir Hatları berth's sibling. */
+  operator?: string;
+  /** Operator berths: how they keep clear of the nearest Şehir Hatları berth, from the coastline (build-piers.ts). */
+  spread?: [number, number, number, number, number, number, number];
 }
 
 /** Berths closer than this (m) belong to one pier for spreading (Eminönü 127 m, Beşiktaş 280 m apart). */
@@ -47,11 +51,27 @@ function berthSpread(b: BerthGeometry, all: BerthGeometry[]): StopBerth['spread'
 }
 
 /**
+ * Docking geometry of one stop. Şehir Hatları berths spread only from each other, exactly as before private
+ * operators were added (half the shortfall each, `berthSpread`). A private operator's berth never shares
+ * slots with them (Şehir Hatları boats don't see it, so they never change) and keeps clear of the nearest one
+ * by the spread build-piers.ts worked out against the coastline (moves alone, capped where land begins).
+ */
+function stopBerth(id: string, berthById: Map<string, BerthGeometry>, tier0: BerthGeometry[], tier1: boolean): StopBerth {
+  const g = berthById.get(id)!;
+  if (!tier1) return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0, spread: berthSpread(g, tier0) };
+  return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0, ...(g.spread ? { spread: g.spread } : {}) };
+}
+
+/**
  * Join line specs with their route legs; leg lengths come from the geometry itself.
  * `berths` (from piers.geojson) adds per-stop docking geometry (abreast slots are per stay: berths.ts).
  */
 export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineString, RouteProps>, refLat: number, berths: BerthGeometry[] = []): Network {
   const berthById = new Map(berths.map((b) => [b.id, b]));
+  // Private operators' piers' berths (and berths only their lines use) are tier 1; every other berth keeps its old neighbours.
+  const tier1 = new Set([...lines.filter((l) => l.operator).flatMap((l) => l.berths ?? []), ...berths.filter((b) => b.operator).map((b) => b.id)]);
+  for (const l of lines) if (!l.operator) for (const b of l.berths ?? []) tier1.delete(b);
+  const tier0 = berths.filter((b) => !tier1.has(b.id));
   const paths = new Map<string, LinePath>();
   const inputs: LineInput[] = lines.map((line) => {
     const legs: LegSpec[] = [];
@@ -73,10 +93,7 @@ export function buildNetwork(lines: LineSpec[], routes: FeatureCollection<LineSt
     if (missing.length) throw new Error(`${line.id}: no route reaches ${missing.join(', ')}`);
     const p: LinePath = { lineId: line.id, legs: geoms, stopPoint: stopPoint as LngLat[] };
     if (line.berths && line.berths.every((id) => berthById.has(id))) {
-      p.berths = line.berths.map((id): StopBerth => {
-        const g = berthById.get(id)!;
-        return { berthId: id, along: g.alongBearing, seaward: g.seawardBearing, slot: 0, spread: berthSpread(g, berths) };
-      });
+      p.berths = line.berths.map((id) => stopBerth(id, berthById, tier0, tier1.has(id)));
     }
     paths.set(line.id, p);
     return { line, legs };

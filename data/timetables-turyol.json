@@ -1,0 +1,5499 @@
+{
+ "operator": {
+  "id": "turyol",
+  "name": "Turyol",
+  "site": "https://www.turyol.com"
+ },
+ "source": "Turyol timetable (turyol.com)",
+ "publisher": "S.S. Turizm ve Yolcu Deniz Taşıyıcılar Kooperatifi (Turyol)",
+ "url": "https://www.turyol.com/Home/Tarifeler",
+ "validFrom": "2026-10-13",
+ "validTo": "2026-11-27",
+ "generated": "2026-10-13",
+ "lines": {
+  "turyol-kadikoy-karakoy-eminonu": {
+   "pdf": [
+    "Turyol: Karaköy İskele Kalkış / Kadıköy",
+    "Turyol: Kadıköy Yeni İskele Kalkış / Karaköy",
+    "Turyol: Eminönü İskele Kalkış / Kadıköy",
+    "Turyol: Kadıköy Yeni İskele Kalkış / Eminönü"
+   ],
+   "notes": [
+    "Each printed departure (pier → pier, day type) is one direct sailing; arrival times are not printed and come from the route length.",
+    "The source prints no holiday timetable: on public holidays this line shows the simulated schedule.",
+    "The source prints no validity period: valid from the day this content was first read until 45 days after the last successful read.",
+    "kadikoy-yeni-turyol → karakoy-turyol → eminonu-turyol: one sailing when the times are printed identically (order of calls inferred: the OSM route relation 'Kadıköy (Çayırbaşı) - Karaköy (Turyol) - Eminönü')."
+   ],
+   "trips": [
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0655",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "06:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0710",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "07:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0715",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "07:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0725",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "07:25"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0730",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "07:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0730",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "07:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0740",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "07:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0750",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "07:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0750",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "07:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0800",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0810",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "08:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0810",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:10"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0820",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0830",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "08:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0830",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0840",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0850",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "08:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0850",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0855",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0900",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0910",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "09:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0910",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:10"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0915",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0920",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "09:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0935",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0940",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:0950",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "09:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:0950",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:0955",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1000",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1010",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "10:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1010",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:10"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1015",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1020",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "10:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1035",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1040",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1050",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "10:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1050",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1055",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1100",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1110",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "11:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1115",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1120",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "11:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1130",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "11:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1135",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1140",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "11:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1150",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "11:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1155",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1200",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1210",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "12:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1215",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1220",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1230",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "12:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1235",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1240",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1250",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "12:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1255",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1300",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1310",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "13:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1315",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1320",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1330",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "13:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1335",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1340",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1350",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "13:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1355",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1400",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1410",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "14:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1415",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1420",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1430",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "14:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1435",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1440",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1450",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "14:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1455",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1500",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1510",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "15:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1515",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1520",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1530",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "15:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1535",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1540",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1550",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "15:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1555",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1600",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1610",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "16:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1620",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1625",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:25"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1630",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "16:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1635",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1640",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1645",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:45"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1650",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "16:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1700",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1705",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:05"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1710",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "17:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1715",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1720",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1730",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "17:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1735",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1740",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1750",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "17:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1755",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1800",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1810",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "18:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1815",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1820",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1830",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "18:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1835",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1840",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1850",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "18:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1855",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1900",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1910",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "19:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1915",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1920",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1930",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "19:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1935",
+     "days": [
+      "weekday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1935",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1940",
+     "days": [
+      "weekday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1945",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:45"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:1950",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:1950",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "19:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1950",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:1955",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:55"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2000",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2005",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:05"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2010",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:10"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2010",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "20:10"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2015",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:15"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2020",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:20"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2020",
+     "days": [
+      "weekday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "20:20"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2025",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:25"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2030",
+     "days": [
+      "weekday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2030",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "20:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2035",
+     "days": [
+      "weekday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2040",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:40"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2045",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:45"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2045",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:45"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2050",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "20:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2050",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:50"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2100",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "21:00"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2105",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "21:05"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2120",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "21:20"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:eminonu-turyol>kadikoy-yeni-turyol:2130",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "21:30"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:karakoy-turyol>kadikoy-yeni-turyol:2135",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "21:35"
+      },
+      {
+       "stop": "kadikoy-yeni-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-kadikoy-karakoy-eminonu:kadikoy-yeni-turyol>karakoy-turyol+eminonu-turyol:2150",
+     "days": [
+      "weekday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "kadikoy-yeni-turyol",
+       "dep": "21:50"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    }
+   ],
+   "url": "https://www.turyol.com/Home/Tarifeler",
+   "fetched": "2026-10-13T02:38:56.388Z",
+   "holidays": "none",
+   "validFrom": "2026-10-13",
+   "validTo": "2026-11-27"
+  },
+  "turyol-uskudar-karakoy-eminonu": {
+   "pdf": [
+    "Turyol: Karaköy İskele Kalkış / Üsküdar",
+    "Turyol: Üsküdar İskele Kalkış / Karaköy",
+    "Turyol: Eminönü İskele Kalkış / Üsküdar",
+    "Turyol: Üsküdar İskele Kalkış / Eminönü"
+   ],
+   "notes": [
+    "Each printed departure (pier → pier, day type) is one direct sailing; arrival times are not printed and come from the route length.",
+    "The source prints no holiday timetable: on public holidays this line shows the simulated schedule.",
+    "The source prints no validity period: valid from the day this content was first read until 45 days after the last successful read.",
+    "uskudar-turyol → karakoy-turyol → eminonu-turyol: one sailing when the times are printed identically (order of calls inferred: nearest pier first (Karaköy) — nothing printed or mapped says which comes first)."
+   ],
+   "trips": [
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0655",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "06:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0715",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "07:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0730",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "07:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0735",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "07:35"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0735",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "07:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0755",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "07:55"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0755",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "07:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0800",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0815",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:15"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0815",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "08:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0820",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0835",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:35"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0835",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "08:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0840",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "08:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0840",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0845",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "08:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0855",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "08:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0900",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0905",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0915",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "09:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0920",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0925",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0925",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0930",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0935",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "09:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0940",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0945",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:0950",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "09:50"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:0955",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "09:55"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:0955",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "09:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1000",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1005",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1015",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:15"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1015",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "10:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1020",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1020",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1025",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1035",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "10:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1040",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "10:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1045",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "10:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1045",
+     "days": [
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "10:45"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1055",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "10:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1100",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1105",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "11:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1115",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "11:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1120",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1125",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "11:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1135",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "11:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1140",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "11:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1145",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "11:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1155",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "11:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1200",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1205",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1215",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "12:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1220",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1225",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1235",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "12:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1240",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "12:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1245",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "12:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1255",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "12:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1300",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1305",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1315",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "13:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1320",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1325",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1335",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "13:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1340",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "13:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1345",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "13:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1355",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "13:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1400",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1405",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1415",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "14:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1420",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1425",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1435",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "14:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1440",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "14:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1445",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "14:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1455",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "14:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1500",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1505",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1515",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "15:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1520",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1525",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1535",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "15:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1540",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "15:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1545",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "15:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1555",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "15:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1600",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1605",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1615",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "16:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1620",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1625",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1635",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "16:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1640",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1645",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "16:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1650",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "16:50"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1655",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "16:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1700",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1705",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1710",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:10"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1715",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "17:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1720",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1720",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1725",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1730",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1735",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "17:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1740",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1740",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1745",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1750",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "17:50"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1755",
+     "days": [
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "17:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1800",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1800",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1800",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "18:00"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1805",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1810",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:10"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1815",
+     "days": [
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "18:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1820",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1820",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1825",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1830",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1830",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "18:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1835",
+     "days": [
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "18:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1840",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1840",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1845",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1850",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "18:50"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1900",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1900",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1900",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "19:00"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1905",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1915",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:15"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1920",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1920",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:20"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1925",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:25"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1930",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:1930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "19:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1935",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:35"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1935",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:35"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:1940",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "19:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1940",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:40"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:1945",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "19:45"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:2000",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:2000",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "20:00"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:2005",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:2030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "20:30"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:uskudar-turyol>karakoy-turyol+eminonu-turyol:2030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "orderInferred": true,
+     "calls": [
+      {
+       "stop": "uskudar-turyol",
+       "dep": "20:30"
+      },
+      {
+       "stop": "karakoy-turyol"
+      },
+      {
+       "stop": "eminonu-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:2035",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "20:35"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:eminonu-turyol>uskudar-turyol:2100",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "eminonu-turyol",
+       "dep": "21:00"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-uskudar-karakoy-eminonu:karakoy-turyol>uskudar-turyol:2105",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "21:05"
+      },
+      {
+       "stop": "uskudar-turyol"
+      }
+     ]
+    }
+   ],
+   "url": "https://www.turyol.com/Home/Tarifeler",
+   "fetched": "2026-10-13T02:38:56.388Z",
+   "holidays": "none",
+   "validFrom": "2026-10-13",
+   "validTo": "2026-11-27"
+  },
+  "turyol-karakoy-kadikoy-metro": {
+   "pdf": [
+    "Turyol: Karaköy İskele Kalkış / Kadıköy",
+    "Turyol: Kadıköy Metro İskele Kalkış / Karaköy"
+   ],
+   "notes": [
+    "Each printed departure (pier → pier, day type) is one direct sailing; arrival times are not printed and come from the route length.",
+    "The source prints no holiday timetable: on public holidays this line shows the simulated schedule.",
+    "The source prints no validity period: valid from the day this content was first read until 45 days after the last successful read."
+   ],
+   "trips": [
+    {
+     "id": "turyol-karakoy-kadikoy-metro:karakoy-turyol>kadikoy-metro-turyol:1705",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:05"
+      },
+      {
+       "stop": "kadikoy-metro-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:karakoy-turyol>kadikoy-metro-turyol:1720",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:20"
+      },
+      {
+       "stop": "kadikoy-metro-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:kadikoy-metro-turyol>karakoy-turyol:1735",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kadikoy-metro-turyol",
+       "dep": "17:35"
+      },
+      {
+       "stop": "karakoy-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:karakoy-turyol>kadikoy-metro-turyol:1740",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "17:40"
+      },
+      {
+       "stop": "kadikoy-metro-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:kadikoy-metro-turyol>karakoy-turyol:1755",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kadikoy-metro-turyol",
+       "dep": "17:55"
+      },
+      {
+       "stop": "karakoy-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:karakoy-turyol>kadikoy-metro-turyol:1800",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:00"
+      },
+      {
+       "stop": "kadikoy-metro-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:kadikoy-metro-turyol>karakoy-turyol:1815",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kadikoy-metro-turyol",
+       "dep": "18:15"
+      },
+      {
+       "stop": "karakoy-turyol"
+      }
+     ]
+    },
+    {
+     "id": "turyol-karakoy-kadikoy-metro:karakoy-turyol>kadikoy-metro-turyol:1820",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "karakoy-turyol",
+       "dep": "18:20"
+      },
+      {
+       "stop": "kadikoy-metro-turyol"
+      }
+     ]
+    }
+   ],
+   "url": "https://www.turyol.com/Home/Tarifeler",
+   "fetched": "2026-10-13T02:38:56.388Z",
+   "holidays": "none",
+   "validFrom": "2026-10-13",
+   "validTo": "2026-11-27"
+  }
+ }
+}

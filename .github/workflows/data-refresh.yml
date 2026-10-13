@@ -3,6 +3,8 @@
 #   - stories: once a month (OSM + Wikidata + Wikipedia + Commons; see scripts/stories)
 #   - ferry timetables: checked every run (validate:data); a warning in the run summary from 30 days
 #     before the timetable ends (it comes from the operator's PDF by hand — scripts/timetables/README.md)
+#   - private ferry operators (Turyol, Dentur Avrasya; scripts/operators): read once a week (the script skips
+#     until 6 days have passed since its last read; what=operators forces a read now)
 # Data is validated first; nothing is committed or deployed when it's empty or broken.
 name: Refresh data (events daily, stories monthly)
 
@@ -13,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       what:
-        description: events, stories, places (auto-featured) or both (= all)
+        description: events, stories, places (auto-featured), operators (ferry timetables, re-read now) or both (= all)
         default: both
       venues:
         description: only these venue ids, comma-separated (re-fetches them today; for fixing a scraper)
@@ -64,6 +66,11 @@ jobs:
         if: contains(steps.what.outputs.what, 'stories') || steps.what.outputs.what == 'both'
         run: npm run data:stories
         continue-on-error: true
+      - name: Read private ferry operators' timetables (weekly; skipped until 6 days since the last read)
+        run: npm run data:operators
+        continue-on-error: true
+        env:
+          FORCE: ${{ (contains(steps.what.outputs.what, 'operators') || steps.what.outputs.what == 'both') && github.event_name == 'workflow_dispatch' && '1' || '' }}
       - name: Validate data (fails → nothing is committed or deployed)
         run: npm run validate:data
       - name: Commit data
@@ -71,7 +78,7 @@ jobs:
         run: |
           git config user.name "data-refresh-bot"
           git config user.email "data-refresh-bot@users.noreply.github.com"
-          for f in data/events.json data/stories.json data/events-log.json data/event-venues.geojson data/venue-geocode.json data/places-auto.geojson; do if [ -f "$f" ]; then git add "$f"; fi; done
+          for f in data/events.json data/stories.json data/events-log.json data/event-venues.geojson data/venue-geocode.json data/places-auto.geojson data/timetables-turyol.json data/timetables-dentur.json data/operators-log.json; do if [ -f "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No data changes."
           else

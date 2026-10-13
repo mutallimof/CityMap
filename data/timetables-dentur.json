@@ -1,0 +1,3577 @@
+{
+ "operator": {
+  "id": "dentur",
+  "name": "Dentur Avrasya",
+  "site": "https://www.denturavrasya.com"
+ },
+ "source": "Dentur Avrasya timetable (denturavrasya.com)",
+ "publisher": "Dentur Avrasya",
+ "url": "https://www.denturavrasya.com/tr-TR/hatlarimiz",
+ "validFrom": "2026-10-13",
+ "validTo": "2026-11-27",
+ "generated": "2026-10-13",
+ "lines": {
+  "dentur-uskudar-kabatas": {
+   "pdf": [
+    "Dentur Avrasya: ÜSKÜDAR KALKIŞ (/tr-TR/hatlarimiz/uskudar-kabatas)",
+    "Dentur Avrasya: KABATAŞ KALKIŞ (/tr-TR/hatlarimiz/uskudar-kabatas)"
+   ],
+   "notes": [
+    "Each printed departure (pier → pier, day type) is one direct sailing; arrival times are not printed and come from the route length.",
+    "The source prints no holiday timetable: on public holidays this line shows the simulated schedule.",
+    "The source prints no validity period: valid from the day this content was first read until 45 days after the last successful read.",
+    "“Arası sürekli sefer” (continuous service) windows are printed without times: shown as a note, no departures are made up."
+   ],
+   "trips": [
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0645",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "06:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0655",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "06:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0700",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "07:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0710",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "07:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0715",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "07:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0725",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "07:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0730",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "07:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0740",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "07:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0740",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "07:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0750",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "07:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0750",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "07:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0800",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "08:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0800",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0810",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "08:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0810",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0815",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0820",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0825",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "08:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0830",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0840",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "08:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0840",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0845",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0850",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "08:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0855",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "08:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0900",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0910",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0910",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0915",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0920",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0920",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0925",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0930",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0940",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0940",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0945",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0950",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:0950",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "09:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:0955",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "09:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1000",
+     "days": [
+      "weekday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1000",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1010",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1010",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1015",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1020",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1020",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1025",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1030",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1040",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1040",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1045",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1050",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1050",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "10:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1055",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "10:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1100",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1100",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1110",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1110",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1115",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1120",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1120",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1125",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1130",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1130",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1140",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1140",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1145",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1150",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1150",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "11:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1155",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "11:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1200",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1200",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1210",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1210",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1215",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1220",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1220",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1225",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1230",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1230",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1240",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1240",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1245",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1250",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1250",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "12:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1255",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "12:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1300",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1300",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1310",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1310",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1315",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1320",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1320",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1325",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1330",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1330",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1340",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1340",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1345",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1350",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1350",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "13:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1355",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "13:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1400",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1400",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1410",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1410",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1415",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1420",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1420",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1425",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1430",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1430",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1440",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1440",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1445",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1450",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1450",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "14:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1455",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "14:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1500",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1500",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1510",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1510",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1515",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1520",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1520",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1525",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1530",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1530",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1540",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1540",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1545",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1550",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1550",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "15:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1555",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "15:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1600",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1600",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1610",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1610",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1615",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1620",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1620",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1625",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1630",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1630",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1640",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1640",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1645",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1650",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1650",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "16:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1655",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "16:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1700",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1700",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1710",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1710",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1715",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1720",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1720",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1725",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1730",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1730",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1740",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1740",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1745",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1750",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1750",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "17:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1755",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "17:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1800",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1800",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1810",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1810",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:10"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1815",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1820",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:20"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1820",
+     "days": [
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1825",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1830",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1830",
+     "days": [
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1840",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1840",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1845",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1850",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1850",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "18:50"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1855",
+     "days": [
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "18:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1900",
+     "days": [
+      "weekday",
+      "saturday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "19:00"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1900",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "19:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1910",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "19:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1915",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "19:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1925",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "19:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1930",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "19:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1940",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "19:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:1945",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "19:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:1955",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "19:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2000",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "20:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2010",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "20:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2015",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "20:15"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2025",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "20:25"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2030",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "20:30"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2040",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "20:40"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2045",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "20:45"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2055",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "20:55"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2100",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "21:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2110",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "21:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2120",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "21:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2130",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "21:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2140",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "21:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2150",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "21:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2200",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "22:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2210",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "22:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2220",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "22:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2230",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "22:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2240",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "22:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2250",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "22:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2300",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "23:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2310",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "23:10"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2320",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "23:20"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2330",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "23:30"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2340",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "23:40"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2350",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "23:50"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:uskudar-dentur>kabatas-dentur:2400",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "uskudar-dentur",
+       "dep": "24:00"
+      },
+      {
+       "stop": "kabatas-dentur"
+      }
+     ]
+    },
+    {
+     "id": "dentur-uskudar-kabatas:kabatas-dentur>uskudar-dentur:2415",
+     "days": [
+      "weekday",
+      "saturday",
+      "sunday"
+     ],
+     "calls": [
+      {
+       "stop": "kabatas-dentur",
+       "dep": "24:15"
+      },
+      {
+       "stop": "uskudar-dentur"
+      }
+     ]
+    }
+   ],
+   "continuous": [
+    {
+     "stop": "uskudar-dentur",
+     "to": "kabatas-dentur",
+     "days": [
+      "weekday"
+     ],
+     "start": "16:00",
+     "end": "18:30"
+    },
+    {
+     "stop": "kabatas-dentur",
+     "to": "uskudar-dentur",
+     "days": [
+      "weekday"
+     ],
+     "start": "08:10",
+     "end": "09:10"
+    }
+   ],
+   "url": "https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas",
+   "fetched": "2026-10-13T02:36:41.517Z",
+   "holidays": "none",
+   "validFrom": "2026-10-13",
+   "validTo": "2026-11-27"
+  }
+ }
+}

@@ -191,7 +191,12 @@ export interface BerthOffsetParams {
   slotSpacing: number;
   /** Drawn hull length: sibling berths of one pier closer than this spread apart (along the line between them). */
   lengthM?: number;
+  /** Real hull length (CONFIG.ferries.lengthM): how exaggerated `lengthM` is, for private operators' berths. */
+  realLengthM?: number;
 }
+
+/** Exaggeration the city-zoom shift of a private operator's berth is worked out for (scripts/build-piers.ts CITY_EXAG). */
+export const OPERATOR_CITY_EXAG = 3.9;
 
 /**
  * Seaward offset (metres east, north) of a vessel near a pier: clears the quay for exaggerated hulls
@@ -203,8 +208,17 @@ export function berthOffset(b: VesselPose['berth'], o: BerthOffsetParams): [numb
   const quay = Math.max(0, (o.beamM / 2) * (1 + o.quayClearance) - o.berthOffsetM);
   const d = (quay + b.slot * o.beamM * o.slotSpacing) * b.weight;
   // Two OSM berths of one pier closer than a drawn hull (Eminönü at city zoom): each moves half the shortfall away.
-  const s = b.spread && o.lengthM ? Math.max(0, (o.lengthM * 1.08 - b.spread[2]) / 2) * b.weight : 0;
-  return [Math.sin(r) * d + (s && b.spread![0] * s), Math.cos(r) * d + (s && b.spread![1] * s)];
+  const sp = b.spread;
+  if (sp && sp.length === 7 && o.lengthM) {
+    // A private operator's berth (build-piers.ts): its own shift away from Şehir Hatları boats, in drawn hull lengths,
+    // real-size → city-zoom interpolated by exaggeration (checked on water at both ends).
+    const f = Math.min(1, Math.max(0, (o.lengthM / (o.realLengthM ?? o.lengthM) - 1) / (OPERATOR_CITY_EXAG - 1)));
+    const e = (sp[3] + (sp[5] - sp[3]) * f) * o.lengthM * b.weight;
+    const n = (sp[4] + (sp[6] - sp[4]) * f) * o.lengthM * b.weight;
+    return [Math.sin(r) * d + e, Math.cos(r) * d + n];
+  }
+  const s = sp && o.lengthM ? Math.max(0, (o.lengthM * 1.08 - sp[2]) / 2) * b.weight : 0;
+  return [Math.sin(r) * d + (s && sp![0] * s), Math.cos(r) * d + (s && sp![1] * s)];
 }
 
 /** Slot / tight / blocked info of a service day's dock stays (cached per schedule in berths.ts). */

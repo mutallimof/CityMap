@@ -834,6 +834,286 @@
      41.107459
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "eminonu-turyol",
+    "name": "Eminönü (Turyol)",
+    "nameEn": "Eminönü (Turyol)",
+    "osm": "node/2478522774",
+    "operator": "turyol",
+    "berths": [
+     {
+      "id": "eminonu-turyol-main",
+      "name": "Eminönü (Turyol)",
+      "osm": "node/2478522774",
+      "lngLat": [
+       28.970596,
+       41.019016
+      ],
+      "alongBearing": 302.5,
+      "seawardBearing": 32.5,
+      "osmToCoastM": 5,
+      "spread": [
+       -0.9623,
+       0.2719,
+       303.7,
+       0,
+       0,
+       -0.1363,
+       -0.0927
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.970438,
+     41.018827
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "karakoy-turyol",
+    "name": "Karaköy (Turyol)",
+    "nameEn": "Karaköy (Turyol)",
+    "osm": "way/240079131",
+    "operator": "turyol",
+    "berths": [
+     {
+      "id": "karakoy-turyol-main",
+      "name": "Turyol İskelesi",
+      "osm": "way/240079131",
+      "lngLat": [
+       28.972539,
+       41.021493
+      ],
+      "alongBearing": 108.4,
+      "seawardBearing": 198.4,
+      "osmToCoastM": 0,
+      "spread": [
+       -0.9964,
+       -0.0851,
+       81.8,
+       0,
+       0,
+       -0.5804,
+       0.2721
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.973295,
+     41.021795
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uskudar-turyol",
+    "name": "Üsküdar (Turyol)",
+    "nameEn": "Üsküdar (Turyol)",
+    "osm": "node/4161740638",
+    "operator": "turyol",
+    "berths": [
+     {
+      "id": "uskudar-turyol-main",
+      "name": "Üsküdar",
+      "osm": "node/4161740638",
+      "lngLat": [
+       29.016123,
+       41.02903
+      ],
+      "alongBearing": 218.2,
+      "seawardBearing": 308.2,
+      "osmToCoastM": 0,
+      "spread": [
+       0.5242,
+       0.8516,
+       96.3,
+       0.2246,
+       0.365,
+       -0.5771,
+       0.3552
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.016403,
+     41.028862
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kadikoy-yeni-turyol",
+    "name": "Kadıköy Yeni (Turyol)",
+    "nameEn": "Kadıköy Yeni (Turyol)",
+    "osm": "way/226127060",
+    "operator": "turyol",
+    "berths": [
+     {
+      "id": "kadikoy-yeni-turyol-main",
+      "name": "Turyol Eminönü ve Karaköy İskelesi",
+      "osm": "way/226127060",
+      "lngLat": [
+       29.023723,
+       40.993769
+      ],
+      "alongBearing": 180,
+      "seawardBearing": 270,
+      "osmToCoastM": 13,
+      "spread": [
+       0.3964,
+       0.9181,
+       74.1,
+       0.165,
+       0.695,
+       -0.6772,
+       0.1607
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.023922,
+     40.993769
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kadikoy-metro-turyol",
+    "name": "Kadıköy Metro (Turyol)",
+    "nameEn": "Kadıköy Metro (Turyol)",
+    "osm": "way/236642399",
+    "operator": "turyol",
+    "berths": [
+     {
+      "id": "kadikoy-metro-turyol-main",
+      "name": "Kadıköy Turyol İskelesi",
+      "osm": "way/236642399",
+      "lngLat": [
+       29.020408,
+       40.991434
+      ],
+      "alongBearing": 240.5,
+      "seawardBearing": 330.5,
+      "osmToCoastM": 12,
+      "spread": [
+       -0.7943,
+       -0.6075,
+       314.2,
+       0,
+       0,
+       0,
+       0
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.020513,
+     40.991292
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uskudar-dentur",
+    "name": "Üsküdar (Dentur)",
+    "nameEn": "Üsküdar (Dentur)",
+    "osm": "node/2456974746",
+    "operator": "dentur",
+    "berths": [
+     {
+      "id": "uskudar-dentur-main",
+      "name": "Üsküdar",
+      "osm": "node/2456974746",
+      "lngLat": [
+       29.014663,
+       41.027913
+      ],
+      "alongBearing": 214.1,
+      "seawardBearing": 304.1,
+      "osmToCoastM": 4,
+      "spread": [
+       -0.8657,
+       -0.5005,
+       83.6,
+       0,
+       0,
+       -0.2664,
+       -0.2238
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.015784,
+     41.028044
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kabatas-dentur",
+    "name": "Kabataş (Dentur)",
+    "nameEn": "Kabataş (Dentur)",
+    "osm": "node/12985066037",
+    "operator": "dentur",
+    "berths": [
+     {
+      "id": "kabatas-dentur-main",
+      "name": "Kabataş",
+      "osm": "node/12985066037",
+      "lngLat": [
+       28.994223,
+       41.033872
+      ],
+      "alongBearing": 352.9,
+      "seawardBearing": 82.9,
+      "osmToCoastM": 28,
+      "spread": [
+       0.1886,
+       0.9821,
+       89.5,
+       0,
+       0,
+       -0.0901,
+       0.5606
+      ]
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.994202,
+     41.03387
+    ]
+   }
   }
  ]
 }

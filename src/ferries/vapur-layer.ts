@@ -287,7 +287,7 @@ export class VapurLayer implements CustomLayerInterface {
   /** Seaward offset (local metres) near a pier: quay clearance + abreast slot (pure, see sim/fleet). */
   private berthOffset(v: VesselPose, exag: number): [number, number] {
     const f = CONFIG.ferries;
-    return berthOffset(v.berth, { beamM: f.beamM * exag, quayClearance: f.quayClearance, berthOffsetM: f.berthOffsetM, slotSpacing: f.slotSpacing, lengthM: f.lengthM * exag });
+    return berthOffset(v.berth, { beamM: f.beamM * exag, quayClearance: f.quayClearance, berthOffsetM: f.berthOffsetM, slotSpacing: f.slotSpacing, lengthM: f.lengthM * exag, realLengthM: f.lengthM });
   }
 
   render(_gl: WebGLRenderingContext | WebGL2RenderingContext, args: CustomRenderMethodInput): void {

@@ -26,8 +26,12 @@ export interface StopBerth {
   seaward: number;
   /** Abreast slot: 0 at the quay, 1, 2, … moored outside it (set per dock stay by berths.ts). */
   slot: number;
-  /** Away from the nearest sibling berth of the same pier: [unit east, unit north, distance m]. */
-  spread?: [number, number, number];
+  /**
+   * Away from the nearest sibling berth of the same pier: [unit east, unit north, distance m]; both siblings move
+   * half the shortfall. A private operator's berth (build-piers.ts) adds [real-size shift east, north, city-zoom
+   * shift east, north] in drawn hull lengths: it moves alone, clear of Şehir Hatları boats nearby, on water.
+   */
+  spread?: [number, number, number] | [number, number, number, number, number, number, number];
 }
 
 export interface LinePath {

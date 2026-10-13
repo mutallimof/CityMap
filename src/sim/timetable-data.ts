@@ -28,17 +28,57 @@ export interface TripSpec {
   weekdays?: number[];
   /** Calls in sailing order; the first has `dep`. */
   calls: CallSpec[];
+  /** The source prints the destinations but not the order the boat calls at them (pier board †). */
+  orderInferred?: true;
 }
 
 export interface LineTimetable {
-  /** Source table(s), e.g. "KADIKÖY - KARAKÖY - EMİNÖNÜ HATTI (p. 4)". */
+  /** Source table(s), e.g. "KADIKÖY - KARAKÖY - EMİNÖNÜ HATTI (p. 4)" (an operator's web page for scraped lines). */
   pdf: string[];
   /** Footnotes and how the tables were read. */
   notes: string[];
   trips: TripSpec[];
+  /**
+   * Optional, per line (operator files, scripts/operators): overrides the file's validity — a line whose
+   * last good read is older keeps its own dates.
+   */
+  validFrom?: string;
+  validTo?: string;
+  /** ISO time of the last successful read of this line's source page. */
+  fetched?: string;
+  /** Source page of this line (credit link); the file's `url` otherwise. */
+  url?: string;
+  /**
+   * Public holidays: 'sunday' = the Sunday timetable (as Şehir Hatları prints; the default when absent);
+   * 'none' = the source prints nothing for holidays → that day the line runs on the simulated schedule.
+   */
+  holidays?: 'sunday' | 'none';
+  /** "Continuous service" windows the source prints instead of times (no departures are made up for them). */
+  continuous?: ContinuousService[];
+}
+
+/** "16:00 - 18:30 Arası Sürekli Sefer": the source says boats run continuously, without times. */
+export interface ContinuousService {
+  /** Pier the departures leave from, and where they go. */
+  stop: string;
+  to: string;
+  days: DayType[];
+  /** "HH:MM", hours ≥ 24 after midnight. */
+  start: string;
+  end: string;
+}
+
+/** Who runs a timetable file's lines (absent = Şehir Hatları, data/timetables.json). */
+export interface OperatorInfo {
+  id: string;
+  name: string;
+  /** Operator's site (credit link). */
+  site: string;
 }
 
 export interface TimetableFile {
+  /** Operator files (scripts/operators); absent in data/timetables.json (Şehir Hatları). */
+  operator?: OperatorInfo;
   /** Source credit shown in the app. */
   source: string;
   publisher: string;

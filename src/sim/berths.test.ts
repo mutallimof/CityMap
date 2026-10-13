@@ -13,12 +13,13 @@ import type { HolidayFile, TimetableFile } from './timetable-data';
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
 const tt = json<TimetableFile>('data/timetables.json');
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
-const piers = json<{ features: { properties: { id: string; berths: { id: string; alongBearing: number; seawardBearing: number }[] } }[] }>('data/piers.geojson');
+const piers = json<{ features: { properties: { id: string; operator?: string; berths: { id: string; alongBearing: number; seawardBearing: number }[] } }[] }>('data/piers.geojson');
+// Şehir Hatları lines only: these tests pin that network's behaviour; the private operators' lines are tested in src/sim/operators.test.ts.
 const net = buildNetwork(
-  json<{ lines: never[] }>('data/lines.json').lines,
+  json<{ lines: { operator?: string }[] }>('data/lines.json').lines.filter((l) => !l.operator) as never,
   json('data/routes.geojson'),
   41.05,
-  piers.features.flatMap((f) => f.properties.berths),
+  piers.features.flatMap((f) => f.properties.berths.map((b) => ({ ...b, operator: f.properties.operator }))),
 );
 const legsOf = (id: string) => net.inputs.find((i) => i.line.id === id)!.legs;
 const real = realTripSource(tt, holidays, legsOf);

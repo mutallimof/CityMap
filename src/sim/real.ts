@@ -1,7 +1,9 @@
 /**
  * Real timetables → planned trips for one service day. Pure.
- * A line runs on its real timetable only when the file covers that date and every one of the line's
- * trips can be sailed on our routes; otherwise it falls back to the simulated schedule (labelled so).
+ * A line runs on its real timetable only when its file covers that date (a private operator's line:
+ * its own dates, scripts/operators) and every one of the line's trips can be sailed on our routes;
+ * otherwise it falls back to the simulated schedule (labelled so). Several files: Şehir Hatları
+ * (data/timetables.json) + one per private operator (data/timetables-<operator>.json).
  */
 import { CONFIG } from '../config';
 import { findLeg, type PlannedTrip, type RealTrips } from './schedule';
@@ -34,8 +36,36 @@ export function timetableStatus(tt: TimetableFile | null, day: number): Timetabl
 }
 
 /** Days from `day` to the last valid day (negative once expired). */
-export function daysLeft(tt: TimetableFile, day: number): number {
+export function daysLeft(tt: Pick<TimetableFile, 'validTo'>, day: number): number {
   return Math.round(Date.parse(`${tt.validTo}T00:00:00Z`) / 86_400_000 - day);
+}
+
+/** Timetable files as given (one, a list, or none). */
+export const fileList = (tt: TimetableFile | readonly TimetableFile[] | null | undefined): readonly TimetableFile[] => (!tt ? [] : Array.isArray(tt) ? tt : [tt as TimetableFile]);
+
+/** The file holding a line's timetable, or null. */
+export function fileOfLine(tt: TimetableFile | readonly TimetableFile[] | null | undefined, lineId: string): TimetableFile | null {
+  return fileList(tt).find((f) => f.lines?.[lineId]) ?? null;
+}
+
+/** A line's own validity (its dates if it has them, else the file's) on a service day. */
+export function lineValidity(tt: TimetableFile | null, lineId: string, day: number): { status: TimetableStatus; validFrom: string; validTo: string; daysLeft: number } {
+  const lt = tt?.lines?.[lineId];
+  if (!tt || !lt) return { status: 'missing', validFrom: '', validTo: '', daysLeft: 0 };
+  const validFrom = lt.validFrom ?? tt.validFrom;
+  const validTo = lt.validTo ?? tt.validTo;
+  const status = timetableStatus({ ...tt, validFrom, validTo }, day);
+  return { status, validFrom, validTo, daysLeft: daysLeft({ validTo }, day) };
+}
+
+/** Why a line is on its simulated schedule on a day (null: it runs its real timetable, if sailable). */
+export function lineFallback(tt: TimetableFile | readonly TimetableFile[] | null | undefined, lineId: string, day: number, holidays: HolidayFile | null): TimetableStatus | 'holiday' | null {
+  const f = fileOfLine(tt, lineId);
+  const v = lineValidity(f, lineId, day);
+  if (v.status !== 'valid') return v.status;
+  // The source prints nothing for public holidays: don't assume the Sunday timetable.
+  if (f!.lines[lineId].holidays === 'none' && holidays?.days[isoDate(day)]) return 'holiday';
+  return null;
 }
 
 /** Problems that make a line's timetable unusable on our network (empty → usable). */
@@ -70,6 +100,7 @@ function planned(line: LineSpec, t: TripSpec): PlannedTrip {
       ...(c.m ? { mark: c.m } : {}),
       ...(c.pier ? { pier: c.pier } : {}),
     })),
+    ...(t.orderInferred ? { orderInferred: true } : {}),
   };
 }
 
@@ -77,12 +108,11 @@ function planned(line: LineSpec, t: TripSpec): PlannedTrip {
  * Real-trip source for buildDaySchedule. Lines whose timetable fails `lineProblems` are simulated
  * (reported once via `onProblem`); dates outside the timetable's validity simulate every line.
  */
-export function realTripSource(tt: TimetableFile | null, holidays: HolidayFile | null, legsOf: (lineId: string) => LegSpec[], onProblem: (msg: string) => void = () => {}): RealTrips {
+export function realTripSource(tt: TimetableFile | readonly TimetableFile[] | null, holidays: HolidayFile | null, legsOf: (lineId: string) => LegSpec[], onProblem: (msg: string) => void = () => {}): RealTrips {
   const usable = new Map<string, boolean>();
   return (line, day) => {
-    if (timetableStatus(tt, day) !== 'valid') return null;
-    const lt = tt!.lines[line.id];
-    if (!lt) return null;
+    if (lineFallback(tt, line.id, day, holidays)) return null;
+    const lt = fileOfLine(tt, line.id)!.lines[line.id];
     if (!usable.has(line.id)) {
       const p = lineProblems(line, legsOf(line.id), lt.trips);
       usable.set(line.id, p.length === 0);
@@ -99,5 +129,12 @@ export function realTripSource(tt: TimetableFile | null, holidays: HolidayFile |
 export function expiryWarning(tt: TimetableFile | null, day: number): string | null {
   if (!tt || timetableStatus(tt, day) !== 'valid') return null;
   const left = daysLeft(tt, day);
+  if (tt.operator) {
+    const old = Object.keys(tt.lines).filter((id) => {
+      const v = lineValidity(tt, id, day);
+      return v.status === 'valid' && v.daysLeft < CONFIG.timetable.expiryWarnDays;
+    });
+    return old.length ? `${tt.operator.name} timetable: ${old.join(', ')} not re-read lately (scripts/operators, data/operators-log.json).` : null;
+  }
   return left < CONFIG.timetable.expiryWarnDays ? `Ferry timetable "${tt.source}" ends ${tt.validTo} (${left} days left) — run scripts/timetables with the new PDF.` : null;
 }

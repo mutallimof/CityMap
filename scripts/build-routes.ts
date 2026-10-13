@@ -11,7 +11,7 @@
  *
  * Run: npm run data:routes
  */
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { Feature, FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson';
 import { shorelineFromLand } from '../src/map/shoreline';
 import { DATA_BBOX } from './bbox';
@@ -47,7 +47,10 @@ interface CatalogLine {
   pattern: string[];
   berths: Record<string, string>;
   via?: Record<string, [number, number][]>;
+  /** "from>to" (either way) → 'seaward': both ends approached straight from the sea, not along the shore. */
+  approach?: Record<string, 'seaward'>;
   toCheck?: string[];
+  operator?: string;
   service: Record<string, unknown>;
 }
 interface BerthProps {
@@ -64,7 +67,10 @@ interface PierProps {
 const land = JSON.parse(readFileSync('data/land.geojson', 'utf8')) as FeatureCollection<Polygon | MultiPolygon>;
 const piers = JSON.parse(readFileSync('data/piers.geojson', 'utf8')) as FeatureCollection<Point, PierProps>;
 const catalog = JSON.parse(readFileSync('data/catalog/lines.json', 'utf8')).lines as CatalogLine[];
-const timetables = existsSync('data/timetables.json') ? (JSON.parse(readFileSync('data/timetables.json', 'utf8')) as TimetableFile) : null;
+// Şehir Hatları (data/timetables.json) + the private operators' files (data/timetables-<operator>.json).
+const timetables: Pick<TimetableFile, 'lines'> = { lines: {} };
+for (const f of ['timetables.json', ...readdirSync('data').filter((n) => /^timetables-(?!source).+\.json$/.test(n)).sort()])
+  if (existsSync(`data/${f}`)) Object.assign(timetables.lines, (JSON.parse(readFileSync(`data/${f}`, 'utf8')) as TimetableFile).lines);
 
 const [w, s, e, n] = DATA_BBOX;
 const proj = localProj(w, s, (s + n) / 2);
@@ -109,13 +115,17 @@ function pointAlong(path: [number, number][], d: number, fallback: [number, numb
   return fallback;
 }
 
-/** Approach point for a berth, on the along-shore side facing `toward` (where the leg's water path heads). */
-function approachOf(b: BerthProps, toward: [number, number]): [number, number] {
+/**
+ * Approach point for a berth, on the along-shore side facing `toward` (where the leg's water path heads);
+ * `seaward`: straight out from the berth (a short crossing to a pier opposite, where the along-shore
+ * approach would hook past the berth and turn back).
+ */
+function approachOf(b: BerthProps, toward: [number, number], seaward = false): [number, number] {
   const [bx, by] = proj.toXY(b.lngLat);
   const sea = unit(b.seawardBearing);
   let along = unit(b.alongBearing);
   if ((toward[0] - bx) * along[0] + (toward[1] - by) * along[1] < 0) along = [-along[0], -along[1]];
-  for (let k = 1; k >= 0.4; k -= 0.15) {
+  for (let k = 1; k >= 0.4 && !seaward; k -= 0.15) {
     const p: [number, number] = [bx + (along[0] * APPROACH_ALONG_M + sea[0] * APPROACH_OUT_M) * k, by + (along[1] * APPROACH_ALONG_M + sea[1] * APPROACH_OUT_M) * k];
     if (openWater(p, APPROACH_OUT_M * k * 0.6) && segmentOk(grid, [bx, by], p, { clear: 45, endClear: 10, endRadius: ROUTE_RULES.endExemptM - 10, ends: [[bx, by], [bx, by]] })) return p;
   }
@@ -181,8 +191,9 @@ for (const line of catalog) {
     // Approach each berth from the side the water path actually comes from (in a bay the other pier's
     // straight-line direction can point the wrong way along the shore and force a hairpin).
     const probe = findPath(grid, from, to, PATH);
-    const a0 = approachOf(b0, probe ? pointAlong(probe, APPROACH_PROBE_M, to) : to);
-    const a1 = approachOf(b1, probe ? pointAlong([...probe].reverse(), APPROACH_PROBE_M, from) : from);
+    const seaward = (line.approach?.[`${fromId}>${toId}`] ?? line.approach?.[`${toId}>${fromId}`]) === 'seaward';
+    const a0 = approachOf(b0, probe ? pointAlong(probe, APPROACH_PROBE_M, to) : to, seaward);
+    const a1 = approachOf(b1, probe ? pointAlong([...probe].reverse(), APPROACH_PROBE_M, from) : from, seaward);
     // Relaxed clearance only near the berths (not at hand-placed via points).
     const rule = { clear: LOS_CLEAR, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
     const pts = [a0, ...(line.via?.[`${fromId}>${toId}`] ?? []).map((c) => proj.toXY(c)), a1];
@@ -204,6 +215,7 @@ for (const line of catalog) {
     berths: line.stops.map((p) => berthOf(line, p).id),
     service: line.service,
     ...(line.toCheck ? { toCheck: line.toCheck } : {}),
+    ...(line.operator ? { operator: line.operator } : {}),
   });
 }
 

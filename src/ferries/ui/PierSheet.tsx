@@ -6,7 +6,7 @@ import { useTicker } from '../../ui/hooks';
 import { formatWait, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
-import { TimetableBadge, TimetableCredit } from './timetable';
+import { continuousAt, operatorName, TimetableBadge, TimetableCredit } from './timetable';
 
 /**
  * Pier: next 5 departures by line with minutes-to-go (printed times for lines on their real timetable,
@@ -17,7 +17,10 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
   const t = useT();
   const lang = useUi((s) => s.lang);
   const { clock, getDay, lineById, pierById } = services();
-  const deps = nextDepartures(getDay, id, toIstanbul(clock.now()), 5);
+  const now = toIstanbul(clock.now());
+  const deps = nextDepartures(getDay, id, now, 5);
+  // "Continuous service" windows still ahead today (printed without times: a note, no made-up departures).
+  const continuous = continuousAt(id, now.day).filter((c) => Number(c.end.slice(0, 2)) * 3600 + Number(c.end.slice(3)) * 60 > now.seconds);
   const served = [...lineById.values()].some((l) => l.stops.includes(id));
   const name = (pid: string) => pierById.get(pid)?.[lang === 'tr' ? 'name' : 'nameEn'] ?? pid;
   return (
@@ -35,7 +38,7 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
                 {line.name[lang]}
                 <small className="muted">
                   {' '}
-                  {t('to')} {name(d.toStopId)}
+                  · {operatorName(d.lineId)} {t('to')} {[...(d.via ?? []), d.toStopId].map(name).join(', ')}
                   {directionInferred(d) && (
                     <sup className="deps__inferred" title={t('dirInferred')} aria-label={t('dirInferred')}>
                       †
@@ -43,7 +46,7 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
                   )}
                   {d.pier && ` · ${t(d.pier === 'old' ? 'oldPier' : 'newPier')}`}
                 </small>{' '}
-                {!d.real && <TimetableBadge real={false} />}
+                {!d.real && <TimetableBadge real={false} lineId={d.lineId} />}
               </span>
               <b className="deps__wait">{formatWait(d.inSeconds, lang)}</b>
             </li>
@@ -55,7 +58,12 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
           † {t('dirInferred')}
         </small>
       )}
-      {deps.some((d) => d.real) && <TimetableCredit />}
+      {continuous.map((c) => (
+        <small key={c.lineId + c.start} className="muted deps__note">
+          {lineById.get(c.lineId)!.name[lang]} · {operatorName(c.lineId)} {t('to')} {name(c.to)}: {c.start}–{c.end} {t('continuousService')}
+        </small>
+      ))}
+      {deps.some((d) => d.real) && <TimetableCredit lineIds={[...new Set(deps.filter((d) => d.real).map((d) => d.lineId))]} />}
       {nearby}
     </div>
   );

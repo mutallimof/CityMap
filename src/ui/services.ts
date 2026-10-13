@@ -20,8 +20,8 @@ export interface Services {
   weather: WeatherController;
   network: Network;
   getDay: (day: number) => DaySchedule & { modes: Record<string, LineMode> };
-  /** The real timetable file (source credit), or null. */
-  timetables: TimetableFile | null;
+  /** The real timetable files (Şehir Hatları + private operators; source credits); empty if none loaded. */
+  timetables: TimetableFile[];
   lines: LineSpec[];
   lineById: Map<string, LineSpec>;
   piers: FeatureCollection<Point, PierProps>;

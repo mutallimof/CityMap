@@ -1,5 +1,5 @@
 {
-  "_comment": "Pier catalog: ids + display names + OSM name tokens. Coordinates are NEVER typed here — build-piers.ts takes them from OSM (data/raw). \"osm\" pins the marker feature. \"berths\" lists separate OSM berths at big terminals (first = main Şehir Hatları berth); piers without berths use the marker feature as their only berth. Lines choose berths in data/catalog/lines.json.",
+  "_comment": "Pier catalog: ids + display names + OSM name tokens. Coordinates are NEVER typed here — build-piers.ts takes them from OSM (data/raw). \"osm\" pins the marker feature. \"berths\" lists separate OSM berths at big terminals (first = main Şehir Hatları berth); piers without berths use the marker feature as their only berth. Lines choose berths in data/catalog/lines.json. Entries with \"operator\" are a private operator's own pier (scripts/operators; built with npm run data:fetch-lookup && npm run data:piers -- --only=<ids>; \"_why\" records which OSM feature and why).",
   "piers": [
     {
       "id": "eminonu",
@@ -268,6 +268,85 @@
         "Çubuklu"
       ],
       "osm": "way/525436006"
+    },
+    {
+      "id": "eminonu-turyol",
+      "tr": "Eminönü (Turyol)",
+      "en": "Eminönü (Turyol)",
+      "match": [
+        "Eminönü",
+        "Turyol"
+      ],
+      "osm": "node/2478522774",
+      "operator": "turyol",
+      "_why": "OSM 'Eminönü (Turyol)'; end of the OSM routes 'Eminönü - Üsküdar (Turyol)' and 'Eminönü - Karaköy (Turyol)'"
+    },
+    {
+      "id": "karakoy-turyol",
+      "tr": "Karaköy (Turyol)",
+      "en": "Karaköy (Turyol)",
+      "match": [
+        "Turyol"
+      ],
+      "osm": "way/240079131",
+      "operator": "turyol",
+      "_why": "OSM 'Turyol İskelesi', operator=Turyol, at the end of 'Kadıköy (Metro Durağı) - Karaköy (Turyol)'"
+    },
+    {
+      "id": "uskudar-turyol",
+      "tr": "Üsküdar (Turyol)",
+      "en": "Üsküdar (Turyol)",
+      "match": [
+        "Üsküdar",
+        "Turyol"
+      ],
+      "osm": "node/4161740638",
+      "operator": "turyol",
+      "_why": "OSM ferry terminal operator=Turyol (website = Turyol's timetable page); end of 'Eminönü - Üsküdar (Turyol)'"
+    },
+    {
+      "id": "kadikoy-yeni-turyol",
+      "tr": "Kadıköy Yeni (Turyol)",
+      "en": "Kadıköy Yeni (Turyol)",
+      "match": [
+        "Turyol"
+      ],
+      "osm": "way/226127060",
+      "operator": "turyol",
+      "_why": "OSM 'Turyol Eminönü ve Karaköy İskelesi' (operator=Turyol): its name lists exactly the destinations Turyol offers from 'Kadıköy Yeni İskele' (Eminönü, Karaköy); the other Turyol pier is the Metro one"
+    },
+    {
+      "id": "kadikoy-metro-turyol",
+      "tr": "Kadıköy Metro (Turyol)",
+      "en": "Kadıköy Metro (Turyol)",
+      "match": [
+        "Turyol"
+      ],
+      "osm": "way/236642399",
+      "operator": "turyol",
+      "_why": "OSM 'Kadıköy Turyol İskelesi' (operator=Turyol), at the end of the OSM route 'Kadıköy (Metro Durağı) - Karaköy (Turyol)'"
+    },
+    {
+      "id": "uskudar-dentur",
+      "tr": "Üsküdar (Dentur)",
+      "en": "Üsküdar (Dentur)",
+      "match": [
+        "Üsküdar"
+      ],
+      "osm": "node/2456974746",
+      "operator": "dentur",
+      "_why": "OSM ferry terminal operator=Dentur Avrasya; start of the OSM route 'Üsküdar - Kabataş (Dentur Avrasya)'"
+    },
+    {
+      "id": "kabatas-dentur",
+      "tr": "Kabataş (Dentur)",
+      "en": "Kabataş (Dentur)",
+      "match": [
+        "Kabataş"
+      ],
+      "osm": "node/12985066037",
+      "operator": "dentur",
+      "_why": "OSM ferry stop operator=Dentur Avrasya at the end of the OSM route 'Üsküdar - Kabataş (Dentur Avrasya)' (tagged FIXME: precise location)"
     }
   ]
 }

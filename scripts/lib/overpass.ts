@@ -17,6 +17,8 @@ export interface OverpassResponse {
 
 export const RAW_OVERPASS = 'data/raw/overpass-istanbul.json';
 export const RAW_NOMINATIM = 'data/raw/nominatim-istanbul.json';
+/** Pinned features looked up by id (scripts/fetch-osm-lookup.ts), for `build-piers.ts --only`. */
+export const RAW_LOOKUP = 'data/raw/nominatim-lookup.json';
 
 /** Representative point: node position, else average of way/relation geometry. */
 export function elementPoint(el: OverpassElement): [number, number] | null {
