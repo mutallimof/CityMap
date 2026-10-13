@@ -5,7 +5,7 @@ import type { PlacesStore } from '../store';
 import type { Place } from '../types';
 import { lookupId, nominatim } from '../../osm/nominatim';
 import { categoryOfClass } from '../place-layers';
-import { distanceM } from '../store';
+import { nearestPierOnLand, onPierLand, type NearestPier, type PierPoint } from '../nearest-pier';
 
 let store: PlacesStore | null = null;
 let reduced = false;
@@ -86,16 +86,27 @@ export function openPier(id: string, fly = true): void {
   if (fly) flyTo(p.lngLat, 14.6);
 }
 
-/** Served pier (some line stops there) closest to a point, by straight-line distance. */
-export function nearestPier(lngLat: [number, number]): { id: string; distance: number } {
-  let best = { id: '', distance: Infinity };
+/** Piers some line stops at. */
+function servedPiers(): PierPoint[] {
   const served = new Set(services().lines.flatMap((l) => l.stops));
-  for (const [id, p] of services().pierById) {
-    if (!served.has(id)) continue;
-    const d = distanceM(lngLat, p.lngLat);
-    if (d < best.distance) best = { id, distance: d };
-  }
-  return best;
+  return [...services().pierById].filter(([id]) => served.has(id)).map(([id, p]) => ({ id, lngLat: p.lngLat }));
+}
+
+/** Served pier closest to a point on its own landmass (nearest-pier.ts); id '' = none. */
+export function nearestPier(lngLat: [number, number]): NearestPier {
+  const { land } = services();
+  return nearestPierOnLand(lngLat, servedPiers(), (p, snap) => land.landOf(p, snap));
+}
+
+/** Plain straight-line nearest served pier (the device location when it is on no landmass: on a boat). */
+export function nearestPierAnyLand(lngLat: [number, number]): NearestPier {
+  return nearestPierOnLand(lngLat, servedPiers());
+}
+
+/** A place is on the pier's landmass (the pier sheet's "Nearby" list). */
+export function sameLandAsPier(pier: [number, number], place: [number, number]): boolean {
+  const { land } = services();
+  return onPierLand(pier, place, servedPiers(), (p, snap) => land.landOf(p, snap));
 }
 
 /** Share link that opens the app flown to a place (#place=id). */

@@ -107,3 +107,30 @@ export function makeLandIndex(fc: FeatureCollection<Polygon | MultiPolygon>, sna
     },
   };
 }
+
+/**
+ * Landmass of a place / stop with the planner's snapping: the coastline within `snapM`; a point off it but
+ * within `snapM` of one of our piers (the pier head over the water) takes that pier's landmass, snapped within
+ * `pierSnapM`; anything else (open water, an islet off the simplified coast) is on none (null).
+ */
+export function pointMass(
+  landOf: (p: LngLat, snapM: number) => number | null,
+  p: LngLat,
+  piers: readonly { lngLat: LngLat }[],
+  snapM: number,
+  pierSnapM: number,
+  dist: (a: LngLat, b: LngLat) => number,
+): number | null {
+  const m = landOf(p, snapM);
+  if (m !== null) return m;
+  let pier: LngLat | null = null;
+  let best = snapM;
+  for (const x of piers) {
+    const d = dist(p, x.lngLat);
+    if (d <= best) {
+      best = d;
+      pier = x.lngLat;
+    }
+  }
+  return pier ? landOf(pier, pierSnapM) : null;
+}

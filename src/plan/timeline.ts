@@ -11,6 +11,7 @@ import { CONFIG } from '../config';
 import type { LineMode } from '../sim/schedule';
 import type { DaySchedule, Departure } from '../sim/types';
 import { isIslet } from './islets';
+import { pointMass } from './land';
 import { endOf, endsOf, planDays, sortedStops, startOf, stopMs, type Plan, type PlanPoint, type PlanStop } from './model';
 
 type LngLat = [number, number];
@@ -132,18 +133,7 @@ function tripsOf(s: DaySchedule) {
  */
 function massOf(deps: PlanDeps, p: LngLat): number | null | undefined {
   if (!deps.landOf) return undefined;
-  const m = deps.landOf(p, CONFIG.plan.walk.snapM);
-  if (m !== null) return m;
-  let pier: LngLat | null = null;
-  let best: number = CONFIG.plan.walk.snapM;
-  for (const x of deps.piers) {
-    const d = distanceM(p, x.lngLat);
-    if (d <= best) {
-      best = d;
-      pier = x.lngLat;
-    }
-  }
-  return pier ? deps.landOf(pier, CONFIG.plan.walk.pierSnapM) : null;
+  return pointMass(deps.landOf, p, deps.piers, CONFIG.plan.walk.snapM, CONFIG.plan.walk.pierSnapM, distanceM);
 }
 
 /** A walk between two landmasses (see massOf) doesn't cross water. */

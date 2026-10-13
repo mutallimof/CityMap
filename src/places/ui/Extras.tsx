@@ -12,7 +12,7 @@ import { FOG, weatherIcon } from '../../weather/icon';
 import { FogIcon } from '../../weather/FogIcon';
 import { PlaceIcon } from './PlaceIcon';
 import { isIslet } from '../../plan/islets';
-import { flyTo, nearestPier, openPier, openPlace, places } from './context';
+import { flyTo, nearestPier, nearestPierAnyLand, openPier, openPlace, places, sameLandAsPier } from './context';
 
 const SEASON_ICON = { spring: '🌷', summer: '☀️', autumn: '🍂', winter: '❄️' } as const;
 
@@ -90,7 +90,9 @@ export function NearestPierButton() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const here: [number, number] = [pos.coords.longitude, pos.coords.latitude];
-        const near = nearestPier(here);
+        // Same landmass as the device; off every landmass (on a boat) the plain nearest.
+        const onLand = nearestPier(here);
+        const near = onLand.id ? onLand : nearestPierAnyLand(here);
         if (near.distance > 25_000) {
           setState('away');
           openPier('karakoy');
@@ -123,6 +125,7 @@ export function NearbyPlaces({ pierId }: { pierId: string }) {
   const list = places()
     .places.map((p) => ({ p, d: distanceM(pier.lngLat, p.lngLat) }))
     .filter((x) => x.d < CONFIG.places.nearbyM && !isIslet(x.p)) // an islet isn't a walk from the pier
+    .filter((x) => sameLandAsPier(pier.lngLat, x.p.lngLat)) // nor is a place across the water
     .sort((a, b) => a.d - b.d)
     .slice(0, 8);
   return (
