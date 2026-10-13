@@ -8,6 +8,8 @@ def text_of(h):
     return re.sub(r'\s+', ' ', html.unescape(h)).strip()
 import os
 ALL = os.environ.get('ALL') == '1'
+RAW = os.environ.get('RAW') == '1'
+RAWMAX = int(os.environ.get('RAWMAX', '6000'))
 RSCMAX = int(os.environ.get('RSCMAX', '20000'))
 SCRIPTMAX = int(os.environ.get('SCRIPTMAX', '4000'))
 def run(urls, textmax):
@@ -16,7 +18,13 @@ def run(urls, textmax):
         if not first: time.sleep(4.5)
         first = False
         print('\n' + '=' * 100 + '\nURL', u, flush=True)
-        req = urllib.request.Request(u, headers={'User-Agent': UA, 'Accept': '*/*', 'Accept-Language': 'tr,en;q=0.8'})
+        parts = u.split(' ', 2)
+        data = None; hdrs = {'User-Agent': UA, 'Accept': '*/*', 'Accept-Language': 'tr,en;q=0.8'}
+        if parts[0] in ('POST', 'POSTJSON'):
+            hdrs['Content-Type'] = 'application/json; charset=utf-8' if parts[0] == 'POSTJSON' else 'application/x-www-form-urlencoded'
+            if parts[0] == 'POSTJSON': hdrs['X-Requested-With'] = 'XMLHttpRequest'
+            u, data = parts[1], parts[2].encode()
+        req = urllib.request.Request(u, data=data, headers=hdrs)
         try:
             r = urllib.request.urlopen(req, timeout=25); code = r.status; body = r.read(); hdr = r.headers; final = r.geturl()
         except urllib.error.HTTPError as e:
@@ -48,6 +56,7 @@ def run(urls, textmax):
             rsc = ''.join(json.loads('"' + m + '"') for m in re.findall(r'self\.__next_f\.push\(\[1,"((?:[^"\\]|\\.)*)"\]\)', s))
             if rsc:
                 for blk in re.findall(r'(?is)<(?:section|div|table)[^>]*>.*', rsc)[:1]:
+                    if RAW: print('RSCRAW', re.sub(r'(?is)<style.*?</style>', '', blk)[:RAWMAX].replace('\n', ' '))
                     print('RSCHTML', text_of(re.sub(r'(?i)</(tr|p|li|h\d|div|td|th)>', r' ¦ ', blk))[:RSCMAX])
             for sc in re.findall(r'(?is)<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', s):
                 if re.search(r'\d{1,2}[:.]\d{2}|sefer|Sefer|tarife|ajax|url', sc): print('SCRIPT', len(sc), sc[:SCRIPTMAX].replace('\n', ' '))

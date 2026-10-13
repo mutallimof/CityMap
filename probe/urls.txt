@@ -1,7 +1,5 @@
-https://www.turyol.com/Home/Tarifeler
-https://www.turyol.com/UserFiles/sozlesme/Mesafeli%20Sat%C4%B1%C5%9F%20S%C3%B6zle%C5%9Fmesi.html
-https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-besiktas
-https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas
+POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'101','langId':'1'}
+POST https://www.turyol.com/Home/Tarifeler MainHatTuruId=1&TarifeKalkisId=1_101_1_101&TarifeVarisId=102
+POST https://www.turyol.com/Home/Tarifeler MainHatTuruId=3&TarifeKalkisId=3_103_1_101&TarifeVarisId=116
 https://www.denturavrasya.com/tr-TR/hatlarimiz/besiktaskadikoy
-https://www.denturavrasya.com/tr-TR/hatlarimiz/adalar
-https://www.denturavrasya.com/tr-TR/sikca-sorulan-sorular
+https://www.denturavrasya.com/tr-TR/hatlarimiz/bogazturu

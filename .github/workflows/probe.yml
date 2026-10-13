@@ -5,4 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: SCRIPTMAX=300 python3 probe/fetch.py probe/urls.txt 300
+      - run: RAW=1 RAWMAX=5000 SCRIPTMAX=200 python3 probe/fetch.py probe/urls.txt 9000
