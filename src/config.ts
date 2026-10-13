@@ -577,9 +577,11 @@ export const CONFIG = {
     placeMinutes: { food: 90, culture: 90, shopping: 60, park: 60, view: 30, default: 60 },
     /**
      * Approximate walking: straight line × factor at kmh; walk when ≤ maxKm, else look for a ferry from
-     * piers within maxPierKm (closest piersPerSide), departing within searchHours.
+     * piers within maxPierKm (closest piersPerSide), departing within searchHours. Walks (incl. to / from a
+     * pier) only on one landmass of data/land.geojson (src/plan/land.ts): a point snaps to the coastline
+     * within snapM, a pier within pierSnapM (Büyükada's pier head is 151 m off the simplified coast).
      */
-    walk: { factor: 1.3, kmh: 4.5, maxKm: 2.5, maxPierKm: 1.6, piersPerSide: 3, searchHours: 12 },
+    walk: { factor: 1.3, kmh: 4.5, maxKm: 2.5, maxPierKm: 1.6, piersPerSide: 3, searchHours: 12, snapM: 100, pierSnapM: 250 },
     /** Share links: whole plan in the URL hash, at most maxChars characters and maxStops stops. */
     share: { maxChars: 2000, maxStops: 20 },
   },

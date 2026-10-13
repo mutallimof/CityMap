@@ -45,6 +45,7 @@ import { hideLoader, parseView, playIntro } from './map/intro';
 import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import { setServices } from './ui/services';
+import { makeLandIndex } from './plan/land';
 import { bindMapInteractions, setTapInterceptor } from './ui/map-interactions';
 import { ui } from './ui/store';
 import './ui/ui.css';
@@ -158,7 +159,7 @@ async function boot() {
   water.motion = reduced ? 0.25 : 1;
   ferries.reduceMotion = reduced;
   const pierById = new Map(piers.features.map((f) => [f.properties.id, { ...f.properties, lngLat: f.geometry.coordinates as [number, number] }]));
-  setServices({ map, clock, daylight, ferries, weather, network, getDay, timetables, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById });
+  setServices({ map, clock, daylight, ferries, weather, network, getDay, timetables, lines, lineById: new Map(lines.map((l) => [l.id, l])), piers, pierById, land: makeLandIndex(land) });
   // Places — all real OpenStreetMap data: featured pins + every map POI (revealed by zoom).
   const store = new PlacesStore(placeData);
   setSearchData({ districts, landmarks });

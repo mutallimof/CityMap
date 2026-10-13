@@ -33,6 +33,7 @@ function planDeps(): PlanDeps {
     piers: s.piers.features.map((f) => ({ id: f.properties.id, name: f.properties.name, nameEn: f.properties.nameEn, lngLat: f.geometry.coordinates as [number, number] })),
     getDay: s.getDay,
     timetableValid: (d) => timetableStatus(s.timetables, d) === 'valid',
+    landOf: (p, snapM) => s.land.landOf(p, snapM),
   };
 }
 

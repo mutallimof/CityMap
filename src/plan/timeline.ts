@@ -1,7 +1,7 @@
 /**
  * Plan timeline: stops in time order grouped by day, and between two consecutive stops — and from the
  * day's start point to the first stop, and from the last stop to its end point — only what's real: an
- * approximate walk when close enough, otherwise the actual ferry from the timetable (labelled when the
+ * approximate walk when close enough and on the same landmass (land.ts), otherwise the actual ferry from the timetable (labelled when the
  * line is on its simulated schedule), otherwise "no transport info". Plus warnings: closed at the
  * planned time (known hours only), overlapping stops, arriving late, and dates outside the timetable.
  * No "last ferry" warning: we only know Şehir Hatları, and private operators often run later.
@@ -25,6 +25,11 @@ export interface PlanDeps {
   getDay(day: number): DaySchedule & { modes: Record<string, LineMode> };
   /** Whether the real timetable covers a service day. */
   timetableValid(day: number): boolean;
+  /**
+   * Landmass of a point within `snapM` m of the coastline polygons, null = on none (`makeLandIndex` in
+   * land.ts). Absent = no land data: walks are decided by distance only.
+   */
+  landOf?(p: LngLat, snapM: number): number | null;
 }
 
 export type Warning =
@@ -120,8 +125,33 @@ function tripsOf(s: DaySchedule) {
   return idx;
 }
 
-function piersNear(deps: PlanDeps, p: LngLat): { id: string; minutes: number }[] {
+/**
+ * Landmass of a stop / point (undefined = no land data): the coastline within snapM; a point off it but on
+ * one of our piers (the pier head over the water) takes that pier's landmass; anything else is on none.
+ */
+function massOf(deps: PlanDeps, p: LngLat): number | null | undefined {
+  if (!deps.landOf) return undefined;
+  const m = deps.landOf(p, CONFIG.plan.walk.snapM);
+  if (m !== null) return m;
+  let pier: LngLat | null = null;
+  let best: number = CONFIG.plan.walk.snapM;
+  for (const x of deps.piers) {
+    const d = distanceM(p, x.lngLat);
+    if (d <= best) {
+      best = d;
+      pier = x.lngLat;
+    }
+  }
+  return pier ? deps.landOf(pier, CONFIG.plan.walk.pierSnapM) : null;
+}
+
+/** A walk between two landmasses (see massOf) doesn't cross water. */
+const sameMass = (a: number | null | undefined, b: number | null | undefined) => a === undefined || (a !== null && a === b);
+
+/** Piers within walking distance of p, on its landmass. */
+function piersNear(deps: PlanDeps, p: LngLat, mass: number | null | undefined): { id: string; minutes: number }[] {
   return deps.piers
+    .filter((x) => sameMass(mass, deps.landOf?.(x.lngLat, CONFIG.plan.walk.pierSnapM)))
     .map((x) => ({ id: x.id, ...walk(p, x.lngLat) }))
     .filter((x) => x.km <= CONFIG.plan.walk.maxPierKm)
     .sort((a, b) => a.km - b.km)
@@ -166,12 +196,14 @@ function rides(deps: PlanDeps, fromPiers: Set<string>, toPiers: Set<string>, fro
   return out;
 }
 
-/** How to get from a (free at `readyMs`) to b: walk if close, else the first real ferry that gets there soonest. */
+/** How to get from a (free at `readyMs`) to b: walk if close and on one landmass, else the first real ferry that gets there soonest. */
 export function connect(deps: PlanDeps, a: LngLat, b: LngLat, readyMs: number, lineStops: (lineId: string) => string[]): Connection {
   const w = walk(a, b);
-  if (w.km <= CONFIG.plan.walk.maxKm) return { mode: 'walk', minutes: w.minutes, km: w.km };
-  const near = piersNear(deps, a);
-  const far = piersNear(deps, b);
+  const ma = massOf(deps, a);
+  const mb = massOf(deps, b);
+  if (w.km <= CONFIG.plan.walk.maxKm && sameMass(ma, mb)) return { mode: 'walk', minutes: w.minutes, km: w.km };
+  const near = piersNear(deps, a, ma);
+  const far = piersNear(deps, b, mb);
   if (!near.length || !far.length) return { mode: 'none' };
   const toWalk = new Map(near.map((p) => [p.id, p.minutes]));
   const fromWalk = new Map(far.map((p) => [p.id, p.minutes]));
@@ -198,14 +230,16 @@ export function connect(deps: PlanDeps, a: LngLat, b: LngLat, readyMs: number, l
 }
 
 /**
- * How to get from a to b by `byMs` (the start point → the day's first stop): walk if close, else the
+ * How to get from a to b by `byMs` (the start point → the day's first stop): walk if close (one landmass), else the
  * ferry you can leave for latest and still arrive in time; if none does, the one that gets there soonest.
  */
 function connectBy(deps: PlanDeps, a: LngLat, b: LngLat, byMs: number, lineStops: (lineId: string) => string[]): Connection {
   const w = walk(a, b);
-  if (w.km <= CONFIG.plan.walk.maxKm) return { mode: 'walk', minutes: w.minutes, km: w.km };
-  const near = piersNear(deps, a);
-  const far = piersNear(deps, b);
+  const ma = massOf(deps, a);
+  const mb = massOf(deps, b);
+  if (w.km <= CONFIG.plan.walk.maxKm && sameMass(ma, mb)) return { mode: 'walk', minutes: w.minutes, km: w.km };
+  const near = piersNear(deps, a, ma);
+  const far = piersNear(deps, b, mb);
   if (!near.length || !far.length) return { mode: 'none' };
   const toWalk = new Map(near.map((p) => [p.id, p.minutes]));
   const fromWalk = new Map(far.map((p) => [p.id, p.minutes]));

@@ -8,9 +8,11 @@ import { cachedDays } from '../sim/state';
 import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
 import { addEvent, addPlace, createPlan, hasPlace, endsOf, fmtMin, moveStop, nextSlot, removeStop, resetDayEnds, setEnds, setStart, sortedStops, type Plan } from './model';
 import { decodePlan, encodePlan } from './share';
+import { makeLandIndex } from './land';
 import { buildTimeline, connect, hhmm, type PlanDeps } from './timeline';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
+const land = makeLandIndex(json('data/land.geojson'));
 const tt = json<TimetableFile>('data/timetables.json');
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
 const lines = json<{ lines: { id: string; stops: string[] }[] }>('data/lines.json').lines;
@@ -38,6 +40,7 @@ const deps: PlanDeps = {
   piers,
   getDay,
   timetableValid: (d) => timetableStatus(tt, d) === 'valid',
+  landOf: (p, snapM) => land.landOf(p, snapM),
 };
 const lineStops = (id: string) => lines.find((l) => l.id === id)!.stops;
 const at = (iso: string) => Date.parse(iso);

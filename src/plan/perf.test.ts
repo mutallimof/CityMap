@@ -13,9 +13,11 @@ import { cachedDays } from '../sim/state';
 import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
 import { addDays, addPlace, createPlan, type Plan, type PlanKind } from './model';
 import { decodePlan, encodePlan } from './share';
+import { makeLandIndex } from './land';
 import { buildTimeline, type PlanDeps } from './timeline';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
+const land = makeLandIndex(json('data/land.geojson'));
 const tt = json<TimetableFile>('data/timetables.json');
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
 const lines = json<{ lines: { id: string; stops: string[] }[] }>('data/lines.json').lines;
@@ -25,8 +27,12 @@ const real = realTripSource(tt, holidays, (id) => net.inputs.find((i) => i.line.
 const getDay = cachedDays((d) => buildDaySchedule(net.inputs, d, undefined, real), 8);
 const piers = json<{ features: { properties: { id: string; name: string; nameEn: string }; geometry: { coordinates: [number, number] } }[] }>('data/piers.geojson').features.map((f) => ({ ...f.properties, lngLat: f.geometry.coordinates }));
 const pier = (id: string) => piers.find((p) => p.id === id)!.lngLat;
-/** A test place next to every real pier (position derived from the pier, not typed). */
-const PLACES = new Map(piers.map((p) => [p.id, { name: p.name, lngLat: [p.lngLat[0] + 0.001, p.lngLat[1] + 0.0006] as [number, number], hours: 'Mo-Su 09:00-22:00' }]));
+/**
+ * A test place next to every real pier (position derived from the pier, not typed); at the pier itself
+ * where that offset is out on the water (Büyükada's pier head: on no landmass, rightly connected to nothing).
+ */
+const nextTo = (p: [number, number]): [number, number] => [p[0] + 0.001, p[1] + 0.0006];
+const PLACES = new Map(piers.map((p) => [p.id, { name: p.name, lngLat: land.landOf(nextTo(p.lngLat)) === null ? p.lngLat : nextTo(p.lngLat), hours: 'Mo-Su 09:00-22:00' }]));
 const deps: PlanDeps = {
   place: (id) => PLACES.get(id),
   event: () => undefined,
@@ -34,6 +40,7 @@ const deps: PlanDeps = {
   piers,
   getDay,
   timetableValid: (d) => timetableStatus(tt, d) === 'valid',
+  landOf: (p, snapM) => land.landOf(p, snapM),
 };
 const lineStops = (id: string) => lines.find((l) => l.id === id)!.stops;
 

@@ -347,9 +347,20 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     curated id): a flagged place (Kız Kulesi; the only place in `places` / `places-auto` off every land polygon) gets
     `ResolvedStop.islet`; every leg to / from it (between stops, start / end point) is `none` = "No transport info", its
     place sheet shows no nearest-pier walk and it is left out of a pier's "Nearby". Adalar places (islands 17 / 18 / 22 in
-    `land.geojson`, own Şehir Hatları piers) are NOT flagged: their ferry connection is real. Known gap: the walk rule is
-    straight line ≤ 2.5 km, so two places on different islands (Burgazada ↔ Heybeliada ≈ 1.7 km) or across the Bosphorus
-    (Beşiktaş ↔ Üsküdar) still say "walk" — fix = same-landmass test against `land.geojson` (island polygons are separate).
+    `land.geojson`, own Şehir Hatları piers) are NOT flagged: their ferry connection is real.
+  - **One landmass per walk** (2026-10-13, `src/plan/land.ts`, pure, `land.test.ts`): every polygon of `land.geojson`'s
+    MultiPolygon is a landmass (0 = European side — one polygon all round the Golden Horn, so Karaköy ↔ Eminönü walks;
+    7 = Asian side; 16 / 17 / 18 / 22 = Kınalıada / Burgazada / Heybeliada / Büyükada; the rest are rocks / breakwaters).
+    A walk (between stops, to / from start / end points, AND to / from a ferry's piers) needs both ends on one landmass;
+    otherwise the leg falls through to the ferry rule, then "No transport info" (Beşiktaş ↔ Üsküdar on a weekday evening:
+    no Şehir Hatları line between them → none). Snap: a point off every polygon takes the nearest within
+    `CONFIG.plan.walk.snapM` (100 m), else the landmass of one of our piers within 100 m, else none (open water: no walk,
+    no pier → none). Piers snap within `pierSnapM` (250 m: Büyükada's pier head is 151 m off the simplified coast); every
+    pier and every featured place but Kız Kulesi lands on a landmass (test). Kız Kulesi isn't in the simplified coastline
+    at all (212 m off Asia), so it is on no landmass — the islet flag stays as the explicit rule. `PlanDeps.landOf` is
+    optional (absent = distance only; old tests), the app passes `services().land`. Time logic, ferry choice and the
+    share format are unchanged; old links recompute (test). Not covered: the Golden Horn and the Bosphorus are still
+    straight-line × 1.3 within a landmass (Fener ↔ Hasköy "walks" straight over the water; the real way is a bridge, a little longer).
   - **Pier board direction** (`src/sim/direction.ts`; checked against the PDF 2026-10-13): the row tables (Kabataş – Adalar
     pp. 12–13, Rumeli Kavağı – Eminönü p. 22, Anadolu Kavağı – Üsküdar p. 28, Boğaz tours p. 35) are printed one direction per
     table ("A - B" title, piers in column order, end pier under VARIŞ) and the Kadıköy – Beşiktaş day table (p. 6) has only

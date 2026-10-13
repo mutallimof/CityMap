@@ -9,6 +9,7 @@ import type { Network } from '../sim/network';
 import type { DaySchedule, LineSpec } from '../sim/types';
 import type { LineMode } from '../sim/schedule';
 import type { TimetableFile } from '../sim/timetable-data';
+import type { LandIndex } from '../plan/land';
 
 /** Everything the UI needs from the map/sim side, set once at boot. */
 export interface Services {
@@ -25,6 +26,8 @@ export interface Services {
   lineById: Map<string, LineSpec>;
   piers: FeatureCollection<Point, PierProps>;
   pierById: Map<string, PierProps & { lngLat: [number, number] }>;
+  /** Landmasses of data/land.geojson (the planner walks only within one). */
+  land: LandIndex;
 }
 
 let current: Services | null = null;
