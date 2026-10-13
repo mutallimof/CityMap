@@ -8,6 +8,7 @@ def text_of(h):
     return re.sub(r'\s+', ' ', html.unescape(h)).strip()
 import os
 ALL = os.environ.get('ALL') == '1'
+RSCMAX = int(os.environ.get('RSCMAX', '20000'))
 SCRIPTMAX = int(os.environ.get('SCRIPTMAX', '4000'))
 def run(urls, textmax):
     first = True
@@ -40,6 +41,14 @@ def run(urls, textmax):
             if ALL: 
                 for l in links:
                     if not l.startswith('/_next') and 'image' not in l: print('  A', l)
+            for f in re.findall(r'(?is)<form[^>]*>', s): print('FORM', f)
+            for sel in re.findall(r'(?is)<select[^>]*>.*?</select>', s):
+                print('SELECT', re.search(r'(?is)<select[^>]*>', sel).group(0))
+                for v, t in re.findall(r'(?is)<option[^>]*value=["\']?([^"\' >]*)["\']?[^>]*>(.*?)</option>', sel): print('   OPT', v, '|', text_of(t))
+            rsc = ''.join(json.loads('"' + m + '"') for m in re.findall(r'self\.__next_f\.push\(\[1,"((?:[^"\\]|\\.)*)"\]\)', s))
+            if rsc:
+                for blk in re.findall(r'(?is)<(?:section|div|table)[^>]*>.*', rsc)[:1]:
+                    print('RSCHTML', text_of(re.sub(r'(?i)</(tr|p|li|h\d|div|td|th)>', r' ¦ ', blk))[:RSCMAX])
             for sc in re.findall(r'(?is)<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', s):
                 if re.search(r'\d{1,2}[:.]\d{2}|sefer|Sefer|tarife|ajax|url', sc): print('SCRIPT', len(sc), sc[:SCRIPTMAX].replace('\n', ' '))
             print('TEXT', text_of(s)[:textmax])
