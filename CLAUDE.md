@@ -11,7 +11,8 @@ create them): project history = this file + git.
 ## Ground rules (from the user)
 - Tags: `v0.1.0` = the look before the theme redesign; `v0.2.0` = the redesign, before the cleanup pass (tag pushes
   are refused by the session git proxy: tags are made by a one-off workflow on a `probe/tag-…` branch; leftover
-  probe branches: `probe/tag-v0.2.0` — the session can't delete remote branches, the user may).
+  probe branches: `probe/tag-v0.2.0`, `probe/ferry-operators` (operator site probes), `probe/operators-scrape` (first
+  operator reads) — the session can't delete remote branches, the user may).
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
 - **No open-source licence** — the user keeps all rights.
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
