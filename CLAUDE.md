@@ -30,6 +30,9 @@ create them): project history = this file + git.
   Uzun Boğaz Turu (35). Weekday peak ≈ 20 vessels at once (19:14).
   Piers added for the commuter lines (all OSM): Büyükdere (way/592032187, pier building), İstinye (node/6502486594),
   Beykoz (way/739105702), Paşabahçe (way/525436007), Çubuklu (way/525436006 passenger pier, not the car ferry).
+  **Private operators (2026-10-13, see "Private operators"):** Turyol Kadıköy (Yeni) – Karaköy – Eminönü, Üsküdar –
+  Karaköy – Eminönü, Karaköy – Kadıköy (Metro); Dentur Avrasya Üsküdar – Kabataş — 4 lines, 7 operator piers (OSM),
+  timetables read weekly from the operators' own sites. Weekday 19:00: 29 vessels in the z11.6 city view (was 19).
   Procedural 3D vapurs (three.js custom layer): wake, bob, docking, smoke, horn rings, splash, gulls, Follow glide.
   Several vessels at one berth moor side by side (up to 4 at Kadıköy on a weekday).
 - **City:** OpenFreeMap vector tiles in our palette; day→golden→night from the real sun; live weather + seasons;
@@ -171,6 +174,8 @@ npm run validate:data   # gate for refreshed data incl. timetables (also runs in
 python3 scripts/timetables/parse-tarife.py data/raw/tarife.pdf && npm run data:timetables   # new timetable PDF
 npm run data:audio      # sounds.json → public/audio (needs ffmpeg + Commons: run in Actions, not the sandbox)
 node scripts/build-icons.cjs   # public/icons/icon.svg → PWA icons + iOS splash PNGs (Playwright)
+npm run data:operators  # private operators' timetables (Actions only: sandbox can't reach them; FORCE=1 OPERATORS=turyol)
+npm run data:fetch-lookup && npm run data:piers -- --only=<ids>   # (re)build only these piers from pinned OSM ids
 ```
 - **Screenshot regression check** (used for the cleanup pass): fixed scene `motion=reduced&t=12:00&date=2026-10-12&
   weather=clear&season=autumn&theme=<id>&view=28.985,41.02,14.2,45,0` (+ night street zoom `t=21:30 …
@@ -197,8 +202,10 @@ ids/names/rules (no coordinates).
 | `stories.json` | `data:stories` | Overpass + Wikidata + Wikipedia + Commons | **monthly (3rd)**, Actions |
 | `places-auto.geojson` | `data:featured` | Overpass | **monthly (3rd)**, Actions |
 | `public/audio/*.webm/.m4a`, `credits.html` | `data:audio` (`scripts/audio/build-audio.py`) | Wikimedia Commons, list in `data/catalog/sounds.json` | manual, in Actions |
+| `timetables-turyol.json`, `timetables-dentur.json`, `operators-log.json` | `data:operators` (`scripts/operators`, catalog `data/catalog/operators.json`) | turyol.com, denturavrasya.com | **weekly** (the daily job runs it; it skips until 6 days since the last read), Actions |
+| operator piers in `piers.geojson` | `data:fetch-lookup` → `data:piers -- --only=<ids>` (merges; other piers untouched) | Nominatim lookup of pinned OSM ids | manual |
 
-- `.github/workflows/data-refresh.yml`: cron + `workflow_dispatch` (`what` = events|stories|places|both,
+- `.github/workflows/data-refresh.yml`: cron + `workflow_dispatch` (`what` = events|stories|places|operators|both,
   `venues` = ids to force-refetch). Steps: scrapers (`continue-on-error`) → `validate:data` (fails ⇒ nothing
   committed) → commit (rebase + retry push) → calls `deploy.yml`. **Never deploy empty or broken data**: the
   validator refuses big drops vs the committed file and empty-after-non-empty.
@@ -207,6 +214,59 @@ ids/names/rules (no coordinates).
 - `deploy.yml`: tests + build with `BASE=/<repo>/` → publishes `dist/` to the `gh-pages` branch (Pages source).
 - The dev sandbox **cannot reach** venue sites, Wikimedia, Overpass or Open-Meteo. Develop those through Actions runs
   (dispatch the refresh job; for page structure push a temporary probe workflow on a side branch).
+
+## Private operators (`scripts/operators/`, catalog `data/catalog/operators.json`; added 2026-10-13)
+- **Permission (Part 0, read 2026-10-13 from Actions):** turyol.com and denturavrasya.com have **no robots.txt** (404)
+  and **no terms of use**; turyol.com only has ticket-sale / cancellation / delivery / privacy contracts ("Mesafeli Satış",
+  "İptal İade", "Teslimat", "Gizlilik") — none about the site's content or automated reading — and "Turyol © 2026 All
+  Rights Reserved"; denturavrasya.com has a KVKK notice and "© 2026 Dentur Avrasya. Tüm hakları saklıdır." Judged:
+  not forbidden, no explicit permission either → we read only the public timetable, facts only, politely. **dentur.com.tr
+  disallows crawling: never touched.** sehirhatlari.istanbul / data.ibb.gov.tr: not tried (blocked; don't work around).
+- **Sources:** Turyol: POST `https://www.turyol.com/Home/Tarifeler` (`MainHatTuruId`, `TarifeKalkisId` = the site's own
+  `main_type_mainPier_pier` value, `TarifeVarisId`) → one table per pier pair, title "<pier> Kalkış / <pier>", columns
+  HAFTAİÇİ / CUMARTESİ / PAZAR; destinations offered per pier: POST JSON `/Tarife/GetVarislar2` (a pair is read only when
+  offered). Dentur Avrasya: `https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas` — HTML inside the Next.js RSC
+  payload (`self.__next_f.push`), one column per departure pier ("ÜSKÜDAR KALKIŞ"), HAFTA İÇİ / CUMARTESİ / PAZAR,
+  "16:00 - 18:30 Arası Sürekli Sefer" cells. ~16 requests a week, ≥ 4 s apart (`scripts/events/http.ts`).
+- **Neither prints a validity period or a holiday timetable** for these lines: a read counts from the day its content
+  was first seen until `horizonDays` (45) after the last good read (validator warns from 30 days left = 2 missed weekly
+  reads); per-line `holidays: 'none'` → **public holidays run that line's simulated schedule** (labelled), never Sunday.
+- **Schema** (backward compatible, `src/sim/timetable-data.ts`): same `TimetableFile`, plus `operator`, per line
+  `validFrom/validTo/fetched/url/holidays/continuous`, trip `orderInferred`, departure `via`. `loadTimetables()` returns
+  the list (SH first); `realTripSource` / `lineFallback` / `lineValidity` are per line (`src/sim/real.ts`).
+- **Reading rules** (`build.ts`, pure, tested): each printed departure = one direct sailing; **one boat printed to two
+  destinations** (Turyol prints Kadıköy Yeni → Karaköy and → Eminönü, and Üsküdar → Karaköy and → Eminönü, with identical
+  columns on every day type) = one sailing calling at both (`merge` in the catalog; order: Kadıköy from the OSM route
+  relation "Kadıköy (Çayırbaşı) - Karaköy (Turyol) - Eminönü", Üsküdar nearest first — **not printed**, pier board †, rides
+  board only at the origin). A day whose columns differ keeps direct trips. Continuous-service windows: a note on the
+  pier board, no departures made up (so no boats in Dentur's 16:00–18:30 / 08:10–09:10 windows beyond the printed ones).
+- **Every read is checked**: parsers throw on any unexpected header / cell / title (Turyol's title must name the
+  requested pair; it prints a Kadıköy destination as plain "Kadıköy"); a failed line keeps its last good read
+  (`operators-log.json`); `validate:data` / build refuse a bad file (shape, speeds, > 50 % drop, deleted file).
+- **Piers (OSM, pinned, `_why` in `data/catalog/piers.json`):** Eminönü (Turyol) node/2478522774, Karaköy (Turyol)
+  way/240079131, Üsküdar (Turyol) node/4161740638, Kadıköy Yeni (Turyol) way/226127060 ("Turyol Eminönü ve Karaköy
+  İskelesi": its name lists Yeni's destinations), Kadıköy Metro (Turyol) way/236642399 (end of the OSM route "Kadıköy
+  (Metro Durağı) - Karaköy (Turyol)"), Üsküdar (Dentur) node/2456974746, Kabataş (Dentur) node/12985066037 (end of the
+  OSM route "Üsküdar - Kabataş (Dentur Avrasya)"; tagged FIXME precise location).
+- **Docking (existing lines never change — test compares every SH pose / slot with and without the new lines):**
+  operator berths never share slots with SH ones. `build-piers.ts` (operator piers only): a berth our coastline snapped
+  onto an SH berth (Karaköy 10 m, Üsküdar 2 m — separate pontoons in OSM) slides along the coast to ≥ 80 m; each operator
+  berth stores a coastline-checked `spread` = [away from nearest SH berth, its distance, real-size shift, city-zoom shift]
+  (smallest shift clearing SH hulls in slots 0–3, incl. swinging hulls at real size, own slots 0–3 on water);
+  `fleet.ts berthOffset` interpolates it by exaggeration. Real size: no docked overlaps (weekday + Sunday, 15 s steps);
+  city zoom (×3.9): ≈ 3 pair-hours a day of touching, bounded in the test (cross-water Golden Horn pairs, swings).
+- **Routes:** lanes 3–5 for the Turyol lines (they share water with SH lines and each other), Dentur lane 0. Catalog
+  `approach: { "karakoy-turyol>eminonu-turyol": "seaward" }`: that 320 m hop comes straight in from the sea (the
+  along-shore approach hooked 90° in 30 m). Existing 86 lanes byte-identical after `data:routes`.
+- **Planner:** closest `piersPerSide` piers are counted **per operator** (an operator pier never pushes an SH pier out).
+- **UI:** operator name on every pier-board row and the vessel sheet; badge "<Operator> timetable" / "Simulated
+  schedule"; credit "Times: Turyol timetable (turyol.com) (read <date>)"; attribution bar "Ferry times: Şehir Hatları ·
+  Turyol · Dentur Avrasya" → `public/ferry-credits.html`. Same vapur look (line colours only, no operator branding).
+- **Not added (and why):** Dentur Üsküdar – Beşiktaş (only "06:10-00:45 arası sürekli sefer", no times); Dentur Beşiktaş –
+  Kadıköy (one list for "BEŞİKTAŞ VE KADIKÖY", departure pier not printed); Dentur Adalar (Beşiktaş – Kabataş – Sirkeci –
+  Heybeliada – Büyükada; no Dentur pier for Sirkeci or Büyükada in OSM); Turyol Adalar (no Turyol pier on Burgazada /
+  Heybeliada in OSM, Bakırköy not added); Boğaz tours of both (no route / turning point published); Turyol Çınarcık /
+  Yalova lines (outside the map).
 
 ## Venue scraping rules (`scripts/events/`, config `data/catalog/venues.json` — internal, never shown in the UI)
 - **Facts only:** title, date/time, venue/place, category, price if listed, event page + official ticket link.
@@ -225,7 +285,7 @@ ids/names/rules (no coordinates).
 
 ## Code map
 Grouped by feature; tests sit next to what they test (`*.test.ts`); non-obvious modules start with a header comment.
-- `src/sim` pure schedule / state: `schedule.ts` (trips → legs → vessels), `real.ts` (real timetables), `fleet.ts`
+- `src/sim` pure schedule / state: `schedule.ts` (trips → legs → vessels), `real.ts` (real timetables, per-line validity / fallback), `fleet.ts`
   (poses, docking, slides), `berths.ts` (abreast slots), `network.ts`, `path.ts`, `motion.ts`, `time.ts` + tests.
 - `src/ferries` vapur layer, model, wake, gulls, smoke, lights; `ferries/ui/` pier board (`PierSheet`), vessel sheet
   (`VesselSheet`), timetable badge / credit (`timetable.tsx`).
@@ -241,7 +301,8 @@ Grouped by feature; tests sit next to what they test (`*.test.ts`); non-obvious 
 - `src/themes` looks (registry, Classic, Toy, Storybook, Night, live switch, fonts) · `src/ui` React HUD (App, top bar,
   chips, sheets, store, i18n) · `src/app` daylight, perf ladder, clock, PWA · `src/data/load.ts` data fetchers ·
   `src/debug` dev panel · `src/config.ts` shared tunables + the Classic look · `src/main.tsx` boot.
-- `scripts/` data builders, validators, scrapers (Turf only here); `scripts/timetables` PDF parser; `scripts/dev`
+- `scripts/` data builders, validators, scrapers (Turf only here); `scripts/timetables` PDF parser; `scripts/operators`
+  private operators' timetable reader (parse / build / validate / scrape); `scripts/dev`
   headless screenshots.
 Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest 5.
 
@@ -447,6 +508,10 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
+- Private operators (2026-10-13): the order of calls on Turyol's merged sailings is inferred (†); city-zoom docked hulls
+  of operator boats still touch neighbours ≈ 3 pair-hours a day; vessel counts on Turyol lines are an upper bound (each
+  line chains its own boats; Turyol may swap boats between lines); timetables can change without notice (Turyol's
+  contract says so) — we see changes within a week; real-world accuracy not checked on site.
 - Browser zoom: fixed 2026-10-13 (see Key decisions → Browser zoom); checked headless only. An open sheet still covers
   the credits (as at 100 %). Pinch zoom on a phone only scales the visual viewport (layout unchanged); not tried on a
   real iPhone (iOS honours `touch-action: none` on the map only partly; the credit strip's sideways swipe neither).
@@ -492,6 +557,11 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - Actions warn about Node 20 deprecation for `actions/checkout@v4` / `setup-node@v4`.
 
 ## Performance notes (2026-10-12, headless Chromium in the sandbox — JS time per frame, not GPU)
+- **With the private operators (2026-10-13, same method):** busiest moment z11.6 at 19:00 — visible vessels 19 → 29
+  (Mon 19 Oct, operators real; 26 on 12 Oct when they run simulated), ferry layer Classic 1.47 → 1.50–1.63 ms, Toy
+  1.44 → 1.76–1.85 ms; `?stress=40` 1.78 → 2.05 ms (Classic), 1.86 → 2.07 ms (Toy); water ~0.2 ms unchanged.
+  Screenshot check (fixed scene, 4 looks, z14.2 and z12.8): existing vessels identical (diff = run-to-run noise); the
+  changes are the new lanes, the new boats / piers and one more attribution row ("Ferry times: …").
 - Busiest moment (Mon 19:00, z11.6) and `?stress=40` (z12.4), Classic and Toy: ferries 1.9–2.8 ms, water 0.2–0.4 ms,
   toy scenery 0.4–0.5 ms per frame; Toy over parks at z15.4: ~2000 trees, scenery 0.7 ms; a tree refresh (moveend,
   debounced) 8–13 ms. GPU cost on a real iPhone 13 is **not verified** (no device here).
@@ -522,3 +592,5 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
    (Safari Web Inspector timeline: long tasks, shader compile), the fog icon and the attribution rows.
 6. ~~Open-Meteo credit~~ — done (2026-10-12): attribution bar, see Key decisions.
 7. ~~Boot performance~~ — done (2026-10-12): on-demand pin images, deferred stories, no glyph 404s; see Key decisions.
+8. ~~Private operators~~ — done (2026-10-13): Turyol + Dentur Avrasya city lines; next: their island lines once OSM
+   has the piers, Dentur's Beşiktaş lines if they print times / directions, İDO / Mavi Marmara (check terms first).
