@@ -8,6 +8,7 @@ def text_of(h):
     return re.sub(r'\s+', ' ', html.unescape(h)).strip()
 import os
 ALL = os.environ.get('ALL') == '1'
+GREP = os.environ.get('GREP')
 RAW = os.environ.get('RAW') == '1'
 RAWMAX = int(os.environ.get('RAWMAX', '6000'))
 RSCMAX = int(os.environ.get('RSCMAX', '20000'))
@@ -49,7 +50,10 @@ def run(urls, textmax):
             if ALL: 
                 for l in links:
                     if not l.startswith('/_next') and 'image' not in l: print('  A', l)
-            for f in re.findall(r'(?is)<form[^>]*>', s): print('FORM', f)
+            if RAW:
+                for t in re.findall(r'(?is)<table.*?</table>', s): print('TABLE', re.sub(r'\s+', ' ', t)[:RAWMAX])
+            if GREP:
+                for m in re.finditer(GREP, text_of(s), re.I): print('GREP', text_of(s)[max(0, m.start() - 250):m.end() + 250])
             for sel in re.findall(r'(?is)<select[^>]*>.*?</select>', s):
                 print('SELECT', re.search(r'(?is)<select[^>]*>', sel).group(0))
                 for v, t in re.findall(r'(?is)<option[^>]*value=["\']?([^"\' >]*)["\']?[^>]*>(.*?)</option>', sel): print('   OPT', v, '|', text_of(t))
