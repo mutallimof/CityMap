@@ -1,6 +1,7 @@
-https://www.turyol.com/robots.txt
-https://www.turyol.com/
-https://www.turyol.com/sitemap.xml
-https://denturavrasya.com/robots.txt
-https://denturavrasya.com/
-https://denturavrasya.com/sitemap.xml
+https://www.turyol.com/Home/Tarifeler
+https://www.turyol.com/Home/Iskeleler
+https://www.turyol.com/js/script.js
+https://www.turyol.com/UserFiles/sozlesme/Gizlilik%20G%C3%BCvenlik%20S%C3%B6zle%C5%9Fmesi.html
+https://www.denturavrasya.com/tr-TR/hatlarimiz
+https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-besiktas
+https://www.denturavrasya.com/tr-TR/kurumsal/kvkk-aydinlatma-metni

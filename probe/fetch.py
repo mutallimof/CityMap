@@ -6,6 +6,9 @@ def text_of(h):
     h = re.sub(r'(?is)<(script|style|noscript)[^>]*>.*?</\1>', ' ', h)
     h = re.sub(r'(?s)<[^>]+>', ' ', h)
     return re.sub(r'\s+', ' ', html.unescape(h)).strip()
+import os
+ALL = os.environ.get('ALL') == '1'
+SCRIPTMAX = int(os.environ.get('SCRIPTMAX', '4000'))
 def run(urls, textmax):
     first = True
     for u in urls:
@@ -34,6 +37,11 @@ def run(urls, textmax):
                 if KEY.search(l) or l.endswith('.js') or l.endswith('.pdf'): print('  L', l)
             for m in sorted(set(re.findall(r'''["'`](/?[\w\-/.]*(?:api|ajax|json|Sefer|sefer|Hat|hat|Tarife|tarife|Saat|saat)[\w\-/.?=&]*)["'`]''', s)))[:120]:
                 print('  S', m)
+            if ALL: 
+                for l in links:
+                    if not l.startswith('/_next') and 'image' not in l: print('  A', l)
+            for sc in re.findall(r'(?is)<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', s):
+                if re.search(r'\d{1,2}[:.]\d{2}|sefer|Sefer|tarife|ajax|url', sc): print('SCRIPT', len(sc), sc[:SCRIPTMAX].replace('\n', ' '))
             print('TEXT', text_of(s)[:textmax])
         else:
             print(s[:textmax])
