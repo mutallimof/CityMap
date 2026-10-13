@@ -59,7 +59,7 @@ import storiesUrl from '../data/stories.json?url';
 import heroData from '../data/hero-landmarks.json';
 import { syncHeroLabels } from './scenery/labels';
 import eventsUrl from '../data/events.json?url';
-import { events, type CityEvent } from './events/events';
+import { events, type EventsFile } from './events/events';
 import { EventPulses } from './events/pulses';
 import { setSearchData } from './search/SearchPanel';
 import guidesCatalog from '../data/catalog/guides.json';
@@ -325,7 +325,7 @@ async function boot() {
   // Events (scraped daily) load right after the map is up — never blocking; "event today" pins need them.
   void fetch(eventsUrl)
     .then((r) => (r.ok ? r.json() : null))
-    .then((j: { events: CityEvent[] } | null) => j && events.set(j.events))
+    .then((j: Partial<EventsFile> | null) => j && events.setFile(j))
     .catch(() => undefined);
   // Stories (history, ~600 kB) load when first needed: story markers about to appear (zoom), a place sheet
   // (its Story section), the skyline test — or when the browser is idle a few seconds after the map is up.

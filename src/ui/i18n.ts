@@ -51,6 +51,7 @@ const STRINGS = {
   website: { tr: 'Web sitesi', en: 'Website' },
   search: { tr: 'Ara', en: 'Search' },
   upcomingEvents: { tr: 'Yaklaşan etkinlikler', en: 'Upcoming events' },
+  eventsUpdated: { tr: 'Etkinlikler güncellendi:', en: 'Events updated' },
   liveNow: { tr: 'Şu an', en: 'On now' },
   free: { tr: 'Ücretsiz', en: 'Free' },
   details: { tr: 'Ayrıntılar', en: 'Details' },

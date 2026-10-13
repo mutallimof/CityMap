@@ -21,6 +21,38 @@ export interface CityEvent {
   tickets?: string;
 }
 
+/** data/events.json. `venues` (venue id → ISO time of its last successful scrape) is newer than the file format: old files lack it. */
+export interface EventsFile {
+  /** ISO time of the last scraper run. */
+  generated?: string;
+  venues?: Record<string, string>;
+  events: CityEvent[];
+}
+
+/** Events of a venue not refreshed for longer than this are hidden (the scraper keeps a venue's last good events when it is blocked / fails). */
+export const STALE_VENUE_MS = 3 * 86_400_000;
+
+/**
+ * The file's events minus those of stale venues: a venue with a refresh time older than `STALE_VENUE_MS`.
+ * A file or venue without a refresh time (older files, venues that never succeeded) shows everything — never throws.
+ */
+export function freshEvents(file: Partial<EventsFile> | null | undefined, nowMs: number): CityEvent[] {
+  const all = Array.isArray(file?.events) ? file.events : [];
+  const times = file?.venues && typeof file.venues === 'object' ? file.venues : null;
+  if (!times) return all;
+  return all.filter((e) => {
+    const t = Date.parse(times[e.venue] ?? '');
+    return Number.isNaN(t) || nowMs - t <= STALE_VENUE_MS;
+  });
+}
+
+/** "12 October 2026" / "12 Ekim 2026" (Istanbul date) of an ISO stamp, or null when missing / invalid. */
+export function formatUpdated(iso: string | null | undefined, lang: 'tr' | 'en'): string | null {
+  const t = Date.parse(iso ?? '');
+  if (Number.isNaN(t)) return null;
+  return new Date(t).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Istanbul' });
+}
+
 export interface EventFilters {
   today: boolean;
   weekend: boolean;
@@ -81,6 +113,14 @@ export class EventsStore {
   private byPlace = new Map<string, CityEvent[]>();
   private listeners = new Set<() => void>();
   all: CityEvent[] = [];
+  /** ISO time the events file was generated (null: unknown). */
+  generated: string | null = null;
+
+  /** Load a data/events.json (any age of format); events of stale venues are left out. */
+  setFile(file: Partial<EventsFile>, nowMs = Date.now()): void {
+    this.generated = typeof file.generated === 'string' ? file.generated : null;
+    this.set(freshEvents(file, nowMs));
+  }
 
   set(events: CityEvent[]): void {
     this.all = [...events].sort((a, b) => startMs(a) - startMs(b));

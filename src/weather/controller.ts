@@ -3,6 +3,9 @@ import { CALM, demoConditions, easeConditions, fromOpenMeteo, parseDemo, seasonO
 
 export type WeatherSource = 'live' | 'demo' | 'offline';
 
+/** Whether data fetched at `fetchedAt` (ms, wall clock) is still young enough to show. */
+export const weatherFresh = (fetchedAt: number | null, nowMs: number, maxAgeMs = CONFIG.weather.maxAgeMin * 60_000): boolean => fetchedAt !== null && nowMs - fetchedAt <= maxAgeMs;
+
 /**
  * Live weather from Open-Meteo (free, no key; fetched by the visitor's browser every ~15 min),
  * or a demo preset from `?weather=…`. Season from the simulated date, or `?season=…`.
@@ -12,15 +15,23 @@ export class WeatherController {
   readonly demo = parseDemo(location.search);
   target: Conditions = CALM;
   current: Conditions = CALM;
-  source: WeatherSource = 'offline';
+  /** Wall-clock time of the last successful fetch. */
+  private fetchedAt: number | null = null;
+  private expired = false;
   private listeners = new Set<() => void>();
   private timer = 0;
 
-  constructor(private now: () => number) {
-    if (this.demo.weather) {
-      this.target = this.current = demoConditions(this.demo.weather);
-      this.source = 'demo';
-    }
+  constructor(
+    private now: () => number,
+    private wall: () => number = Date.now,
+  ) {
+    if (this.demo.weather) this.target = this.current = demoConditions(this.demo.weather);
+  }
+
+  /** 'live' only while the last successful fetch is under `maxAgeMin` old — a later run of failures hides the weather. */
+  get source(): WeatherSource {
+    if (this.demo.weather) return 'demo';
+    return weatherFresh(this.fetchedAt, this.wall()) ? 'live' : 'offline';
   }
 
   start(): void {
@@ -29,7 +40,12 @@ export class WeatherController {
       const c = await fetchCurrent();
       if (c) {
         this.target = c;
-        this.source = 'live';
+        this.fetchedAt = this.wall();
+        this.expired = false;
+        this.emit();
+      } else if (this.fetchedAt !== null && !this.expired && this.source === 'offline') {
+        this.expired = true; // too old to trust: back to a calm scene, chip hidden
+        this.target = CALM;
         this.emit();
       }
     };

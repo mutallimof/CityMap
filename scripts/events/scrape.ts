@@ -560,7 +560,10 @@ async function main() {
   }
 
   const events = dedupeIds(all).sort((a, b) => a.start.localeCompare(b.start) || a.id.localeCompare(b.id));
-  writeFileSync(OUT, JSON.stringify({ generated: stamp, events }, null, 0) + '\n');
+  // venue id → time of its last successful scrape: the app hides a venue's events once that is > 3 days old
+  // (a blocked / failing venue keeps its last good events here, see keep()). Older files lack this.
+  const venues = Object.fromEntries(Object.entries(log).flatMap(([id, l]) => (l.lastOk ? [[id, l.lastOk]] : [])));
+  writeFileSync(OUT, JSON.stringify({ generated: stamp, venues, events }, null, 0) + '\n');
   geo.save();
   writeFileSync(LOG, JSON.stringify({ generated: stamp, venues: log, ...(geo.log.length ? { places: geo.log } : {}) }, null, 1) + '\n');
   console.log(`→ ${OUT}: ${events.length} events from ${new Set(events.map((e) => e.venue)).size} venues`);

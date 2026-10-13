@@ -593,6 +593,8 @@ export const CONFIG = {
     /** Open-Meteo (free, no key). Refresh interval in minutes. */
     url: 'https://api.open-meteo.com/v1/forecast?latitude=41.02&longitude=29.0&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,cloud_cover,precipitation,visibility&wind_speed_unit=ms&timezone=Europe%2FIstanbul',
     refreshMin: 15,
+    /** Live weather older than this (every refresh since failed) is dropped: no chip, calm scene. */
+    maxAgeMin: 180,
     /** The weather chip's drawn fog icon (src/weather/FogIcon.tsx): cloud, its highlight, mist lines. */
     fogIcon: { cloud: '#AEB8C4', highlight: '#E6EBF0', mist: '#8592A0' },
     /** Seconds (real time) for the scene to ease into new conditions. */

@@ -69,6 +69,8 @@ function checkEvents(places: Set<string>): void {
   if (!existsSync(file)) return;
   const j = JSON.parse(readFileSync(file, 'utf8')) as { events: EventItem[] };
   if (!Array.isArray(j.events)) return bad(`${file}: no events array`);
+  const venueTimes = (j as { venues?: Record<string, string> }).venues; // optional (older files lack it)
+  if (venueTimes !== undefined) for (const [id, t] of Object.entries(venueTimes ?? {})) if (Number.isNaN(Date.parse(t))) bad(`${file}: venues.${id} is not a time ("${t}")`);
   const ids = new Set<string>();
   for (const e of j.events) {
     for (const p of validateEvent(e, places)) bad(`${file} ${e.id ?? '?'}: ${p}`);

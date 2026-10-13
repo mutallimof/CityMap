@@ -6,6 +6,8 @@ import { useTicker } from '../../ui/hooks';
 import { kindLabel, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
+import { anyEventFilter } from '../../events/events';
+import { EventsUpdated } from '../../events/EventsSection';
 import { PlaceIcon } from './PlaceIcon';
 import { distanceM } from '../store';
 import { NearestPierButton, SunsetCard } from './Extras';
@@ -98,6 +100,7 @@ export function FeedBody({ extra }: { extra?: ReactNode }) {
       {!saved && !openNow && <SunsetCard />}
       {!saved && extra}
       <h3 className="section">{saved ? t('saved') : openNow ? t('openPlaces') : t('featured')}</h3>
+      {!saved && anyEventFilter(ev) && <EventsUpdated />}
       {list.length === 0 && <p className="muted feed__empty">{t('noMatches')}</p>}
       <ul className="plist">
         {list.map(({ p, d, o }) => (

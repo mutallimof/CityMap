@@ -3,7 +3,7 @@ import { useTicker } from '../ui/hooks';
 import { useT, type StringKey } from '../ui/i18n';
 import { services } from '../ui/services';
 import { useUi } from '../ui/store';
-import { dayOf, events, isLongRun, isNow, startMs, endMs, type CityEvent } from './events';
+import { dayOf, events, formatUpdated, isLongRun, isNow, startMs, endMs, type CityEvent } from './events';
 import { AddEventToPlan } from '../plan/ui';
 
 const fmtTime = (ms: number) => new Date(ms + 3 * 3_600_000).toISOString().slice(11, 16);
@@ -12,6 +12,21 @@ function fmtDay(ms: number, now: number, lang: 'tr' | 'en'): string {
   if (d === 0) return lang === 'tr' ? 'Bugün' : 'Today';
   if (d === 1) return lang === 'tr' ? 'Yarın' : 'Tomorrow';
   return new Date(ms).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Istanbul' });
+}
+
+/** "Events updated 12 October 2026" — when the events file was last generated (nothing if unknown). */
+export function EventsUpdated() {
+  const t = useT();
+  const lang = useUi((s) => s.lang);
+  const [, force] = useState(0);
+  useEffect(() => events.onChange(() => force((n) => n + 1)), []);
+  const date = formatUpdated(events.generated, lang);
+  if (!date) return null;
+  return (
+    <small className="muted events__updated">
+      {t('eventsUpdated')} {date}
+    </small>
+  );
 }
 
 /** Upcoming events at a venue, each linking to its original page (and ticket page when listed). */
@@ -60,6 +75,7 @@ export function EventsSection({ placeId }: { placeId: string }) {
           );
         })}
       </ul>
+      <EventsUpdated />
     </section>
   );
 }
