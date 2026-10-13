@@ -318,8 +318,10 @@
   background: rgba(127, 127, 127, 0.35);
   margin: 0 auto 10px;
 }
-.sheet__headrow { display: flex; align-items: center; gap: 10px; }
-.sheet__title { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+.sheet__headrow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+/* Narrower than its 150 px basis (browser zoom), the title takes its own line and the buttons wrap below it. */
+.sheet__title { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 150px; }
+.sheet__title > div { min-width: 0; overflow-wrap: anywhere; }
 .sheet__title h2 { margin: 0; font-size: 19px; line-height: 1.2; font-weight: 800; font-family: var(--font-display); }
 .sheet__title small { font-size: 12.5px; font-weight: 600; }
 .sheet__close {
@@ -513,7 +515,7 @@
 /* ---- Legend ---- */
 .legend {
   position: absolute;
-  top: calc(var(--safe-top) + 104px);
+  top: calc(var(--safe-top) + 104px + var(--topbar-extra, 0px));
   right: 12px;
   width: min(300px, calc(100vw - 24px));
   pointer-events: auto;
@@ -611,11 +613,18 @@
   .chip--weather { min-width: 0; flex-shrink: 1; overflow: hidden; }
   .chip--weather .chip__demo { display: none; }
 }
+/* Browser zoom (150 % of a phone ≈ 260 px, 200 % ≈ 195 px): the buttons wrap onto right-aligned rows instead of
+   running off the screen; 8 px between rows keeps the 44 px hit areas apart. Panels below move down with it
+   (--topbar-extra, TopBar.tsx). */
+@media (max-width: 359px) {
+  .topbar { flex-wrap: wrap; justify-content: flex-end; row-gap: 8px; }
+  .chip--weather { flex-shrink: 0; }
+}
 
 /* ---- Map style (theme) picker ---- */
 .themes {
   position: absolute;
-  top: calc(var(--safe-top) + 104px);
+  top: calc(var(--safe-top) + 104px + var(--topbar-extra, 0px));
   right: 12px;
   width: min(340px, calc(100vw - 24px));
   max-height: calc(100vh - var(--safe-top) - 260px);
@@ -632,7 +641,13 @@
   box-shadow: var(--shadow);
   z-index: 6;
 }
-.themes__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.themes__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+/* Browser zoom (< 360 px): the popovers keep inside the screen (their width includes the padding) with one column. */
+@media (max-width: 359px) {
+  .themes, .legend { box-sizing: border-box; }
+  .themes__grid, .legend__list { grid-template-columns: minmax(0, 1fr); }
+  .legend__list li:nth-last-child(-n + 2) { grid-column: auto; }
+}
 .themecard {
   display: grid;
   gap: 4px;

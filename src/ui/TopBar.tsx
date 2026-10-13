@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { formatHHMM, toIstanbul } from '../sim/time';
 import { useTicker } from './hooks';
 import { useT } from './i18n';
@@ -6,8 +7,24 @@ import { setLang, ui, useUi } from './store';
 import { PlanButton } from '../plan/ui';
 import { ThemeButton } from './ThemePanel';
 
+/** Height the top bar gains when it wraps (browser zoom), as `--topbar-extra`: panels under it move down by it. */
+function useWrapExtra(ref: React.RefObject<HTMLDivElement | null>): void {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const row = Math.max(0, ...[...el.children].map((c) => (c as HTMLElement).offsetHeight));
+      document.documentElement.style.setProperty('--topbar-extra', `${Math.max(0, el.offsetHeight - row)}px`);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+}
+
 export function TopBar({ extra }: { extra?: React.ReactNode }) {
   useTicker(500);
+  const ref = useRef<HTMLDivElement>(null);
+  useWrapExtra(ref);
   const t = useT();
   const lang = useUi((s) => s.lang);
   const sound = useUi((s) => s.sound);
@@ -16,7 +33,7 @@ export function TopBar({ extra }: { extra?: React.ReactNode }) {
   const live = Math.abs(now - Date.now()) < 60_000 && clock.speed === 1;
   const icon = daylight.theme.night > 0.5 ? '☾' : daylight.theme.golden > 0.5 ? '◐' : '☀';
   return (
-    <div className="topbar">
+    <div className="topbar" ref={ref}>
       <button className="chip chip--clock" onClick={() => ui.set((s) => ({ timePanel: !s.timePanel }))} aria-label={t('time')}>
         <span className="chip__icon" aria-hidden>
           {icon}
