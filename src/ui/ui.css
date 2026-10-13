@@ -411,6 +411,8 @@
 }
 .deps__line { flex: 1; font-weight: 700; font-size: 14px; }
 .deps__wait { font-variant-numeric: tabular-nums; }
+.deps__inferred { margin-left: 2px; cursor: help; }
+.deps__note { display: block; margin-top: 6px; font-size: 11px; }
 
 @media (prefers-reduced-motion: reduce) {
   .sheet, .timepanel, .chip, .hint { transition-duration: 1ms !important; animation-duration: 1ms !important; }

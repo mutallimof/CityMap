@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { directionInferred } from '../../sim/direction';
 import { nextDepartures } from '../../sim/state';
 import { toIstanbul } from '../../sim/time';
 import { useTicker } from '../../ui/hooks';
@@ -35,6 +36,11 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
                 <small className="muted">
                   {' '}
                   {t('to')} {name(d.toStopId)}
+                  {directionInferred(d) && (
+                    <sup className="deps__inferred" title={t('dirInferred')} aria-label={t('dirInferred')}>
+                      †
+                    </sup>
+                  )}
                   {d.pier && ` · ${t(d.pier === 'old' ? 'oldPier' : 'newPier')}`}
                 </small>{' '}
                 {!d.real && <TimetableBadge real={false} />}
@@ -44,6 +50,11 @@ export function PierSheet({ id, nearby }: { id: string; nearby?: ReactNode }) {
           );
         })}
       </ul>
+      {deps.some(directionInferred) && (
+        <small className="muted deps__note">
+          † {t('dirInferred')}
+        </small>
+      )}
       {deps.some((d) => d.real) && <TimetableCredit />}
       {nearby}
     </div>
