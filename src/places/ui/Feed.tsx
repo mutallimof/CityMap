@@ -8,6 +8,7 @@ import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
 import { anyEventFilter } from '../../events/events';
 import { EventsUpdated } from '../../events/EventsSection';
+import { cleanName } from '../format';
 import { PlaceIcon } from './PlaceIcon';
 import { distanceM } from '../store';
 import { NearestPierButton, SunsetCard } from './Extras';
@@ -108,7 +109,7 @@ export function FeedBody({ extra }: { extra?: ReactNode }) {
             <button onClick={() => openPlace(p.id)}>
               <PlaceIcon kind={p.kind} category={p.category} />
               <span className="plist__name">
-                <b>{lang === 'en' && p.nameEn ? p.nameEn : p.name}</b>
+                <b>{cleanName(lang === 'en' && p.nameEn ? p.nameEn : p.name, lang)}</b>
                 <small className="muted">
                   {o.state === 'open' && <span className="dot-open" />}
                   {kindLabel(p.kind, lang)}

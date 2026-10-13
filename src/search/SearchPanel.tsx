@@ -11,9 +11,11 @@ import { kindOfPlace, type IconKind } from '../places/icons';
 import { PlaceIcon } from '../places/ui/PlaceIcon';
 import { categoryOfClass, iconKindOfPoi, placeFromFeature } from '../places/place-layers';
 import { flyTo, openPier, openPlace, places } from '../places/ui/context';
+import { cleanName } from '../places/format';
 import { kindLabel, useT } from '../ui/i18n';
 import { services } from '../ui/services';
 import { ui, useUi } from '../ui/store';
+import { landmarkPlace } from './landmark';
 import { rankResults, score, type SearchResult } from './local';
 import { osmSearch, PLACE_CATEGORIES, type OsmResult } from './osm';
 
@@ -57,7 +59,7 @@ export function localSearch(q: string, lang: 'tr' | 'en', t: ReturnType<typeof u
   const { map, pierById } = services();
   const items: SearchResult[] = [];
   for (const p of places().byId.values())
-    items.push({ kind: 'place', id: p.id, name: lang === 'en' && p.nameEn ? p.nameEn : p.name, sub: kindLabel(p.kind, lang), icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
+    items.push({ kind: 'place', id: p.id, name: cleanName(lang === 'en' && p.nameEn ? p.nameEn : p.name, lang), sub: kindLabel(p.kind, lang), icon: `k:${kindOfPlace(p.kind, p.category)}`, lngLat: p.lngLat });
   for (const [id, p] of pierById) items.push({ kind: 'pier', id, name: lang === 'en' ? p.nameEn : p.name, sub: t('pier'), icon: '⚓', lngLat: p.lngLat });
   for (const f of data?.districts.features ?? [])
     items.push({ kind: 'district', id: f.properties.id, name: lang === 'en' ? f.properties.nameEn : f.properties.name, sub: t('district'), icon: '🏘', lngLat: f.geometry.coordinates as [number, number] });
@@ -117,6 +119,14 @@ export function SearchPanel() {
     close();
     if (r.kind === 'place') return openPlace(r.id);
     if (r.kind === 'pier') return openPier(r.id);
+    if (r.kind === 'landmark') {
+      const f = data?.landmarks.features.find((x) => x.properties.id === r.id);
+      const open = f && landmarkPlace(f.properties, r.lngLat, places().byId.values());
+      if (open) {
+        if ('add' in open) places().add(open.add);
+        return openPlace('add' in open ? open.add.id : open.existing);
+      }
+    }
     if (r.kind === 'poi') {
       const f = feats.current.get(r.id);
       const p = f && placeFromFeature(f);

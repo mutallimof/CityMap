@@ -11,6 +11,7 @@ import { distanceM } from '../store';
 import { FOG, weatherIcon } from '../../weather/icon';
 import { FogIcon } from '../../weather/FogIcon';
 import { PlaceIcon } from './PlaceIcon';
+import { isIslet } from '../../plan/islets';
 import { flyTo, nearestPier, openPier, openPlace, places } from './context';
 
 const SEASON_ICON = { spring: '🌷', summer: '☀️', autumn: '🍂', winter: '❄️' } as const;
@@ -121,7 +122,7 @@ export function NearbyPlaces({ pierId }: { pierId: string }) {
   if (!pier) return null;
   const list = places()
     .places.map((p) => ({ p, d: distanceM(pier.lngLat, p.lngLat) }))
-    .filter((x) => x.d < CONFIG.places.nearbyM)
+    .filter((x) => x.d < CONFIG.places.nearbyM && !isIslet(x.p)) // an islet isn't a walk from the pier
     .sort((a, b) => a.d - b.d)
     .slice(0, 8);
   return (

@@ -192,7 +192,7 @@ ids/names/rules (no coordinates).
 | `landmarks.geojson` | `data:landmarks` | OFM tiles | manual |
 | `hero-landmarks.json` | `data:hero-landmarks` (catalog `data/catalog/hero-landmarks.json`) | OFM tiles | manual |
 | `venue-places.geojson` | `data:venues` | OFM tiles + Nominatim fallback | manual |
-| `events.json`, `events-log.json`, `event-venues.geojson`, `venue-geocode.json` | `data:events` | venue sites + Nominatim | **daily 06:17 Istanbul**, Actions |
+| `events.json` (incl. per-venue `venues` times), `events-log.json`, `event-venues.geojson`, `venue-geocode.json` | `data:events` | venue sites + Nominatim | **daily 06:17 Istanbul**, Actions |
 | `stories.json` | `data:stories` | Overpass + Wikidata + Wikipedia + Commons | **monthly (3rd)**, Actions |
 | `places-auto.geojson` | `data:featured` | Overpass | **monthly (3rd)**, Actions |
 | `public/audio/*.webm/.m4a`, `credits.html` | `data:audio` (`scripts/audio/build-audio.py`) | Wikimedia Commons, list in `data/catalog/sounds.json` | manual, in Actions |
@@ -342,6 +342,35 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     plan, `d` [[day index, {s, e}]] per day; point = [name, lng, lat], 0 = none, 1 = same as start. Still version
     `1.`: links without `e`/`d` (all older links) open and start at the first stop (test keeps a real old link).
     Decoding validates everything and never throws; missing places/events show "no longer available".
+- **Honest display (2026-10-13):**
+  - **Islets** (`data/catalog/no-walk.json`, `src/plan/islets.ts`, matched by place id / OSM element / name — tapped POIs have no
+    curated id): a flagged place (Kız Kulesi; the only place in `places` / `places-auto` off every land polygon) gets
+    `ResolvedStop.islet`; every leg to / from it (between stops, start / end point) is `none` = "No transport info", its
+    place sheet shows no nearest-pier walk and it is left out of a pier's "Nearby". Adalar places (islands 17 / 18 / 22 in
+    `land.geojson`, own Şehir Hatları piers) are NOT flagged: their ferry connection is real. Known gap: the walk rule is
+    straight line ≤ 2.5 km, so two places on different islands (Burgazada ↔ Heybeliada ≈ 1.7 km) or across the Bosphorus
+    (Beşiktaş ↔ Üsküdar) still say "walk" — fix = same-landmass test against `land.geojson` (island polygons are separate).
+  - **Pier board direction** (`src/sim/direction.ts`; checked against the PDF 2026-10-13): the row tables (Kabataş – Adalar
+    pp. 12–13, Rumeli Kavağı – Eminönü p. 22, Anadolu Kavağı – Üsküdar p. 28, Boğaz tours p. 35) are printed one direction per
+    table ("A - B" title, piers in column order, end pier under VARIŞ) and the Kadıköy – Beşiktaş day table (p. 6) has only
+    one other pier → "→ destination" kept as is. The cycle tables (Kadıköy – Karaköy – Eminönü p. 4, Üsküdar – Karaköy –
+    Eminönü p. 5, night Kadıköy – Karaköy – Beşiktaş p. 6) print only departure times per pier column: no destination, so
+    every real departure of those lines (trip ids `kadikoy-karakoy-eminonu:`, `uskudar-karakoy-eminonu:`,
+    `kadikoy-karakoy-besiktas-night:`) is marked † "Direction inferred from the line route". Simulated departures claim nothing
+    printed (the "Simulated schedule" label covers them). A test fails when a timetable file has a trip id in neither list.
+  - **Data age:** `events.json` = `{ generated, venues: { id: ISO of that venue's last successful scrape }, events }`
+    (`venues` is new; old files lack it and show everything). The app hides events of venues older than 3 days
+    (`freshEvents`, `STALE_VENUE_MS`, by the wall clock, applied when the file is loaded) and shows "Events updated <date>"
+    (Istanbul date, TR / EN) under a place's events and in the feed while an event chip is on. A venue with no events
+    (blocked CRR / Zorlu PSM / İBB Kültür, Moda Sahnesi without dates) keeps its pin and has no events UI at all.
+    Weather: `WeatherController.source` is 'live' only while the last successful fetch is ≤ `CONFIG.weather.maxAgeMin` (180)
+    old; after that the chip is hidden and the scene goes calm (once), a later success brings it back.
+  - **Place text** (`src/places/format.ts`, pure, tested): `cleanName` (semicolon lists → "A, B"; ALL-CAPS strings with a
+    5+ letter word → Title Case with `tr` locale in the Turkish UI, `en` otherwise; short acronyms stay), `formatCuisine`
+    (OSM English keys keep English casing), `formatPhone` ("+90 505 096 26 23"; other countries / unreadable numbers
+    unchanged). Used in the place header, feed, search results, place sheet facts. Landmark picked in search opens its place
+    (`src/search/landmark.ts`: the featured place of the same OSM element, else an OSM place).
+  - **Viewport zoom** is allowed (`maximum-scale=1` removed); the map keeps its own pinch (`#map { touch-action: none }`).
 - **Attribution bar** (MapLibre's own, bottom right, lifted 140 px above the sheet's peek; rows keep 12 px + safe
   area from both screen edges — at 390 px the top row used to touch / clip at the right on an iPhone): OSM, OpenFreeMap /
   OpenMapTiles, "Weather data by Open-Meteo.com" (`src/weather/credit.ts`, off for `?weather=` demos) and, while sound
@@ -392,7 +421,13 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
-- Not done on purpose (accessibility, next steps): viewport zoom is still locked (index.html), no focus trap in
+- Browser zoom (Ctrl + / text zoom; layout viewport 195–260 px, checked 2026-10-13 headless, Toy): the top bar's right-hand
+  buttons run off the screen (search, sound, TR at 195 px), the place sheet title collides with the camera / close buttons,
+  attribution pills overlap the map controls. Pinch zoom on a phone only scales the visual viewport (layout unchanged);
+  not tried on a real iPhone (iOS honours `touch-action: none` on the map only partly).
+- Pier-board direction for the cycle tables is our reading, not printed (see Honest display); nothing in the PDF shows
+  it wrong, nothing proves it right either (e.g. whether a Karaköy departure on p. 4 / 5 goes on to Eminönü or back).
+- Not done on purpose (accessibility, next steps): no focus trap in
   sheets / dialogs and no focus return, map pins are not keyboard-reachable (list view / feed is the keyboard path).
 - `docs/plan.md` and the removed `docs/design-pass/*.jpg` screenshots are untracked / deleted now but still in the
   public git history (rewriting history would break tags and clones; not done).

@@ -8,6 +8,8 @@ import { useTicker } from '../../ui/hooks';
 import { kindLabel, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
 import { useUi } from '../../ui/store';
+import { isIslet } from '../../plan/islets';
+import { cleanName, formatCuisine, phoneList, telHref } from '../format';
 import { PlaceIcon } from './PlaceIcon';
 import { PierHint } from './Extras';
 import { StorySection } from '../../stories/StorySection';
@@ -25,7 +27,7 @@ export function PlaceHeader({ id }: { id: string }) {
   useStoreVersion();
   const p = places().byId.get(id);
   if (!p) return null;
-  const name = lang === 'en' && p.nameEn ? p.nameEn : p.name;
+  const name = cleanName(lang === 'en' && p.nameEn ? p.nameEn : p.name, lang);
   return (
     <div className="sheet__title">
       <PlaceIcon kind={p.kind} category={p.category} size={44} />
@@ -33,14 +35,13 @@ export function PlaceHeader({ id }: { id: string }) {
         <h2>{name}</h2>
         <small className="muted">
           {kindLabel(p.kind, lang)}
-          {p.district ? ` · ${p.district.replace(/ Mahallesi$/, '')}` : ''}
+          {p.district ? ` · ${cleanName(p.district.replace(/ Mahallesi$/i, ''), lang)}` : ''}
         </small>
       </div>
     </div>
   );
 }
 
-const pretty = (s: string) => s.split(/[;,]/).map((x) => x.trim().replace(/_/g, ' ')).filter(Boolean).join(' · ');
 const domain = (url: string) => url.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
 
 /**
@@ -51,6 +52,7 @@ export function PlaceBody({ id }: { id: string }) {
   useTicker(15_000);
   useStoreVersion();
   const t = useT();
+  const lang = useUi((s) => s.lang);
   const [toast, setToast] = useState('');
   const store = places();
   const p = store.byId.get(id);
@@ -62,6 +64,7 @@ export function PlaceBody({ id }: { id: string }) {
   const open = store.open(id, now);
   const fav = store.favourites.has(id);
   const loading = store.details.get(id) === 'loading';
+  const phones = phoneList(p.phone);
 
   const onShare = async () => {
     const r = await share(p.name, placeLink(id));
@@ -81,8 +84,8 @@ export function PlaceBody({ id }: { id: string }) {
         <button className="pill" onClick={onShare}>
           ↗ {t('share')}
         </button>
-        {p.phone && (
-          <a className="pill" href={`tel:${p.phone.split(';')[0].replace(/\s+/g, '')}`}>
+        {phones[0] && (
+          <a className="pill" href={telHref(phones[0])}>
             ☎ {t('call')}
           </a>
         )}
@@ -121,18 +124,23 @@ export function PlaceBody({ id }: { id: string }) {
               </dd>
             </>
           )}
-          {p.phone && (
+          {phones.length > 0 && (
             <>
               <dt>☎</dt>
               <dd>
-                <a href={`tel:${p.phone.split(';')[0].replace(/\s+/g, '')}`}>{p.phone.split(';')[0]}</a>
+                {phones.map((n, i) => (
+                  <span key={n}>
+                    {i > 0 && ', '}
+                    <a href={telHref(n)}>{n}</a>
+                  </span>
+                ))}
               </dd>
             </>
           )}
           {p.cuisine && (
             <>
               <dt>{t('cuisine')}</dt>
-              <dd>{pretty(p.cuisine)}</dd>
+              <dd>{formatCuisine(p.cuisine, lang)}</dd>
             </>
           )}
         </dl>
@@ -143,7 +151,7 @@ export function PlaceBody({ id }: { id: string }) {
 
       <StorySection osm={p.osm} />
 
-      <PierHint lngLat={p.lngLat} />
+      {!isIslet(p) && <PierHint lngLat={p.lngLat} />}
 
       <p className="place__credit muted">
         © OpenStreetMap
