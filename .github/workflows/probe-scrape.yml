@@ -1,0 +1,15 @@
+name: probe operator scrape
+on: push
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: FORCE=1 npm run data:operators
+      - run: npm run validate:data
+      - run: for f in data/timetables-turyol.json data/timetables-dentur.json data/operators-log.json; do echo "=== $f"; [ -f $f ] && python3 -c "import json,sys;print(json.dumps(json.load(open(sys.argv[1])),ensure_ascii=False,separators=(',',':')))" $f; done
