@@ -1,3 +1,4 @@
+import { tripDirectionInferred } from '../../sim/direction';
 import { useTicker } from '../../ui/hooks';
 import { formatCountdown, useT } from '../../ui/i18n';
 import { services } from '../../ui/services';
@@ -23,11 +24,19 @@ export function VesselSheet({ id }: { id: string }) {
   const stops = s.trip?.stops ?? [s.stopIndex ?? s.nextStopIndex];
   const docked = s.phase === 'docked';
   const real = s.trip?.real ?? isReal(line.id);
+  // From / to and the order of calls not printed by the source (same rule as the pier board's †).
+  const inferred = !!s.trip && tripDirectionInferred(s.trip);
+  const dagger = inferred && (
+    <sup className="deps__inferred" title={t('dirInferred')} aria-label={t('dirInferred')}>
+      †
+    </sup>
+  );
 
   return (
     <div className="vessel">
       <div className="vessel__route">
         <b>{name(stops[0])}</b> <span className="muted">{t('to')}</span> <b>{name(stops[stops.length - 1])}</b>
+        {dagger}
       </div>
       <div className="vessel__status">
         {docked ? (
@@ -45,6 +54,7 @@ export function VesselSheet({ id }: { id: string }) {
           <>
             <span className="tag tag--live">
               {t('next')}: {name(s.nextStopIndex)}
+              {dagger}
             </span>
             <span className="vessel__eta">
               {t('arrivesIn')} <b>{formatCountdown(s.eta)}</b>
@@ -62,6 +72,7 @@ export function VesselSheet({ id }: { id: string }) {
           </li>
         ))}
       </ol>
+      {inferred && <small className="muted deps__note">† {t('dirInferred')}</small>}
       <button className={`pill ${follow ? 'pill--accent' : ''}`} onClick={() => ui.set({ follow: !follow })}>
         {follow ? `◉ ${t('following')}` : `◎ ${t('follow')}`}
       </button>

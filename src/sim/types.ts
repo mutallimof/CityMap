@@ -51,6 +51,8 @@ export interface TripRef {
   stops: number[];
   /** From the operator's timetable (true) or the simulated fallback. */
   real: boolean;
+  /** The order of calls is not printed (a private operator's boat printed to two destinations). */
+  orderInferred?: true;
 }
 
 /** Times are seconds since the service day's local midnight. */

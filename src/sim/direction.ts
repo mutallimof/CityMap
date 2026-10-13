@@ -12,7 +12,7 @@
  * Private operators (scripts/operators) print each departure with its destination. Only their merged
  * sailings (one boat printed to two destinations, `via`) have an inferred part: the order of the calls.
  */
-import type { Departure } from './types';
+import type { Departure, TripRef } from './types';
 
 /** Trip id prefixes (data/timetables.json) of the cycle tables. */
 export const INFERRED_DIRECTION_TRIPS = ['kadikoy-karakoy-eminonu:', 'uskudar-karakoy-eminonu:', 'kadikoy-karakoy-besiktas-night:'];
@@ -28,7 +28,15 @@ export const PRINTED_DIRECTION_TRIPS = [
   'uzun-bogaz-',
 ];
 
-/** True for a printed (real) departure whose destination (or order of calls) we inferred from the line route. */
+/**
+ * True for a printed (real) trip whose direction (cycle tables) or order of calls (merged operator sailings)
+ * we inferred from the line route. The single rule for the pier board and the vessel sheet.
+ */
+export function tripDirectionInferred(t: Pick<TripRef, 'id' | 'real' | 'orderInferred'>): boolean {
+  return t.real && (INFERRED_DIRECTION_TRIPS.some((p) => t.id.startsWith(p)) || !!t.orderInferred);
+}
+
+/** The same rule for one departure on the pier board (`via` = it calls somewhere before its destination). */
 export function directionInferred(d: Pick<Departure, 'tripId' | 'real' | 'via'>): boolean {
-  return d.real && (INFERRED_DIRECTION_TRIPS.some((p) => d.tripId.startsWith(p)) || !!d.via?.length);
+  return tripDirectionInferred({ id: d.tripId, real: d.real, ...(d.via?.length ? { orderInferred: true as const } : {}) });
 }

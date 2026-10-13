@@ -100,7 +100,7 @@ export function buildTrip({ line, legs }: LineInput, trip: PlannedTrip, p: Sched
   const lineCruise = kmhToMs(line.service.speedKmh);
   const dwell = line.service.dwellMin * 60;
   const t0 = calls[0].dep;
-  const ref: TripRef = { id: trip.id, t0, t1: t0, stops: calls.map((c) => c.stop), real: trip.real };
+  const ref: TripRef = { id: trip.id, t0, t1: t0, stops: calls.map((c) => c.stop), real: trip.real, ...(trip.orderInferred ? { orderInferred: true as const } : {}) };
   const segments: Segment[] = [];
   const departures: Departure[] = [];
   const toStopId = line.stops[calls[calls.length - 1].stop];
