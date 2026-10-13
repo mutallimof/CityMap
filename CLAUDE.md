@@ -294,7 +294,7 @@ Grouped by feature; tests sit next to what they test (`*.test.ts`); non-obvious 
   textures (`city-patterns.ts`: crowns, tulips, night windows) + colours (`city-look.ts`), buildings protocol / workers,
   labels, intro camera, skyline · `src/scenery` toy trees / hero landmarks / bridges · `src/three` shared renderer,
   `LocalFrame`, toon materials.
-- `src/places` stores, filters, layers, icons (+ `pin-images.ts`: on-demand pin images), opening hours; `places/ui/` sheets, feed, extras · `src/events`,
+- `src/places` stores, filters, layers, icons (+ `pin-images.ts`: on-demand pin images), opening hours, `nearest-pier.ts` (same-landmass pier); `places/ui/` sheets, feed, extras · `src/events`,
   `src/stories`, `src/guides`, `src/search`, `src/share` (snapshot), `src/fun` (gull facts), `src/osm` (Nominatim).
 - `src/plan` planner (pure `model.ts` / `timeline.ts` / `share.ts`, `store.ts`, `runtime.ts`, `ui.tsx`, `points.tsx`).
 - `src/audio` city sound (`mix.ts` pure levels, `engine.ts` Web Audio) · `src/weather` conditions, palette under
@@ -324,6 +324,10 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   validated (5 m sampling vs shoreline). Berths = shore point + 30 m seaward; approach points run along the shore;
   each berth is used by the lines listed in `lines.json` (Eminönü and Beşiktaş have two OSM berths). Each berth is approached from the side the raw A* water path arrives from (not the
   other pier's straight-line side — that made hairpins in İstinye bay).
+  Catalog `hug: { "from>to": m }` (either way) lowers that leg's open-water comfort distance (A* `comfortClear`,
+  default 350 m; line of sight / smoothing follow, never below 70 / 55 m): only Rumeli Kavağı – Eminönü
+  `bebek>arnavutkoy` = 230 m (2026-10-13: rounds Akıntıburnu closer, see Known issues; values 70–300 swept, 230 =
+  shortest both ways with the two directions still apart — ≤ 120 m pulled the lanes together, 25 m at their meeting).
 - **Berth slots** (`src/sim/berths.ts`, pure, per berth): each dock stay takes the lowest abreast slot free when it
   arrives (0 = quay, 1, 2, … hull to hull outside, 1.25 beams between centres, seaward only) and keeps it until it
   leaves; occupancy padded 120 s both sides; the previous service day's late stays are carried in with the slots
@@ -432,6 +436,18 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     every real departure of those lines (trip ids `kadikoy-karakoy-eminonu:`, `uskudar-karakoy-eminonu:`,
     `kadikoy-karakoy-besiktas-night:`) is marked † "Direction inferred from the line route". Simulated departures claim nothing
     printed (the "Simulated schedule" label covers them). A test fails when a timetable file has a trip id in neither list.
+    **Vessel sheet** (2026-10-13): the same rule (`tripDirectionInferred(trip)`; `directionInferred(departure)` is that
+    rule on a departure, `TripRef.orderInferred` carries Turyol's merged sailings) puts † on its "A → B" and "Next:" and the
+    note under the stop list. `direction-sheets.test.ts`: on a weekday, Fri, Sat, Sun and a holiday every departure's mark
+    equals its trip's mark, and back.
+  - **Nearest pier** (2026-10-13, `src/places/nearest-pier.ts`, pure, tested): the place sheet's pier hint ("nearest pier ·
+    next ferry"), the "Next ferry · Nearest pier" location button and the pier sheet's "Nearby" list only pair a place with
+    a served pier on its landmass (`pointMass` in `land.ts` = the planner's snapping: point 100 m, or a pier within 100 m;
+    pier 250 m). No pier on its landmass (Kız Kulesi, open water) → no hint. The location button falls back to plain
+    distance when the device is on no landmass (on a boat). Changed hints: Rumeli Hisarı, Köprüaltı, Kiss The Frog,
+    Borusan Contemporary (Anadolu Hisarı → Bebek / Emirgan), Ekmek Teknesi in Kuzguncuk (Ortaköy → Üsküdar Turyol);
+    ~20 inland places > 2.2 km from any pier (hint hidden either way) now count from Bostancı instead of Büyükada.
+    "Nearby" lists: no change. The planner's per-operator pier choice (`piersNear`) is untouched.
   - **Data age:** `events.json` = `{ generated, venues: { id: ISO of that venue's last successful scrape }, events }`
     (`venues` is new; old files lack it and show everything). The app hides events of venues older than 3 days
     (`freshEvents`, `STALE_VENUE_MS`, by the wall clock, applied when the file is loaded) and shows "Events updated <date>"
@@ -516,9 +532,7 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
 - Browser zoom: fixed 2026-10-13 (see Key decisions → Browser zoom); checked headless only. An open sheet still covers
   the credits (as at 100 %). Pinch zoom on a phone only scales the visual viewport (layout unchanged); not tried on a
   real iPhone (iOS honours `touch-action: none` on the map only partly; the credit strip's sideways swipe neither).
-- The place sheet's "nearest pier" hint (`nearestPier`, `src/places/ui/context.ts`) is straight-line only — it can name
-  a pier across the water; the planner's landmass rule doesn't apply there yet.
-- Pier-board direction for the cycle tables is our reading, not printed (see Honest display); nothing in the PDF shows
+- Pier-board / vessel-sheet direction for the cycle tables is our reading, not printed (see Honest display); nothing in the PDF shows
   it wrong, nothing proves it right either (e.g. whether a Karaköy departure on p. 4 / 5 goes on to Eminönü or back).
 - Not done on purpose (accessibility, next steps): no focus trap in
   sheets / dialogs and no focus return, map pins are not keyboard-reachable (list view / feed is the keyboard path).
@@ -541,7 +555,10 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   Arnavutköy 08:25); with the 1 min dwell the sim sails 4 min. The OSM piers are 1.09 km apart in a straight line,
   but our lanes run 1.55 km (→) / 1.67 km (←) around Akıntıburnu (≥ 60 m from land + lane offset): avg 23–25 km/h,
   cruise 31 / 33.5 km/h with the 60 s ramps. Over a ~1.2 km line it would cruise ≈ 24 km/h, normal for a vapur:
-  the timetable is plausible, the speed comes from our route length. A tighter route around the cape would fix it.
+  the timetable is plausible, the speed comes from our route length. **2026-10-13:** `hug` 230 m (see Routes): lanes
+  1.43 km (→) / 1.56 km (←), max cruise 28.7 / 31.2 km/h; the other legs of the line unchanged; the nearest other vessel
+  to a boat on the leg 82 → 116 m (`akintiburnu.test.ts`). Still above 24 km/h: the lane rules (≥ 60 m off land, keep
+  right, ≤ 4 % stretch) and Arnavutköy's berth facing SSW (approached along the shore from the east) leave ≈ 1.3 km at best.
 - Kadıköy old / new pier (night trips' PDF notes "Kadıköy (Eski)" / "(Yeni) İskelesi"): OSM has no pier named or
   tagged as either — only "Kadıköy 2 İskelesi" (our berth, relation/19464376), unnamed / "Kadıköy" ferry terminals
   and private (Turyol) piers — so mapping them would be guesswork; one berth stays, the board keeps the PDF's note.
