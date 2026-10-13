@@ -5,4 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 probe/overpass.py
+      - run: RAW=1 RAWMAX=16000 SCRIPTMAX=0 CTX="datatable-responsive" python3 probe/fetch.py probe/urls.txt 100

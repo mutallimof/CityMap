@@ -1,16 +1,2 @@
-POST https://www.turyol.com/Home/Tarifeler MainHatTuruId=1&TarifeKalkisId=1_101_1_101&TarifeVarisId=105
-https://www.turyol.com/UserFiles/sozlesme/Mesafeli%20Sat%C4%B1%C5%9F%20S%C3%B6zle%C5%9Fmesi.html
-https://www.turyol.com/UserFiles/sozlesme/%C4%B0ptal%20%C4%B0ade%20S%C3%B6zle%C5%9Fmesi.html
-https://www.turyol.com/UserFiles/sozlesme/Teslimat%20S%C3%B6zle%C5%9Fmesi.html
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'101','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'104','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'105','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'102','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'101','kalkisId':'103','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'403','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'116','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'101','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'118','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'104','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'102','langId':'1'}
-POSTJSON https://www.turyol.com/Tarife/GetVarislar2 {'hatTuruId':'103','kalkisId':'117','langId':'1'}
+POST https://www.turyol.com/Home/Tarifeler MainHatTuruId=1&TarifeKalkisId=1_101_4_104&TarifeVarisId=102
+https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas

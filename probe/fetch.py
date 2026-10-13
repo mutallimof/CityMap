@@ -9,6 +9,7 @@ def text_of(h):
 import os
 ALL = os.environ.get('ALL') == '1'
 GREP = os.environ.get('GREP')
+CTX = os.environ.get('CTX')
 RAW = os.environ.get('RAW') == '1'
 RAWMAX = int(os.environ.get('RAWMAX', '6000'))
 RSCMAX = int(os.environ.get('RSCMAX', '20000'))
@@ -52,6 +53,8 @@ def run(urls, textmax):
                     if not l.startswith('/_next') and 'image' not in l: print('  A', l)
             if RAW:
                 for t in re.findall(r'(?is)<table.*?</table>', s): print('TABLE', re.sub(r'\s+', ' ', t)[:RAWMAX])
+            if CTX:
+                for m in re.finditer(CTX, s): print('CTX', re.sub(r'\s+', ' ', s[max(0, m.start() - 1500):m.end() + 600]))
             if GREP:
                 for m in re.finditer(GREP, text_of(s), re.I): print('GREP', text_of(s)[max(0, m.start() - 250):m.end() + 250])
             for sel in re.findall(r'(?is)<select[^>]*>.*?</select>', s):
