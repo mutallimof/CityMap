@@ -1,0 +1,6 @@
+https://www.turyol.com/robots.txt
+https://www.turyol.com/
+https://www.turyol.com/sitemap.xml
+https://denturavrasya.com/robots.txt
+https://denturavrasya.com/
+https://denturavrasya.com/sitemap.xml

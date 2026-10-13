@@ -1,9 +1,0 @@
-node_modules
-dist
-.DS_Store
-*.local
-data/raw/*
-!data/raw/.gitkeep
-
-# Business plan: kept out of the public repo (local copy only; history: git show v0.2.0:docs/plan.md)
-docs/plan.md
