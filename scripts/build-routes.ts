@@ -49,6 +49,12 @@ interface CatalogLine {
   via?: Record<string, [number, number][]>;
   /** "from>to" (either way) → 'seaward': both ends approached straight from the sea, not along the shore. */
   approach?: Record<string, 'seaward'>;
+  /**
+   * "from>to" (either way) → open-water comfort distance (m) for that leg's path search, line-of-sight and
+   * smoothing (default PATH.comfortClear / LOS_CLEAR / SMOOTH_CLEAR): rounds a cape closer, where the
+   * default sweeps wide and the printed time asks for a shorter way. Never below PATH.minClear.
+   */
+  hug?: Record<string, number>;
   toCheck?: string[];
   operator?: string;
   service: Record<string, unknown>;
@@ -194,17 +200,21 @@ for (const line of catalog) {
     const seaward = (line.approach?.[`${fromId}>${toId}`] ?? line.approach?.[`${toId}>${fromId}`]) === 'seaward';
     const a0 = approachOf(b0, probe ? pointAlong(probe, APPROACH_PROBE_M, to) : to, seaward);
     const a1 = approachOf(b1, probe ? pointAlong([...probe].reverse(), APPROACH_PROBE_M, from) : from, seaward);
+    const hugM = line.hug?.[`${fromId}>${toId}`] ?? line.hug?.[`${toId}>${fromId}`];
+    const path = hugM ? { ...PATH, comfortClear: Math.max(PATH.minClear, hugM) } : PATH;
+    const losClear = hugM ? Math.max(PATH.minClear, Math.min(LOS_CLEAR, hugM)) : LOS_CLEAR;
+    const smoothClear = hugM ? Math.min(SMOOTH_CLEAR, losClear) : SMOOTH_CLEAR;
     // Relaxed clearance only near the berths (not at hand-placed via points).
-    const rule = { clear: LOS_CLEAR, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
+    const rule = { clear: losClear, endClear: LOS_END_CLEAR, endRadius: ROUTE_RULES.endExemptM - 10, ends: [from, to] as [[number, number], [number, number]] };
     const pts = [a0, ...(line.via?.[`${fromId}>${toId}`] ?? []).map((c) => proj.toXY(c)), a1];
     let pulled: [number, number][] = [from];
     for (let v = 0; v < pts.length - 1; v++) {
-      const raw = findPath(grid, pts[v], pts[v + 1], PATH);
+      const raw = findPath(grid, pts[v], pts[v + 1], path);
       if (!raw) throw new Error(`${line.id} ${fromId} → ${toId}: no water path`);
       pulled = [...pulled, ...stringPull(grid, raw, rule)];
     }
     pulled.push(to);
-    centres.push({ line, fromId, toId, main, xy: chaikinSafe(grid, pulled, SMOOTH_ITER, { ...rule, clear: SMOOTH_CLEAR }) });
+    centres.push({ line, fromId, toId, main, xy: chaikinSafe(grid, pulled, SMOOTH_ITER, { ...rule, clear: smoothClear }) });
   }
   linesOut.push({
     id: line.id,

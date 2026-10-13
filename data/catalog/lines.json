@@ -1,5 +1,5 @@
 {
-  "_comment": "Ferry lines. stops = every pier the line calls at; pattern = the simulated fallback's outbound stop order (inbound reverses it). Real trips come from data/timetables.json (any order of stops; the route builder adds a leg for every pier pair a trip sails). berths maps pierId → berth id where a line uses a non-main berth. via = optional extra water waypoints [lon, lat] per leg key \"from>to\" to steer the route generator. toCheck = things for a human to verify. operator = a private operator (data/catalog/operators.json; timetables from data/timetables-<operator>.json); absent = Şehir Hatları. approach = optional \"from>to\" → \"seaward\": both ends of that leg are approached straight from the sea (short crossings to the opposite shore).",
+  "_comment": "Ferry lines. stops = every pier the line calls at; pattern = the simulated fallback's outbound stop order (inbound reverses it). Real trips come from data/timetables.json (any order of stops; the route builder adds a leg for every pier pair a trip sails). berths maps pierId → berth id where a line uses a non-main berth. via = optional extra water waypoints [lon, lat] per leg key \"from>to\" to steer the route generator. toCheck = things for a human to verify. operator = a private operator (data/catalog/operators.json; timetables from data/timetables-<operator>.json); absent = Şehir Hatları. approach = optional \"from>to\" → \"seaward\": both ends of that leg are approached straight from the sea (short crossings to the opposite shore). hug = optional \"from>to\" (either way) → open-water comfort distance in metres for that leg's path search (default 350 m): rounds a cape closer (Akıntıburnu).",
   "lines": [
     {
       "id": "kadikoy-karakoy-eminonu",
@@ -225,7 +225,10 @@
       },
       "toCheck": [
         "Eminönü / Beşiktaş: uses the Boğaz berths (same as the Uzun Boğaz Turu); the PDF doesn't say which berth."
-      ]
+      ],
+      "hug": {
+        "bebek>arnavutkoy": 230
+      }
     },
     {
       "id": "anadolu-kavagi-uskudar",
