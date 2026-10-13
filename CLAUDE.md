@@ -22,7 +22,7 @@ create them): project history = this file + git.
 - **Every visual constant lives in `src/config.ts`** (shared tunables + the Classic look) **or in its theme's file in
   `src/themes/`** (one file per look). Record decisions in this file.
 
-## Current state (2026-10-12, switchable looks: Toy (default), Classic, Storybook, Night)
+## Current state (2026-10-13, switchable looks: Toy (default), Classic, Storybook, Night)
 - **Ferries:** 7 Şehir Hatları lines (as the operator runs them), 27 OSM piers with berths, **real timetables**
   (winter 2026-27 PDF, valid to 27 Jun 2027; simulated fallback per line, labelled) — `src/sim`, pure.
   Lines (PDF page): Kadıköy – Karaköy – Eminönü (4), Üsküdar – Karaköy – Eminönü (5), Kadıköy – Beşiktaş (+ Fri/Sat
@@ -159,6 +159,7 @@ npm run dev        # :5173 · ?t=18:30 ?date=2026-10-12 ?speed=60 ?debug=1 ?stre
                    #   ?debug=0 ?motion=reduced|full ?theme=<id> · #place= #pier= #guide= #plan= · keys: ` panel, s speed, n now
 node scripts/dev/shot.mjs out.png "adaptive=0&intro=0&debug=0&view=29,41.02,14" [waitMs]   # headless screenshot (real WebGL
                    #   via SwiftShader, needs the dev server; ~5 fps; never move the camera — jumps crash headless Chromium)
+METRICS=1 node scripts/dev/zoomshot.mjs out "adaptive=0&intro=0&theme=toy" 9000 390 844 1,1.25,1.5,2   # browser-zoom layout check
 BASE=/CityMap/ npm run build && BASE=/CityMap/ npx vite preview --port 4173 &
 BASE_URL=http://localhost:4173/CityMap/ node scripts/dev/profile.mjs out.json "adaptive=0&intro=0&theme=toy" 15000 3
                    #   boot profile: loader gone, "usable", long tasks, JS time, app bytes (medians of N runs);
@@ -382,6 +383,20 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
     unchanged). Used in the place header, feed, search results, place sheet facts. Landmark picked in search opens its place
     (`src/search/landmark.ts`: the featured place of the same OSM element, else an OSM place).
   - **Viewport zoom** is allowed (`maximum-scale=1` removed); the map keeps its own pinch (`#map { touch-action: none }`).
+- **Browser zoom (2026-10-13):** zoom divides the CSS viewport (390 px phone: 312 / 260 / 195 px at 125 / 150 / 200 %;
+  1440 px desktop: 1152 / 960 / 720), so every fix is a media query below 360 px (or beside the desktop card) and
+  nothing changes at 100 % (screenshots: pixel-identical HUD / sheets in all four looks, 390 and 1440 px).
+  - Top bar (`ui.css`, `max-width: 359px`): wraps onto right-aligned rows, 8 px row gap (44 px hit areas stay apart);
+    the weather chip no longer shrinks to a sliver. `--topbar-extra` (TopBar.tsx, ResizeObserver: height above one row)
+    moves the map style / legend popovers down; under 360 px they are border-box and one column.
+  - Sheet header: `.sheet__headrow` wraps; the title (and the feed's `.feedhead`) has a 150 px basis, so below that the
+    camera / close buttons drop under it instead of covering it; long words break (`overflow-wrap: anywhere`).
+    Trap: a header child with `width: 100%` (the feed) wrapped the camera at 100 % — give it the same flex basis.
+  - Credits (`styles.css`): ≥ 720 px they stay right of the sheet card (`left: 432px`, wrap there); narrow AND short
+    (`max-width: 359px and max-height: 520px`, a phone at 200 %) they are one 44 px row scrolling sideways (`touch-action:
+    pan-x` on the strip; the map doesn't move — checked with CDP touch events), © OpenStreetMap first and fully visible.
+  - Check: `METRICS=1 node scripts/dev/zoomshot.mjs out "…&theme=toy#place=galata-kulesi" 9000 390 844 1,1.25,1.5,2`
+    (viewport w/z × h/z at device scale z; lists off-screen buttons and overlapping controls).
 - **Attribution bar** (MapLibre's own, bottom right, lifted 140 px above the sheet's peek; rows keep 12 px + safe
   area from both screen edges — at 390 px the top row used to touch / clip at the right on an iPhone): OSM, OpenFreeMap /
   OpenMapTiles, "Weather data by Open-Meteo.com" (`src/weather/credit.ts`, off for `?weather=` demos) and, while sound
@@ -432,10 +447,11 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
 ## Known issues
-- Browser zoom (Ctrl + / text zoom; layout viewport 195–260 px, checked 2026-10-13 headless, Toy): the top bar's right-hand
-  buttons run off the screen (search, sound, TR at 195 px), the place sheet title collides with the camera / close buttons,
-  attribution pills overlap the map controls. Pinch zoom on a phone only scales the visual viewport (layout unchanged);
-  not tried on a real iPhone (iOS honours `touch-action: none` on the map only partly).
+- Browser zoom: fixed 2026-10-13 (see Key decisions → Browser zoom); checked headless only. An open sheet still covers
+  the credits (as at 100 %). Pinch zoom on a phone only scales the visual viewport (layout unchanged); not tried on a
+  real iPhone (iOS honours `touch-action: none` on the map only partly; the credit strip's sideways swipe neither).
+- The place sheet's "nearest pier" hint (`nearestPier`, `src/places/ui/context.ts`) is straight-line only — it can name
+  a pier across the water; the planner's landmass rule doesn't apply there yet.
 - Pier-board direction for the cycle tables is our reading, not printed (see Honest display); nothing in the PDF shows
   it wrong, nothing proves it right either (e.g. whether a Karaköy departure on p. 4 / 5 goes on to Eminönü or back).
 - Not done on purpose (accessibility, next steps): no focus trap in
