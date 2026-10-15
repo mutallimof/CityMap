@@ -1,95 +1,95 @@
 {
- "generated": "2026-10-14T08:50:05.476Z",
+ "generated": "2026-10-15T08:25:03.731Z",
  "venues": {
   "arter": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 25
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 30
   },
   "akbank-sanat": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 1,
-   "unplaced": 5,
+   "unplaced": 4,
    "message": "not on the map: Çevrimiçi Platform – Zoom"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 45,
-   "unplaced": 6,
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 35,
+   "unplaced": 5,
    "message": "not on the map: Üsküdar Kerem Yılmazer Sahnesi. · İnal Aydınoğlu K.M Şener Şen Sahnesi"
   },
   "istanbul-modern": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 4,
    "message": "2 list page(s), 4 detail link(s), 0 without a date"
   },
   "salt": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 6,
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 8,
    "unplaced": 8,
-   "message": "2 list page(s), 20 detail link(s), 3 without a date"
+   "message": "2 list page(s), 22 detail link(s), 3 without a date"
   },
   "pera": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 6,
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 4,
    "message": "1 list page(s), 4 detail link(s), 0 without a date"
   },
   "ibb-kultur": {
    "status": "empty",
-   "lastRun": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
    "count": 0,
    "unplaced": 10,
    "message": "2 list page(s), 10 detail link(s), 0 without a date"
   },
   "borusan": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 2,
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 3,
    "message": "2 list page(s), 7 detail link(s), 0 without a date"
   },
   "iksv": {
    "status": "empty",
-   "lastRun": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
    "lastOk": "2026-10-11T14:09:36.552Z",
    "count": 0,
    "message": "4 list page(s), 0 detail link(s), 0 without a date"
   },
   "salon-iksv": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 33
   },
   "crr": {
    "status": "failed",
-   "lastRun": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
    "count": 0,
    "message": "fetch failed (Client network socket disconnected before secure TLS connection was established)"
   },
   "zorlu-psm": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 150,
-   "message": "2 list page(s), 68 detail link(s), 6 without a date"
+   "message": "2 list page(s), 66 detail link(s), 4 without a date"
   },
   "akm": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 10,
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 11,
    "message": "2 list page(s), 8 detail link(s), 0 without a date"
   },
   "moda-sahnesi": {
@@ -100,65 +100,65 @@
   },
   "nardis": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 25,
-   "message": "1 list page(s), 42 detail link(s), 0 without a date"
+   "message": "1 list page(s), 41 detail link(s), 0 without a date"
   },
   "babylon": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 26,
    "message": "2 list page(s), 35 detail link(s), 0 without a date"
   },
   "fisekhane": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 39
   },
   "dasdas": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 80
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 79
   },
   "kumbaraci50": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 7
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 6
   },
   "borusan-contemporary": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 2
   },
   "galata-rum-okulu": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 2
   },
   "sakip-sabanci": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
    "count": 1
   },
   "uniq": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 29
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 28
   },
   "bkm": {
    "status": "ok",
-   "lastRun": "2026-10-14T08:50:05.476Z",
-   "lastOk": "2026-10-14T08:50:05.476Z",
-   "count": 11
+   "lastRun": "2026-10-15T08:25:03.731Z",
+   "lastOk": "2026-10-15T08:25:03.731Z",
+   "count": 9
   }
  }
 }
