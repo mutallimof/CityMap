@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1F5E6E" />
+    <meta name="description" content="A living map of Istanbul: vapurs on the water, real places from OpenStreetMap, live weather." />
+    <link rel="icon" href="/CityMap/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/CityMap/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/CityMap/icons/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="İstanbul" />
+    <link rel="apple-touch-startup-image" href="/CityMap/icons/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" />
+    <link rel="apple-touch-startup-image" href="/CityMap/icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" />
+    <link rel="apple-touch-startup-image" href="/CityMap/icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" />
+    <link rel="apple-touch-startup-image" href="/CityMap/icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+    <title>İstanbul Living City</title>
+    <script>
+      // The look to paint the loading screen in, before any script loads: ?theme=, saved choice, else the
+      // default (keep in sync with DEFAULT_THEME in src/themes/registry.ts).
+      try {
+        document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme:v1') || 'toy';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'toy';
+      }
+    </script>
+    <script type="module" crossorigin src="/CityMap/assets/index-C2LaiYnn.js"></script>
+    <link rel="modulepreload" crossorigin href="/CityMap/assets/react-BJFCeMBC.js">
+    <link rel="modulepreload" crossorigin href="/CityMap/assets/maplibre-DCR3tY3n.js">
+    <link rel="modulepreload" crossorigin href="/CityMap/assets/three-BHFW6PD1.js">
+    <link rel="stylesheet" crossorigin href="/CityMap/assets/maplibre-B8-mEBLf.css">
+    <link rel="stylesheet" crossorigin href="/CityMap/assets/index-B38XI69k.css">
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="ui"></div>
+    <div id="loader" role="status" aria-live="polite">
+      <div class="loader__scene">
+        <div class="loader__line"></div>
+        <svg class="loader__boat" viewBox="0 0 64 32" aria-hidden="true">
+          <path d="M4 20h56l-6 8H10z" fill="#fff" />
+          <path d="M6 23h52l-4 5H10z" fill="#2A2E35" />
+          <rect x="14" y="13" width="34" height="7" rx="2" fill="#fff" />
+          <rect x="16" y="15" width="30" height="2.4" fill="#34404C" />
+          <rect x="30" y="4" width="5" height="9" fill="#E8B22E" />
+          <rect x="30" y="4" width="5" height="2.5" fill="#1E1F22" />
+        </svg>
+      </div>
+      <p class="loader__text"><span lang="tr">İstanbul uyanıyor…</span><br /><span lang="en">İstanbul is waking up…</span></p>
+    </div>
+  </body>
+</html>

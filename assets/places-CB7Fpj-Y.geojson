@@ -1,0 +1,1613 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sureyya-operasi",
+    "name": "Süreyya Operası",
+    "nameEn": "Süreyya Opera",
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/491935728",
+    "district": "Caferağa Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://www.sureyyaoperasi.kadikoy.bel.tr/",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.029027,
+     40.987996
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "oyun-atolyesi",
+    "name": "Oyun Atölyesi",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/6525497699",
+    "district": "Caferağa Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "http://www.oyunatolyesi.com/",
+    "phone": "+90 216 345 39 39",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.025773,
+     40.986326
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "haldun-taner-sahnesi",
+    "name": "Haldun Taner Sahnesi",
+    "nameEn": "Haldun Taner Stage",
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/102190100",
+    "district": "Caferağa Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.023449,
+     40.991888
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "baba-sahne",
+    "name": "Baba Sahne",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/4833359922",
+    "district": "Caferağa Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.027924,
+     40.98733
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ataturk-kultur-merkezi",
+    "name": "Atatürk Kültür Merkezi",
+    "nameEn": "Ataturk Cultural Center",
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/1033333873",
+    "district": "Gümüşsuyu",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://akmistanbul.gov.tr/tr/iletisim",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.988246,
+     41.036542
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ortaoyuncular-tiyatrosu",
+    "name": "Ortaoyuncular Tiyatrosu",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/6432240559",
+    "district": "Asmalı Mescit",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://www.ortaoyuncular.com/",
+    "phone": "+90 212 251 18 65",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.979189,
+     41.034367
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ibb-muammer-karaca-tiyatrosu",
+    "name": "İBB Muammer Karaca Tiyatrosu",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/224685421",
+    "district": "Tomtom",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.976432,
+     41.031076
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "garaj-istanbul",
+    "name": "Garaj Istanbul",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/654189927",
+    "district": "Tomtom",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": "+90 212 244 44 99",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.977454,
+     41.032377
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bkm",
+    "name": "BKM",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/7656296101",
+    "district": "Beşiktaş",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://bkmonline.net/",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.006098,
+     41.043308
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bkm-mutfak",
+    "name": "BKM Mutfak",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "node/9255335169",
+    "district": "Beşiktaş",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.005755,
+     41.043164
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "paraf-kurucesme-acikhava",
+    "name": "Paraf Kuruçeşme Açıkhava",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/1106158059",
+    "district": "Ortaköy Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.033771,
+     41.051988
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "cemal-resit-rey-konser-salonu",
+    "name": "Cemal Reşit Rey Konser Salonu",
+    "nameEn": "Cemal Resit Rey Concert Hall",
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/59595670",
+    "district": "Harbiye Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "http://www.crrkonsersalonu.org/",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.99016,
+     41.048209
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "harbiye-cemil-topuzlu-acik-hava-tiyatros",
+    "name": "Harbiye Cemil Topuzlu Açık Hava Tiyatrosu",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/1039501845",
+    "district": "Harbiye Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.990042,
+     41.046108
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "harbiye-muhsin-ertugrul-tiyatrosu",
+    "name": "Harbiye Muhsin Ertuğrul Tiyatrosu",
+    "nameEn": "Harbiye Muhsin Ertuğrul Theater",
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/59595672",
+    "district": "Harbiye Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.988651,
+     41.046452
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "devlet-tiyatrolari-tekel-sahnesi",
+    "name": "Devlet Tiyatroları Tekel Sahnesi",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/164328435",
+    "district": "Sultantepe Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.021531,
+     41.031347
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uskudar-musahipzade-celal-sahnesi",
+    "name": "Üsküdar Musahipzade Celal Sahnesi",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "theatre",
+    "osm": "way/310110171",
+    "district": "Aziz Mahmut Hüdayi Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://sehirtiyatrolari.ibb.istanbul/sahne/uskudar-musahipzade-cell-sahnesi",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.012815,
+     41.01967
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "borusan-art-center",
+    "name": "Borusan Art Center",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "arts_centre",
+    "osm": "node/796862400",
+    "district": "Kuloğlu",
+    "hours": null,
+    "cuisine": null,
+    "website": "http://www.borusan.com.tr/en-us/SocialResponsibility/CultureAndArts/Pages/ArtCenterIstanbul.aspx",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.980392,
+     41.033815
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "istanbul-modern-sanat-muzesi",
+    "name": "İstanbul Modern Sanat Müzesi",
+    "nameEn": "Istanbul Museum of Modern Art",
+    "category": "culture",
+    "kind": "museum",
+    "osm": "node/5640069827",
+    "district": "Kılıçali Paşa",
+    "hours": "Tu-Th, Sa-Su 10:00-18:00; Fr 10:00-20:00",
+    "cuisine": null,
+    "website": "https://www.istanbulmodern.org/",
+    "phone": "+902123347300",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.982812,
+     41.025911
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pera-muzesi",
+    "name": "Pera Müzesi",
+    "nameEn": "Pera Museum",
+    "category": "culture",
+    "kind": "museum",
+    "osm": "way/112676117",
+    "district": "Asmalı Mescit",
+    "hours": "Tu-Su 10:00-19:00, Su 12:00-18:00",
+    "cuisine": null,
+    "website": "https://www.peramuzesi.org.tr",
+    "phone": "+90 212 334 99 00",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.975204,
+     41.031803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "atasehir-modern",
+    "name": "Ataşehir Modern",
+    "nameEn": null,
+    "category": "culture",
+    "kind": "museum",
+    "osm": "way/866642931",
+    "district": "Atatürk Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.119623,
+     40.988445
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "akmerkez",
+    "name": "Akmerkez",
+    "nameEn": null,
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "way/152827180",
+    "district": "Kültür Mahallesi",
+    "hours": "Mo-Su 10:00-22:00",
+    "cuisine": null,
+    "website": "https://www.akmerkez.com.tr/",
+    "phone": "+90 212 282 0170",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.02692,
+     41.076819
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "istanbul-cevahir-alisveris-ve-eglence-me",
+    "name": "İstanbul Cevahir Alışveriş ve Eğlence Merkezi",
+    "nameEn": "Istanbul Cevahir Shopping and Entertainment Center",
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "way/46962419",
+    "district": "Şişli",
+    "hours": "10:00-22:00",
+    "cuisine": null,
+    "website": "https://istanbulcevahir.com/",
+    "phone": "+90 212 368 6900",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.992994,
+     41.062604
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "capitol-alisveris-merkezi",
+    "name": "Capitol Alışveriş Merkezi",
+    "nameEn": "Capitol Shopping Center",
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "way/866022515",
+    "district": "Altunizade Mahallesi",
+    "hours": "10:00-22:00",
+    "cuisine": null,
+    "website": "https://www.capitol.com.tr/",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.039498,
+     41.020936
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "akasya-alisveris-merkezi",
+    "name": "Akasya Alışveriş Merkezi",
+    "nameEn": "Akasya MALL",
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "relation/10098365",
+    "district": "Acıbadem Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://www.ak-asya.com.tr/",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.054865,
+     41.0016
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "zorlu-center",
+    "name": "Zorlu Center",
+    "nameEn": null,
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "relation/4840435",
+    "district": "Levazım Mahallesi",
+    "hours": "10:00-22:00",
+    "cuisine": null,
+    "website": "https://www.zorlucenter.com.tr/",
+    "phone": "+90 212 924 0100",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.018037,
+     41.066486
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "istinyepark",
+    "name": "İstinyePark",
+    "nameEn": null,
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "way/163625174",
+    "district": "Reşitpaşa Mahallesi",
+    "hours": "Mo-Su 10:00-22:00",
+    "cuisine": null,
+    "website": "https://istinyepark.com.tr/",
+    "phone": "+90 212 345 5555",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.032642,
+     41.110329
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "galataport",
+    "name": "Galataport",
+    "nameEn": null,
+    "category": "shopping",
+    "kind": "mall",
+    "osm": "way/343046405",
+    "district": "Kılıçali Paşa",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://galataport.com/",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.982866,
+     41.025776
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kapali-carsi",
+    "name": "Kapalı Çarşı",
+    "nameEn": "Grand Bazaar",
+    "category": "shopping",
+    "kind": "bazaar",
+    "osm": "way/303807317",
+    "district": "Beyazıt Mahallesi",
+    "hours": "Mo-Sa 9:00-19:00",
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.968022,
+     41.010954
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "misir-carsisi",
+    "name": "Mısır Çarşısı",
+    "nameEn": "Egyptian (Spice) Bazaar",
+    "category": "shopping",
+    "kind": "bazaar",
+    "osm": "way/24234971",
+    "district": "Rüstempaşa Mahallesi",
+    "hours": "Mo-Sa 08:00-19:00; Su 09:30-19:00",
+    "cuisine": null,
+    "website": "http://www.misircarsisi.net/",
+    "phone": "+902125136597",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.970538,
+     41.016479
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "karakoy-gumruk",
+    "name": "Karaköy Gümrük",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/6327464485",
+    "district": "Kemankeş Karamustafa Paşa",
+    "hours": "Mo-Th 09:00-24:00; Fr-Sa 09:00-24:30; Su 10:00-22:00",
+    "cuisine": "pasta;burger;chicken",
+    "website": null,
+    "phone": "+90 212 244 22 52",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.975838,
+     41.022872
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "birecikli-kebap-karakoy",
+    "name": "Birecikli Kebap Karaköy",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/11833689471",
+    "district": "Kemankeş Karamustafa Paşa",
+    "hours": "Mo-Su 11:30-23:00",
+    "cuisine": "turkish",
+    "website": null,
+    "phone": "+90 212 293 62 63",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.978306,
+     41.02348
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "namli-gurme",
+    "name": "Namli Gurme",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/11834403969",
+    "district": "Kemankeş Karamustafa Paşa",
+    "hours": null,
+    "cuisine": "coffee_shop;turkish",
+    "website": "https://namligurme.com.tr/",
+    "phone": "+90 212 293 68 80",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.977922,
+     41.02373
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "espressolab",
+    "name": "Espressolab",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/8324180075",
+    "district": "Kemankeş Karamustafa Paşa",
+    "hours": "Mo-Su 07:00-23:00",
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.975955,
+     41.021896
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kavacoffee",
+    "name": "KAVACOFFEE",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/5753798522",
+    "district": "Hacımimi",
+    "hours": "Mo-Fr 08:00-22:00; Sa-Su 10:00-22:00",
+    "cuisine": "coffee_shop",
+    "website": "https://kavacoffeeroasting.com/",
+    "phone": "+90 535 733 15 72",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.977889,
+     41.024772
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "yanyali-fehmi-lokantasi",
+    "name": "Yanyalı Fehmi Lokantası",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/11335161041",
+    "district": "Osmanağa Mahallesi",
+    "hours": "Mo-Su 09:00-21:00",
+    "cuisine": "turkish;regional",
+    "website": "http://www.fehmilokantasi.com/",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.025509,
+     40.990765
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "tatar-salim",
+    "name": "Tatar Salim",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/11240964037",
+    "district": "Caferağa Mahallesi",
+    "hours": "Mo-Su 11:30-22:00",
+    "cuisine": "kebab;turkish",
+    "website": "http://tatarsalim.com.tr",
+    "phone": "+902165505656",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.024449,
+     40.98955
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "olimpiyat-kokorec",
+    "name": "Olimpiyat Kokoreç",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "way/694298359",
+    "district": "Osmanağa Mahallesi",
+    "hours": "Mo-We 12:00-22:30; Th 12:00-22:30; Fr 12:00-24:00; Sa 12:00-26:00; Su 12:00-23:30",
+    "cuisine": "turkish;kokorec;kokoreç",
+    "website": null,
+    "phone": "+90 535 401 04 02",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.025393,
+     40.990752
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kont-moda",
+    "name": "KONT Moda",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/14135026501",
+    "district": "Caferağa Mahallesi",
+    "hours": "Mo-Su 09:00-22:30",
+    "cuisine": null,
+    "website": "http://kont.cafe",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.025832,
+     40.980505
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pisi-mutfak",
+    "name": "Piși Mutfak",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/10074452417",
+    "district": "Caferağa Mahallesi",
+    "hours": "Tu-Su 08:00-18:00",
+    "cuisine": "turkish",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.024959,
+     40.984662
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pandeli",
+    "name": "Pandeli",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/3079823142",
+    "district": "Rüstempaşa Mahallesi",
+    "hours": null,
+    "cuisine": "turkish",
+    "website": "https://www.pandeli.com.tr/",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.971179,
+     41.017145
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bab-i-hayat",
+    "name": "Bab-ı Hayat",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/3079823143",
+    "district": "Rüstempaşa Mahallesi",
+    "hours": null,
+    "cuisine": "turkish",
+    "website": "https://www.babihayat.com/",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.971745,
+     41.015774
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ist-too",
+    "name": "Ist Too",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/8493543924",
+    "district": "Beşiktaş",
+    "hours": "Mo-Su 07:00-23:00",
+    "cuisine": "turkish;sushi",
+    "website": "https://www.shangri-la.com/tr/istanbul/shangrila/dining/restaurants/ist-too/",
+    "phone": "+90 212 275 88 88",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.005425,
+     41.040401
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "shang-palace",
+    "name": "Shang Palace",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/8493543925",
+    "district": "Beşiktaş",
+    "hours": "Mo-Su 12:00-15:00, 18:00-23:00",
+    "cuisine": "chinese",
+    "website": "https://www.shangri-la.com/istanbul/shangrila/dining/restaurants/shang-palace/",
+    "phone": "+90 212 275 88 88",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.005324,
+     41.04038
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "blak-coffee-co",
+    "name": "BLAK Coffee Co.",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/11912290229",
+    "district": "Cihannüma Mahallesi",
+    "hours": "Mo-Su 09:00-23:00",
+    "cuisine": "coffee_shop",
+    "website": "https://www.blakcoffee.co",
+    "phone": "+905363540000",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.007072,
+     41.045025
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kahve-dunyasi",
+    "name": "Kahve Dünyası",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/10646969525",
+    "district": "Beşiktaş",
+    "hours": "07:00-01:00",
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": "+90 212 703 1080",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.008358,
+     41.042213
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "mesut-cafe",
+    "name": "Mesut Cafe",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/12569326446",
+    "district": "Mimar Sinan Mahallesi",
+    "hours": "Mo-Su,PH 13:00-02:00",
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.016081,
+     41.026349
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "gulfem-hatun-konagi",
+    "name": "Gülfem Hatun Konağı",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/14017781801",
+    "district": "Aziz Mahmut Hüdayi Mahallesi",
+    "hours": "Mo-Su 11:00-00:00",
+    "cuisine": null,
+    "website": null,
+    "phone": "+90 542 289 29 25",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.014886,
+     41.023667
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "mado",
+    "name": "Mado",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "way/928019617",
+    "district": "Mimar Sinan Mahallesi",
+    "hours": "Mo-Su,PH 07:00-01:00",
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.0162,
+     41.026072
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "uskudar-sahne",
+    "name": "Üsküdar Sahne",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/13011953213",
+    "district": "Mimar Sinan Mahallesi",
+    "hours": "Mo-Su 09:00-21:00",
+    "cuisine": "coffee_shop",
+    "website": null,
+    "phone": "+90 532 051 74 23",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.013983,
+     41.025145
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "yemen-2-ocakbasi",
+    "name": "Yemen 2 Ocakbasi",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/4162021184",
+    "district": "Ortaköy Mahallesi",
+    "hours": null,
+    "cuisine": "regional",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.026544,
+     41.049034
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "cengelkoy-borekcisi",
+    "name": "Cengelköy Börekcisi",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/4162021185",
+    "district": "Ortaköy Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.026581,
+     41.048982
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "midpoint",
+    "name": "Midpoint",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/7552360429",
+    "district": "Bebek Mahallesi",
+    "hours": "Mo-Su 09:00-02:00",
+    "cuisine": null,
+    "website": "midpoint.com.tr",
+    "phone": "+90 212 265 40 37",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.042979,
+     41.075798
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "bebek-koru-kahvesi",
+    "name": "Bebek Koru Kahvesi",
+    "nameEn": null,
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/7542070017",
+    "district": "Bebek Mahallesi",
+    "hours": "Mo-Su 09:00-00:00",
+    "cuisine": null,
+    "website": "https://tr-tr.facebook.com/",
+    "phone": "+90 212 287 56 07",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.051032,
+     41.080148
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "mihrabat",
+    "name": "Mihrabat",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "way/338831488",
+    "district": "Kanlıca Mahallesi",
+    "hours": "Mo-Su 09:00-23:30",
+    "cuisine": "burger;pizza;coffee_shop",
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.06849,
+     41.096404
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pideban-sariyer",
+    "name": "Pideban Sariyer",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/12065302769",
+    "district": "Merkez Mahallesi",
+    "hours": "Mo-Su 08:00-22:30",
+    "cuisine": "turkish",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.056618,
+     41.169057
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pide-ban",
+    "name": "Pide Ban",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/13626628857",
+    "district": "Çayırbaşı Mahallesi",
+    "hours": null,
+    "cuisine": "turkish",
+    "website": "https://www.pideban.com.tr/",
+    "phone": "+90 212 242 1946",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.035552,
+     41.156103
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "yucetepe-kir-gazinosu",
+    "name": "Yücetepe Kır Gazinosu",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "node/4935862767",
+    "district": "Nizam Mahallesi",
+    "hours": "Mo-Su 10:00-00:00",
+    "cuisine": null,
+    "website": "yucetepe.com.tr",
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.119452,
+     40.848747
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "lunapark-restaurant",
+    "name": "Lunapark Restaurant",
+    "nameEn": null,
+    "category": "food",
+    "kind": "restaurant",
+    "osm": "way/231458585",
+    "district": "Maden Mahallesi",
+    "hours": null,
+    "cuisine": "regional",
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.120375,
+     40.857308
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "gezi-istanbul-cafe",
+    "name": "Gezi İstanbul Cafe",
+    "nameEn": "Gezi İstanbul Cafe-Pastanesi",
+    "category": "food",
+    "kind": "cafe",
+    "osm": "node/5047985026",
+    "district": "Gümüşsuyu",
+    "hours": "Mo-Su 07:30-23:00",
+    "cuisine": "turkish;breakfast;regional;coffee_shop",
+    "website": "http://www.geziistanbul.com",
+    "phone": "+902122925358",
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.98751,
+     41.036182
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "salacak",
+    "name": "Salacak",
+    "nameEn": null,
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "relation/9463224",
+    "district": "Salacak Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.011821,
+     41.01663
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "kiz-kulesi",
+    "name": "Kız Kulesi",
+    "nameEn": "Maiden's Tower",
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "relation/4429796",
+    "district": "Salacak Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.004058,
+     41.021138
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "camlica-tepesi",
+    "name": "Çamlıca Tepesi",
+    "nameEn": null,
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "node/13240477174",
+    "district": "Üsküdar",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.067793,
+     41.026888
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "pierre-loti",
+    "name": "Pierre Loti",
+    "nameEn": null,
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "way/1311677944",
+    "district": "Merkez Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.933368,
+     41.053291
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "galata-kulesi",
+    "name": "Galata Kulesi",
+    "nameEn": "Galata Tower",
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "way/23236783",
+    "district": "Bereketzade Mahallesi",
+    "hours": "09:00-20:30",
+    "cuisine": null,
+    "website": "https://muze.gen.tr/muze-detay/galatakulesi",
+    "phone": "+90 212 293 81 80",
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28.974213,
+     41.025641
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "moda-burnu",
+    "name": "Moda Burnu",
+    "nameEn": null,
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "way/236464869",
+    "district": "Caferağa Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": false
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.026735,
+     40.980569
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ulus-parki",
+    "name": "Ulus Parkı",
+    "nameEn": null,
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "way/48962874",
+    "district": "Kuruçeşme Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": null,
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.032283,
+     41.063797
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "emirgan-korusu",
+    "name": "Emirgan Korusu",
+    "nameEn": "Emirgan Park",
+    "category": "view",
+    "kind": "viewpoint",
+    "osm": "way/569310851",
+    "district": "Emirgan Mahallesi",
+    "hours": null,
+    "cuisine": null,
+    "website": "https://www.geziyerler.com/emirgan-korusu",
+    "phone": null,
+    "major": true
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.052517,
+     41.109012
+    ]
+   }
+  }
+ ]
+}
