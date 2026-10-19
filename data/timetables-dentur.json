@@ -8,8 +8,8 @@
  "publisher": "Dentur Avrasya",
  "url": "https://www.denturavrasya.com/tr-TR/hatlarimiz",
  "validFrom": "2026-10-13",
- "validTo": "2026-11-27",
- "generated": "2026-10-13",
+ "validTo": "2026-12-03",
+ "generated": "2026-10-19",
  "lines": {
   "dentur-uskudar-kabatas": {
    "pdf": [
@@ -3568,10 +3568,10 @@
     }
    ],
    "url": "https://www.denturavrasya.com/tr-TR/hatlarimiz/uskudar-kabatas",
-   "fetched": "2026-10-13T03:08:58.865Z",
+   "fetched": "2026-10-19T09:15:11.966Z",
    "holidays": "none",
    "validFrom": "2026-10-13",
-   "validTo": "2026-11-27"
+   "validTo": "2026-12-03"
   }
  }
 }
