@@ -135,6 +135,32 @@
    "type": "Feature",
    "properties": {
     "nameEn": null,
+    "category": "food",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
+    "id": "ev-komunite",
+    "name": "Komünite",
+    "kind": "restaurant",
+    "osm": "node/14027446382",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.035903,
+     40.99285
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
     "category": "culture",
     "district": null,
     "hours": null,
