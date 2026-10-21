@@ -1,94 +1,94 @@
 {
- "generated": "2026-10-20T08:40:20.359Z",
+ "generated": "2026-10-21T08:41:23.444Z",
  "venues": {
   "arter": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 38
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 40
   },
   "akbank-sanat": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 1,
-   "unplaced": 9,
+   "unplaced": 8,
    "message": "not on the map: Çevrimiçi Platform – Zoom · Sefaköy Kültür ve Sanat Merkezi · Eski Askeri Gazino Binası, SİNOP"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 54,
-   "unplaced": 11,
-   "message": "not on the map: İnal Aydınoğlu K.M Şener Şen Sahnesi · Üsküdar Kerem Yılmazer Sahnesi."
+   "unplaced": 14,
+   "message": "not on the map: Üsküdar Kerem Yılmazer Sahnesi."
   },
   "istanbul-modern": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 5,
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 4,
    "message": "2 list page(s), 6 detail link(s), 0 without a date"
   },
   "salt": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 7,
    "unplaced": 8,
    "message": "2 list page(s), 21 detail link(s), 3 without a date"
   },
   "pera": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 4,
    "message": "1 list page(s), 4 detail link(s), 0 without a date"
   },
   "ibb-kultur": {
    "status": "empty",
-   "lastRun": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
    "count": 0,
-   "unplaced": 7,
-   "message": "2 list page(s), 7 detail link(s), 0 without a date"
+   "unplaced": 6,
+   "message": "2 list page(s), 6 detail link(s), 0 without a date"
   },
   "borusan": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 3,
    "message": "2 list page(s), 7 detail link(s), 0 without a date"
   },
   "iksv": {
    "status": "empty",
-   "lastRun": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
    "lastOk": "2026-10-11T14:09:36.552Z",
    "count": 0,
    "message": "4 list page(s), 0 detail link(s), 0 without a date"
   },
   "salon-iksv": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 29
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 27
   },
   "crr": {
    "status": "failed",
-   "lastRun": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
    "count": 0,
    "message": "fetch failed (Client network socket disconnected before secure TLS connection was established)"
   },
   "zorlu-psm": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 150,
-   "message": "2 list page(s), 67 detail link(s), 11 without a date"
+   "message": "2 list page(s), 71 detail link(s), 10 without a date"
   },
   "akm": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 7,
    "message": "2 list page(s), 6 detail link(s), 0 without a date"
   },
@@ -100,68 +100,65 @@
   },
   "nardis": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 25,
-   "message": "1 list page(s), 37 detail link(s), 0 without a date"
+   "message": "1 list page(s), 36 detail link(s), 0 without a date"
   },
   "babylon": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 26,
-   "message": "2 list page(s), 35 detail link(s), 0 without a date"
+   "message": "2 list page(s), 37 detail link(s), 0 without a date"
   },
   "fisekhane": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 36
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 44
   },
   "dasdas": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 72
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 71
   },
   "kumbaraci50": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 4
   },
   "borusan-contemporary": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 3
   },
   "galata-rum-okulu": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 2
   },
   "sakip-sabanci": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 1
   },
   "uniq": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
-   "count": 25
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
+   "count": 24
   },
   "bkm": {
    "status": "ok",
-   "lastRun": "2026-10-20T08:40:20.359Z",
-   "lastOk": "2026-10-20T08:40:20.359Z",
+   "lastRun": "2026-10-21T08:41:23.444Z",
+   "lastOk": "2026-10-21T08:41:23.444Z",
    "count": 6
   }
- },
- "places": [
-  "\"Komünite\" → Komünite (node/14027446382, amenity/restaurant)"
- ]
+ }
 }
