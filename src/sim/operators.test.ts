@@ -80,7 +80,10 @@ describe('private operators on the map', () => {
 
 describe('fallback per line, like the Şehir Hatları lines', () => {
   it('a line whose read has run out is simulated alone (never shown as real); Şehir Hatları stays real', () => {
-    const after = dayOf('2026-12-01'); // Dentur / Turyol read on 2026-10-13, valid 45 days
+    // The day after the last operator read runs out (a weekly read moves validTo on by 45 days).
+    const lastValidTo = [turyol, dentur].flatMap((f) => [f.validTo, ...Object.values(f.lines).map((l) => l.validTo ?? f.validTo)]).sort().at(-1)!;
+    const after = dayOf(lastValidTo) + 1;
+    expect(after).toBeLessThan(dayOf(sh.validTo)); // Şehir Hatları still valid then
     expect(lineFallback(files, 'dentur-uskudar-kabatas', after, holidays)).toBe('expired');
     const m = full.getDay(after).modes;
     for (const id of OPERATOR_LINES) expect(m[id]).toBe('sim');
