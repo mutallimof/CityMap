@@ -7,6 +7,7 @@
 import { readFileSync } from 'node:fs';
 import type { FeatureCollection, LineString, MultiPolygon, Polygon } from 'geojson';
 import { describe, expect, it } from 'vitest';
+import { timetableFiles } from './test-files';
 import { DATA_BBOX } from '../../scripts/bbox';
 import { localProj } from '../../scripts/lib/local-proj';
 import { CoastIndex } from '../../scripts/lib/route-check';
@@ -19,13 +20,13 @@ import { realTripSource } from './real';
 import { buildDaySchedule } from './schedule';
 import { cachedDays } from './state';
 import { DAY_S } from './time';
-import type { HolidayFile, TimetableFile } from './timetable-data';
+import type { HolidayFile } from './timetable-data';
 import type { LineSpec } from './types';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
 const land = json<FeatureCollection<Polygon | MultiPolygon>>('data/land.geojson');
 const routes = json<FeatureCollection<LineString, { id: string; from: string; to: string; lineId: string }>>('data/routes.geojson');
-const files = ['data/timetables.json', 'data/timetables-turyol.json', 'data/timetables-dentur.json'].map((f) => json<TimetableFile>(f));
+const files = timetableFiles(); // operator read windows pinned (test-files.ts)
 const lines = json<{ lines: LineSpec[] }>('data/lines.json').lines;
 const piers = json<{ features: { properties: { operator?: string; berths: { id: string; alongBearing: number; seawardBearing: number }[] } }[] }>('data/piers.geojson');
 const net = buildNetwork(lines, routes as never, 41.05, piers.features.flatMap((f) => f.properties.berths.map((b) => ({ ...b, operator: f.properties.operator }))));

@@ -5,18 +5,19 @@
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { timetableFiles } from '../sim/test-files';
 import { openAt } from '../places/store';
 import { buildNetwork } from '../sim/network';
 import { realTripSource, timetableStatus } from '../sim/real';
 import { buildDaySchedule } from '../sim/schedule';
 import { cachedDays } from '../sim/state';
-import type { HolidayFile, TimetableFile } from '../sim/timetable-data';
+import type { HolidayFile } from '../sim/timetable-data';
 import type { LineSpec } from '../sim/types';
 import { makeLandIndex } from './land';
 import { connect, hhmm, type PlanDeps } from './timeline';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
-const files = ['data/timetables.json', 'data/timetables-turyol.json', 'data/timetables-dentur.json'].map((f) => json<TimetableFile>(f));
+const files = timetableFiles(); // operator read windows pinned (test-files.ts)
 const dentur = files[2];
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
 const lines = json<{ lines: LineSpec[] }>('data/lines.json').lines;

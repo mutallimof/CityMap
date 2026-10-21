@@ -16,11 +16,12 @@ import { parseHHMM, DAY_S } from './time';
 import type { HolidayFile, TimetableFile } from './timetable-data';
 import type { LineSpec } from './types';
 import { makeLandIndex } from '../plan/land';
+import { pinReads } from './test-files';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
 const sh = json<TimetableFile>('data/timetables.json');
-const turyol = json<TimetableFile>('data/timetables-turyol.json');
-const dentur = json<TimetableFile>('data/timetables-dentur.json');
+const turyol = pinReads(json<TimetableFile>('data/timetables-turyol.json')); // read window pinned: test-files.ts
+const dentur = pinReads(json<TimetableFile>('data/timetables-dentur.json')); // read window pinned: test-files.ts
 const files = [sh, turyol, dentur];
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
 const allLines = json<{ lines: LineSpec[] }>('data/lines.json').lines;
@@ -80,10 +81,7 @@ describe('private operators on the map', () => {
 
 describe('fallback per line, like the Şehir Hatları lines', () => {
   it('a line whose read has run out is simulated alone (never shown as real); Şehir Hatları stays real', () => {
-    // The day after the last operator read runs out (a weekly read moves validTo on by 45 days).
-    const lastValidTo = [turyol, dentur].flatMap((f) => [f.validTo, ...Object.values(f.lines).map((l) => l.validTo ?? f.validTo)]).sort().at(-1)!;
-    const after = dayOf(lastValidTo) + 1;
-    expect(after).toBeLessThan(dayOf(sh.validTo)); // Şehir Hatları still valid then
+    const after = dayOf('2026-12-01'); // the pinned read (2026-10-13 + 45 days) has run out
     expect(lineFallback(files, 'dentur-uskudar-kabatas', after, holidays)).toBe('expired');
     const m = full.getDay(after).modes;
     for (const id of OPERATOR_LINES) expect(m[id]).toBe('sim');

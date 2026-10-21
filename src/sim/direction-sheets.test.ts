@@ -5,15 +5,16 @@
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { timetableFiles } from './test-files';
 import { directionInferred, tripDirectionInferred } from './direction';
 import { buildNetwork } from './network';
 import { realTripSource } from './real';
 import { buildDaySchedule } from './schedule';
-import type { HolidayFile, TimetableFile } from './timetable-data';
+import type { HolidayFile } from './timetable-data';
 import type { LineSpec, TripRef } from './types';
 
 const json = <T>(f: string) => JSON.parse(readFileSync(f, 'utf8')) as T;
-const files = ['data/timetables.json', 'data/timetables-turyol.json', 'data/timetables-dentur.json'].map((f) => json<TimetableFile>(f));
+const files = timetableFiles(); // operator read windows pinned (test-files.ts)
 const holidays = json<HolidayFile>('data/catalog/holidays.json');
 const lines = json<{ lines: LineSpec[] }>('data/lines.json').lines;
 const net = buildNetwork(lines, json('data/routes.geojson'), 41.05);
