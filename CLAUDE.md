@@ -11,8 +11,10 @@ create them): project history = this file + git.
 ## Ground rules (from the user)
 - Tags: `v0.1.0` = the look before the theme redesign; `v0.2.0` = the redesign, before the cleanup pass (tag pushes
   are refused by the session git proxy: tags are made by a one-off workflow on a `probe/tag-…` branch; leftover
-  probe branches: `probe/tag-v0.2.0`, `probe/ferry-operators` (operator site probes), `probe/operators-scrape` (first
-  operator reads) — the session can't delete remote branches, the user may).
+  probe branches (2026-10-21): `probe/ferry-operators` (operator site probes), `probe/operators-scrape` (first
+  operator reads); `probe/tag-v0.2.0` is gone — the session can't delete remote branches, the user may).
+  `phase-0` is the GitHub default branch (checked 2026-10-21), so the refresh schedule in its `data-refresh.yml` is
+  the only one that fires; Pages serves `gh-pages`.
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
 - **No open-source licence** — the user keeps all rights.
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
@@ -521,6 +523,11 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   - Credit: while sound is on the attribution bar shows "Sounds: Wikimedia Commons …" → `audio/credits.html`.
   - Budget: Opus 1.48 MB, AAC 1.76 MB for everything (one format per visitor; usually only 3–4 beds load). Build
     fails over 2 MB per format. **No call to prayer** (none in the files; Galata clips checked on a spectrogram).
+- **Tests vs refreshed data (2026-10-21):** the deploy job runs `npm test` on the freshly committed data, so a test
+  that pairs a fixed date with a file the refresh job rewrites breaks every deploy (19–20 Oct: the weekly operator
+  read moved `validTo` and the expiry test failed; the live site kept 18 Oct events). Tests load the timetables
+  through `src/sim/test-files.ts` (operator read windows pinned to 2026-10-13 … 11-27); clocks in tests are fixed
+  (`events.test.ts` `now`, fake timers). Rule: never compare fixed dates with refreshed fields; pin them.
 - **Perf:** adaptive ladder (pixel ratio → particles/gulls → windows → flat buildings). Headless screenshots run
   ~2 fps: always use `?adaptive=0&intro=0`. Debug globals (`map`, `ferries`, `ui`, …) exist in dev builds only.
 
