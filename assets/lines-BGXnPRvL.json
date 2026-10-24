@@ -1,0 +1,441 @@
+{
+  "lines": [
+    {
+      "id": "kadikoy-karakoy-eminonu",
+      "name": {
+        "tr": "Kadıköy – Karaköy – Eminönü",
+        "en": "Kadıköy – Karaköy – Eminönü"
+      },
+      "color": "#E0A100",
+      "stops": [
+        "kadikoy",
+        "karakoy",
+        "eminonu"
+      ],
+      "pattern": [
+        "kadikoy",
+        "karakoy",
+        "eminonu"
+      ],
+      "berths": [
+        "kadikoy-sh",
+        "karakoy-kadikoy-uskudar",
+        "eminonu-kadikoy"
+      ],
+      "service": {
+        "first": "07:00",
+        "last": "23:30",
+        "headwayPeak": 20,
+        "headwayOff": 20,
+        "dwellMin": 4,
+        "speedKmh": 24
+      },
+      "toCheck": [
+        "Kadıköy: our one Kadıköy berth (OSM 'Kadıköy 2 İskelesi'); the PDF's night trips name an old (Eski) and a new (Yeni) Kadıköy pier — which one is ours is not known."
+      ]
+    },
+    {
+      "id": "uskudar-karakoy-eminonu",
+      "name": {
+        "tr": "Üsküdar – Karaköy – Eminönü",
+        "en": "Üsküdar – Karaköy – Eminönü"
+      },
+      "color": "#F4F1E8",
+      "stops": [
+        "uskudar",
+        "karakoy",
+        "eminonu"
+      ],
+      "pattern": [
+        "uskudar",
+        "eminonu"
+      ],
+      "berths": [
+        "uskudar-main",
+        "karakoy-kadikoy-uskudar",
+        "eminonu-kadikoy"
+      ],
+      "service": {
+        "first": "06:50",
+        "last": "23:10",
+        "headwayPeak": 15,
+        "headwayOff": 30,
+        "dwellMin": 3,
+        "speedKmh": 22
+      },
+      "toCheck": [
+        "Which Eminönü berth serves Üsküdar? Using the main one (Şehir Hatları Kadıköy İskelesi).",
+        "Üsküdar berth: using node/6356616321 'Üsküdar İskelesi' (no operator tag)."
+      ]
+    },
+    {
+      "id": "kadikoy-besiktas",
+      "name": {
+        "tr": "Kadıköy – Beşiktaş",
+        "en": "Kadıköy – Beşiktaş"
+      },
+      "color": "#8FD3F4",
+      "stops": [
+        "kadikoy",
+        "karakoy",
+        "besiktas"
+      ],
+      "pattern": [
+        "kadikoy",
+        "besiktas"
+      ],
+      "berths": [
+        "kadikoy-sh",
+        "karakoy-kadikoy-uskudar",
+        "besiktas-kadikoy"
+      ],
+      "service": {
+        "first": "07:15",
+        "last": "22:45",
+        "headwayPeak": 20,
+        "headwayOff": 30,
+        "dwellMin": 4,
+        "speedKmh": 24
+      },
+      "toCheck": [
+        "Which Kadıköy berth serves Beşiktaş? Using the main one (Kadıköy 2 İskelesi).",
+        "Night trips (Fri/Sat nights) call at Karaköy and sail from the old or new Kadıköy pier (PDF p. 6); we draw them at our one Kadıköy berth."
+      ]
+    },
+    {
+      "id": "bogaz",
+      "name": {
+        "tr": "Uzun Boğaz Turu",
+        "en": "Full Bosphorus Tour"
+      },
+      "color": "#E57BA6",
+      "stops": [
+        "eminonu",
+        "besiktas",
+        "uskudar",
+        "kanlica",
+        "sariyer",
+        "rumeli-kavagi",
+        "anadolu-kavagi"
+      ],
+      "pattern": [
+        "eminonu",
+        "besiktas",
+        "uskudar",
+        "kanlica",
+        "sariyer",
+        "rumeli-kavagi",
+        "anadolu-kavagi"
+      ],
+      "berths": [
+        "eminonu-bogaz",
+        "besiktas-uskudar-bogaz",
+        "uskudar-main",
+        "kanlica-main",
+        "sariyer-main",
+        "rumeli-kavagi-main",
+        "anadolu-kavagi-main"
+      ],
+      "service": {
+        "first": "08:00",
+        "last": "19:00",
+        "headwayPeak": 30,
+        "headwayOff": 45,
+        "dwellMin": 5,
+        "speedKmh": 19
+      },
+      "toCheck": [
+        "Üsküdar: uses the main berth (node/6356616321).",
+        "Simulated fallback runs every 30/45 min; the real tour is once a day (10:35 from Eminönü, back 15:00 from Anadolu Kavağı)."
+      ]
+    },
+    {
+      "id": "adalar",
+      "name": {
+        "tr": "Kabataş – Adalar",
+        "en": "Kabataş – Islands"
+      },
+      "color": "#B5D96B",
+      "stops": [
+        "kabatas",
+        "eminonu",
+        "kadikoy",
+        "kinaliada",
+        "burgazada",
+        "heybeliada",
+        "buyukada",
+        "bostanci"
+      ],
+      "pattern": [
+        "kabatas",
+        "kadikoy",
+        "kinaliada",
+        "burgazada",
+        "heybeliada",
+        "buyukada"
+      ],
+      "berths": [
+        "kabatas-main",
+        "eminonu-kadikoy",
+        "kadikoy-sh",
+        "kinaliada-main",
+        "burgazada-main",
+        "heybeliada-main",
+        "buyukada-main",
+        "bostanci-main"
+      ],
+      "service": {
+        "first": "07:00",
+        "last": "21:00",
+        "headwayPeak": 30,
+        "headwayOff": 60,
+        "dwellMin": 3,
+        "speedKmh": 26
+      }
+    },
+    {
+      "id": "rumeli-kavagi-eminonu",
+      "name": {
+        "tr": "Rumeli Kavağı – Eminönü",
+        "en": "Rumeli Kavağı – Eminönü"
+      },
+      "color": "#6FC2B0",
+      "stops": [
+        "rumeli-kavagi",
+        "sariyer",
+        "buyukdere",
+        "istinye",
+        "emirgan",
+        "bebek",
+        "arnavutkoy",
+        "ortakoy",
+        "besiktas",
+        "eminonu"
+      ],
+      "pattern": [
+        "rumeli-kavagi",
+        "sariyer",
+        "buyukdere",
+        "istinye",
+        "emirgan",
+        "bebek",
+        "arnavutkoy",
+        "ortakoy",
+        "besiktas",
+        "eminonu"
+      ],
+      "berths": [
+        "rumeli-kavagi-main",
+        "sariyer-main",
+        "buyukdere-main",
+        "istinye-main",
+        "emirgan-main",
+        "bebek-main",
+        "arnavutkoy-main",
+        "ortakoy-main",
+        "besiktas-uskudar-bogaz",
+        "eminonu-bogaz"
+      ],
+      "service": {
+        "first": "07:20",
+        "last": "18:30",
+        "headwayPeak": 60,
+        "headwayOff": 60,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Eminönü / Beşiktaş: uses the Boğaz berths (same as the Uzun Boğaz Turu); the PDF doesn't say which berth."
+      ]
+    },
+    {
+      "id": "anadolu-kavagi-uskudar",
+      "name": {
+        "tr": "Anadolu Kavağı – Üsküdar",
+        "en": "Anadolu Kavağı – Üsküdar"
+      },
+      "color": "#C39BEA",
+      "stops": [
+        "anadolu-kavagi",
+        "beykoz",
+        "pasabahce",
+        "cubuklu",
+        "kanlica",
+        "anadolu-hisari",
+        "cengelkoy",
+        "beylerbeyi",
+        "uskudar"
+      ],
+      "pattern": [
+        "anadolu-kavagi",
+        "beykoz",
+        "pasabahce",
+        "cubuklu",
+        "kanlica",
+        "anadolu-hisari",
+        "cengelkoy",
+        "beylerbeyi",
+        "uskudar"
+      ],
+      "berths": [
+        "anadolu-kavagi-main",
+        "beykoz-main",
+        "pasabahce-main",
+        "cubuklu-main",
+        "kanlica-main",
+        "anadolu-hisari-main",
+        "cengelkoy-main",
+        "beylerbeyi-main",
+        "uskudar-main"
+      ],
+      "service": {
+        "first": "07:00",
+        "last": "17:45",
+        "headwayPeak": 120,
+        "headwayOff": 120,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Çubuklu: the passenger pier way/525436006 'Çubuklu İskelesi', not the Çubuklu–İstinye car-ferry terminal next to it.",
+        "Büyükdere is on the other line; Kandilli and Küçüksu are not called at by this line in the PDF."
+      ]
+    },
+    {
+      "id": "turyol-kadikoy-karakoy-eminonu",
+      "name": {
+        "tr": "Kadıköy – Karaköy – Eminönü",
+        "en": "Kadıköy – Karaköy – Eminönü"
+      },
+      "color": "#D9A27E",
+      "stops": [
+        "kadikoy-yeni-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "pattern": [
+        "kadikoy-yeni-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "berths": [
+        "kadikoy-yeni-turyol-main",
+        "karakoy-turyol-main",
+        "eminonu-turyol-main"
+      ],
+      "service": {
+        "first": "06:55",
+        "last": "21:50",
+        "headwayPeak": 20,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Turyol prints departures per pier pair; Kadıköy Yeni → Karaköy and → Eminönü share every time, so they are drawn as one boat calling at Karaköy first (OSM route relation order) — the order is not printed.",
+        "Which OSM pier is 'Kadıköy Yeni': way/226127060 ('Turyol Eminönü ve Karaköy İskelesi') by its destinations; the Metro pier is the end of the OSM route 'Kadıköy (Metro Durağı) - Karaköy (Turyol)'."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "turyol-uskudar-karakoy-eminonu",
+      "name": {
+        "tr": "Üsküdar – Karaköy – Eminönü",
+        "en": "Üsküdar – Karaköy – Eminönü"
+      },
+      "color": "#9AA8D8",
+      "stops": [
+        "uskudar-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "pattern": [
+        "uskudar-turyol",
+        "karakoy-turyol",
+        "eminonu-turyol"
+      ],
+      "berths": [
+        "uskudar-turyol-main",
+        "karakoy-turyol-main",
+        "eminonu-turyol-main"
+      ],
+      "service": {
+        "first": "06:55",
+        "last": "21:05",
+        "headwayPeak": 20,
+        "headwayOff": 25,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Üsküdar → Karaköy and → Eminönü share every time: one boat, Karaköy first (nearest) — the order is not printed or mapped."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "turyol-karakoy-kadikoy-metro",
+      "name": {
+        "tr": "Karaköy – Kadıköy (Metro)",
+        "en": "Karaköy – Kadıköy (Metro)"
+      },
+      "color": "#E3C76B",
+      "stops": [
+        "karakoy-turyol",
+        "kadikoy-metro-turyol"
+      ],
+      "pattern": [
+        "karakoy-turyol",
+        "kadikoy-metro-turyol"
+      ],
+      "berths": [
+        "karakoy-turyol-main",
+        "kadikoy-metro-turyol-main"
+      ],
+      "service": {
+        "first": "17:05",
+        "last": "18:20",
+        "headwayPeak": 20,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Weekday evening sailings only (as printed)."
+      ],
+      "operator": "turyol"
+    },
+    {
+      "id": "dentur-uskudar-kabatas",
+      "name": {
+        "tr": "Üsküdar – Kabataş",
+        "en": "Üsküdar – Kabataş"
+      },
+      "color": "#7FC4A4",
+      "stops": [
+        "uskudar-dentur",
+        "kabatas-dentur"
+      ],
+      "pattern": [
+        "uskudar-dentur",
+        "kabatas-dentur"
+      ],
+      "berths": [
+        "uskudar-dentur-main",
+        "kabatas-dentur-main"
+      ],
+      "service": {
+        "first": "06:45",
+        "last": "00:00",
+        "headwayPeak": 10,
+        "headwayOff": 20,
+        "dwellMin": 2,
+        "speedKmh": 20
+      },
+      "toCheck": [
+        "Kabataş: OSM node/12985066037 (operator Dentur Avrasya, end of the OSM route 'Üsküdar - Kabataş (Dentur Avrasya)') is tagged 'FIXME: precise location'.",
+        "Weekday 16:00–18:30 from Üsküdar and 08:10–09:10 from Kabataş: printed as 'continuous service' without times — no boats are drawn for it beyond the printed times."
+      ],
+      "operator": "dentur"
+    }
+  ]
+}
