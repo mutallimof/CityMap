@@ -99,6 +99,13 @@ body {
   opacity: 0;
   pointer-events: none;
 }
+.loader__mark {
+  display: block;
+  width: 236px;
+  max-width: 80vw;
+  height: auto;
+  margin: 0 auto;
+}
 .loader__scene {
   position: relative;
   width: 220px;

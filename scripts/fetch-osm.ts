@@ -9,6 +9,7 @@
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { DATA_BBOX } from './bbox';
+import { userAgent } from './lib/app';
 import { RAW_OVERPASS, type OverpassResponse } from './lib/overpass';
 
 const ENDPOINTS = process.env.OVERPASS_URL
@@ -36,7 +37,7 @@ async function main() {
       console.log(`POST ${url} …`);
       const res = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'istanbul-living-map/0.0 (prototype data build)' },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': userAgent('osm data build') },
         body: new URLSearchParams({ data: QUERY }),
       });
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);

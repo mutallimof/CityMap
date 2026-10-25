@@ -5,9 +5,10 @@
  * Run: npm run data:fetch-places   then   npm run data:places
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { userAgent } from './lib/app';
 import { DATA_BBOX } from './bbox';
 
-const UA = 'istanbul-living-map/0.0 (Phase 0 prototype data build; https://github.com/mutallimof/CityMap)';
+const UA = userAgent('places data build');
 const INTERVAL_MS = 2500;
 export const RAW_PLACES = 'data/raw/nominatim-places.json';
 const [w, s, e, n] = DATA_BBOX;

@@ -9,10 +9,11 @@
  * Run: npm run data:featured
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { userAgent } from './lib/app';
 import { CONFIG } from '../src/config';
 
 const OUT = 'data/places-auto.geojson';
-const UA = 'IstanbulLivingCity/0.1 (https://mutallimof.github.io/CityMap/; github.com/mutallimof/CityMap) featured-places';
+const UA = userAgent('featured places');
 const OVERPASS = (process.env.OVERPASS_URL ?? 'https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter,https://overpass.private.coffee/api/interpreter').split(',');
 const CELL_DEG = 0.02; // ~2 km
 const PER_CELL = 4;

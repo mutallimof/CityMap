@@ -669,7 +669,7 @@ export const CONFIG = {
   guides: { walkColor: '#C0392B', stopColor: '#E0A100' },
 
   /** Snapshot share image: aspect (w/h, 4:5 = Instagram feed) and max height in px. */
-  snapshot: { aspect: 0.8, maxHeight: 1350, appName: 'Istanbul Living City' },
+  snapshot: { aspect: 0.8, maxHeight: 1350, appName: "Livin' Istanbul" },
 
   /** OpenStreetMap services used from the browser (no keys). */
   osm: {

@@ -32,10 +32,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      # validate:routes + validate:timetables + typecheck + vite build; Pages serves the site under /<repo>/
+      # validate:routes + validate:timetables + typecheck + vite build; the base path (/CityMap/) comes from site.json
       - run: npm run build
-        env:
-          BASE: /${{ github.event.repository.name }}/
       - run: touch dist/.nojekyll
       # Pages serves the gh-pages branch (Settings → Pages → Deploy from a branch: gh-pages / root).
       - uses: peaceiris/actions-gh-pages@v4

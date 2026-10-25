@@ -1,3 +1,4 @@
+import { BOT_NAME, userAgent } from '../lib/app';
 import { allowed, parseRobots, type Rules } from './robots';
 
 /**
@@ -5,7 +6,7 @@ import { allowed, parseRobots, type Rules } from './robots';
  * Crawl-delay), at least `minDelayMs` between requests to the same host, timeouts, no retries
  * hammering a site. Every request is logged.
  */
-export const USER_AGENT = 'IstanbulLivingCityBot/0.1 (+https://mutallimof.github.io/CityMap/; events map; contact: github.com/mutallimof/CityMap/issues)';
+export const USER_AGENT = userAgent('events map', true);
 const MIN_DELAY_MS = Number(process.env.SCRAPE_DELAY_MS ?? 4000);
 
 const robots = new Map<string, Rules | 'blocked'>();
@@ -21,7 +22,7 @@ async function rulesFor(origin: string): Promise<Rules | 'blocked'> {
     const res = await timedFetch(`${origin}/robots.txt`);
     if (res.status === 401 || res.status === 403) r = 'blocked';
     else if (!res.ok) r = { allow: [], disallow: [] }; // no robots.txt → allowed
-    else r = parseRobots(await res.text(), 'IstanbulLivingCityBot');
+    else r = parseRobots(await res.text(), BOT_NAME);
   } catch {
     r = { allow: [], disallow: [] };
   }

@@ -40,7 +40,7 @@ export function Fabs() {
     setTimeout(() => document.documentElement.classList.remove('flash'), 350);
     try {
       const blob = await snapshot(services().map, { mark: CONFIG.snapshot.appName, caption: caption(lang) });
-      const r = await shareImage(blob, `istanbul-${Date.now()}.png`, CONFIG.snapshot.appName);
+      const r = await shareImage(blob, `livin-istanbul-${Date.now()}.png`, CONFIG.snapshot.appName);
       if (r === 'downloaded') {
         setToast(t('snapshotSaved'));
         setTimeout(() => setToast(''), 2200);

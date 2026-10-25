@@ -12,9 +12,10 @@
  * Run: npm run data:stories
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { userAgent } from '../lib/app';
 import { CONFIG } from '../../src/config';
 
-const UA = 'IstanbulLivingCity/0.1 (https://mutallimof.github.io/CityMap/; github.com/mutallimof/CityMap) stories-builder';
+const UA = userAgent('stories');
 const OUT = 'data/stories.json';
 const OVERPASS = (process.env.OVERPASS_URL ?? 'https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter,https://overpass.private.coffee/api/interpreter').split(',');
 const MAX_SUMMARY = 700;

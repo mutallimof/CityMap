@@ -1,4 +1,6 @@
-# İstanbul Living City
+# Livin' Istanbul
+
+<img src="public/wordmark.svg" width="236" alt="Livin' Istanbul logo: a small ferry above a wave line">
 
 An animated map of İstanbul that runs in the browser and is designed for phones first. Ferries move on the water
 according to the published timetables, and the city is drawn from OpenStreetMap. Places, upcoming cultural events

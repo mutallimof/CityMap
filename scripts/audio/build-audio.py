@@ -13,10 +13,11 @@ exceeds the mobile budget.
 import html, json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+SITE = json.load(open(os.path.join(ROOT, 'site.json')))  # app name / URLs: one place
 CAT = os.path.join(ROOT, 'data/catalog/sounds.json')
 RAW = os.path.join(ROOT, 'data/raw/audio')
 OUT = os.path.join(ROOT, 'public/audio')
-UA = 'IstanbulLivingCityBot/0.1 (+https://mutallimof.github.io/CityMap/; audio build)'
+UA = f"LivinIstanbul/0.1 (+{SITE['url']}; audio build; contact: {SITE['repo']}/issues)"
 ALLOWED = re.compile(r'^(CC0|Public domain|CC BY \d\.\d)$')
 BUDGET = 2_000_000  # bytes per format
 SR = 32000
@@ -127,7 +128,7 @@ def write_credits(cat, meta, used):
 <style>:root{{color-scheme:light dark}}body{{font:15px/1.5 system-ui,sans-serif;max-width:720px;margin:0 auto;padding:16px;background:Canvas;color:CanvasText}}li{{margin:0 0 10px}}small{{opacity:.75}}</style>
 </head><body>
 <h1>Sound credits</h1>
-<p>Istanbul Living City plays real field recordings from Wikimedia Commons, cut, mixed and re-encoded (mono, Opus / AAC).
+<p>Livin' Istanbul plays real field recordings from Wikimedia Commons, cut, mixed and re-encoded (mono, Opus / AAC).
 Licences as stated on each file page (CC0, public domain or Creative Commons Attribution).</p>
 <ul>
 {chr(10).join(rows)}

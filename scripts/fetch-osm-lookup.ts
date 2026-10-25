@@ -7,10 +7,11 @@
  * Run: npm run data:fetch-lookup [-- --only=eminonu-turyol,uskudar-dentur]
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { userAgent } from './lib/app';
 import type { CatalogEntry } from './lib/match-places';
 import { RAW_LOOKUP, type OverpassElement } from './lib/overpass';
 
-const UA = 'istanbul-living-map/0.0 (Phase 0 prototype data build; https://github.com/mutallimof/CityMap)';
+const UA = userAgent('osm lookup data build');
 type Entry = CatalogEntry & { operator?: string; berths?: { osm: string }[] };
 
 const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7).split(',');

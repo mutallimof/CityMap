@@ -13,7 +13,7 @@ Disallow: /
 `;
 
 describe('robots.txt', () => {
-  const r = parseRobots(txt, 'IstanbulLivingCityBot/0.1');
+  const r = parseRobots(txt, 'LivinIstanbulBot/0.1');
   it('applies the * group to us', () => {
     expect(allowed(r, '/etkinlikler')).toBe(true);
     expect(allowed(r, '/admin/x')).toBe(false);

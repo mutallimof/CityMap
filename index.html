@@ -4,19 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1F5E6E" />
-    <meta name="description" content="A living map of Istanbul: vapurs on the water, real places from OpenStreetMap, live weather." />
+    <meta name="description" content="An animated map of Istanbul: ferries on the water, places and events from open data, live weather." />
+    <meta property="og:title" content="Livin&#39; Istanbul" />
+    <meta property="og:description" content="An animated map of Istanbul: ferries on the water, places and events from open data, live weather." />
+    <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="İstanbul" />
+    <meta name="apple-mobile-web-app-title" content="Livin&#39; Istanbul" />
     <link rel="apple-touch-startup-image" href="/icons/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" />
     <link rel="apple-touch-startup-image" href="/icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" />
     <link rel="apple-touch-startup-image" href="/icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" />
     <link rel="apple-touch-startup-image" href="/icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
-    <title>İstanbul Living City</title>
+    <title>Livin' Istanbul</title>
     <script>
       // The look to paint the loading screen in, before any script loads: ?theme=, saved choice, else the
       // default (keep in sync with DEFAULT_THEME in src/themes/registry.ts).
@@ -31,6 +35,7 @@
     <div id="map"></div>
     <div id="ui"></div>
     <div id="loader" role="status" aria-live="polite">
+      <img class="loader__mark" src="/wordmark.svg" alt="Livin' Istanbul" width="236" height="48" />
       <div class="loader__scene">
         <div class="loader__line"></div>
         <svg class="loader__boat" viewBox="0 0 64 32" aria-hidden="true">

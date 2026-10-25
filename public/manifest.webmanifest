@@ -1,7 +1,7 @@
 {
-  "name": "İstanbul Living City",
-  "short_name": "İstanbul",
-  "description": "A living map of Istanbul: vapurs on the water, real places from OpenStreetMap, live weather.",
+  "name": "Livin' Istanbul",
+  "short_name": "Livin' Istanbul",
+  "description": "An animated map of Istanbul: ferries on the water, places and events from open data, live weather.",
   "lang": "tr",
   "start_url": "./",
   "scope": "./",

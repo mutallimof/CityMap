@@ -9,11 +9,12 @@
  * Run: npm run data:fetch-nominatim
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { userAgent } from './lib/app';
 import { DATA_BBOX } from './bbox';
 import type { CatalogEntry } from './lib/match-places';
 import { RAW_NOMINATIM, type OverpassElement } from './lib/overpass';
 
-const UA = 'istanbul-living-map/0.0 (Phase 0 prototype data build; https://github.com/mutallimof/CityMap)';
+const UA = userAgent('nominatim data build');
 const MIN_INTERVAL_MS = 1100;
 const [w, s, e, n] = DATA_BBOX;
 

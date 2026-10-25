@@ -5,6 +5,7 @@
  * Run: npm run data:venues
  */
 import { CONFIG } from '../src/config';
+import { userAgent } from './lib/app';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { VectorTile } from '@mapbox/vector-tile';
 import { PbfReader } from 'pbf';
@@ -64,7 +65,7 @@ for (const v of cat.venues) {
     await new Promise((r) => setTimeout(r, 1100));
     const [w, s, e, n] = CONFIG.bounds;
     const q = new URLSearchParams({ q: v.nominatim, format: 'jsonv2', limit: '5', bounded: '1', viewbox: `${w},${n},${e},${s}` });
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?${q}`, { headers: { 'User-Agent': 'IstanbulLivingCity/0.1 (github.com/mutallimof/CityMap) build-venues' } });
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?${q}`, { headers: { 'User-Agent': userAgent('venue build') } });
     const list = res.ok ? ((await res.json()) as { osm_type: string; osm_id: number; category: string; type: string; name: string; lat: string; lon: string }[]) : [];
     const m = list.find((x) => ['amenity', 'tourism', 'leisure', 'building'].includes(x.category) && re.test(x.name));
     if (m) hits.push({ name: m.name, id: m.osm_id * 10 + ({ node: 1, way: 2, relation: 3 } as Record<string, number>)[m.osm_type], coords: [Number(m.lon), Number(m.lat)], cls: `${m.category}/${m.type} (nominatim)` });

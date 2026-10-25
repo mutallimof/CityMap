@@ -1,4 +1,4 @@
-# Istanbul Living City
+# Livin' Istanbul
 
 Animated, mobile-first map of Istanbul: vapurs on the water, a colourful OSM city, places, events, history.
 Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · public docs: `README.md` (portfolio
@@ -275,7 +275,7 @@ ids/names/rules (no coordinates).
 - **Facts only:** title, date/time, venue/place, category, price if listed, event page + official ticket link.
   Never copy descriptions or images.
 - **Polite:** respect robots.txt (403 on robots.txt = blocked), **≥ 4 s between requests per host**, clear User-Agent
-  (`IstanbulLivingCityBot/0.1 (+site; contact)`), 25 s timeout, **at most once a day per venue** (20 h guard).
+  (`LivinIstanbulBot/0.1 (+site; contact)`), 25 s timeout, **at most once a day per venue** (20 h guard).
 - **No ticket resellers** (Biletix, Passo, Bubilet, Biletinial, Mobilet) — never fetched, never linked.
 - Every event attaches to a real map place: venue default, `aliases`, map-place names, or OSM name lookup;
   venues not in OSM come from `data/catalog/extra-venues.json` (official address, verified on the venue's own
