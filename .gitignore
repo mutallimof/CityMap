@@ -2,8 +2,14 @@ node_modules
 dist
 .DS_Store
 *.local
+.env
+.env.*
+*.log
+coverage
+
+# Downloads and raw inputs (timetable PDFs, OSM extracts, audio sources): never committed
 data/raw/*
 !data/raw/.gitkeep
 
-# Business plan: kept out of the public repo (local copy only; history: git show v0.2.0:docs/plan.md)
+# Local notes
 docs/plan.md

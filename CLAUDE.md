@@ -1,22 +1,17 @@
 # Livin' Istanbul
 
 Animated, mobile-first map of Istanbul: vapurs on the water, a colourful OSM city, places, events, history.
-Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · public docs: `README.md` (portfolio
-page; screenshots in `docs/screenshots/`, regenerate with `scripts/dev/shot.mjs`), `docs/data-sources.md` (every source,
-licence, in-app credit, refresh) · ideas `docs/ideas.md` (stays an ideas list). The business plan `docs/plan.md` is
-**not tracked** (gitignored 2026-10-12; read it with `git show v0.2.0:docs/plan.md`; never re-add it, never put
-strategy / monetisation / scraper details in public docs). **No changelog / decisions / operations files** (don't
-create them): project history = this file + git.
+Live: **https://mutallimof.github.io/CityMap/** · default branch `phase-0` · public docs: `README.md`, `docs/data-sources.md`
+(every source, licence, in-app credit, refresh), `scripts/timetables/README.md`. App name, public URL and the Pages base
+path (`/CityMap/`) are in `site.json` (vite, scripts' User-Agents, the audio builder read it; manifest `start_url` / `scope`
+are `./`, so installed home-screen apps keep working). **No changelog / decisions / operations files** (don't create
+them): project history = this file + git. No strategy, monetisation or scraper-internals in public docs.
 
 ## Ground rules (from the user)
-- Tags: `v0.1.0` = the look before the theme redesign; `v0.2.0` = the redesign, before the cleanup pass (tag pushes
-  are refused by the session git proxy: tags are made by a one-off workflow on a `probe/tag-…` branch; leftover
-  probe branches (2026-10-21): `probe/ferry-operators` (operator site probes), `probe/operators-scrape` (first
-  operator reads); `probe/tag-v0.2.0` is gone — the session can't delete remote branches, the user may).
-  `phase-0` is the GitHub default branch (checked 2026-10-21), so the refresh schedule in its `data-refresh.yml` is
-  the only one that fires; Pages serves `gh-pages`.
+- Tags: `v0.1.0` = the look before the theme redesign; `v0.2.0` = the redesign, before the cleanup pass. `phase-0` is the
+  GitHub default branch, so the refresh schedule in its `data-refresh.yml` is the only one that fires; Pages serves `gh-pages`.
 - Work autonomously; commit and deploy as you go (every push to `phase-0` deploys). Summary + link + "what to try" at the end.
-- **No open-source licence** — the user keeps all rights.
+- **Licence: MIT** (`LICENSE`, holder mutallimof, 2026). Data, sounds and fonts keep their own licences (`docs/data-sources.md`).
 - **Real data only.** Coordinates only from OSM (or geocoded from an official address) — never typed from memory.
   No demo/fake posts. Each line is labelled "Official timetable" or "Simulated schedule"; OSM attribution always visible.
 - No API keys, no backend: static data + keyless services (OpenFreeMap, Open-Meteo, Nominatim).

@@ -113,9 +113,9 @@ Details, licences and how each is credited in the app: [docs/data-sources.md](do
 
 ## Licence
 
-This repository has no licence file and no open-source licence: the owner keeps all rights. Map data is ©
-OpenStreetMap contributors. Other data, sounds and fonts keep their own licences (see
-[docs/data-sources.md](docs/data-sources.md)).
+The code is under the [MIT licence](LICENSE) (copyright 2026 mutallimof). The data, sounds and fonts the app uses
+keep their own licences: map data is © OpenStreetMap contributors, and every other source is listed in
+[docs/data-sources.md](docs/data-sources.md).
 
 ## How it was built
 

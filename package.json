@@ -1,5 +1,16 @@
 {
   "name": "livin-istanbul",
+  "description": "Livin' Istanbul: an animated map of Istanbul with ferries, places, events and history",
+  "license": "MIT",
+  "author": "mutallimof",
+  "homepage": "https://mutallimof.github.io/CityMap/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mutallimof/CityMap.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "private": true,
   "version": "0.0.1",
   "type": "module",
