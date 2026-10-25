@@ -538,8 +538,8 @@ Stack: Vite 8, TypeScript 7 strict, MapLibre 6.13, three 0.186, React 19, Vitest
   it wrong, nothing proves it right either (e.g. whether a Karaköy departure on p. 4 / 5 goes on to Eminönü or back).
 - Not done on purpose (accessibility, next steps): no focus trap in
   sheets / dialogs and no focus return, map pins are not keyboard-reachable (list view / feed is the keyboard path).
-- `docs/plan.md` and the removed `docs/design-pass/*.jpg` screenshots are untracked / deleted now but still in the
-  public git history (rewriting history would break tags and clones; not done).
+- Two removed files (`docs/plan.md`, `docs/design-pass/*.jpg`) are still in the git history until the owner runs the history
+  purge (git filter-repo, force push of all refs, then everyone re-clones; GitHub's `refs/pull/*` need a support request).
 - Fixed 2026-10-12: pin images that change size (the bar icon's night glow, a theme switch) threw in
   `updateImage` and aborted the night / theme refresh (latent since v0.1.0); `put()` now re-adds on a size change.
 - Planner "freeze" (a stop near Kadıköy + one across the water): not reproduced. `src/plan/perf.test.ts` builds such
