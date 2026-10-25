@@ -22,7 +22,7 @@ An animated, phone-first map of Istanbul: ferries on the Bosphorus, places, even
   position, live weather and the seasons. Four looks (Toy, Classic, Storybook, Night), switchable without a reload.
 - **Places.** Featured places and the points of interest in the map tiles, with opening hours, website and phone from
   OpenStreetMap when available, and an "Open now" filter.
-- **Events.** Upcoming events from the websites of about 20 cultural venues. Only facts are kept (title, time, venue,
+- **Events.** Upcoming events from the websites of cultural venues (23 are configured; some return none at the moment). Only facts are kept (title, time, venue,
   price if listed) with a link to the venue's own page.
 - **Stories.** Several hundred historic places with a short Wikipedia summary and a Wikimedia Commons photo.
 - **Planner.** Plan an evening, a day or several days; between stops it shows an approximate walk or a real ferry
@@ -40,6 +40,8 @@ directly (OpenFreeMap tiles, Open-Meteo weather, Nominatim search).
   delays or cancellations.
 - Only some ferries are on the map: seven Şehir Hatları lines and four private city lines. The Şehir Hatları Boğaz
   commuter line, the short Bosphorus tour, İDO, and the other Turyol / Dentur lines are missing.
+- The Şehir Hatları timetable is re-parsed by hand from the official PDF whenever a new one is published; the current
+  one is valid to 27 Jun 2027. The private operators' times are read from their own sites once a week.
 - Some timetables print only departure times per pier. The direction shown for those departures is our reading of
   the table and is marked †. The private operators publish no holiday timetable, so holidays show a simulated
   schedule for their lines.
@@ -52,9 +54,11 @@ directly (OpenFreeMap tiles, Open-Meteo weather, Nominatim search).
 
 ## Run it locally
 
-Requires Node.js 22 (`.nvmrc`, the version CI uses).
+Requires Node.js 22 (`.nvmrc`, the version CI uses). At the last run, `npm test` passed 402 tests in 70 files.
 
 ```bash
+git clone https://github.com/mutallimof/CityMap.git
+cd CityMap
 npm install
 npm run dev        # dev server on http://localhost:5173
 npm test           # Vitest
@@ -69,22 +73,38 @@ The app name, public URL and the base path the site is served under (`/CityMap/`
 
 ## Tech stack
 
-TypeScript (strict), Vite, MapLibre GL JS, three.js (custom layers for the water, ferries and 3D scenery), React for
-the interface, Vitest. Data scripts are TypeScript and Python. GitHub Actions refreshes the data and deploys to
-GitHub Pages.
+TypeScript (strict), Vite, MapLibre GL JS, three.js, React and Vitest; data scripts in TypeScript and Python; GitHub
+Actions and GitHub Pages.
 
 ## Data
 
-Every source, its licence and how it is credited in the app: [docs/data-sources.md](docs/data-sources.md). In short:
-OpenStreetMap (city, piers, places), the Şehir Hatları timetable PDF, the Turyol and Dentur Avrasya websites,
-cultural venues' own sites (event facts), Wikidata / Wikipedia / Wikimedia Commons (stories, photos, sounds),
-Open-Meteo (weather) and Fontsource (self-hosted fonts, SIL OFL).
+Licences and in-app credits for every source: [docs/data-sources.md](docs/data-sources.md).
+
+- OpenStreetMap (via OpenFreeMap tiles, land polygons, Nominatim, Overpass): the city, coastline, piers, places.
+- Şehir Hatları timetable PDF: ferry times for its seven lines.
+- Turyol and Dentur Avrasya websites: ferry times for their city lines.
+- Cultural venues' own websites: event facts only.
+- Wikidata, Wikipedia, Wikimedia Commons: stories, photos and sound recordings.
+- Open-Meteo: live weather. Fontsource: self-hosted fonts (SIL OFL).
 
 A scheduled GitHub Actions job (`.github/workflows/data-refresh.yml`) reads venue events daily and the private
-operators' timetables weekly, and refreshes stories and auto-picked places monthly. Data is validated before it is
-committed; empty files, sharp drops or broken timetables stop the job and nothing is deployed. A venue or operator
-that fails keeps its last good data. The Şehir Hatları timetable is parsed by hand from the official PDF when a new
-one is published (see `scripts/timetables/README.md`).
+operators' timetables weekly, and refreshes stories and auto-picked places monthly. The data is validated before it is
+committed; if it is empty, drops sharply or a timetable is broken, nothing is committed or deployed. A venue or
+operator that fails keeps its last good data. The Şehir Hatları timetable is re-parsed by hand from the official PDF
+when a new one is published (`scripts/timetables/README.md`).
+
+## Project layout
+
+```
+src/        the app: sim (ferry schedule and motion), ferries, map, water, places, events, stories, plan,
+            themes (the four looks), ui (React interface), audio, weather, scenery (3D trees and landmarks)
+scripts/    data builders, validators, scrapers and dev tools (screenshots, boot profile)
+data/       committed data the app loads; data/catalog holds hand-written inputs; data/raw (ignored) holds downloads
+public/     icons, manifest, service worker, sound files, credits pages
+docs/       data sources and README screenshots
+.github/    the two workflows: data refresh and deploy
+site.json   app name, public URL, base path
+```
 
 ## Licence
 
@@ -94,5 +114,5 @@ their own licences: map data is © OpenStreetMap contributors, and the other sou
 
 ## How it was built
 
-The owner directed the project and it was written with [Claude Code](https://claude.com/claude-code), Anthropic's
-coding agent. The project notes the agent works from are in [CLAUDE.md](CLAUDE.md).
+The code was written with [Claude Code](https://claude.com/claude-code), Anthropic's coding agent; the notes it works
+from are in [CLAUDE.md](CLAUDE.md).
