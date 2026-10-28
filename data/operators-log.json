@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-27T09:20:12.017Z",
+ "generated": "2026-10-28T10:01:37.646Z",
  "operators": {
   "turyol": {
    "at": "2026-10-26T09:17:57.090Z",
@@ -11,7 +11,7 @@
    }
   },
   "dentur": {
-   "at": "2026-10-27T09:20:12.017Z",
+   "at": "2026-10-28T10:01:37.646Z",
    "status": "failed",
    "lines": {
     "dentur-uskudar-kabatas": "failed: no departure columns on the page (kept the last good read)"
