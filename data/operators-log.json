@@ -1,8 +1,8 @@
 {
- "generated": "2026-10-31T09:58:34.754Z",
+ "generated": "2026-11-01T10:49:35.068Z",
  "operators": {
   "turyol": {
-   "at": "2026-10-26T09:17:57.090Z",
+   "at": "2026-11-01T10:49:35.068Z",
    "status": "ok",
    "lines": {
     "turyol-kadikoy-karakoy-eminonu": "ok: 152 trips",
@@ -11,7 +11,7 @@
    }
   },
   "dentur": {
-   "at": "2026-10-31T09:58:34.754Z",
+   "at": "2026-11-01T10:49:35.068Z",
    "status": "failed",
    "lines": {
     "dentur-uskudar-kabatas": "failed: no departure columns on the page (kept the last good read)"

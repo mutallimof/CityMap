@@ -8,8 +8,8 @@
  "publisher": "S.S. Turizm ve Yolcu Deniz Taşıyıcılar Kooperatifi (Turyol)",
  "url": "https://www.turyol.com/Home/Tarifeler",
  "validFrom": "2026-10-13",
- "validTo": "2026-12-10",
- "generated": "2026-10-26",
+ "validTo": "2026-12-16",
+ "generated": "2026-11-01",
  "lines": {
   "turyol-kadikoy-karakoy-eminonu": {
    "pdf": [
@@ -2717,10 +2717,10 @@
     }
    ],
    "url": "https://www.turyol.com/Home/Tarifeler",
-   "fetched": "2026-10-26T09:17:57.090Z",
+   "fetched": "2026-11-01T10:49:35.068Z",
    "holidays": "none",
    "validFrom": "2026-10-13",
-   "validTo": "2026-12-10"
+   "validTo": "2026-12-16"
   },
   "turyol-uskudar-karakoy-eminonu": {
    "pdf": [
@@ -5352,10 +5352,10 @@
     }
    ],
    "url": "https://www.turyol.com/Home/Tarifeler",
-   "fetched": "2026-10-26T09:17:57.090Z",
+   "fetched": "2026-11-01T10:49:35.068Z",
    "holidays": "none",
    "validFrom": "2026-10-13",
-   "validTo": "2026-12-10"
+   "validTo": "2026-12-16"
   },
   "turyol-karakoy-kadikoy-metro": {
    "pdf": [
@@ -5490,10 +5490,10 @@
     }
    ],
    "url": "https://www.turyol.com/Home/Tarifeler",
-   "fetched": "2026-10-26T09:17:57.090Z",
+   "fetched": "2026-11-01T10:49:35.068Z",
    "holidays": "none",
    "validFrom": "2026-10-13",
-   "validTo": "2026-12-10"
+   "validTo": "2026-12-16"
   }
  }
 }
