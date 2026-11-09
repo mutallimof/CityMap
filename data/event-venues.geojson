@@ -11,6 +11,32 @@
     "cuisine": null,
     "phone": null,
     "major": false,
+    "id": "ev-ankara-mercan-yuvasi",
+    "name": "Ankara Mercan Yuvası",
+    "kind": "garden",
+    "osm": "way/1190362806",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.281102,
+     40.823084
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
     "id": "ev-apartman-sahne",
     "name": "Apartman Sahne",
     "kind": "theatre",
