@@ -1,95 +1,95 @@
 {
- "generated": "2026-11-10T11:22:12.029Z",
+ "generated": "2026-11-11T11:09:02.796Z",
  "venues": {
   "arter": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
-   "count": 31
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
+   "count": 30
   },
   "akbank-sanat": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 7,
    "unplaced": 7,
    "message": "not on the map: Çevrimiçi Platform – Zoom · YUNT · Minerva Han"
   },
   "sehir-tiyatrolari": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 44,
    "unplaced": 5,
    "message": "not on the map: Üsküdar Kerem Yılmazer Sahnesi."
   },
   "istanbul-modern": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 9,
    "message": "2 list page(s), 9 detail link(s), 0 without a date"
   },
   "salt": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
-   "count": 7,
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
+   "count": 9,
    "unplaced": 6,
-   "message": "2 list page(s), 20 detail link(s), 3 without a date"
+   "message": "2 list page(s), 22 detail link(s), 3 without a date"
   },
   "pera": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 4,
    "message": "1 list page(s), 4 detail link(s), 0 without a date"
   },
   "ibb-kultur": {
    "status": "failed",
-   "lastRun": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
    "count": 0,
    "message": "fetch failed (Connect Timeout Error (attempted address: kultursanat.istanbul:443, timeout: 10000ms))"
   },
   "borusan": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 5,
    "message": "2 list page(s), 7 detail link(s), 0 without a date"
   },
   "iksv": {
    "status": "empty",
-   "lastRun": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
    "lastOk": "2026-10-11T14:09:36.552Z",
    "count": 0,
    "message": "4 list page(s), 0 detail link(s), 0 without a date"
   },
   "salon-iksv": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 17
   },
   "crr": {
    "status": "failed",
-   "lastRun": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
    "count": 0,
    "message": "fetch failed (Connect Timeout Error (attempted address: www.crrkonsersalonu.org:443, timeout: 10000ms))"
   },
   "zorlu-psm": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 150,
-   "message": "2 list page(s), 64 detail link(s), 9 without a date"
+   "message": "2 list page(s), 70 detail link(s), 9 without a date"
   },
   "akm": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
-   "count": 11,
-   "message": "2 list page(s), 9 detail link(s), 0 without a date"
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
+   "count": 10,
+   "message": "2 list page(s), 8 detail link(s), 0 without a date"
   },
   "moda-sahnesi": {
    "status": "skipped",
@@ -99,65 +99,65 @@
   },
   "nardis": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 25,
-   "message": "1 list page(s), 46 detail link(s), 0 without a date"
+   "message": "1 list page(s), 45 detail link(s), 0 without a date"
   },
   "babylon": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 12,
    "message": "2 list page(s), 12 detail link(s), 0 without a date"
   },
   "fisekhane": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 20
   },
   "dasdas": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 78
   },
   "kumbaraci50": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 7
   },
   "borusan-contemporary": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 3
   },
   "galata-rum-okulu": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 1
   },
   "sakip-sabanci": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 1
   },
   "uniq": {
    "status": "failed",
-   "lastRun": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
    "lastOk": "2026-11-02T11:23:16.936Z",
    "count": 12,
    "message": "programme: no event cards (layout changed?)"
   },
   "bkm": {
    "status": "ok",
-   "lastRun": "2026-11-10T11:22:12.029Z",
-   "lastOk": "2026-11-10T11:22:12.029Z",
+   "lastRun": "2026-11-11T11:09:02.796Z",
+   "lastOk": "2026-11-11T11:09:02.796Z",
    "count": 8
   }
  }
