@@ -89,6 +89,32 @@
     "cuisine": null,
     "phone": null,
     "major": false,
+    "id": "ev-basimhane-reklam",
+    "name": "Basimhane reklam",
+    "kind": "library",
+    "osm": "node/5542886403",
+    "address": null,
+    "website": null,
+    "geocoded": "name"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.263458,
+     40.969222
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "nameEn": null,
+    "category": "culture",
+    "district": null,
+    "hours": null,
+    "cuisine": null,
+    "phone": null,
+    "major": false,
     "id": "ev-bostanci-gosteri-merkezi",
     "name": "Bostancı Gösteri Merkezi",
     "kind": "arts_centre",
